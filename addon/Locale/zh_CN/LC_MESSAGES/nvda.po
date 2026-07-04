@@ -1,4 +1,4 @@
-# FreeRadio NVDA Add-on
+  # FreeRadio NVDA Add-on
 # SOME DESCRIPTIVE TITLE.
 #
 #, fuzzy
@@ -73,7 +73,7 @@ msgstr "将音频镜像到另一个输出设备"
 #: addon/globalPlugins/freeradio/__init__.py:1554 addon/globalPlugins/freeradio/__init__.py:1562 addon/globalPlugins/freeradio/__init__.py:1639 addon/globalPlugins/freeradio/__init__.py:1676 addon/globalPlugins/freeradio/__init__.py:1699 addon/globalPlugins/freeradio/__init__.py:1718
 #: addon/globalPlugins/freeradio/__init__.py:2490
 msgid "FreeRadio"
-msgstr "自有广播"
+msgstr "自由广播"
 
 #: addon/globalPlugins/freeradio/__init__.py:513
 msgid "Audio mirror requires BASS backend. Enable it in FreeRadio settings."
