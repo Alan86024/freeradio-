@@ -347,32 +347,43 @@ class PlaybackCoreMixin:
 		station_dict["audiobook_chapter_title"] = chapter_title
 		return station_dict
 
-	def _advance_getem_chapter_headless(self, station):
-		"""Auto-advance an audio book (GETEM or LibriVox) to its next part
-		when the current part finishes on its own while the FreeRadio
-		dialog isn't open (or isn't shown) to do it itself via
-		RadioDialog._on_playback_finished()/_play_next_getem_chapter() -
-		see GlobalPlugin._on_podcast_finished_ui() in __init__.py.
+	def _advance_getem_chapter_headless(self, station, direction=1):
+		"""Move an audio book (GETEM or LibriVox) to its previous/next part
+		(*direction* = -1/+1) independent of any dialog UI (list
+		selection/focus/"now playing" state) - either because the current
+		part finished on its own while the FreeRadio dialog isn't open (or
+		isn't shown) to do it itself via
+		RadioDialog._on_playback_finished()/_play_next_getem_chapter() (see
+		GlobalPlugin._on_podcast_finished_ui() in __init__.py, always
+		direction=1 for that caller - a part never finishes "backward"),
+		or because TimeshiftMixin._maybe_jump_track_boundary() decided a
+		Ctrl+Win+J/K seek landed too close to this part's start/end to stay
+		within it (either direction).
+
+		Returns True if the jump was made, False if there was nowhere to
+		jump to (already at the first/last part, or nothing's actually
+		loaded/playing) - callers that care (the boundary-jump case does;
+		the natural-finish case doesn't) use this to fall back to
+		whatever they'd otherwise have done.
 
 		Playback should keep moving forward the same way a podcast
 		episode's resume position keeps saving in the background,
 		regardless of whether the window happens to be open - so this
 		mirrors RadioDialog._start_getem_chapter()'s playback and progress-
-		tracking, but without touching any dialog UI (list selection/
-		focus/"now playing" state), using only the finished station's own
-		"getem_detail_url"/"getem_chapter_index" fields plus a fresh,
-		dialog-independent library lookup - the same pattern
-		_rebuild_getem_resume_url() uses for the NVDA-startup-resume case,
-		including trying both libraries since the finished station's own
-		dict doesn't say which source it came from. If the dialog is later
+		tracking, but without touching any dialog UI, using only the
+		playing station's own "getem_detail_url"/"getem_chapter_index"
+		fields plus a fresh, dialog-independent library lookup - the same
+		pattern _rebuild_getem_resume_url() uses for the NVDA-startup-resume
+		case, including trying both libraries since the station's own dict
+		doesn't say which source it came from. If the dialog is later
 		opened while this is playing,
 		RadioDialog._sync_getem_now_playing_from_player() picks its state
 		back up from the player, same as it does after a startup resume."""
 		if not station or "audiobook" not in station.get("tags", ""):
-			return
+			return False
 		detail_url = station.get("getem_detail_url")
 		if not detail_url:
-			return
+			return False
 		try:
 			chapter_index = int(station.get("getem_chapter_index", 0))
 		except (TypeError, ValueError):
@@ -389,18 +400,18 @@ class PlaybackCoreMixin:
 				book, module, library = found, candidate_module, candidate_library
 				break
 		if not book or not book.chapters:
-			return
-		next_index = chapter_index + 1
-		if next_index >= len(book.chapters):
-			# Reached the end of the book - nothing further to advance to.
-			return
+			return False
+		next_index = chapter_index + direction
+		if next_index < 0 or next_index >= len(book.chapters):
+			# Reached the start/end of the book - nothing further to jump to.
+			return False
 		chapter_url = book.chapters[next_index].get("url")
 		if not chapter_url:
-			return
+			return False
 		try:
 			stream_url = module.get_stream_url(chapter_url, referer=book.detail_url)
 		except Exception:
-			return
+			return False
 
 		library.mark_progress(book, next_index)
 
@@ -425,16 +436,28 @@ class PlaybackCoreMixin:
 		# trackInfoMixin._build_audiobook_details()'s "Chapter" row.
 		station_dict["audiobook_chapter_title"] = chapter_title
 		self._play_station(station_dict)
+		return True
 
-	def _advance_jukebox_folder_headless(self, station):
-		"""Auto-advance a jukebox folder to its next track when the
-		current one finishes on its own while the FreeRadio dialog isn't
-		open (or isn't shown) to do it itself via
-		RadioDialog._on_playback_finished() - see
-		GlobalPlugin._on_podcast_finished_ui() in __init__.py.
+	def _advance_jukebox_folder_headless(self, station, direction=1):
+		"""Move a jukebox folder to its previous/next track (*direction* =
+		-1/+1) independent of any dialog UI - either because the current
+		track finished on its own while the FreeRadio dialog isn't open
+		(or isn't shown) to do it itself via
+		RadioDialog._on_playback_finished() (see
+		GlobalPlugin._on_podcast_finished_ui() in __init__.py, always
+		direction=1 for that caller - a track never finishes "backward"),
+		or because TimeshiftMixin._maybe_jump_track_boundary() decided a
+		Ctrl+Win+J/K seek landed too close to this track's start/end to
+		stay within it (either direction).
+
+		Returns True if the jump was made, False if there was nowhere to
+		jump to (already at the first/last track in the folder, this
+		isn't a folder-sequence track at all, or the folder's gone) - see
+		_advance_getem_chapter_headless()'s matching docstring for why
+		callers care about this.
 
 		Mirrors _advance_getem_chapter_headless() above: uses only the
-		finished station's own "jukebox_folder_path"/"jukebox_track_index"
+		playing station's own "jukebox_folder_path"/"jukebox_track_index"
 		fields (set by RadioDialog._play_jukebox_track() when a track is
 		played as part of a folder sequence - see its docstring) plus a
 		fresh, dialog-independent jukebox.JukeboxManager lookup, rather
@@ -442,27 +465,27 @@ class PlaybackCoreMixin:
 		the same way a podcast's resume position keeps saving in the
 		background, regardless of whether the window happens to be open."""
 		if not station or station.get("media_kind") != "jukebox":
-			return
+			return False
 		folder_path = station.get("jukebox_folder_path")
 		if not folder_path:
 			# A single file, or a track played directly from the tracks
 			# list rather than through a folder sequence - nothing to
-			# advance to.
-			return
+			# jump to.
+			return False
 		try:
 			index = int(station.get("jukebox_track_index", -1))
 		except (TypeError, ValueError):
-			return
+			return False
 
 		manager = jukebox.JukeboxManager()
 		entry = manager.get_folder_entry(folder_path)
 		if not entry:
-			return
+			return False
 		tracks = entry.tracks()
-		next_index = index + 1
-		if next_index >= len(tracks):
-			# Reached the end of the folder - nothing further to advance to.
-			return
+		next_index = index + direction
+		if next_index < 0 or next_index >= len(tracks):
+			# Reached the start/end of the folder - nothing further to jump to.
+			return False
 		next_track = tracks[next_index]
 
 		station_dict = next_track.to_dict()
@@ -472,6 +495,7 @@ class PlaybackCoreMixin:
 		station_dict["jukebox_folder_path"] = entry.path
 		station_dict["jukebox_track_index"] = next_index
 		self._play_station(station_dict)
+		return True
 
 	def _resume_last_station(self):
 		url  = config.conf["freeradio"].get("last_station_url", "").strip()

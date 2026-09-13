@@ -80,11 +80,65 @@ class TimeshiftMixin:
 			}
 		return _("%(elapsed)s elapsed") % {"elapsed": _format_duration(pos)}
 
+	def _maybe_jump_track_boundary(self, seconds):
+		"""If seeking by *seconds* would run past the start or end of the
+		current audio-book part or jukebox-folder track - i.e. less time
+		remains in that direction than the seek itself - jump to the
+		previous/next part/track instead of doing an in-file seek that
+		would just clamp at 0:00 or the very end. Mirrors how many media
+		players treat "rewind near the very start" as "previous track":
+		if you're only a few seconds into a part and hit rewind, you
+		almost certainly want the previous one, not to sit at 0:00 of
+		this one.
+
+		Deliberately limited to audio books and jukebox-folder tracks -
+		the two media kinds that actually have a well-defined "previous/
+		next" to jump to and where the user explicitly asked for this
+		(podcast episodes keep their existing plain-seek/clamp behavior).
+		Routed through playbackCoreMixin's dialog-independent
+		_advance_getem_chapter_headless()/_advance_jukebox_folder_headless()
+		- the same functions natural end-of-part/track auto-advance
+		already uses - so this works identically whether the FreeRadio
+		window is open or not, and the dialog (if open) simply resyncs
+		its own display from the player the next time that tab is shown,
+		exactly as it already does after a natural auto-advance or an
+		NVDA-startup resume.
+
+		Returns True if a jump was made (caller should not also seek);
+		False if there was nothing to jump to (single/standalone track,
+		already at the first/last part, or position/length unknown) - the
+		caller should then fall through to a normal in-file seek."""
+		station = self._player.get_current_station()
+		if not station:
+			return False
+		media_kind = station.get("media_kind")
+		if media_kind not in ("audiobook", "jukebox"):
+			return False
+		ok, pos, length = self._player.get_playback_position()
+		if not ok or length <= 0:
+			return False
+		remaining = pos if seconds < 0 else (length - pos)
+		if remaining > abs(seconds):
+			return False
+		direction = -1 if seconds < 0 else 1
+		if media_kind == "audiobook":
+			return self._advance_getem_chapter_headless(station, direction)
+		return self._advance_jukebox_folder_headless(station, direction)
+
 	def _seek_and_announce(self, seconds):
 		"""Seek by *seconds* (negative = backward) in the current podcast/
 		audio-book file and announce the resulting position - shared tail
 		end of both the tap and hold paths in
-		_handle_podcast_seek() below."""
+		_handle_podcast_seek() below.
+
+		For an audio book or jukebox-folder track, first checks whether
+		this seek would run past the part/track's start or end - see
+		_maybe_jump_track_boundary() - and jumps to the previous/next
+		part/track instead when it would; that jump announces the new
+		part/track's name on its own (via playbackCoreMixin._play_station()),
+		so nothing further is done here in that case."""
+		if self._maybe_jump_track_boundary(seconds):
+			return
 		ok, pos = self._player.seek_relative(seconds)
 		if not ok:
 			_notify(_("Could not seek"))
