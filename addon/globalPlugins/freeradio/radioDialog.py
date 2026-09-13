@@ -6904,8 +6904,12 @@ class RadioDialog(wx.Dialog):
 
 	def _on_jukebox_list_key(self, event):
 		"""Jukebox entries list - Space pauses if something is playing,
-		otherwise plays the focused entry; Enter always plays directly.
-		Mirrors _on_episode_key()'s Space/Enter handling."""
+		otherwise plays the focused entry; Enter always plays directly;
+		Delete / Shift+Delete removes the focused entry (with
+		confirmation) when the Remove button is enabled. Mirrors
+		_on_episode_key()'s Space/Enter handling and
+		_on_liked_list_key()'s Delete handling - wx reports Shift+Delete
+		with the same WXK_DELETE key code, so both are handled here."""
 		key = event.GetKeyCode()
 		if key in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
 			self._on_jukebox_entry_play(event)
@@ -6916,6 +6920,10 @@ class RadioDialog(wx.Dialog):
 				_notify(_("Paused"))
 			else:
 				self._on_jukebox_entry_play(None)
+			return
+		if key == wx.WXK_DELETE:
+			if self._jukebox_remove_btn.IsEnabled():
+				self._on_jukebox_remove_entry(event)
 			return
 		event.Skip()
 
@@ -7025,9 +7033,36 @@ class RadioDialog(wx.Dialog):
 		if not entry:
 			return
 		title = entry.title
+		# Ask for confirmation before removing the entry - mirrors
+		# _on_liked_remove()'s confirmation prompt.
+		dlg = wx.MessageDialog(
+			self,
+			_("Do you want to remove \"%s\" from the jukebox?") % title,
+			_("Remove From Jukebox"),
+			wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
+		)
+		result = dlg.ShowModal()
+		dlg.Destroy()
+		if result != wx.ID_YES:
+			return
+		# Remember the removed index so we can move focus to whichever
+		# entry takes its place afterwards.
+		deleted_idx = self._jukebox_list.GetSelection()
 		self._jukebox_manager.remove_entry(entry.path)
 		ui.message(_("Removed from jukebox: %s") % title)
 		self._refresh_jukebox_list()
+		# After removal, move focus to the next entry (or the new last
+		# entry if the removed one was at the end); if the jukebox is now
+		# empty, move focus to Add File instead - mirrors
+		# _on_liked_remove()'s post-deletion focus handling.
+		count = self._jukebox_list.GetCount()
+		if count > 0 and deleted_idx != wx.NOT_FOUND:
+			new_idx = min(deleted_idx, count - 1)
+			self._jukebox_list.SetSelection(new_idx)
+			self._on_jukebox_entry_selected(None)
+			self._jukebox_list.SetFocus()
+		else:
+			self._jukebox_add_file_btn.SetFocus()
 
 	def _on_jukebox_rescan_folder(self, event):
 		entry = self._get_selected_jukebox_entry()
