@@ -52,6 +52,22 @@ _SEEK_HOLD_GAP = 0.15  # seconds
 _SEEK_TAP_WINDOW_S  = 0.35
 _SEEK_TAP_WINDOW_MS = int(_SEEK_TAP_WINDOW_S * 1000)
 
+# When a rewind would run past the start of an audio-book part or
+# jukebox-folder track (see _handle_track_boundary()), the *first* such
+# rewind just clamps to 0:00 of the current part/track instead of
+# jumping straight to the previous one. If another rewind that would
+# again run past the start arrives within this many seconds, *that*
+# press jumps to the previous part/track. (Forward/end-of-track always
+# jumps to the next part/track immediately - this window only applies
+# to rewind, see _handle_track_boundary()'s docstring for why.) This
+# mirrors _SEEK_TAP_WINDOW_S above in spirit (a short window to catch a
+# deliberate follow-up press) but is deliberately its own, much longer
+# constant - a boundary is something the user reaches once and then may
+# pause on for a while before deciding whether to actually back out of
+# the current part/track, unlike the sub-second taps _SEEK_TAP_WINDOW_S
+# is tuned for.
+_BOUNDARY_JUMP_WINDOW_S = 10.0  # seconds
+
 
 class TimeshiftMixin:
 	"""Rewind/fast-forward the time-shift buffer (or seek within a podcast
@@ -80,33 +96,48 @@ class TimeshiftMixin:
 			}
 		return _("%(elapsed)s elapsed") % {"elapsed": _format_duration(pos)}
 
-	def _maybe_jump_track_boundary(self, seconds):
+	def _handle_track_boundary(self, seconds):
 		"""If seeking by *seconds* would run past the start or end of the
 		current audio-book part or jukebox-folder track - i.e. less time
-		remains in that direction than the seek itself - jump to the
-		previous/next part/track instead of doing an in-file seek that
-		would just clamp at 0:00 or the very end. Mirrors how many media
-		players treat "rewind near the very start" as "previous track":
-		if you're only a few seconds into a part and hit rewind, you
-		almost certainly want the previous one, not to sit at 0:00 of
-		this one.
+		remains in that direction than the seek itself - handle it here
+		instead of letting the caller do a plain in-file seek that would
+		just clamp at 0:00 or the very end.
+
+		Rewind (*seconds* < 0) and forward (*seconds* > 0) are handled
+		differently:
+
+		  - Forward: jumps to the next part/track immediately, same as
+		    this always worked. If you've fast-forwarded past the end,
+		    you want the next part/track, no second press needed.
+		  - Rewind: two-stage, mirroring how many media players treat
+		    "rewind near the very start" - reaching the edge once just
+		    parks you at 0:00, and only a *second* rewind that again
+		    runs past the start within _BOUNDARY_JUMP_WINDOW_S actually
+		    jumps to the previous part/track:
+		      - 1st press to hit the start: seeks straight to 0:00 and
+		        announces the resulting position, same as any other seek.
+		      - 2nd press to hit the start again within
+		        _BOUNDARY_JUMP_WINDOW_S: jumps to the previous part/
+		        track instead.
+
+		Either kind of jump goes through playbackCoreMixin's
+		dialog-independent _advance_getem_chapter_headless()/
+		_advance_jukebox_folder_headless() - the same functions natural
+		end-of-part/track auto-advance already uses, so this works
+		identically whether the FreeRadio window is open or not, and the
+		dialog (if open) simply resyncs its own display from the player
+		the next time that tab is shown, exactly as it already does
+		after a natural auto-advance or an NVDA-startup resume.
 
 		Deliberately limited to audio books and jukebox-folder tracks -
 		the two media kinds that actually have a well-defined "previous/
 		next" to jump to and where the user explicitly asked for this
 		(podcast episodes keep their existing plain-seek/clamp behavior).
-		Routed through playbackCoreMixin's dialog-independent
-		_advance_getem_chapter_headless()/_advance_jukebox_folder_headless()
-		- the same functions natural end-of-part/track auto-advance
-		already uses - so this works identically whether the FreeRadio
-		window is open or not, and the dialog (if open) simply resyncs
-		its own display from the player the next time that tab is shown,
-		exactly as it already does after a natural auto-advance or an
-		NVDA-startup resume.
 
-		Returns True if a jump was made (caller should not also seek);
-		False if there was nothing to jump to (single/standalone track,
-		already at the first/last part, or position/length unknown) - the
+		Returns True if this call fully handled the press (seek-to-start
+		or jump, plus announcement - caller should not also seek); False
+		if there was nothing to do here (single/standalone track, not
+		actually at the boundary, or position/length unknown) - the
 		caller should then fall through to a normal in-file seek."""
 		station = self._player.get_current_station()
 		if not station:
@@ -121,9 +152,41 @@ class TimeshiftMixin:
 		if remaining > abs(seconds):
 			return False
 		direction = -1 if seconds < 0 else 1
-		if media_kind == "audiobook":
-			return self._advance_getem_chapter_headless(station, direction)
-		return self._advance_jukebox_folder_headless(station, direction)
+
+		if seconds > 0:
+			# Forward: jump straight to the next part/track, as before.
+			if media_kind == "audiobook":
+				return self._advance_getem_chapter_headless(station, direction)
+			return self._advance_jukebox_folder_headless(station, direction)
+
+		# Rewind: two-stage - park at 0:00 first, only jump to the
+		# previous part/track if the start is hit again within the window.
+		boundary_attr = "_seek_rew_boundary_time"
+		now = time.monotonic()
+		last_boundary_time = getattr(self, boundary_attr, None)
+
+		if last_boundary_time is not None and now - last_boundary_time < _BOUNDARY_JUMP_WINDOW_S:
+			# Hit the start again within the window - actually jump.
+			setattr(self, boundary_attr, None)
+			if media_kind == "audiobook":
+				return self._advance_getem_chapter_headless(station, direction)
+			return self._advance_jukebox_folder_headless(station, direction)
+
+		# First time hitting the start - just park at 0:00 and remember
+		# when, so a follow-up rewind within the window escalates to an
+		# actual jump above.
+		setattr(self, boundary_attr, now)
+		ok, new_pos = self._player.seek_relative(-pos)
+		if not ok:
+			_notify(_("Could not seek"))
+			return True
+		# No dedicated "Start of track" wording here - the elapsed/
+		# remaining position _announce_seek_position() reports (0:00
+		# elapsed) already makes that obvious on its own. Its
+		# only-if-unavailable fallback reuses the same generic wording
+		# the failure case above already uses.
+		_notify(self._announce_seek_position() or _("Could not seek"))
+		return True
 
 	def _seek_and_announce(self, seconds):
 		"""Seek by *seconds* (negative = backward) in the current podcast/
@@ -133,11 +196,13 @@ class TimeshiftMixin:
 
 		For an audio book or jukebox-folder track, first checks whether
 		this seek would run past the part/track's start or end - see
-		_maybe_jump_track_boundary() - and jumps to the previous/next
-		part/track instead when it would; that jump announces the new
-		part/track's name on its own (via playbackCoreMixin._play_station()),
-		so nothing further is done here in that case."""
-		if self._maybe_jump_track_boundary(seconds):
+		_handle_track_boundary() - which either parks at that start/end
+		itself or (on a 2nd press within its jump window) jumps to the
+		previous/next part/track; either way it does its own seek and
+		announcement (the jump case announces the new part/track's name
+		via playbackCoreMixin._play_station()), so nothing further is
+		done here in that case."""
+		if self._handle_track_boundary(seconds):
 			return
 		ok, pos = self._player.seek_relative(seconds)
 		if not ok:

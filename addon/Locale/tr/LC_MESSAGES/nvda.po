@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FreeRadio 2026.20.2\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-13 11:23+0300\n"
-"PO-Revision-Date: 2026-09-13 11:25+0300\n"
+"POT-Creation-Date: 2026-09-13 19:19+0300\n"
+"PO-Revision-Date: 2026-09-13 19:20+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -114,14 +114,14 @@ msgstr "FreeRadio istasyon tarayıcısını aç"
 #: addon/globalPlugins/freeradio/playbackCoreMixin.py:141
 #: addon/globalPlugins/freeradio/playbackCoreMixin.py:193
 #: addon/globalPlugins/freeradio/playbackCoreMixin.py:229
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:742
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:758
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:766
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:782
 #: addon/globalPlugins/freeradio/recordingMixin.py:68
 #: addon/globalPlugins/freeradio/recordingMixin.py:220
 #: addon/globalPlugins/freeradio/settingsPanel.py:50
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:186
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:221
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:252
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:305
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:340
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:371
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:119
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:306
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:323
@@ -452,7 +452,7 @@ msgstr "%(effect)s %(state)s"
 #: addon/globalPlugins/freeradio/radioDialog.py:1350
 #: addon/globalPlugins/freeradio/settingsPanel.py:571
 #: addon/globalPlugins/freeradio/settingsPanel.py:582
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:275
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:394
 msgid "enabled"
 msgstr "açık"
 
@@ -464,7 +464,7 @@ msgstr "açık"
 #: addon/globalPlugins/freeradio/radioDialog.py:1350
 #: addon/globalPlugins/freeradio/settingsPanel.py:571
 #: addon/globalPlugins/freeradio/settingsPanel.py:582
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:275
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:394
 msgid "disabled"
 msgstr "kapalı"
 
@@ -640,32 +640,32 @@ msgstr ""
 msgid "The downloaded file was empty."
 msgstr "İndirilen dosya boştu."
 
-#: addon/globalPlugins/freeradio/jukebox.py:906
+#: addon/globalPlugins/freeradio/jukebox.py:933
 #, python-format
 msgid "%(name)s (folder, %(count)d tracks)"
 msgstr "%(name)s (klasör, %(count)d parça)"
 
-#: addon/globalPlugins/freeradio/jukebox.py:1031
+#: addon/globalPlugins/freeradio/jukebox.py:1058
 #, python-format
 msgid "File not found: %s"
 msgstr "Dosya bulunamadı: %s"
 
-#: addon/globalPlugins/freeradio/jukebox.py:1033
+#: addon/globalPlugins/freeradio/jukebox.py:1060
 #, python-format
 msgid "Not a recognized audio file: %s"
 msgstr "Tanınmayan bir ses dosyası: %s"
 
-#: addon/globalPlugins/freeradio/jukebox.py:1035
-#: addon/globalPlugins/freeradio/jukebox.py:1047
+#: addon/globalPlugins/freeradio/jukebox.py:1062
+#: addon/globalPlugins/freeradio/jukebox.py:1074
 msgid "Already in the jukebox."
 msgstr "Zaten müzik kutusunda."
 
-#: addon/globalPlugins/freeradio/jukebox.py:1045
+#: addon/globalPlugins/freeradio/jukebox.py:1072
 #, python-format
 msgid "Folder not found: %s"
 msgstr "Klasör bulunamadı: %s"
 
-#: addon/globalPlugins/freeradio/jukebox.py:1051
+#: addon/globalPlugins/freeradio/jukebox.py:1078
 msgid "No audio files found in that folder."
 msgstr "Bu klasörde ses dosyası bulunamadı."
 
@@ -795,12 +795,12 @@ msgstr ""
 "favorilere ekleyin."
 
 #: addon/globalPlugins/freeradio/obligatoMixin.py:272
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:600
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:624
 msgid "No stream URL available for this station"
 msgstr "Bu istasyon için yayın adresi bulunamadı"
 
 #: addon/globalPlugins/freeradio/obligatoMixin.py:286
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:607
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:631
 msgid "No internet connection. Please check your connection and try again."
 msgstr ""
 "İnternet bağlantısı yok. Lütfen bağlantınızı kontrol edip tekrar deneyin."
@@ -900,52 +900,52 @@ msgstr "Sonraki istasyonu çal"
 msgid "Play previous station"
 msgstr "Önceki istasyonu çal"
 
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:557
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:581
 msgid ""
 "Could not resume the last audio book - it may have been removed from your "
 "library."
 msgstr ""
 "Son sesli kitap devam ettirilemedi; kitaplığınızdan kaldırılmış olabilir."
 
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:594
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:618
 msgid "Unknown station"
 msgstr "Bilinmeyen istasyon"
 
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:736
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:760
 msgid "Normal pitch"
 msgstr "Normal perde"
 
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:738
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:762
 #, python-format
 msgid "%+.2f semitones"
 msgstr "%+.2f yarım ton"
 
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:741
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:765
 msgid "Raise pitch transpose (podcasts, audio books and jukebox tracks)"
 msgstr ""
 "Yüksek perdeye transpozisyon (podcastler, sesli kitaplar ve müzik kutusu "
 "parçaları)"
 
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:750
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:766
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:774
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:790
 msgid "Transpose only applies to podcasts, audio books and jukebox tracks"
 msgstr ""
 "Perde değişimi yalnızca podcast’ler, sesli kitaplar ve müzik kutusu "
 "parçaları için geçerlidir."
 
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:752
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:768
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:776
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:792
 msgid "Transpose requires the bass_fx audio component, which isn't available"
 msgstr ""
 "Perde değişimi özelliği, mevcut olmayan bass_fx ses bileşenini gerektiriyor."
 
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:757
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:781
 msgid "Lower pitch transpose (podcasts, audio books and jukebox tracks)"
 msgstr ""
 "düşük perdeye transpozisyon (podcast'ler, sesli kitaplar ve müzik kutusu "
 "parçaları)"
 
-#: addon/globalPlugins/freeradio/playbackCoreMixin.py:776
+#: addon/globalPlugins/freeradio/playbackCoreMixin.py:800
 #, python-format
 msgid "Could not play station: %s"
 msgstr "İstasyon çalınamadı: %s"
@@ -3134,7 +3134,7 @@ msgstr "Uyku zamanlayıcısı: Radyo durduruldu"
 msgid "Sleep timer: fading out…"
 msgstr "Uyku zamanlayıcısı: Radyo durduruluyor"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:77
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:93
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:172
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:203
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:458
@@ -3144,7 +3144,7 @@ msgstr "Uyku zamanlayıcısı: Radyo durduruluyor"
 msgid "%(elapsed)s elapsed, %(remaining)s remaining"
 msgstr "%(elapsed)s oynatıldı, %(remaining)s kaldı"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:81
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:97
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:208
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:485
 #, python-format
@@ -3153,44 +3153,46 @@ msgstr "%(elapsed)s oynatıldı"
 
 # ── Kayıt sekmesi (radioDialog.py)
 # ───────────────────────────────────────────
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:90
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:181
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:188
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:209
 msgid "Could not seek"
 msgstr "Arama yapılamadı"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:93
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:212
 #, python-format
 msgid "Forwarded %d seconds"
 msgstr "%d saniye ileri sar"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:94
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:213
 #, python-format
 msgid "Rewound %d seconds"
 msgstr "%d saniye geri sar"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:185
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:304
 msgid ""
 "Time-shift: rewind 15 seconds (enters time-shift mode if not already active)"
 msgstr ""
 "Zaman kaydırma: 15 saniye geri sar (henüz aktif değilse zaman kaydırma "
 "moduna girer)"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:198
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:208
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:233
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:317
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:327
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:352
 msgid "Time-shift buffer is disabled. Enable it in FreeRadio settings."
 msgstr ""
 "Zaman kaydırma tamponu devre dışı. FreeRadio ayarlarından etkinleştirin."
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:207
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:326
 msgid ""
 "Time-shift requires the BASS audio backend, which is currently disabled."
 msgstr "Zaman kaydırma, şu anda devre dışı olan BASS arka ucunu gerektirir."
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:209
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:328
 msgid "Time-shift is not available for the current playback backend."
 msgstr "Zaman kaydırma, mevcut oynatma arka ucu için kullanılamaz."
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:210
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:329
 msgid ""
 "Time-shift is not supported for this station's stream (no seekable audio "
 "could be extracted)."
@@ -3198,7 +3200,7 @@ msgstr ""
 "Bu istasyonun akışı için zaman kaydırma desteklenmiyor (aranabilir ses "
 "çıkarılamadı)."
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:211
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:330
 msgid ""
 "Not enough buffered audio to rewind yet. Wait a few seconds after the "
 "station starts playing and try again."
@@ -3206,54 +3208,54 @@ msgstr ""
 "Geri sarmak için yeterli tamponlanmış ses yok. İstasyon başladıktan sonra "
 "birkaç saniye bekleyin ve tekrar deneyin."
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:212
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:331
 msgid "Time-shift buffer file is not ready yet."
 msgstr "Zaman kaydırma tampon dosyası henüz hazır değil."
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:213
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:332
 msgid "Could not switch to time-shifted playback."
 msgstr "Zaman kaydırmalı oynatmaya geçilemedi."
 
 # ── Kayıt sekmesi (radioDialog.py)
 # ───────────────────────────────────────────
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:215
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:334
 msgid "Could not rewind"
 msgstr "Geri sarılamadı"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:217
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:336
 #, python-format
 msgid "Rewound to %.0f seconds behind live"
 msgstr "Canlı yayından %.0f saniye geride geri sarıldı"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:220
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:339
 msgid ""
 "Time-shift: fast-forward 15 seconds, or return to live if already caught up"
 msgstr ""
 "Zaman kaydırma: 15 saniye ileri sar veya canlı yayına ulaşıldıysa geri dön"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:236
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:355
 msgid "Already listening live"
 msgstr "Zaten canlı dinliyorsunuz"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:241
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:360
 msgid "Could not fast-forward"
 msgstr "İleri sarılamadı"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:244
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:363
 msgid "Back to live"
 msgstr "Canlıya dön"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:247
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:366
 #, python-format
 msgid "Fast-forwarded, still %.0f seconds behind live"
 msgstr "İleri sarıldı, canlı yayından hâlâ %.0f saniye geride"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:251
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:370
 msgid "Enable or disable the time-shift (rewind) buffer"
 msgstr ""
 "Zaman kaydırma (geri sarma) tamponunu etkinleştir veya devre dışı bırak"
 
-#: addon/globalPlugins/freeradio/timeshiftMixin.py:275
+#: addon/globalPlugins/freeradio/timeshiftMixin.py:394
 #, python-format
 msgid "Time-shift buffer %s"
 msgstr "Zaman kaydırma tamponu %s"
@@ -3367,7 +3369,6 @@ msgid "Episode URL"
 msgstr "Bölüm URL'si"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:797
-#| msgid "Tracks:"
 msgid "Track"
 msgstr "Parça"
 
@@ -3380,7 +3381,6 @@ msgid "Size"
 msgstr "Boyut"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:809
-#| msgid "Duration: %s"
 msgid "Duration"
 msgstr "Süre"
 
@@ -3568,51 +3568,3 @@ msgstr ""
 "- Ctrl+Win+T (Zaman kaydırmalı arabelleği aç/kapat) artık podcast, sesli "
 "kitap veya müzik kutusu oynatmasında herhangi bir etkisi olmadığını "
 "açıklar.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "### Added\n"
-#~ "- **Obligato mode (background music)** — Play a favourite station quietly "
-#~ "in the background, on its own independent audio output and volume, no "
-#~ "matter what plays (or doesn't play) as the main media.\n"
-#~ "  - New shortcut: `Ctrl+Win+Shift+M` toggles Obligato mode on and off.\n"
-#~ "  - On first press, a dialog lets you choose the background station (from "
-#~ "your favourites), the output device (**Same as main output** by default, "
-#~ "**System default**, or any specific device), and the background volume as "
-#~ "a percentage of the main player's current volume (25%–150%). Your choices "
-#~ "are remembered for next time.\n"
-#~ "  - Runs on a fully separate playback engine from the main player, so "
-#~ "switching stations, podcasts, or audio books — or stopping the main "
-#~ "player entirely — never interrupts it.\n"
-#~ "  - Background volume automatically stays proportional to the main "
-#~ "player's volume as it changes (`Ctrl+Win+↑`/`↓`).\n"
-#~ "  - Pausing the main player (`Ctrl+Win+P`) pauses the background station "
-#~ "too, and resuming the main player resumes it; a full stop of the main "
-#~ "player is not treated as a pause.\n"
-#~ "  - Requires at least one favourite station; if none exist, FreeRadio "
-#~ "prompts you to add one first.\n"
-#~ "  - Start/stop announcements respect the **Mute notifications** setting.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "### Eklenenler\n"
-#~ "- **Fon modu (Obligato)** — Ana medyada ne çalıyor (ya da çalmıyor) "
-#~ "olursa olsun, favori bir istasyonu kendi bağımsız ses çıkışında ve kendi "
-#~ "ses seviyesinde fonda çalar.\n"
-#~ "  - Yeni kısayol: `Ctrl+Win+Shift+M` fon modunu açıp kapatır.\n"
-#~ "  - İlk basışta açılan iletişim kutusundan fon istasyonunu "
-#~ "(favorilerinizden), çıkış aygıtını (varsayılan olarak **Ana çıkışla "
-#~ "aynı**, **Sistem varsayılanı** veya belirli bir aygıt) ve fon ses "
-#~ "seviyesini ana oynatıcının o anki ses seviyesine oranla (%25–%150) "
-#~ "seçebilirsiniz. Seçimleriniz bir sonraki sefer için hatırlanır.\n"
-#~ "  - Ana oynatıcıdan tamamen ayrı bir oynatma motorunda çalışır; bu "
-#~ "nedenle ana oynatıcıda istasyon, podcast veya sesli kitap değiştirmek — "
-#~ "hatta ana oynatıcıyı tamamen durdurmak — fon modunu asla kesintiye "
-#~ "uğratmaz.\n"
-#~ "  - Fon ses seviyesi, ana ses seviyesi değiştikçe (`Ctrl+Win+↑`/`↓`) "
-#~ "otomatik olarak orantılı kalır.\n"
-#~ "  - Ana oynatıcıyı duraklatmak (`Ctrl+Win+P`) fon istasyonunu da "
-#~ "duraklatır, ana oynatıcıyı devam ettirmek fon istasyonunu da devam "
-#~ "ettirir; ana oynatıcının tamamen durdurulması duraklatma sayılmaz.\n"
-#~ "  - En az bir favori istasyon gerektirir; hiç yoksa FreeRadio önce bir "
-#~ "istasyon eklemenizi ister.\n"
-#~ "  - Başlama/durma anonsları **Bildirimleri sessize al** ayarına uyar.\n"

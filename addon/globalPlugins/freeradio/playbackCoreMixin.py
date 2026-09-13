@@ -356,7 +356,7 @@ class PlaybackCoreMixin:
 		RadioDialog._on_playback_finished()/_play_next_getem_chapter() (see
 		GlobalPlugin._on_podcast_finished_ui() in __init__.py, always
 		direction=1 for that caller - a part never finishes "backward"),
-		or because TimeshiftMixin._maybe_jump_track_boundary() decided a
+		or because TimeshiftMixin._handle_track_boundary() decided a
 		Ctrl+Win+J/K seek landed too close to this part's start/end to stay
 		within it (either direction).
 
@@ -446,7 +446,7 @@ class PlaybackCoreMixin:
 		RadioDialog._on_playback_finished() (see
 		GlobalPlugin._on_podcast_finished_ui() in __init__.py, always
 		direction=1 for that caller - a track never finishes "backward"),
-		or because TimeshiftMixin._maybe_jump_track_boundary() decided a
+		or because TimeshiftMixin._handle_track_boundary() decided a
 		Ctrl+Win+J/K seek landed too close to this track's start/end to
 		stay within it (either direction).
 
