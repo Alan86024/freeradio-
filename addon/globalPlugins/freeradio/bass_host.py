@@ -262,6 +262,12 @@ class BassHost:
 		self._meta_thread = None
 		self._current_play_thread = None
 		self._current_play_seq = None
+		# Set at the top of play() from the caller's "seekable" flag (True for
+		# podcasts/audio books/jukebox tracks, False for live radio streams -
+		# see radioPlayer._is_seekable_media()). Read by _monitor_loop() to
+		# react to a clean BASS_ACTIVE_STOPPED far faster for local media - see
+		# _STOPPED_THRESHOLD_SEEKABLE's docstring below for why that's safe.
+		self._seekable = False
 		self._pending_response = None
 		# Cache successful resolve chains: original_url → (employee_url, timestamp)
 		# Segment URLs (like TRT) are ephemeral — they are not cached.
@@ -1305,6 +1311,7 @@ class BassHost:
 		# Store seq for this play attempt
 		with self._lock:
 			self._current_play_seq = seq
+			self._seekable = seekable
 			# Bake the desired playback rate/transpose for *this* track
 			# directly into the play() call, atomically with everything
 			# else it does under this lock, rather than relying on the
@@ -2039,6 +2046,19 @@ class BassHost:
 	# 3 × 3s = ~9s — fast enough to catch Icecast dropouts without
 	# false positives on slow-but-healthy HLS streams.
 	_STALL_THRESHOLD = 3
+	# Local/seekable media (a podcast episode, audio book chapter, or jukebox
+	# track - see the "seekable" flag threaded through from play()) reaching
+	# BASS_ACTIVE_STOPPED is a clean, unambiguous end of file: unlike a live
+	# stream's STALLED/STOPPED, which can be a transient network hiccup that
+	# self-recovers (that's what _STALL_THRESHOLD's multi-cycle debounce
+	# above guards against), there's nothing here that "recovers" - the file
+	# is simply done. radioPlayer._on_bass_stall() already treats this case
+	# specially too: for seekable media it never attempts a reconnect, it
+	# just reports the track finished and (for jukebox folders/audio books)
+	# advances to the next one - so debouncing this the same way a live
+	# stream's transient dropout is debounced only adds pure latency, felt
+	# as a gap between jukebox tracks. React on the very first hit instead.
+	_STOPPED_THRESHOLD_SEEKABLE = 1
 
 	def _restart_meta_thread(self):
 		self._stop_meta_thread()
@@ -2072,7 +2092,9 @@ class BassHost:
 			 Detected via BASS_ChannelGetPosition(BASS_POS_BYTE) not moving
 			 across consecutive polls.
 		Either condition increments its own counter; after _STALL_THRESHOLD
-		consecutive hits a stall event is sent to the parent process.
+		consecutive hits a stall event is sent to the parent process - except
+		a STOPPED state on local/seekable media, which only needs
+		_STOPPED_THRESHOLD_SEEKABLE (1) hit; see that constant's docstring.
 		"""
 		last_title	  = ""
 		stall_count	 = 0
@@ -2080,12 +2102,32 @@ class BassHost:
 		pos_stuck_count = 0
 		last_pos		= None
 		_BUF_EMPTY_THRESHOLD = 2   # consecutive near-empty reads before stall
+		# Snapshotted once per thread rather than re-read from self._seekable
+		# on every cycle: play() always spins up a brand-new monitor thread
+		# for each track (see _restart_meta_thread()), so this loop instance
+		# only ever watches the one track "seekable" was set for at the
+		# moment it started - a later, different track's play() call can't
+		# retroactively change what this already-running loop is checking.
+		seekable = self._seekable
+		first_cycle = True
 
 		while not self._meta_stop.is_set():
-			for _ in range(6):   # 3-second hold, cancellable in 0.5s steps
+			# Local/seekable media gets its very first check sped way up
+			# (0.5s instead of the normal 3s cycle) - together with
+			# _STOPPED_THRESHOLD_SEEKABLE above, this is what actually
+			# shortens the gap between jukebox tracks/podcast episodes/audio
+			# book chapters. Only the first check of a freshly-started track
+			# is sped up this way; every check after that (relevant if it
+			# turns out the track is still genuinely playing) falls back to
+			# the normal 3s cadence, so this doesn't add any extra CPU churn
+			# for the remainder of a track's playback. Live-radio timing
+			# (non-seekable) is completely untouched.
+			wait_steps = 1 if (seekable and first_cycle) else 6   # 0.5s per step
+			for _ in range(wait_steps):
 				if self._meta_stop.is_set():
 					return
 				time.sleep(0.5)
+			first_cycle = False
 
 			try:
 				with self._lock:
@@ -2121,7 +2163,12 @@ class BassHost:
 					buf_empty_count = 0
 					pos_stuck_count = 0
 					last_pos		= None
-					if stall_count >= self._STALL_THRESHOLD:
+					effective_threshold = (
+						self._STOPPED_THRESHOLD_SEEKABLE
+						if (seekable and state == _BASS_ACTIVE_STOPPED)
+						else self._STALL_THRESHOLD
+					)
+					if stall_count >= effective_threshold:
 						if not self._meta_stop.is_set():
 							_event(type="stall", state=state)
 						stall_count = 0
