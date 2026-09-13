@@ -422,7 +422,19 @@ def _scan_mpeg_pts(data):
 	"""Return every presentation timestamp (a 90kHz clock value) found in
 	MPEG-2 Program Stream PES packet headers within *data*, in the order
 	encountered. Used by _mpeg_ps_duration() to estimate an MPEG program
-	stream's duration from its first and last timestamps."""
+	stream's duration from its first and last timestamps.
+
+	Only genuine MPEG-2 PES optional headers are accepted: byte data[i+6]
+	must carry the mandatory '10' marker that starts that header
+	extension, and the PTS field itself must carry its own marker bits
+	(top nibble matching pts_dts_flags, plus the fixed '1' bits within
+	the 5-byte timestamp). Without these checks, a 00 00 01 <stream_id>
+	match that ISN'T actually followed by an MPEG-2 PES extension - most
+	notably in MPEG-1 Program Streams, which use a different optional-
+	header layout with no flags/header_len bytes at these offsets at all -
+	gets its next few payload/stuffing bytes misread as flags/header_len
+	and PTS, producing a plausible-looking but wrong duration instead of
+	safely finding nothing."""
 	pts_values = []
 	i = 0
 	n = len(data)
@@ -430,16 +442,31 @@ def _scan_mpeg_pts(data):
 		if data[i] == 0 and data[i + 1] == 0 and data[i + 2] == 1:
 			stream_id = data[i + 3]
 			if 0xC0 <= stream_id <= 0xEF:  # audio (C0-DF) or video (E0-EF) stream
+				marker = data[i + 6]
+				if (marker & 0xC0) != 0x80:
+					# Not a real MPEG-2 PES header extension (e.g. an
+					# MPEG-1 stream, or a coincidental start-code-like
+					# byte sequence) - don't trust flags/header_len below.
+					i += 1
+					continue
 				flags = data[i + 7]
 				pts_dts_flags = (flags >> 6) & 0x3
 				header_len = data[i + 8]
 				if pts_dts_flags in (0x2, 0x3) and i + 9 + 5 <= n:
 					pb = data[i + 9:i + 14]
-					pts = (
-						((pb[0] & 0x0E) << 29) | (pb[1] << 22) |
-						((pb[2] & 0xFE) << 14) | (pb[3] << 7) | (pb[4] >> 1)
+					expected_top_nibble = 0x2 if pts_dts_flags == 0x2 else 0x3
+					valid_markers = (
+						(pb[0] >> 4) == expected_top_nibble
+						and (pb[0] & 0x01) == 1
+						and (pb[2] & 0x01) == 1
+						and (pb[4] & 0x01) == 1
 					)
-					pts_values.append(pts)
+					if valid_markers:
+						pts = (
+							((pb[0] & 0x0E) << 29) | (pb[1] << 22) |
+							((pb[2] & 0xFE) << 14) | (pb[3] << 7) | (pb[4] >> 1)
+						)
+						pts_values.append(pts)
 				i += 9 + header_len
 				continue
 		i += 1
