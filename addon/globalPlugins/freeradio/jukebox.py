@@ -524,6 +524,237 @@ def _mpeg_duration(path):
 		return audio_bytes * 8 / float(header["bitrate"]) if header["bitrate"] else None
 
 
+# --- Track technical-info probing (bitrate/sample rate/channels/etc.) --
+#
+# Powers the "Track details" block shown in the station-details dialog
+# (Ctrl+Win+I, 2x press) for jukebox tracks - see
+# trackInfoMixin._build_jukebox_details(). Each probe below reads a
+# little more of the same header the corresponding _xxx_duration()
+# function above already reads, rather than reusing/refactoring those
+# (kept deliberately separate to avoid risking the already-working
+# duration probes above). Formats without a probe here (.ape, .mpc, raw
+# .aac, .avi, .mpeg/.mpg, .wma/.wmv/.asf, .m4a/.m4b/.mp4/.mov/.3gp/.3g2)
+# simply get "sample_rate"/"channels"/"bit_depth" of None and fall back
+# to a whole-file average bitrate (size/duration) - see
+# _get_track_audio_info(). None of these probes raise on a malformed or
+# truncated file; each returns None (folded into {} by the caller) so a
+# bad file just means fewer detail rows shown, not a crash.
+
+
+def _wav_info(path):
+	with open(path, "rb") as f:
+		riff = f.read(12)
+		if len(riff) < 12 or riff[:4] != b"RIFF" or riff[8:12] != b"WAVE":
+			return None
+		while True:
+			header = f.read(8)
+			if len(header) < 8:
+				return None
+			chunk_id = header[:4]
+			chunk_size = struct.unpack("<I", header[4:8])[0]
+			if chunk_id == b"fmt ":
+				fmt_data = f.read(chunk_size)
+				if len(fmt_data) < 16:
+					return None
+				channels = struct.unpack("<H", fmt_data[2:4])[0]
+				sample_rate = struct.unpack("<I", fmt_data[4:8])[0]
+				byte_rate = struct.unpack("<I", fmt_data[8:12])[0]
+				bit_depth = struct.unpack("<H", fmt_data[14:16])[0] if len(fmt_data) >= 16 else None
+				return {
+					"sample_rate": sample_rate or None,
+					"channels": channels or None,
+					"bit_depth": bit_depth or None,
+					"bitrate_kbps": int(round(byte_rate * 8 / 1000.0)) if byte_rate else None,
+				}
+			f.seek(chunk_size + (chunk_size % 2), 1)
+
+
+def _aiff_info(path):
+	with open(path, "rb") as f:
+		header = f.read(12)
+		if len(header) < 12 or header[:4] != b"FORM" or header[8:12] not in (b"AIFF", b"AIFC"):
+			return None
+		while True:
+			chunk_header = f.read(8)
+			if len(chunk_header) < 8:
+				return None
+			chunk_id = chunk_header[:4]
+			chunk_size = struct.unpack(">I", chunk_header[4:8])[0]
+			if chunk_id == b"COMM":
+				comm = f.read(chunk_size)
+				if len(comm) < 18:
+					return None
+				channels = struct.unpack(">H", comm[0:2])[0]
+				bit_depth = struct.unpack(">H", comm[6:8])[0]
+				sample_rate = _ieee_extended_to_float(comm[8:18])
+				return {
+					"sample_rate": int(round(sample_rate)) if sample_rate else None,
+					"channels": channels or None,
+					"bit_depth": bit_depth or None,
+					"bitrate_kbps": None,
+				}
+			f.seek(chunk_size + (chunk_size % 2), 1)
+
+
+def _flac_info(path):
+	with open(path, "rb") as f:
+		if f.read(4) != b"fLaC":
+			return None
+		while True:
+			header = f.read(4)
+			if len(header) < 4:
+				return None
+			is_last = bool(header[0] & 0x80)
+			block_type = header[0] & 0x7F
+			length = struct.unpack(">I", b"\x00" + header[1:4])[0]
+			data = f.read(length)
+			if block_type == 0 and len(data) >= 18:
+				bits = int.from_bytes(data[10:18], "big")
+				sample_rate = bits >> 44
+				channels = ((bits >> 41) & 0x7) + 1
+				bit_depth = ((bits >> 36) & 0x1F) + 1
+				return {
+					"sample_rate": sample_rate or None,
+					"channels": channels,
+					"bit_depth": bit_depth,
+					"bitrate_kbps": None,  # FLAC is variable-rate by nature
+				}
+			if is_last:
+				return None
+
+
+def _ogg_info(path):
+	"""Vorbis/Opus, from the identification packet in the file's first
+	page - see _ogg_duration() for the shared page/packet layout this
+	reads from. Vorbis' identification packet also states a nominal
+	bitrate; Opus doesn't carry one directly, so its bitrate is left for
+	_get_track_audio_info()'s whole-file average to fill in."""
+	with open(path, "rb") as f:
+		head = f.read(65536)
+	if head[:4] != b"OggS" or len(head) < 28:
+		return None
+	num_segments = head[26]
+	seg_table = head[27:27 + num_segments]
+	if len(seg_table) < num_segments:
+		return None
+	payload_start = 27 + num_segments
+	payload_len = sum(seg_table)
+	payload = head[payload_start:payload_start + payload_len]
+	if payload[:8] == b"OpusHead" and len(payload) >= 10:
+		return {
+			"sample_rate": None,  # always played back at 48kHz regardless of input_sample_rate
+			"channels": payload[9] or None,
+			"bit_depth": None,
+			"bitrate_kbps": None,
+		}
+	if len(payload) >= 28 and payload[0:1] == b"\x01" and payload[1:7] == b"vorbis":
+		channels = payload[11]
+		sample_rate = struct.unpack("<I", payload[12:16])[0]
+		bitrate_nominal = struct.unpack("<i", payload[20:24])[0]
+		return {
+			"sample_rate": sample_rate or None,
+			"channels": channels or None,
+			"bit_depth": None,
+			"bitrate_kbps": int(round(bitrate_nominal / 1000.0)) if bitrate_nominal > 0 else None,
+		}
+	return None
+
+
+def _mp3_info(path):
+	"""MP3/MP2/MP1, from the same first valid frame header
+	_mpeg_duration() locates - re-scanned independently here (see the
+	module note above on why these probes don't share code with the
+	duration ones). The channel mode (stereo/joint stereo/dual channel/
+	mono) lives in the 2 bits right after the ones _parse_mpeg_frame_header()
+	already decodes, so it's read directly from the frame bytes here."""
+	with open(path, "rb") as f:
+		offset = 0
+		start = f.read(10)
+		if start[:3] == b"ID3":
+			size = (
+				(start[6] & 0x7F) << 21 | (start[7] & 0x7F) << 14 |
+				(start[8] & 0x7F) << 7 | (start[9] & 0x7F)
+			)
+			offset = 10 + size
+			f.seek(offset)
+		window = f.read(8192)
+	pos = 0
+	while pos < len(window) - 4:
+		if window[pos] == 0xFF and (window[pos + 1] & 0xE0) == 0xE0:
+			parsed = _parse_mpeg_frame_header(window[pos:pos + 4])
+			if parsed:
+				channel_mode = (window[pos + 3] >> 6) & 0x3
+				channels = 1 if channel_mode == 3 else 2
+				return {
+					"sample_rate": parsed["sample_rate"],
+					"channels": channels,
+					"bit_depth": None,  # MP3 has no fixed bit depth - it's a lossy, block-based codec
+					"bitrate_kbps": parsed["bitrate"] // 1000,
+				}
+		pos += 1
+	return None
+
+
+_PROBE_BY_EXTENSION = {
+	".wav": _wav_info,
+	".aiff": _aiff_info, ".aif": _aiff_info,
+	".flac": _flac_info,
+	".ogg": _ogg_info, ".oga": _ogg_info, ".opus": _ogg_info,
+	".mp3": _mp3_info, ".mp2": _mp3_info, ".mp1": _mp3_info,
+}
+
+_audio_info_cache = {}  # path -> (mtime, size, info_dict)
+
+
+def _get_track_audio_info(path):
+	"""Returns a dict describing *path*'s audio properties for the
+	jukebox "Track details" block (trackInfoMixin._build_jukebox_details()):
+	"duration" (seconds, reusing _get_track_duration()'s own cache),
+	"size_bytes" (from os.stat - always available, for every format),
+	"sample_rate" (Hz), "channels", "bit_depth" (bits per sample - only
+	meaningful for uncompressed/lossless formats, None for lossy ones),
+	"bitrate_kbps", and "format" (the file extension in upper case,
+	purely for display - not a real codec probe). Any field a
+	format-specific probe above doesn't supply is None; "bitrate_kbps"
+	specifically then falls back to a whole-file average computed from
+	size/duration, so every playable file still shows *some* bitrate
+	even when the exact encoded value isn't cheaply readable (MP4/WMA/
+	AVI/MPEG-PS, and FLAC/AIFF/Opus, which are lossless/variable enough
+	that no single header field states one).
+
+	Cached by path, keyed on (mtime, size) exactly like
+	_get_track_duration() - see that function's docstring for why."""
+	try:
+		st = os.stat(path)
+	except OSError:
+		return None
+	cached = _audio_info_cache.get(path)
+	if cached and cached[0] == st.st_mtime and cached[1] == st.st_size:
+		return cached[2]
+	duration = _get_track_duration(path)
+	probe = _PROBE_BY_EXTENSION.get(os.path.splitext(path)[1].lower())
+	extra = {}
+	if probe:
+		try:
+			extra = probe(path) or {}
+		except Exception as e:
+			log.debug("FreeRadio Jukebox: technical-info probe failed for %s: %s", path, e)
+	bitrate_kbps = extra.get("bitrate_kbps")
+	if bitrate_kbps is None and duration and duration > 0:
+		bitrate_kbps = int(round(st.st_size * 8 / duration / 1000.0))
+	info = {
+		"duration": duration,
+		"size_bytes": st.st_size,
+		"sample_rate": extra.get("sample_rate"),
+		"channels": extra.get("channels"),
+		"bit_depth": extra.get("bit_depth"),
+		"bitrate_kbps": bitrate_kbps,
+		"format": os.path.splitext(path)[1].lstrip(".").upper(),
+	}
+	_audio_info_cache[path] = (st.st_mtime, st.st_size, info)
+	return info
+
+
 class JukeboxTrack:
 	"""A single playable audio file - either a manually added file, or one
 	discovered inside a manually added folder."""
@@ -545,6 +776,12 @@ class JukeboxTrack:
 		and radioPlayer._is_seekable_media() for why "media_kind":"jukebox"
 		alone is enough to get resume/seek/speed/transpose support.
 
+		Also includes this file's technical properties (size/duration/
+		bitrate/sample rate/channels/bit depth/format - see
+		_get_track_audio_info()) under "jukebox_*" keys, so the
+		station-details dialog (trackInfoMixin._build_jukebox_details())
+		can show them without re-probing the file itself.
+
 		If an audio_profile was supplied, it's included as "station_audio"
 		so playbackCoreMixin._play_station() applies it automatically the
 		same way it does for podcasts and audio books."""
@@ -558,6 +795,21 @@ class JukeboxTrack:
 			"media_kind": "jukebox",
 			"description": "",
 		}
+		info = _get_track_audio_info(self.path)
+		if info:
+			# Read back by trackInfoMixin._build_jukebox_details() to
+			# show file size/duration/bitrate/sample rate/channels/bit
+			# depth in the station-details dialog. Any field the probe
+			# for this format couldn't determine (see
+			# _get_track_audio_info()) is simply absent/None here, and
+			# that row is omitted there rather than shown as "Unknown".
+			d["jukebox_size_bytes"] = info.get("size_bytes")
+			d["jukebox_duration_seconds"] = info.get("duration")
+			d["jukebox_bitrate_kbps"] = info.get("bitrate_kbps")
+			d["jukebox_sample_rate"] = info.get("sample_rate")
+			d["jukebox_channels"] = info.get("channels")
+			d["jukebox_bit_depth"] = info.get("bit_depth")
+			d["jukebox_format"] = info.get("format")
 		if self.audio_profile:
 			d["station_audio"] = self.audio_profile
 		return d

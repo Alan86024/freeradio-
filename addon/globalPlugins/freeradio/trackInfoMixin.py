@@ -43,6 +43,18 @@ from .radioPlayer import _is_seekable_media
 log = logging.getLogger(__name__)
 
 
+def _format_file_size(num_bytes):
+	"""Human-readable file size for the jukebox "Track details" block
+	(_build_jukebox_details()) - B/KB/MB/GB, one decimal place above KB.
+	No locale-specific thousands separators; this mirrors the plain
+	"%d kbps"-style formatting the rest of this file's details rows use."""
+	num_bytes = float(num_bytes)
+	for unit in ("B", "KB", "MB", "GB"):
+		if num_bytes < 1024.0 or unit == "GB":
+			return "%d %s" % (num_bytes, unit) if unit == "B" else "%.1f %s" % (num_bytes, unit)
+		num_bytes /= 1024.0
+
+
 class TrackInfoMixin:
 	"""'What's playing' announcements (Ctrl+Win+I, 1x/2x/3x/4x press),
 	station-details dialog and clipboard/recognition actions, their F2/F8
@@ -637,15 +649,17 @@ class TrackInfoMixin:
 		"""Return information about whatever is currently playing as a list
 		of (label, value) rows, tailored to what kind of source it is:
 		a plain radio station (radio-browser fields - country, bitrate,
-		stream URL, ...), a podcast episode, or an audiobook chapter (GETEM
-		or LibriVox). Podcasts and audiobooks carry none of the
-		radio-browser fields (country/language/bitrate/codec/homepage/
-		votes) and showing "Stream URL" for them is actively misleading -
-		for a podcast it's just the one episode's file, and for an
-		audiobook (GETEM especially) it can be a temporary local streaming
-		proxy address that won't mean anything to the user or work once
-		copied elsewhere - so each kind gets its own field set instead of
-		reusing the radio-station rows with the inapplicable ones dropped."""
+		stream URL, ...), a podcast episode, an audiobook chapter (GETEM
+		or LibriVox), or a local jukebox track. Podcasts, audiobooks and
+		jukebox tracks carry none of the radio-browser fields (country/
+		language/bitrate/codec/homepage/votes) and showing "Stream URL"
+		for them is actively misleading - for a podcast it's just the one
+		episode's file, for an audiobook (GETEM especially) it can be a
+		temporary local streaming proxy address that won't mean anything
+		to the user or work once copied elsewhere, and for a jukebox
+		track it's simply the local file path (shown as "File" instead) -
+		so each kind gets its own field set instead of reusing the
+		radio-station rows with the inapplicable ones dropped."""
 		s = self._player.get_current_station()
 		if not s:
 			return []
@@ -656,6 +670,8 @@ class TrackInfoMixin:
 			return self._build_audiobook_details(s)
 		if media_kind == "podcast":
 			return self._build_podcast_details(s)
+		if media_kind == "jukebox":
+			return self._build_jukebox_details(s)
 		return self._build_radio_station_details(s)
 
 	def _build_radio_station_details(self, s):
@@ -762,6 +778,57 @@ class TrackInfoMixin:
 		episode_url = s.get("url_resolved", "").strip() or s.get("url", "").strip()
 		if episode_url:
 			rows.append((_("Episode URL"), episode_url))
+
+		return rows
+
+	def _build_jukebox_details(self, s):
+		"""Details rows for a local jukebox track: the file path plus its
+		technical properties (size/duration/bitrate/sample rate/channels/
+		bit depth/format), all pre-computed by jukebox._get_track_audio_info()
+		and carried on the station dict under "jukebox_*" keys - see
+		jukebox.JukeboxTrack.to_dict(). Any field the probe for this
+		file's format couldn't determine is simply left out of the list
+		rather than shown as "Unknown", same as every other details block
+		here does for blank/missing fields."""
+		rows = []
+
+		name = s.get("name", "").strip()
+		if name:
+			rows.append((_("Track"), name))
+
+		path = s.get("url", "").strip()
+		if path:
+			rows.append((_("File"), path))
+
+		size_bytes = s.get("jukebox_size_bytes")
+		if size_bytes:
+			rows.append((_("Size"), _format_file_size(size_bytes)))
+
+		duration = s.get("jukebox_duration_seconds")
+		if duration:
+			rows.append((_("Duration"), _format_duration(duration)))
+
+		fmt = s.get("jukebox_format", "").strip()
+		if fmt:
+			rows.append((_("Format"), fmt))
+
+		bitrate = s.get("jukebox_bitrate_kbps")
+		if bitrate:
+			rows.append((_("Bitrate"), _("%d kbps") % bitrate))
+
+		sample_rate = s.get("jukebox_sample_rate")
+		if sample_rate:
+			rows.append((_("Sample rate"), _("%.1f kHz") % (sample_rate / 1000.0)))
+
+		channels = s.get("jukebox_channels")
+		if channels:
+			# Translators: shown as a jukebox track's channel count in the details dialog
+			channel_names = {1: _("Mono"), 2: _("Stereo")}
+			rows.append((_("Channels"), channel_names.get(channels, str(channels))))
+
+		bit_depth = s.get("jukebox_bit_depth")
+		if bit_depth:
+			rows.append((_("Bit depth"), _("%d-bit") % bit_depth))
 
 		return rows
 
