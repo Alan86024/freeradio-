@@ -386,6 +386,20 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		sHelper.addItem(_default_hint)
 		rec_dir_browse.Bind(wx.EVT_BUTTON, self._on_browse_recordings_dir)
 
+		# --- Jukebox disk search ---
+		# Off by default - see jukebox._list_drive_roots()'s
+		# include_network parameter for why: a network share can turn a
+		# search that takes a second on a local disk into one that takes
+		# minutes, or hang outright if the share is unreachable.
+		self._jukebox_search_network_drives = wx.CheckBox(
+			self,
+			label=_("Include &network drives when searching the jukebox"),
+		)
+		self._jukebox_search_network_drives.SetValue(
+			config.conf["freeradio"].get("jukebox_search_network_drives", False)
+		)
+		sHelper.addItem(self._jukebox_search_network_drives)
+
 		# --- Audio book sources ---
 		# A plain checklist, not per-source settings screens - as more
 		# sources are added later, they just join _AUDIOBOOK_SOURCE_KEYS/
@@ -724,6 +738,9 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			pass
 		
 		config.conf["freeradio"]["recordings_dir"] = self._recordings_dir.GetValue().strip()
+
+		config.conf["freeradio"]["jukebox_search_network_drives"] = \
+			self._jukebox_search_network_drives.GetValue()
 
 		# Audio book sources: which of GETEM/LibriVox the Audio Books tab's
 		# search actually queries - see

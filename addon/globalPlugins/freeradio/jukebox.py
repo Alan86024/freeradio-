@@ -14,6 +14,7 @@
 # transpose treatment podcasts and audio books get, with no jukebox-specific
 # code needed in radioPlayer.py itself.
 
+import ctypes
 import json
 import logging
 import os
@@ -1123,30 +1124,64 @@ _SKIP_DIR_NAMES = {
 	"__pycache__", ".git", ".svn",
 }
 
+# GetDriveTypeW's "network drive" constant - see _get_drive_type()/
+# _list_drive_roots() below.
+_DRIVE_REMOTE = 4
 
-def _list_drive_roots():
+
+def _get_drive_type(root):
+	"""Return the Windows drive type constant for *root* (e.g. "C:\\") via
+	kernel32.GetDriveTypeW - DRIVE_REMOTE (4) identifies a mapped/UNC
+	network drive. Returns 0 (DRIVE_UNKNOWN) if the call fails for any
+	reason, which _list_drive_roots() treats as "not remote" so a drive
+	it couldn't classify is never silently excluded."""
+	try:
+		return ctypes.windll.kernel32.GetDriveTypeW(root)
+	except Exception:
+		return 0
+
+
+def _list_drive_roots(include_network=False):
 	"""Return every ready, locally-reachable drive root (e.g. "C:\\",
-	"D:\\") - fixed disks, removable drives, and mapped/optical drives are
-	all included; only drives that fail a basic access check are skipped
-	(e.g. an empty optical or card reader)."""
+	"D:\\") - fixed disks, removable drives, and optical drives are all
+	included; only drives that fail a basic access check are skipped
+	(e.g. an empty optical or card reader).
+
+	Network (mapped/UNC) drives are excluded by default: walking a share
+	over SMB means every listdir()/stat() call is a network round trip,
+	which can turn a search that takes a second on a local disk into one
+	that takes minutes - or hangs outright if the share has gone
+	unreachable, since a single blocked filesystem call inside os.walk()
+	can't be interrupted by *cancel_event*. Pass include_network=True to
+	search them anyway; see search_disk_for_audio()'s include_network
+	parameter and the "Search network drives when searching the jukebox"
+	setting in settingsPanel.py that controls it."""
 	roots = []
 	for letter in string.ascii_uppercase:
 		root = "%s:\\" % letter
-		if os.path.isdir(root):
-			try:
-				os.listdir(root)
-			except Exception:
-				continue
-			roots.append(root)
+		if not os.path.isdir(root):
+			continue
+		if not include_network and _get_drive_type(root) == _DRIVE_REMOTE:
+			continue
+		try:
+			os.listdir(root)
+		except Exception:
+			continue
+		roots.append(root)
 	return roots
 
 
-def search_disk_for_audio(query, limit=10000, roots=None, cancel_event=None):
+def search_disk_for_audio(query, limit=10000, roots=None, cancel_event=None, include_network=False):
 	"""Walk every attached drive (or *roots*, if given) looking for audio
 	files whose filename contains *query* (case-insensitive). Stops early
 	once *limit* matches are found. If *cancel_event* is given and gets
 	set, the walk stops as soon as possible so a fresh search can start
 	without waiting for a slow, stale one to finish.
+
+	*include_network* controls whether mapped/UNC network drives are
+	included when *roots* isn't given explicitly - see
+	_list_drive_roots(). Ignored when *roots* is passed directly, since
+	the caller has already decided exactly which roots to search.
 
 	Returns a list of absolute file paths.
 	"""
@@ -1154,7 +1189,7 @@ def search_disk_for_audio(query, limit=10000, roots=None, cancel_event=None):
 	if not query:
 		return []
 	results = []
-	for root in (roots or _list_drive_roots()):
+	for root in (roots or _list_drive_roots(include_network=include_network)):
 		if cancel_event is not None and cancel_event.is_set():
 			break
 		for dirpath, dirnames, filenames in os.walk(root):

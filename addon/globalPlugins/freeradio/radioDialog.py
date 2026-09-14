@@ -6428,6 +6428,18 @@ class RadioDialog(wx.Dialog):
 				self._player.clear_podcast_positions(urls)
 			ui.message(_("Removed from library: %s") % book.title)
 			self._refresh_getem_library_list()
+			# After removal, move focus to the next book (or the new last
+			# one if the removed book was at the end); if the library is
+			# now empty, move focus to the search box instead - mirrors
+			# _on_jukebox_remove_entry()'s post-deletion focus handling.
+			count = self._getem_library_ctrl.GetCount()
+			if count > 0:
+				new_idx = min(idx, count - 1)
+				self._getem_library_ctrl.SetSelection(new_idx)
+				self._on_getem_library_selected(None)
+				self._getem_library_ctrl.SetFocus()
+			else:
+				self._getem_search.SetFocus()
 
 	def download_getem_book_by_detail_url(self, detail_url):
 		"""Downloads every part of the audio book (GETEM or LibriVox)
@@ -6659,10 +6671,14 @@ class RadioDialog(wx.Dialog):
 	def _on_jukebox_search(self, event):
 		"""Search every locally attached drive for audio files whose
 		filename contains the typed text - see
-		jukebox.search_disk_for_audio(). Runs on a background thread;
-		a fresh search cancels whichever one is still in flight via
-		self._jukebox_search_cancel, and self._jukebox_search_seq guards
-		against a superseded search's results overwriting a newer one."""
+		jukebox.search_disk_for_audio(). Network (mapped/UNC) drives are
+		included only if the "Include network drives when searching the
+		jukebox" setting is on (off by default - see
+		jukebox._list_drive_roots()'s include_network parameter). Runs on
+		a background thread; a fresh search cancels whichever one is
+		still in flight via self._jukebox_search_cancel, and
+		self._jukebox_search_seq guards against a superseded search's
+		results overwriting a newer one."""
 		query = self._jukebox_search.GetValue().strip()
 		if not query:
 			ui.message(_("Please enter a search term."))
@@ -6681,8 +6697,12 @@ class RadioDialog(wx.Dialog):
 		self._jukebox_search_results.Append(_("Searching..."))
 		ui.message(_("Searching disks for \"%s\"...") % query)
 
+		include_network = config.conf["freeradio"].get("jukebox_search_network_drives", False)
+
 		def _do_search():
-			results = jukebox.search_disk_for_audio(query, cancel_event=cancel_event)
+			results = jukebox.search_disk_for_audio(
+				query, cancel_event=cancel_event, include_network=include_network,
+			)
 			wx.CallAfter(self._on_jukebox_search_done, results, seq)
 
 		threading.Thread(target=_do_search, daemon=True).start()

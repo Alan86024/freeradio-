@@ -266,6 +266,12 @@ def _init_config():
 		# by default; FreeRadioSettingsPanel's "Audio book sources" checklist
 		# is what edits this, in settingsPanel.py.
 		"audiobook_sources": "string(default='getem,librivox,gutenberg')",
+		# Whether the Jukebox tab's disk search walks mapped/UNC network
+		# drives as well as local ones - off by default, since a network
+		# share can make the search dramatically slower or hang if it's
+		# unreachable. See jukebox._list_drive_roots()'s include_network
+		# parameter and FreeRadioSettingsPanel's checkbox that edits this.
+		"jukebox_search_network_drives": "boolean(default=False)",
 		"audio_device":      "integer(default=-1)",
 		"audio_device_name": "string(default='')",
 		"audio_device_refresh_mode": "string(default='reliable')",
