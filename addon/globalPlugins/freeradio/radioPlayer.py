@@ -987,7 +987,11 @@ class RadioPlayer:
 					finished_cb(station)
 				except Exception:
 					pass
-			self.stop()
+			# Deliberately keep_mirror=True here - see stop()'s docstring
+			# for why an unconditional stop_mirror() in this specific
+			# "track finished on its own" path breaks Audio Mirror on
+			# every jukebox/audio-book auto-advance.
+			self.stop(keep_mirror=True)
 			return
 
 		# bass_host's stall watcher monitors whatever is on the single BASS
@@ -2061,7 +2065,38 @@ class RadioPlayer:
 
 		threading.Thread(target=_bg_resume, daemon=True, name="FreeRadio-resume").start()
 
-	def stop(self):
+	def stop(self, keep_mirror=False):
+		"""Stop the current stream. *keep_mirror*, if True, leaves the
+		Audio Mirror output (self._mirror_engine/_mirror_device_index)
+		untouched instead of tearing it down - used only by
+		_on_bass_stall()'s "track finished on its own" handling, never by
+		a real user-requested stop.
+
+		Why: for a jukebox folder track or audio-book chapter,
+		self.on_podcast_finished (wired to
+		GlobalPlugin._on_podcast_finished in __init__.py) only ever does
+		wx.CallAfter(self._on_podcast_finished_ui, station) - it returns
+		immediately, and the actual advance-to-the-next-track/chapter
+		play() call happens later, once wx's event loop gets around to
+		running that queued callback. So by the time _on_bass_stall()
+		reaches this call, that next play() has *not* run yet - it's not
+		a fuzzy race, this stop() is *guaranteed* to run first. With the
+		old unconditional stop_mirror() here, self._mirror_engine was
+		already None by the time the deferred play() finally ran, so its
+		own mirror-resync (in _bg_launch - see start_mirror()'s
+		docstring) had nothing to resync and Audio Mirror silently never
+		came back on every jukebox/audio-book auto-advance, even though
+		the main output kept playing fine (a fresh play() doesn't depend
+		on anything this stop() clears).
+		With keep_mirror=True, the mirror engine reference survives: if a
+		next track *does* follow, that play()'s own resync logic picks it
+		up exactly as it would for a manual track change. If nothing
+		follows (last track in the sequence), the mirror's own stream was
+		mirroring the exact same source that just ended, so it simply
+		runs out of audio and goes quiet on its own - functionally
+		silence either way, but correctly ready to resync the next time
+		anything is played, without the user needing to manually toggle
+		Audio Mirror off and back on."""
 		with self._play_lock:
 			if self._is_playing:
 				try:
@@ -2084,7 +2119,8 @@ class RadioPlayer:
 			self._backend = self.BACKEND_NONE
 
 		# Also stop Mirror (except lock - no risk of deadlock)
-		self.stop_mirror()
+		if not keep_mirror:
+			self.stop_mirror()
 
 		# Stop time-shift capture (outside lock — no risk of deadlock).
 		# This always runs now regardless of the rewind toggle - see

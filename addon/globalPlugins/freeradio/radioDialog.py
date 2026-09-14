@@ -6903,11 +6903,17 @@ class RadioDialog(wx.Dialog):
 
 	def _on_jukebox_entry_play(self, event):
 		"""Play the selected jukebox entry: for a file, just that file; for
-		a folder, every track it contains in order, automatically advancing
-		to the next one as each finishes on its own - the same auto-advance
-		GETEM audio book parts get, and (like GETEM) it keeps advancing
-		even if this dialog is later closed - see
-		playbackCoreMixin._advance_jukebox_folder_headless(). See
+		a folder, every track it contains in order, automatically
+		advancing to the next one as each finishes on its own - the same
+		auto-advance GETEM audio book parts get, and (like GETEM) it
+		keeps advancing even if this dialog is later closed - see
+		playbackCoreMixin._advance_jukebox_folder_headless(). The
+		sequence starts from whichever track is currently highlighted in
+		the tracks list (self._jukebox_tracks_list) rather than always
+		the first one, so re-playing a folder you were partway through
+		picks up where you last looked instead of restarting from track 1
+		every time; it falls back to the first track if nothing in the
+		tracks list is selected (e.g. right after adding the folder). See
 		jukebox.JukeboxEntry's docstring for why a folder itself isn't
 		directly playable."""
 		entry = self._get_selected_jukebox_entry()
@@ -6918,7 +6924,10 @@ class RadioDialog(wx.Dialog):
 			ui.message(_("No playable audio in this item."))
 			return
 		if entry.kind == "folder":
-			self._play_jukebox_folder_track(entry, tracks, 0)
+			start = self._jukebox_tracks_list.GetSelection()
+			if start == wx.NOT_FOUND or start >= len(tracks):
+				start = 0
+			self._play_jukebox_folder_track(entry, tracks, start)
 		else:
 			self._play_jukebox_track(tracks[0])
 
