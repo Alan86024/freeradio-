@@ -2985,7 +2985,7 @@ class RadioPlayer:
 
 		return saved_index, saved_name or "", "missing"
 
-	def start_mirror(self, device_index):
+	def start_mirror(self, device_index, device_name=""):
 		"""Start mirroring the current stream to an additional output device.
 		Launches a second bass_host process on device_index and plays the
 		same source the main output is already on, so switching on audio
@@ -3003,11 +3003,28 @@ class RadioPlayer:
 		already-running mirror subprocess and so don't need this), so it
 		would otherwise silently come up at normal speed. See the matching
 		safety-net comment in _launch().
+		*device_name*, if given, is used to re-resolve device_index against
+		a freshly probed device list before opening it - BASS device
+		indices can drift between when the picker dialog listed devices
+		and when this runs, and unlike switch_output_device() (which goes
+		through resolve_audio_device() for exactly this reason), a stale
+		index here would silently open the wrong device rather than error,
+		so mirroring would produce no audible sound with no obvious cause.
 		Returns True on success, False otherwise.
 		"""
 		if not self._current_url:
 			return False
 		self.stop_mirror()
+		if device_name:
+			try:
+				fresh_devices = self.get_audio_devices(fresh=True)
+				resolved_index, _resolved_name, match = self.resolve_audio_device(
+					fresh_devices, device_index, device_name,
+				)
+				if match != "missing":
+					device_index = resolved_index
+			except Exception:
+				pass
 		dll_dir = os.path.dirname(os.path.abspath(__file__))
 		mirror_engine = _BassEngine(dll_dir, output_device=device_index)
 		if not mirror_engine.load():

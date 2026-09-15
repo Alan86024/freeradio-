@@ -200,7 +200,7 @@ class AudioDeviceMixin:
 				dev_index, dev_name = devices[sel]
 
 				def _do_mirror():
-					ok = self._player.start_mirror(dev_index)
+					ok = self._player.start_mirror(dev_index, dev_name)
 					if ok:
 						wx.CallAfter(ui.message, _("Mirroring to: %s") % dev_name)
 					else:
