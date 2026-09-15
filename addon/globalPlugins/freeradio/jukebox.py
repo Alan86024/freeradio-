@@ -330,6 +330,19 @@ _MPEG_BITRATES = {
 	(1, 3): (0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, None),
 	(2, 1): (0, 32, 48, 56, 64, 80, 96, 112, 128, 144, 160, 176, 192, 224, 256, None),
 	(2, 2): (0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, None),
+	# MPEG Version 2/2.5 Layer III uses the exact same bitrate table as
+	# Layer II (2, 2) above - the two layers share one table at this
+	# version per the MPEG audio spec. Without this entry, every MPEG-2/
+	# 2.5 Layer III frame (common for lower sample-rate MP3s - 24000/
+	# 22050/16000 Hz for MPEG2, 12000/11025/8000 Hz for MPEG2.5) fails
+	# this lookup and _parse_mpeg_frame_header() returns None for every
+	# real frame in the file, so callers scan past all of them into raw
+	# compressed audio data and eventually lock onto a coincidental,
+	# meaningless byte sequence that happens to look like a valid header -
+	# producing a bogus bitrate/sample rate/channel count and, since
+	# duration is computed from that same false match, a bogus duration
+	# too.
+	(2, 3): (0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, None),
 }
 _MPEG_SAMPLE_RATES = {
 	1: (44100, 48000, 32000, None),
@@ -513,7 +526,15 @@ def _mpeg_duration(path):
 				(start[8] & 0x7F) << 7 | (start[9] & 0x7F)
 			)
 			offset = 10 + size
-			f.seek(offset)
+		# Always resync to *offset* (0 when there's no ID3v2 tag) before
+		# reading the scan window - f.read(10) above already moved the file
+		# pointer to byte 10 even when no tag was found, and without this
+		# seek the very first 10 bytes of a tagless file are silently
+		# skipped and every position computed from here on (frame_offset,
+		# the later f.seek() back into the file, the Xing/Info/VBRI search)
+		# is off by that same 10 bytes - misreading duration/bitrate/sample
+		# rate/channels for any file that doesn't start with an ID3v2 tag.
+		f.seek(offset)
 		window = f.read(8192)
 		header = None
 		frame_offset = None
@@ -694,7 +715,24 @@ def _mp3_info(path):
 	module note above on why these probes don't share code with the
 	duration ones). The channel mode (stereo/joint stereo/dual channel/
 	mono) lives in the 2 bits right after the ones _parse_mpeg_frame_header()
-	already decodes, so it's read directly from the frame bytes here."""
+	already decodes, so it's read directly from the frame bytes here.
+
+	VBR-encoded files (the large majority of MP3s in the wild) don't start
+	with a real audio frame at all - the first frame is a dummy "Xing"/
+	"Info"/"VBRI" header frame (see _mpeg_duration()'s docstring for why
+	that function specifically looks for it). That frame's own bitrate
+	field is a throwaway placeholder value picked by the encoder (commonly
+	the lowest one legal for the file's MPEG version/sample rate, since
+	real decoders never play this frame), not the track's actual bitrate -
+	so it must never be reported as one. When the first frame found is one
+	of these header frames, its bitrate is left out entirely (None here,
+	so _get_track_audio_info() falls back to an accurate whole-file
+	average computed from size/duration - and duration is already correct
+	for these files via _mpeg_duration()'s own Xing/VBRI parsing), and
+	sample_rate/channels are read from the first genuine audio frame right
+	after it instead, since a few older/nonstandard encoders don't keep
+	those fields on the placeholder frame in sync with the real stream
+	either."""
 	with open(path, "rb") as f:
 		offset = 0
 		start = f.read(10)
@@ -704,22 +742,66 @@ def _mp3_info(path):
 				(start[8] & 0x7F) << 7 | (start[9] & 0x7F)
 			)
 			offset = 10 + size
-			f.seek(offset)
+		# Always resync to *offset* (0 when there's no ID3v2 tag) before
+		# reading the scan window - f.read(10) above already moved the file
+		# pointer to byte 10 even when no tag was found, and without this
+		# seek the very first 10 bytes of a tagless file are silently
+		# skipped and every position computed from here on (frame_offset,
+		# the later f.seek() back into the file, the Xing/Info/VBRI search)
+		# is off by that same 10 bytes - misreading duration/bitrate/sample
+		# rate/channels for any file that doesn't start with an ID3v2 tag.
+		f.seek(offset)
 		window = f.read(8192)
-	pos = 0
-	while pos < len(window) - 4:
-		if window[pos] == 0xFF and (window[pos + 1] & 0xE0) == 0xE0:
-			parsed = _parse_mpeg_frame_header(window[pos:pos + 4])
-			if parsed:
-				channel_mode = (window[pos + 3] >> 6) & 0x3
-				channels = 1 if channel_mode == 3 else 2
-				return {
-					"sample_rate": parsed["sample_rate"],
-					"channels": channels,
-					"bit_depth": None,  # MP3 has no fixed bit depth - it's a lossy, block-based codec
-					"bitrate_kbps": parsed["bitrate"] // 1000,
-				}
-		pos += 1
+		pos = 0
+		while pos < len(window) - 4:
+			if window[pos] == 0xFF and (window[pos + 1] & 0xE0) == 0xE0:
+				parsed = _parse_mpeg_frame_header(window[pos:pos + 4])
+				if parsed:
+					frame_offset = offset + pos
+					tag_region = window[pos:pos + parsed["frame_size"] + 4]
+					is_vbr_header = any(tag in tag_region for tag in (b"Xing", b"Info", b"VBRI"))
+					if is_vbr_header:
+						# Placeholder frame, not real audio - hunt for the next
+						# valid frame right after it and use that one's fields
+						# instead; bitrate is left for the whole-file-average
+						# fallback in _get_track_audio_info().
+						f.seek(frame_offset + parsed["frame_size"])
+						next_window = f.read(8192)
+						npos = 0
+						while npos < len(next_window) - 4:
+							if next_window[npos] == 0xFF and (next_window[npos + 1] & 0xE0) == 0xE0:
+								next_parsed = _parse_mpeg_frame_header(next_window[npos:npos + 4])
+								if next_parsed:
+									channel_mode = (next_window[npos + 3] >> 6) & 0x3
+									channels = 1 if channel_mode == 3 else 2
+									return {
+										"sample_rate": next_parsed["sample_rate"],
+										"channels": channels,
+										"bit_depth": None,
+										"bitrate_kbps": None,
+									}
+							npos += 1
+						# No real audio frame turned up after the header (an
+						# unusually short/truncated file) - fall back to the
+						# header frame's own sample_rate/channels rather than
+						# nothing.
+						channel_mode = (window[pos + 3] >> 6) & 0x3
+						channels = 1 if channel_mode == 3 else 2
+						return {
+							"sample_rate": parsed["sample_rate"],
+							"channels": channels,
+							"bit_depth": None,
+							"bitrate_kbps": None,
+						}
+					channel_mode = (window[pos + 3] >> 6) & 0x3
+					channels = 1 if channel_mode == 3 else 2
+					return {
+						"sample_rate": parsed["sample_rate"],
+						"channels": channels,
+						"bit_depth": None,  # MP3 has no fixed bit depth - it's a lossy, block-based codec
+						"bitrate_kbps": parsed["bitrate"] // 1000,
+					}
+			pos += 1
 	return None
 
 
