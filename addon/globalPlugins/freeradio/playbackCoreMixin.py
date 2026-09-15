@@ -646,9 +646,12 @@ class PlaybackCoreMixin:
 			ui.message(_("No stream URL available for this station"))
 			return
 
-		# Check internet connectivity before attempting to stream
-		# (skipped if the user has disabled this check in settings)
-		if not config.conf["freeradio"].get("disable_internet_check", False):
+		# Check internet connectivity before attempting to stream - not
+		# applicable to jukebox tracks, which are local files (see
+		# jukebox.JukeboxTrack.to_dict()) and never touch the network
+		# regardless of whether one's available. Also skipped if the user
+		# has disabled this check in settings.
+		if station.get("media_kind") != "jukebox" and not config.conf["freeradio"].get("disable_internet_check", False):
 			if not self._check_internet():
 				ui.message(_("No internet connection. Please check your connection and try again."))
 				return
