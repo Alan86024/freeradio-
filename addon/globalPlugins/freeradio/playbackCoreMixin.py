@@ -484,6 +484,15 @@ class PlaybackCoreMixin:
 		tracks = entry.tracks()
 		next_index = index + direction
 		if next_index < 0 or next_index >= len(tracks):
+			if next_index >= len(tracks):
+				# Played through to the last track - clear the saved
+				# resume position so the folder starts over from track 1
+				# next time, instead of staying "stuck" on the last track
+				# forever (see RadioPlayer.save_jukebox_folder_position()).
+				try:
+					self._player.clear_jukebox_folder_position(folder_path)
+				except Exception:
+					pass
 			# Reached the start/end of the folder - nothing further to jump to.
 			return False
 		next_track = tracks[next_index]
@@ -664,6 +673,22 @@ class PlaybackCoreMixin:
 				config.conf["freeradio"]["last_station_podcast_feed_url"] = ""
 		except Exception:
 			pass
+
+		# Remember which track of a jukebox folder sequence this is, so the
+		# folder can resume here next time it's played (see
+		# RadioPlayer.save_jukebox_folder_position() and
+		# RadioDialog._on_jukebox_entry_play()). Only set for tracks played
+		# as part of a folder (_play_jukebox_folder_track()/
+		# _advance_jukebox_folder_headless()) - a track played on its own
+		# has no "jukebox_folder_path" and nothing to save here.
+		folder_path = station.get("jukebox_folder_path")
+		if folder_path:
+			try:
+				self._player.save_jukebox_folder_position(
+					folder_path, station.get("jukebox_track_index", 0), url_resolved or url,
+				)
+			except Exception:
+				pass
 
 		# Apply station-specific audio profile if one exists, else restore global settings
 		station_audio = station.get("station_audio")

@@ -904,6 +904,18 @@ class RadioPlayer:
 		self._podcast_positions_path = self._get_podcast_positions_path()
 		self._podcast_positions_lock = threading.Lock()
 		self._podcast_positions = self._load_podcast_positions()
+
+		# Jukebox folder resume positions: {folder_path: {"track_index": int,
+		# "track_path": str, "updated": iso timestamp}}, persisted the same
+		# way as podcast positions above, so replaying a folder picks up
+		# from the last track played in it instead of always track 1. The
+		# track's own within-track position comes for free from
+		# _podcast_positions above (jukebox tracks are seekable media too -
+		# see _is_seekable_media()), so this only needs to remember *which*
+		# track.
+		self._jukebox_folder_positions_path = self._get_jukebox_folder_positions_path()
+		self._jukebox_folder_positions_lock = threading.Lock()
+		self._jukebox_folder_positions = self._load_jukebox_folder_positions()
 		self._podcast_autosave_stop = threading.Event()
 		self._podcast_autosave_thread = threading.Thread(
 			target=self._podcast_autosave_loop, daemon=True,
@@ -2392,6 +2404,80 @@ class RadioPlayer:
 					changed = True
 		if changed:
 			self._write_podcast_positions()
+
+	def _get_jukebox_folder_positions_path(self):
+		"""Path for jukebox_folder_positions.json, next to podcast_positions.json
+		under the NVDA user config directory."""
+		try:
+			import globalVars
+			base_dir = globalVars.appArgs.configPath
+		except Exception:
+			base_dir = os.path.dirname(os.path.abspath(__file__))
+
+		return os.path.join(base_dir, "jukebox_folder_positions.json")
+
+	def _load_jukebox_folder_positions(self):
+		try:
+			with open(self._jukebox_folder_positions_path, "r", encoding="utf-8") as fh:
+				data = json.load(fh)
+			if isinstance(data, dict):
+				return data
+		except FileNotFoundError:
+			pass
+		except Exception as e:
+			log.error("FreeRadio: failed to load jukebox folder positions: %s", e)
+		return {}
+
+	def _write_jukebox_folder_positions(self):
+		try:
+			with self._jukebox_folder_positions_lock:
+				data = dict(self._jukebox_folder_positions)
+			with open(self._jukebox_folder_positions_path, "w", encoding="utf-8") as fh:
+				json.dump(data, fh, ensure_ascii=False, indent=2)
+		except Exception as e:
+			log.error("FreeRadio: failed to save jukebox folder positions: %s", e)
+
+	def save_jukebox_folder_position(self, folder_path, track_index, track_path=""):
+		"""Remember that *track_index* of *folder_path* was just played, so
+		RadioDialog._on_jukebox_entry_play() can resume there next time
+		instead of always starting the folder over from track 1. Called
+		from playbackCoreMixin._play_station() for every track played as
+		part of a folder sequence - both dialog-driven and the headless
+		auto-advance in _advance_jukebox_folder_headless() - so the
+		remembered track stays current even while the dialog is closed."""
+		if not folder_path:
+			return
+		with self._jukebox_folder_positions_lock:
+			self._jukebox_folder_positions[folder_path] = {
+				"track_index": int(track_index),
+				"track_path": track_path or "",
+				"updated": time.strftime("%Y-%m-%dT%H:%M:%S"),
+			}
+		self._write_jukebox_folder_positions()
+
+	def get_jukebox_folder_position(self, folder_path):
+		"""Return (track_index, track_path) last saved for *folder_path*,
+		or None if nothing's been played from it yet."""
+		if not folder_path:
+			return None
+		with self._jukebox_folder_positions_lock:
+			entry = self._jukebox_folder_positions.get(folder_path)
+		if not entry:
+			return None
+		return int(entry.get("track_index", 0)), entry.get("track_path", "")
+
+	def clear_jukebox_folder_position(self, folder_path):
+		"""Remove the saved position for *folder_path* - used when the
+		folder is played through to the end of its last track (so it
+		starts over from track 1 next time rather than staying "stuck" on
+		the last track forever), and when the folder is removed from the
+		jukebox library (RadioDialog._on_jukebox_remove_entry())."""
+		if not folder_path:
+			return
+		with self._jukebox_folder_positions_lock:
+			removed = self._jukebox_folder_positions.pop(folder_path, None) is not None
+		if removed:
+			self._write_jukebox_folder_positions()
 
 	def has_podcast_position_entry(self, url):
 		"""Whether *url* has ever had a podcast resume position recorded.

@@ -6912,10 +6912,18 @@ class RadioDialog(wx.Dialog):
 		the tracks list (self._jukebox_tracks_list) rather than always
 		the first one, so re-playing a folder you were partway through
 		picks up where you last looked instead of restarting from track 1
-		every time; it falls back to the first track if nothing in the
-		tracks list is selected (e.g. right after adding the folder). See
-		jukebox.JukeboxEntry's docstring for why a folder itself isn't
-		directly playable."""
+		every time. If nothing in the tracks list is selected (e.g. right
+		after adding the folder, or reopening the dialog fresh), it falls
+		back to wherever this folder was last actually played to - saved
+		across sessions by RadioPlayer.save_jukebox_folder_position() -
+		and only defaults to the first track if the folder's never been
+		played, or its saved track index no longer exists (fewer tracks
+		now than when it was saved). Either way, the tracks list's
+		selection (not keyboard focus - SetSelection() alone doesn't move
+		that) is updated to match the track that actually starts playing,
+		so the list reflects reality if the user tabs over to look at it
+		afterwards. See jukebox.JukeboxEntry's docstring for why a folder
+		itself isn't directly playable."""
 		entry = self._get_selected_jukebox_entry()
 		if not entry:
 			return
@@ -6927,8 +6935,15 @@ class RadioDialog(wx.Dialog):
 			start = self._jukebox_tracks_list.GetSelection()
 			if start == wx.NOT_FOUND or start >= len(tracks):
 				start = 0
+				saved = self._player.get_jukebox_folder_position(entry.path)
+				if saved is not None:
+					saved_index, _saved_path = saved
+					if 0 <= saved_index < len(tracks):
+						start = saved_index
+			self._jukebox_tracks_list.SetSelection(start)
 			self._play_jukebox_folder_track(entry, tracks, start)
 		else:
+			self._jukebox_tracks_list.SetSelection(0)
 			self._play_jukebox_track(tracks[0])
 
 	def _on_jukebox_list_key(self, event):
@@ -7078,6 +7093,7 @@ class RadioDialog(wx.Dialog):
 		# entry takes its place afterwards.
 		deleted_idx = self._jukebox_list.GetSelection()
 		self._jukebox_manager.remove_entry(entry.path)
+		self._player.clear_jukebox_folder_position(entry.path)
 		ui.message(_("Removed from jukebox: %s") % title)
 		self._refresh_jukebox_list()
 		# After removal, move focus to the next entry (or the new last
