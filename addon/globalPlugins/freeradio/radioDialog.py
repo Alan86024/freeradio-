@@ -6325,6 +6325,26 @@ class RadioDialog(wx.Dialog):
 				ui.message(_("Finished: %s") % entry.title)
 				return
 			self._play_jukebox_folder_track(entry, tracks, next_index)
+			self.sync_jukebox_track_selection(folder_path, next_index)
+
+	def sync_jukebox_track_selection(self, folder_path, index):
+		"""Update the tracks list's selection to *index*, but only if the
+		jukebox entries list is currently showing *folder_path*'s tracks -
+		i.e. the folder being advanced/skipped is the one the user is
+		actually looking at right now. A no-op otherwise (some other entry
+		is selected), so a folder auto-advancing or being Ctrl+Win+J/K-
+		skipped never disturbs an unrelated view. Never moves keyboard
+		focus - see _on_jukebox_entry_play(). Called from
+		_on_playback_finished() above for the natural-finish case, and
+		from playbackCoreMixin._advance_jukebox_folder_headless() (via
+		GlobalPlugin's self._dialog) for the Ctrl+Win+J/K track-boundary
+		case, so both ways a folder can move to a different track keep the
+		list in sync."""
+		entry = self._get_selected_jukebox_entry()
+		if not entry or entry.kind != "folder" or entry.path != folder_path:
+			return
+		if 0 <= index < self._jukebox_tracks_list.GetCount():
+			self._jukebox_tracks_list.SetSelection(index)
 
 	def _show_getem_library_context_menu(self):
 		"""Context menu for the selected item in the library list: play,

@@ -504,6 +504,19 @@ class PlaybackCoreMixin:
 		station_dict["jukebox_folder_path"] = entry.path
 		station_dict["jukebox_track_index"] = next_index
 		self._play_station(station_dict)
+		# If FreeRadio's dialog happens to be open and showing this same
+		# folder's tracks (e.g. this jump came from a Ctrl+Win+J/K seek
+		# while the dialog is visible), keep its selection in sync too -
+		# mirrors _on_playback_finished()'s call to the same helper for
+		# the natural-finish case. A no-op if the dialog is closed or
+		# showing something else.
+		dialog = getattr(self, "_dialog", None)
+		if dialog:
+			try:
+				if dialog.IsShown():
+					dialog.sync_jukebox_track_selection(entry.path, next_index)
+			except Exception:
+				pass
 		return True
 
 	def _resume_last_station(self):
