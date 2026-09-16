@@ -15,10 +15,35 @@ import re
 import random
 import urllib.request
 import atexit
+import tempfile
 
 from . import timeshift as _timeshift_mod
 
 log = logging.getLogger()
+
+# Dedicated log for audio mirror attempts (start_mirror()) - separate
+# from NVDA's own log (which log.warning()/log.error() calls elsewhere in
+# this file go to) because that one depends on NVDA's log level and
+# requires knowing where/how to search it. This file is a single, small,
+# plain-text log a non-technical user can just attach to a bug report.
+# Off by default, matching bass_host.py's own _DEBUG_ENABLED for the
+# time-shift debug log - flip to True (or expose a setting) when actively
+# chasing a mirror report; leaving it on unconditionally would mean every
+# user's mirror use quietly grows a file in their temp folder for a
+# diagnostic almost nobody needs day to day.
+_MIRROR_DEBUG_ENABLED = False
+_MIRROR_DEBUG_LOG_PATH = os.path.join(tempfile.gettempdir(), "freeradio_mirror_debug.log")
+
+
+def _mirror_debug_log(msg):
+	if not _MIRROR_DEBUG_ENABLED:
+		return
+	try:
+		with open(_MIRROR_DEBUG_LOG_PATH, "a", encoding="utf-8") as f:
+			f.write("%s %s\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), msg))
+	except Exception:
+		pass
+
 
 _WATCHDOG_INTERVAL = 5
 _WATCHDOG_BACKOFF = [5, 10, 20, 30, 30, 30]
@@ -223,7 +248,34 @@ class _BassSubprocessEngine:
 		# here for *why*, instead of that detail being read off the wire
 		# and then silently discarded the way it used to be.
 		self.last_play_error = None
+		# Last few lines the bass_host.py subprocess wrote to stderr (e.g.
+		# an uncaught traceback if it crashed on startup) - drained
+		# continuously by a background thread once the process starts (see
+		# load()) rather than read on demand, so a subprocess that does
+		# write to stderr during normal operation never blocks trying to
+		# fill an unread pipe. Bounded so a chatty/crash-looping process
+		# can't grow this unboundedly.
+		self._stderr_tail = []
+		self._stderr_tail_lock = threading.Lock()
 		atexit.register(self._cleanup)
+
+	def _drain_stderr(self, proc):
+		try:
+			for raw_line in proc.stderr:
+				line = raw_line.rstrip("\r\n")
+				with self._stderr_tail_lock:
+					self._stderr_tail.append(line)
+					if len(self._stderr_tail) > 50:
+						del self._stderr_tail[: len(self._stderr_tail) - 50]
+		except Exception:
+			pass
+
+	def get_stderr_tail(self):
+		"""Return the last lines the subprocess wrote to stderr, for
+		diagnosing a load()/play() failure - e.g. an uncaught traceback if
+		bass_host.py crashed on startup."""
+		with self._stderr_tail_lock:
+			return list(self._stderr_tail)
 
 	def _find_python(self):
 		"""
@@ -302,7 +354,7 @@ class _BassSubprocessEngine:
 				cmd,
 				stdin=subprocess.PIPE,
 				stdout=subprocess.PIPE,
-				stderr=subprocess.DEVNULL,
+				stderr=subprocess.PIPE,
 				startupinfo=si,
 				creationflags=subprocess.CREATE_NO_WINDOW,
 				encoding="utf-8",
@@ -313,6 +365,12 @@ class _BassSubprocessEngine:
 
 		with self._lock:
 			self._proc = proc
+
+		# Drain stderr continuously in the background from here on - see
+		# _drain_stderr()'s docstring for why this can't just be read on
+		# demand after a failure.
+		threading.Thread(
+			target=self._drain_stderr, args=(proc,), daemon=True, name="FreeRadio-BassStderr").start()
 
 		try:
 			line = proc.stdout.readline()
@@ -928,6 +986,7 @@ class RadioPlayer:
 		# the BASS backend.
 		self._timeshift_enabled = False
 		self._timeshift_active  = False   # True while time-shifted (buffered) playback is active
+		self._timeshift_suspended_for_mirror = False  # True while suspend_timeshift_for_mirror() has stopped capture to free a connection slot for the mirror
 		# User-configurable rewind buffer capacity in seconds (default 10
 		# min; up to 5 hours via Settings). Only applies once the
 		# time-shift feature itself is enabled — the always-on lightweight
@@ -3013,8 +3072,12 @@ class RadioPlayer:
 		Returns True on success, False otherwise.
 		"""
 		if not self._current_url:
+			_mirror_debug_log(
+				"start_mirror: no current_url, nothing to mirror (requested device=%r %r)"
+				% (device_index, device_name)
+			)
 			return False
-		self.stop_mirror()
+		self._teardown_mirror_engine()
 		if device_name:
 			try:
 				fresh_devices = self.get_audio_devices(fresh=True)
@@ -3025,9 +3088,22 @@ class RadioPlayer:
 					device_index = resolved_index
 			except Exception:
 				pass
+		_mirror_debug_log(
+			"start_mirror: attempting device=%r (%r) resolved_from_name=%r url=%r station=%r"
+			% (device_index, device_name, bool(device_name), self._current_url, self._current_station.get("name"))
+		)
 		dll_dir = os.path.dirname(os.path.abspath(__file__))
 		mirror_engine = _BassEngine(dll_dir, output_device=device_index)
 		if not mirror_engine.load():
+			stderr_tail = mirror_engine.get_stderr_tail()
+			log.warning(
+				"FreeRadio: mirror subprocess failed to load for device %r (%r): %s",
+				device_index, device_name, stderr_tail,
+			)
+			_mirror_debug_log(
+				"start_mirror: FAILED - mirror subprocess failed to load for device=%r (%r) stderr=%r"
+				% (device_index, device_name, stderr_tail)
+			)
 			return False
 		vol = self._volume / 100.0
 		station = self._current_station
@@ -3051,6 +3127,16 @@ class RadioPlayer:
 
 		time.sleep(1.0)
 		if not ok:
+			last_error = getattr(mirror_engine, "last_play_error", None)
+			log.warning(
+				"FreeRadio: mirror play failed for device %r (%r): %s",
+				device_index, device_name, last_error,
+			)
+			_mirror_debug_log(
+				"start_mirror: FAILED - play() returned false for device=%r (%r) "
+				"is_podcast=%r timeshifted=%r last_play_error=%r"
+				% (device_index, device_name, is_podcast, timeshifted, last_error)
+			)
 			mirror_engine.unload()
 			return False
 		if is_podcast and self._playback_rate != 1.0:
@@ -3067,10 +3153,71 @@ class RadioPlayer:
 			self._resume_podcast_position_on_engine(mirror_engine, current_pos)
 		self._mirror_engine	   = mirror_engine
 		self._mirror_device_index = device_index
+		_mirror_debug_log(
+			"start_mirror: SUCCESS - mirroring to device=%r (%r)" % (device_index, device_name)
+		)
 		return True
 
-	def stop_mirror(self):
-		"""Stop the mirror output if one is running."""
+	def suspend_timeshift_for_mirror(self):
+		"""Temporarily stop the time-shift buffer's capture connection to
+		free up a connection slot for the mirror, for stations that reject
+		more than N simultaneous connections from the same client - main
+		playback + the always-on time-shift capture (see
+		_LIGHT_BUFFER_SECONDS) is already 2, and some servers only allow
+		2 total, so adding a 3rd for the mirror fails even though the
+		mirror itself is otherwise fine. See
+		audioDeviceMixin._do_mirror(), which calls this only as a retry
+		after a first mirror attempt already failed, and only when
+		nothing is recording - the capture connection is shared with
+		recording (see get_timeshift_buffer()'s docstring), so stopping
+		it here would cut off an in-progress recording too.
+		Returns True if it stopped a running capture (so retrying the
+		mirror is worth it), False if there was nothing to stop (the
+		buffer wasn't active, so this wouldn't free anything and the
+		mirror failure has some other cause).
+		Call resume_timeshift_after_mirror() to restart it afterwards -
+		stop_mirror() does this automatically.
+		"""
+		if not self._timeshift_buffer.is_active():
+			_mirror_debug_log("suspend_timeshift_for_mirror: buffer wasn't active, nothing to free")
+			return False
+		self._timeshift_suspended_for_mirror = True
+		self._timeshift_buffer.stop()
+		_mirror_debug_log("suspend_timeshift_for_mirror: stopped active capture to free a connection slot")
+		return True
+
+	def resume_timeshift_after_mirror(self):
+		"""Restart the time-shift buffer's capture, undoing
+		suspend_timeshift_for_mirror() - called by stop_mirror() once the
+		mirror that needed the freed-up connection is gone, and also by
+		audioDeviceMixin._do_mirror() itself if the retried mirror attempt
+		still failed (no point leaving the buffer suspended for nothing).
+		A no-op if nothing was suspended, or if playback has since moved
+		on to a different station (nothing sensible left to resume
+		capturing for).
+		"""
+		if not getattr(self, "_timeshift_suspended_for_mirror", False):
+			return
+		self._timeshift_suspended_for_mirror = False
+		if not self._is_playing or not self._current_url:
+			return
+		stream_url = self._current_url_resolved or self._current_url
+		is_hls = stream_url.lower().split("?")[0].endswith(".m3u8")
+		resolved_for_capture = stream_url if is_hls else _resolve_playlist_url(stream_url)
+		try:
+			self._timeshift_buffer.start(resolved_for_capture)
+		except Exception:
+			pass
+
+	def _teardown_mirror_engine(self):
+		"""Stop and unload the mirror engine, if any, without touching the
+		time-shift buffer - the part of stop_mirror() safe to call from
+		start_mirror() itself when clearing out a stale engine before
+		opening a fresh one. Calling the full stop_mirror() there instead
+		would resume_timeshift_after_mirror() before the new attempt even
+		starts, undoing a suspend_timeshift_for_mirror() from a previous
+		call and putting the connection count right back to what caused
+		the failure this call might be retrying past."""
 		engine = getattr(self, "_mirror_engine", None)
 		if engine:
 			try:
@@ -3080,6 +3227,19 @@ class RadioPlayer:
 				pass
 		self._mirror_engine	   = None
 		self._mirror_device_index = None
+
+	def stop_mirror(self):
+		"""Stop the mirror output if one is running."""
+		self._teardown_mirror_engine()
+		self.resume_timeshift_after_mirror()
+
+	def log_mirror_debug(self, msg):
+		"""Public wrapper around this module's _mirror_debug_log(), for
+		callers outside radioPlayer.py (audioDeviceMixin.py's _do_mirror())
+		that want to record their own part of a mirror attempt - e.g. why
+		the connection-freeing retry was or wasn't attempted - in the same
+		freeradio_mirror_debug.log timeline."""
+		_mirror_debug_log(msg)
 
 	def get_mirror_device(self):
 		"""Return the device index of the active mirror, or None."""

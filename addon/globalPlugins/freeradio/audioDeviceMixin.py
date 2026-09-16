@@ -201,6 +201,22 @@ class AudioDeviceMixin:
 
 				def _do_mirror():
 					ok = self._player.start_mirror(dev_index, dev_name)
+					if not ok:
+						# Might have failed because this station caps
+						# concurrent connections and the always-on
+						# time-shift buffer was already using one - see
+						# RadioPlayer.suspend_timeshift_for_mirror()'s
+						# docstring. Only safe to try when nothing is
+						# recording, since that capture connection is
+						# shared with recording.
+						if self._recorder.is_recording():
+							self._player.log_mirror_debug(
+								"_do_mirror: skipping connection-freeing retry - a recording is active"
+							)
+						elif self._player.suspend_timeshift_for_mirror():
+							ok = self._player.start_mirror(dev_index, dev_name)
+							if not ok:
+								self._player.resume_timeshift_after_mirror()
 					if ok:
 						wx.CallAfter(ui.message, _("Mirroring to: %s") % dev_name)
 					else:
