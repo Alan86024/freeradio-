@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: FreeRadio 2026.24.0\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
 "POT-Creation-Date: 2026-09-15 12:37+0300\n"
-"PO-Revision-Date: 2026-09-15 12:41+0300\n"
+"PO-Revision-Date: 2026-09-15 18:41+0300\n"
 "Last-Translator: Rémy Ruiz <remyruiz@gmail.com>\n"
 "Language-Team: Rémy Ruiz <remyruiz@gmail.com>\n"
 "Language: fr\n"
@@ -1050,7 +1050,7 @@ msgstr "Source: %s"
 #: addon/globalPlugins/freeradio/radioDialog.py:263
 #, python-format
 msgid "Original title: %s"
-msgstr ""
+msgstr "Titre original: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:265
 #, python-format
@@ -1061,7 +1061,7 @@ msgstr "Auteur: %s"
 #, python-format
 #| msgid "Narrator: %s"
 msgid "Director: %s"
-msgstr ""
+msgstr "Réalisateur: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:269
 #, python-format
@@ -1072,7 +1072,7 @@ msgstr "Narrateur: %s"
 #, python-format
 #| msgid "Paused: %s"
 msgid "Cast: %s"
-msgstr ""
+msgstr "Distribution: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:273
 #, python-format
@@ -1088,13 +1088,13 @@ msgstr "Type: %s"
 #, python-format
 #| msgid "Renamed to: %s"
 msgid "Release year: %s"
-msgstr ""
+msgstr "Année de sortie: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:279
 #, python-format
 #| msgid "Duration: %s"
 msgid "IMDB rating: %s"
-msgstr ""
+msgstr "Note IMDB: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:281
 #, python-format
@@ -2695,12 +2695,12 @@ msgstr "Ajouter un dossier au jukebox"
 #, python-format
 #| msgid "Do you want to remove \"%s\" from liked songs?"
 msgid "Do you want to remove \"%s\" from the jukebox?"
-msgstr ""
+msgstr "Voulez-vous supprimer \"%s\" du jukebox ?"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:7105
 #| msgid "Removed from jukebox: %s"
 msgid "Remove From Jukebox"
-msgstr ""
+msgstr "Supprimer du Jukebox"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:7117
 #, python-format
@@ -2838,6 +2838,8 @@ msgstr ""
 #: addon/globalPlugins/freeradio/recordingMixin.py:200
 msgid "Jukebox tracks are already local files and cannot be recorded."
 msgstr ""
+"Les morceaux du jukebox sont déjà des fichiers locaux et ne peuvent pas être "
+"enregistrés."
 
 #: addon/globalPlugins/freeradio/recordingMixin.py:143
 msgid ""
@@ -3093,7 +3095,7 @@ msgstr "Explo&rer le dossier..."
 
 #: addon/globalPlugins/freeradio/settingsPanel.py:396
 msgid "Include &network drives when searching the jukebox"
-msgstr ""
+msgstr "Inclure les &lecteurs réseau lors de la recherche dans le jukebox"
 
 #: addon/globalPlugins/freeradio/settingsPanel.py:423
 msgid "Audio book &sources:"
@@ -3418,55 +3420,55 @@ msgstr "URL de l'épisode"
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:797
 #| msgid "Tracks:"
 msgid "Track"
-msgstr ""
+msgstr "Piste"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:801
 msgid "File"
-msgstr ""
+msgstr "Fichier"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:805
 msgid "Size"
-msgstr ""
+msgstr "Taille"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:809
 #| msgid "Duration: %s"
 msgid "Duration"
-msgstr ""
+msgstr "Durée"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:817
 #, python-format
 msgid "%d kbps"
-msgstr ""
+msgstr "%d kbps"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:821
 msgid "Sample rate"
-msgstr ""
+msgstr "Taux d'échantillonnage"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:821
 #, python-format
 msgid "%.1f kHz"
-msgstr ""
+msgstr "%.1f kHz"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:826
 msgid "Mono"
-msgstr ""
+msgstr "Mono"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:826
 msgid "Stereo"
-msgstr ""
+msgstr "Stéréo"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:827
 msgid "Channels"
-msgstr ""
+msgstr "Canaux"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:831
 msgid "Bit depth"
-msgstr ""
+msgstr "Profondeur de bits"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:831
 #, python-format
 msgid "%d-bit"
-msgstr ""
+msgstr "%d-bit"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:856
 msgid "Book"
@@ -3504,7 +3506,7 @@ msgstr "Enregistrement du morceau enregistré: %s"
 #: buildVars.py:15
 #| msgid "FreeRadio - Station Browser"
 msgid "freeRadio: Radio and more"
-msgstr ""
+msgstr "freeRadio : Radio et plus encore"
 
 #: buildVars.py:19
 #| msgid ""
@@ -3543,6 +3545,27 @@ msgid ""
 "lyrics lookup. All controls and shortcuts are designed for NVDA "
 "accessibility."
 msgstr ""
+"FreeRadio est une extension de radio Internet, podcast, livre audio et "
+"musique locale pour NVDA qui offre un accès continu à des milliers de "
+"stations via l'annuaire ouvert de Radio Browser , les flux RSS/Atom de "
+"podcasts, libriVox+ la bibliothèque numérique GETEM pour les personnes "
+"malvoyantes et vos propres fichiers et dossiers audio locaux via le jukebox "
+"intégré. Il dispose d'un navigateur de stations entièrement accessible avec "
+"recherche, filtre de pays, gestion des favoris et profils audio par station, "
+"par podcast, par livre audio et par morceau du jukebox. Les épisodes de "
+"podcasts, les chapitres de livres audio et  les morceaux du jukebox "
+"reprennent automatiquement là où vous les avez laissés - les dossiers du "
+"jukebox reprennent même le dernier morceau que vous écoutiez -avec une "
+"vitesse de lecture ajustable qui préserve la hauteur et le changement de la "
+"hauteur indépendant (transposition d'un demi-ton). La lecture est gérée par "
+"BASS, avec prise en charge du contrôle du volume, des effets audio, de la "
+"sélection du périphérique de sortie et de la mise en miroir audio simultanée "
+"sur un deuxième périphérique. Les fonctionnalités supplémentaires incluent "
+"l'enregistrement instantané et planifié, décalage temporel retour en arrière "
+"sur la radio, minuteries de mise en veille et d'alarme, des annonces "
+"automatiques de métadonnées ICY, une reconnaissance musicale basée sur "
+"Shazam et un journal des morceaux aimés avec recherche des paroles. Tous les "
+"contrôles et raccourcis sont conçus pour l'accessibilité de NVDA."
 
 #: buildVars.py:26
 msgid ""

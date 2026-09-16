@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: FreeRadio 2026.24.0\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
 "POT-Creation-Date: 2026-09-15 12:41+0300\n"
-"PO-Revision-Date: 2026-09-15 12:42+0300\n"
+"PO-Revision-Date: 2026-09-15 18:38+0300\n"
 "Last-Translator: Rémy Ruiz <remyruiz@gmail.com>\n"
 "Language-Team: Rémy Ruiz <remyruiz@gmail.com>\n"
 "Language: es\n"
@@ -1047,7 +1047,7 @@ msgstr "Fuente: %s"
 #: addon/globalPlugins/freeradio/radioDialog.py:263
 #, python-format
 msgid "Original title: %s"
-msgstr ""
+msgstr "Título original: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:265
 #, python-format
@@ -1058,7 +1058,7 @@ msgstr "Autor: %s"
 #, python-format
 #| msgid "Narrator: %s"
 msgid "Director: %s"
-msgstr ""
+msgstr "Director: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:269
 #, python-format
@@ -1069,7 +1069,7 @@ msgstr "Narrador: %s"
 #, python-format
 #| msgid "Paused: %s"
 msgid "Cast: %s"
-msgstr ""
+msgstr "Reparto: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:273
 #, python-format
@@ -1085,13 +1085,13 @@ msgstr "Tipo: %s"
 #, python-format
 #| msgid "Renamed to: %s"
 msgid "Release year: %s"
-msgstr ""
+msgstr "Año de lanzamiento: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:279
 #, python-format
 #| msgid "Duration: %s"
 msgid "IMDB rating: %s"
-msgstr ""
+msgstr "Nota de IMDB: %s"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:281
 #, python-format
@@ -2692,12 +2692,12 @@ msgstr "Añadir una carpeta al jukebox"
 #, python-format
 #| msgid "Do you want to remove \"%s\" from liked songs?"
 msgid "Do you want to remove \"%s\" from the jukebox?"
-msgstr ""
+msgstr "¿Quieres eliminar \"%s\" del jukebox?"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:7105
 #| msgid "Removed from jukebox: %s"
 msgid "Remove From Jukebox"
-msgstr ""
+msgstr "Eliminar del Jukebox"
 
 #: addon/globalPlugins/freeradio/radioDialog.py:7117
 #, python-format
@@ -2834,7 +2834,7 @@ msgstr ""
 #: addon/globalPlugins/freeradio/recordingMixin.py:126
 #: addon/globalPlugins/freeradio/recordingMixin.py:200
 msgid "Jukebox tracks are already local files and cannot be recorded."
-msgstr ""
+msgstr "Las pistas del jukebox ya son archivos locales y no se pueden grabar."
 
 #: addon/globalPlugins/freeradio/recordingMixin.py:143
 msgid ""
@@ -3089,7 +3089,7 @@ msgstr "Explo&rar carpeta..."
 
 #: addon/globalPlugins/freeradio/settingsPanel.py:396
 msgid "Include &network drives when searching the jukebox"
-msgstr ""
+msgstr "Incluir &unidades de red al buscar en el jukebox"
 
 #: addon/globalPlugins/freeradio/settingsPanel.py:423
 msgid "Audio book &sources:"
@@ -3413,55 +3413,55 @@ msgstr "URL del episodio"
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:797
 #| msgid "Tracks:"
 msgid "Track"
-msgstr ""
+msgstr "Pista"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:801
 msgid "File"
-msgstr ""
+msgstr "Archivo"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:805
 msgid "Size"
-msgstr ""
+msgstr "Tamaño"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:809
 #| msgid "Duration: %s"
 msgid "Duration"
-msgstr ""
+msgstr "Duración"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:817
 #, python-format
 msgid "%d kbps"
-msgstr ""
+msgstr "%d kbps"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:821
 msgid "Sample rate"
-msgstr ""
+msgstr "Frecuencia de muestreo"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:821
 #, python-format
 msgid "%.1f kHz"
-msgstr ""
+msgstr "%.1f kHz"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:826
 msgid "Mono"
-msgstr ""
+msgstr "Mono"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:826
 msgid "Stereo"
-msgstr ""
+msgstr "Estéreo"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:827
 msgid "Channels"
-msgstr ""
+msgstr "Canales"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:831
 msgid "Bit depth"
-msgstr ""
+msgstr "Profundidad de bits"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:831
 #, python-format
 msgid "%d-bit"
-msgstr ""
+msgstr "%d-bit"
 
 #: addon/globalPlugins/freeradio/trackInfoMixin.py:856
 msgid "Book"
@@ -3499,7 +3499,7 @@ msgstr "Grabación de canción guardada: %s"
 #: buildVars.py:15
 #| msgid "FreeRadio - Station Browser"
 msgid "freeRadio: Radio and more"
-msgstr ""
+msgstr "freeRadio: Radio y más"
 
 #: buildVars.py:19
 #| msgid ""
@@ -3537,6 +3537,27 @@ msgid ""
 "announcements, Shazam-based music recognition, and a liked-songs log with "
 "lyrics lookup. All controls and shortcuts are designed for NVDA accessibility."
 msgstr ""
+"FreeRadio es un complemento de radio por Internet, podcast, audiolibro y "
+"música local para NVDA  que proporciona un acceso continuo a miles de "
+"estaciones a través del directorio abierto de Radio Browser, Fuentes de "
+"podcast RSS/Atom, libriVox+ la biblioteca digital GETEM para personas con "
+"discapacidad visual y tus propios archivos y carpetas de audio locales a "
+"través del jukebox integrado. Cuenta con un navegador de estaciones "
+"totalmente accesible con búsqueda, filtro de países, administración de "
+"favoritos y perfiles de audio por estación, por podcast, por audiolibro y por "
+"pista del jukebox. Los episodios de podcasts,los capítulos de audiolibros y "
+"las pistas del jukebox se reanudan automáticamente desde donde los dejaste - "
+"las carpetas del jukebox  incluso retoman la última pista que estabas "
+"reproduciendo - con una velocidad de reproducción ajustable que conserva el "
+"tono y el cambio de tono independiente (transposición de semitonos). La "
+"reproducción es manejada por BASS, con soporte para control de volumen, "
+"efectos de audio, selección de dispositivo de salida y la puesta en espejo de "
+"audio simultánea en un segundo dispositivo. Las características adicionales "
+"incluyen grabación instantánea y programada, desplazamiento temporal "
+"rebobinar radio en directo, temporizadores de apagado y alarma, anuncios "
+"automáticos de metadatos ICY, reconocimiento de música basado en Shazam y un "
+"registro de canciones favoritas con búsqueda de letras. Todos los controles y "
+"atajos están diseñados para la accesibilidad de NVDA."
 
 #: buildVars.py:26
 msgid ""
@@ -3617,4 +3638,3 @@ msgstr ""
 "las pistas del jukebox.\n"
 "- Ctrl+Win+T (Alternar búfer de desplazamiento temporal) ahora aclara que no "
 "tiene efecto en la reproducción de podcasts, audiolibros o la del jukebox.\n"
-

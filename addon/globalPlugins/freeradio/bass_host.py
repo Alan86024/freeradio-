@@ -216,10 +216,16 @@ def _resolve_playlist_url(url, timeout=8):
 		from urllib.parse import urljoin
 		base_url = final_url
 
-		audio_types = ("audio/", "application/ogg", "video/")
-		if any(ct.startswith(t) for t in audio_types):
-			return final_url
-
+		# Playlist-specific content-types first - audio/x-scpls and the
+		# various M3U mimetypes all start with "audio/" themselves, so
+		# checking the generic "is this already audio" prefix first would
+		# match them too and return before ever parsing the playlist body.
+		# Currently masked in practice by BASS's own built-in M3U/PLS
+		# handling in BASS_StreamCreateURL (this function is only a
+		# fallback - see the "Resolve chain" comment below), but fixing
+		# the ordering here too keeps this in sync with timeshift.py's
+		# copy of the same function, and closes the gap for whatever
+		# playlist format BASS's own handling doesn't cover.
 		if ct in ("audio/x-mpegurl", "application/x-mpegurl",
 				  "audio/mpegurl", "application/vnd.apple.mpegurl") \
 				or url.lower().endswith((".m3u", ".m3u8")):
@@ -238,6 +244,10 @@ def _resolve_playlist_url(url, timeout=8):
 			m = re.search(r"href\s*=\s*[\"']([^\"']+)[\"']", data, re.IGNORECASE)
 			if m:
 				return urljoin(base_url, m.group(1))
+
+		audio_types = ("audio/", "application/ogg", "video/")
+		if any(ct.startswith(t) for t in audio_types):
+			return final_url
 	except Exception:
 		pass
 	return url

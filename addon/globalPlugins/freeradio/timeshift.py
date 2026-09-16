@@ -15,6 +15,62 @@ import re
 
 from . import recorder as _recorder_mod
 
+
+def _resolve_playlist_url(url, timeout=8):
+	"""Follow a PLS/M3U/ASX playlist-redirector response to the real
+	audio URL it points to, or return *url* unchanged if it's already
+	audio (or resolution fails for any reason).
+	Mirrors bass_host.py's identically-named function - main playback
+	(via bass_host.py) already does this before opening a stream, which
+	is why a URL like TuneIn's Tune.ashx?id=... (a small PLS file, not
+	audio) plays fine normally. This capture loop opens *url* directly
+	on its own raw socket with no such resolution, so without this it
+	was writing that tiny playlist response straight into the time-shift
+	buffer as if it were audio - the connection then ends almost
+	immediately (the whole playlist body is a few dozen bytes), which
+	looked like a dropped connection and triggered an endless ~2s
+	reconnect loop, never actually buffering any audio."""
+	try:
+		req = urllib.request.Request(
+			url, headers={"User-Agent": "FreeRadio-NVDA/1.0", "Icy-MetaData": "1"})
+		with urllib.request.urlopen(req, timeout=timeout) as resp:
+			final_url = resp.url if hasattr(resp, "url") else url
+			ct = (resp.headers.get("content-type") or "").lower().split(";")[0].strip()
+			data = resp.read(8192).decode("utf-8", "ignore")
+
+		from urllib.parse import urljoin
+		base_url = final_url
+
+		# Playlist-specific content-types first - audio/x-scpls and the
+		# various M3U mimetypes all start with "audio/" themselves, so
+		# checking the generic "is this already audio" prefix first would
+		# match them too and return before ever parsing the playlist body.
+		if ct in ("audio/x-mpegurl", "application/x-mpegurl",
+				  "audio/mpegurl", "application/vnd.apple.mpegurl") \
+				or url.lower().endswith((".m3u", ".m3u8")):
+			for line in data.splitlines():
+				line = line.strip()
+				if line and not line.startswith("#"):
+					return urljoin(base_url, line)
+
+		if ct == "audio/x-scpls" or url.lower().endswith(".pls"):
+			for line in data.splitlines():
+				if line.lower().startswith("file1="):
+					return urljoin(base_url, line.split("=", 1)[1].strip())
+
+		if ct in ("video/x-ms-asf", "audio/x-ms-wax", "audio/x-ms-wmx") or \
+				any(url.lower().endswith(e) for e in (".asx", ".wmx", ".wax")):
+			m = re.search(r"href\s*=\s*[\"']([^\"']+)[\"']", data, re.IGNORECASE)
+			if m:
+				return urljoin(base_url, m.group(1))
+
+		audio_types = ("audio/", "application/ogg", "video/")
+		if any(ct.startswith(t) for t in audio_types):
+			return final_url
+	except Exception:
+		pass
+	return url
+
 log = logging.getLogger()
 
 _CHUNK = 65536
@@ -557,6 +613,18 @@ class TimeShiftBuffer:
 		url = self._url
 		if self._is_stale(my_gen):
 			return
+
+		# Resolve a playlist-redirector URL (e.g. TuneIn's Tune.ashx) to
+		# the real audio URL once, cached for as long as self._url stays
+		# the same - see _resolve_playlist_url()'s docstring. Re-resolves
+		# automatically if the station/URL changes.
+		if getattr(self, "_resolved_capture_url_source", None) != url:
+			resolved = _resolve_playlist_url(url)
+			self._resolved_capture_url_source = url
+			self._resolved_capture_url = resolved
+			if resolved != url:
+				_debug_log("resolved playlist URL %s -> %s" % (url, resolved))
+		url = self._resolved_capture_url
 
 		reader = None
 		is_socket = False
