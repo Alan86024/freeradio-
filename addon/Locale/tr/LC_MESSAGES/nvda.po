@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: FreeRadio 2026.20.2\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
 "POT-Creation-Date: 2026-09-15 14:39+0300\n"
-"PO-Revision-Date: 2026-09-15 14:42+0300\n"
+"PO-Revision-Date: 2026-09-17 08:11+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -404,7 +404,7 @@ msgstr "Oynatma hızı değiştirilemedi."
 
 #: addon/globalPlugins/freeradio/audioFxMixin.py:120
 msgid "Toggle bass boost"
-msgstr "Bas güçlendirmeyi aç/kapatToggle bass boos"
+msgstr "Bas güçlendirmeyi aç/kapa"
 
 #: addon/globalPlugins/freeradio/audioFxMixin.py:125
 #: addon/globalPlugins/freeradio/radioDialog.py:460

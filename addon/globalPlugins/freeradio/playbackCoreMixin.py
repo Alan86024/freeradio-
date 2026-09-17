@@ -14,6 +14,8 @@
 # auto-registration only sees the literal class a script is defined in, not
 # the MRO - see the __gestures comment in __init__.py for details).
 
+import threading
+
 import config
 import gui
 import ui
@@ -716,83 +718,117 @@ class PlaybackCoreMixin:
 		# never derived from external data, so it's just as safe a marker.
 		is_podcast_like = ("podcast" in station.get("tags", "")
 		                    or "jukebox" in station.get("tags", ""))
-		if station_audio:
-			vol = station_audio.get("volume", config.conf["freeradio"]["volume"])
-			fx  = station_audio.get("fx", "none")
-			self._player.set_volume(vol)
-			try:
-				self._player.set_fx(fx)
-			except Exception:
-				pass
-			# Apply station-specific EQ gains if present
-			eq_gains = station_audio.get("eq_gains", {})
-			for band, gain_db in eq_gains.items():
+
+		# Everything below this point either waits on a blocking bass_host
+		# IPC round-trip (RadioPlayer.play() -> _save_current_podcast_position_if_playing()
+		# -> timeshift_status(); set_playback_rate_value()/set_transpose_value()
+		# -> their bass_host "set_playback_rate"/"set_transpose" commands,
+		# all of which do evt.wait(timeout=3.0) in _BassSubprocessEngine) or
+		# feeds into one of those calls. _play_station() itself always runs
+		# on NVDA's main/core thread (it's reached via wx.CallAfter from
+		# _on_playback_finished()/_advance_jukebox_folder_headless(), or
+		# directly from a script_* handler), so doing this work inline used
+		# to stall NVDA's speech/input handling for as long as those
+		# round-trips took - most noticeable as a brief freeze on every
+		# jukebox folder track auto-advance, since is_podcast_like is True
+		# for jukebox tracks and both set_playback_rate_value()/
+		# set_transpose_value() are called for every one of them. Moving it
+		# into a background thread keeps the same ordering/behaviour but
+		# gets it off the thread NVDA itself depends on - only the pieces
+		# that actually touch wx GUI state (_sync_dialog_audio, and
+		# ui.message for the announce) are marshalled back with
+		# wx.CallAfter. self._player.set_volume()/set_fx()/set_eq_gain()
+		# are already fire-and-forget (no reply waited on), so they're kept
+		# here unchanged - no benefit to moving them, and keeping them here
+		# means _sync_dialog_audio() (below) reflects them immediately.
+		def _apply_profile_and_play():
+			if station_audio:
+				vol = station_audio.get("volume", config.conf["freeradio"]["volume"])
+				fx  = station_audio.get("fx", "none")
+				self._player.set_volume(vol)
 				try:
-					self._player.set_eq_gain(band, gain_db)
+					self._player.set_fx(fx)
 				except Exception:
 					pass
-			self._sync_dialog_audio(vol, fx, eq_gains=eq_gains)
-		else:
-			# Restore global settings
-			global_vol = config.conf["freeradio"]["volume"]
-			global_fx  = config.conf["freeradio"].get("audio_fx", "none")
-			self._player.set_volume(global_vol)
-			try:
-				self._player.set_fx(global_fx)
-			except Exception:
-				pass
-			# Restore global EQ gains
-			_eq_defaults = {"eq_bass": 9, "eq_treble": 9, "eq_vocal": 6}
-			for band, default_db in _eq_defaults.items():
-				gain_db = config.conf["freeradio"].get("eq_gain_" + band, default_db)
+				# Apply station-specific EQ gains if present
+				eq_gains = station_audio.get("eq_gains", {})
+				for band, gain_db in eq_gains.items():
+					try:
+						self._player.set_eq_gain(band, gain_db)
+					except Exception:
+						pass
+				wx.CallAfter(self._sync_dialog_audio, vol, fx, eq_gains=eq_gains)
+			else:
+				# Restore global settings
+				global_vol = config.conf["freeradio"]["volume"]
+				global_fx  = config.conf["freeradio"].get("audio_fx", "none")
+				self._player.set_volume(global_vol)
 				try:
-					self._player.set_eq_gain(band, gain_db)
+					self._player.set_fx(global_fx)
 				except Exception:
 					pass
-			self._sync_dialog_audio(global_vol, global_fx)
+				# Restore global EQ gains
+				_eq_defaults = {"eq_bass": 9, "eq_treble": 9, "eq_vocal": 6}
+				for band, default_db in _eq_defaults.items():
+					gain_db = config.conf["freeradio"].get("eq_gain_" + band, default_db)
+					try:
+						self._player.set_eq_gain(band, gain_db)
+					except Exception:
+						pass
+				wx.CallAfter(self._sync_dialog_audio, global_vol, global_fx)
 
-		# Playback speed - podcasts/audio books only (pitch-preserving
-		# tempo change, see RadioPlayer.set_playback_rate_value). Handled
-		# as its own step, independent of the volume/fx branch above, so
-		# it follows the same "per-item, falls back to normal 1.0x when
-		# nothing is saved" rule volume/fx already follow rather than
-		# staying sticky: leaving a fast-profiled book for one with no
-		# profile of its own must land back on normal speed, or the second
-		# book plays at whatever rate the first one left behind.
-		if is_podcast_like:
-			speed = station_audio.get("speed") if station_audio else None
-			try:
-				self._player.set_playback_rate_value(speed if speed else 1.0)
-			except Exception:
-				pass
-			# Pitch transpose follows the same per-item, falls-back-to-normal
-			# rule as speed just above, for the same reason: leaving a
-			# transposed track for one with no saved transpose of its own
-			# must land back on 0.0 (no shift), not carry the previous
-			# track's shift over.
-			transpose = station_audio.get("transpose") if station_audio else None
-			try:
-				self._player.set_transpose_value(transpose if transpose else 0.0)
-			except Exception:
-				pass
+			# Playback speed - podcasts/audio books only (pitch-preserving
+			# tempo change, see RadioPlayer.set_playback_rate_value). Handled
+			# as its own step, independent of the volume/fx branch above, so
+			# it follows the same "per-item, falls back to normal 1.0x when
+			# nothing is saved" rule volume/fx already follow rather than
+			# staying sticky: leaving a fast-profiled book for one with no
+			# profile of its own must land back on normal speed, or the second
+			# book plays at whatever rate the first one left behind.
+			if is_podcast_like:
+				speed = station_audio.get("speed") if station_audio else None
+				try:
+					self._player.set_playback_rate_value(speed if speed else 1.0)
+				except Exception:
+					pass
+				# Pitch transpose follows the same per-item, falls-back-to-normal
+				# rule as speed just above, for the same reason: leaving a
+				# transposed track for one with no saved transpose of its own
+				# must land back on 0.0 (no shift), not carry the previous
+				# track's shift over.
+				transpose = station_audio.get("transpose") if station_audio else None
+				try:
+					self._player.set_transpose_value(transpose if transpose else 0.0)
+				except Exception:
+					pass
 
-		self._icy_last_title  = None        # None = station just changed; suppress first read
-		# station is passed as an explicit argument (not stashed on self and
-		# read back later) so a second _play_station() call racing in
-		# before this one's deferred _start_playing() runs can't clobber
-		# it - each call gets its own independently-captured url/station
-		# pair, however close together they happen or however wx.CallAfter
-		# ends up ordering them. Previously these went through
-		# self._pending_url/self._pending_station, which a fast-arriving
-		# second call (e.g. a duplicate/near-simultaneous GETEM chapter
-		# auto-advance) could overwrite before the first call's
-		# _start_playing() had a chance to read them - the audio that
-		# actually started playing would then get tagged with a
-		# *different* chapter's metadata than the one actually streaming.
-		wx.CallAfter(self._start_playing, url, name, url_resolved, station)
-		if announce:
-			if not _notifications_muted():
-				wx.CallAfter(ui.message, name)
+			self._icy_last_title  = None        # None = station just changed; suppress first read
+			# station is passed as an explicit argument (not stashed on self and
+			# read back later) so a second _play_station() call racing in
+			# before this one's deferred _start_playing() runs can't clobber
+			# it - each call gets its own independently-captured url/station
+			# pair, however close together they happen or however this
+			# background thread/wx.CallAfter ends up ordering them.
+			# Previously these went through self._pending_url/self._pending_station,
+			# which a fast-arriving second call (e.g. a duplicate/near-
+			# simultaneous GETEM chapter auto-advance) could overwrite before
+			# the first call's _start_playing() had a chance to read them -
+			# the audio that actually started playing would then get tagged
+			# with a *different* chapter's metadata than the one actually
+			# streaming. _start_playing() itself calls RadioPlayer.play(),
+			# which still needs to run somewhere - it used to be re-marshalled
+			# onto the main thread via wx.CallAfter for no real reason (its
+			# own blocking work is already pushed into RadioPlayer._bg_launch()
+			# on a further background thread), so it's simply called directly
+			# here rather than bounced back to the thread we just moved off of.
+			self._start_playing(url, name, url_resolved, station)
+			if announce:
+				if not _notifications_muted():
+					wx.CallAfter(ui.message, name)
+
+		threading.Thread(
+			target=_apply_profile_and_play, daemon=True, name="FreeRadio-play-station"
+		).start()
 
 	def _format_transpose(self, semitones):
 		"""Format a transpose value for announcement, e.g. "+1.25 semitones",
@@ -838,4 +874,9 @@ class PlaybackCoreMixin:
 		try:
 			self._player.play(url, name, url_resolved=url_resolved, station=station or {})
 		except Exception as e:
-			ui.message(_("Could not play station: %s") % str(e))
+			# Only caller now is _play_station()'s _apply_profile_and_play()
+			# background thread (see its comment on why it calls this
+			# directly rather than via wx.CallAfter) - ui.message needs to
+			# stay marshalled onto the main thread from here since we're not
+			# on it.
+			wx.CallAfter(ui.message, _("Could not play station: %s") % str(e))
