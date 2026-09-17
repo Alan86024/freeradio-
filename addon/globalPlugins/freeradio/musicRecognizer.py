@@ -4,12 +4,14 @@
 # shazamio/algorithm.py + signature.py'den numpy'sız saf Python'a aktarıldı.
 # numpy / aiohttp bağımlılığı yoktur.
 
+import ctypes
 import json
 import logging
 import math
 import os
 import struct
 import subprocess
+import sys
 import threading
 import time
 import urllib.error
@@ -35,6 +37,39 @@ _HTTP_TIMEOUT	 = 10
 _semaphore = threading.Semaphore(1)
 
 DATA_URI_PREFIX = "data:audio/vnd.shazam.sig;base64,"
+
+# ── GIL/OS scheduling: keep NVDA's own thread responsive while recognizing ────
+#
+# recognize_async() already runs recognize() on its own background thread, so
+# NVDA's main thread is never directly blocked here. But the signature
+# computation below (_compute_signature_uri -> _SignatureGenerator) is a
+# genuinely heavy pure-Python FFT/peak-detection loop (numpy was deliberately
+# avoided - see the module docstring), running for a few seconds per
+# recognition. Because CPython has a single GIL, that CPU-bound loop still
+# competes with NVDA's own thread for interpreter time even though it's "in
+# the background" - NVDA's speech/input handling has to wait its turn for the
+# GIL (and, once released, for the OS scheduler to actually run it), which is
+# what shows up as brief NVDA sluggishness while a recognition is in
+# progress. Two small, low-risk mitigations, both scoped to just this
+# recognition rather than applied process-wide for the whole add-on:
+#   1. Lower this thread's OS priority so the scheduler favours NVDA's own
+#      thread whenever both want the CPU at the same time.
+#   2. Temporarily shorten Python's GIL switch interval so the main thread
+#      never has to wait more than ~1ms for its turn at the GIL, instead of
+#      the interpreter's 5ms default - restored afterwards either way.
+_THREAD_PRIORITY_BELOW_NORMAL = -1  # Windows THREAD_PRIORITY_BELOW_NORMAL
+
+
+def _lower_current_thread_priority():
+	"""Best-effort: drop the calling (background) thread's Windows priority
+	one notch below normal, so OS scheduling favours NVDA's own thread under
+	CPU contention. No-op (silently) if the Win32 call isn't available for
+	any reason - recognition still works, just without this scheduling hint."""
+	try:
+		kernel32 = ctypes.windll.kernel32
+		kernel32.SetThreadPriority(kernel32.GetCurrentThread(), _THREAD_PRIORITY_BELOW_NORMAL)
+	except Exception:
+		pass
 
 # ── Sonuç sınıfı ──────────────────────────────────────────────────────────────
 
@@ -732,13 +767,30 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 		log.info("FreeRadio Recognizer: %d PCM bytes received", len(pcm_bytes))
 
 		# 4. Shazam imzası üret
+		#
+		# This is the heaviest pure-Python CPU stretch in the whole
+		# pipeline (see the module-level comment above _lower_current_thread_priority()
+		# for why it needs special handling) - shorten the GIL switch
+		# interval just around this call so NVDA's own thread never waits
+		# long for the GIL while it runs, then always restore the
+		# interpreter's previous interval afterwards.
 		log.info("FreeRadio Recognizer: computing signature")
+		_prev_switch_interval = sys.getswitchinterval()
+		try:
+			sys.setswitchinterval(0.001)
+		except Exception:
+			pass
 		try:
 			sig_uri, sample_ms = _compute_signature_uri(pcm_bytes)
 		except Exception as exc:
 			log.warning("FreeRadio Recognizer: signature error: %s", exc)
 			return RecognitionResult(
 				success=False, error_msg="Signature error: %s" % str(exc))
+		finally:
+			try:
+				sys.setswitchinterval(_prev_switch_interval)
+			except Exception:
+				pass
 
 		# 5. Shazam sorgusu
 		log.info("FreeRadio Recognizer: querying Shazam (sample_ms=%d)", sample_ms)
@@ -779,6 +831,7 @@ def recognize_async(stream_url, ffmpeg_path, api_key, callback, local_file=None)
 	"""api_key geriye dönük uyumluluk için korunmuştur (kullanılmaz).
 	local_file: bkz. recognize()."""
 	def _worker():
+		_lower_current_thread_priority()
 		result = recognize(stream_url, ffmpeg_path, api_key, local_file=local_file)
 		try:
 			callback(result)
