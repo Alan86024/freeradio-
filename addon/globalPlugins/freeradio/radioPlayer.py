@@ -161,11 +161,22 @@ def _read_icy_title(url):
 
 
 
-def _resolve_playlist_url(url, timeout=8):
+def _resolve_playlist_url(url, timeout=8, _hops=3):
 	"""
 	If url points to a playlist (M3U, PLS, XSPF, ASX) or returns a redirect,
 	return the first actual stream URL found inside it.
 	Returns the original url if nothing better is found.
+
+	Playlist type is detected primarily by sniffing the response body
+	itself, with content-type/extension only used as a secondary hint.
+	Some tuning endpoints - e.g. TuneIn's Tune.ashx (see
+	externalSources.search_tunein()) - return a PLS-formatted body from a
+	URL with no playlist-like extension, and not always with an
+	audio/x-scpls content-type either, so a check that only trusted
+	content-type/extension would silently fall through and hand back the
+	tuning URL unchanged, which isn't a real audio stream. Follows up to
+	*_hops* levels in case a playlist points at another playlist
+	(e.g. a tuning endpoint that redirects to a second, real .pls).
 	"""
 	try:
 		import urllib.request as _req
@@ -180,37 +191,109 @@ def _resolve_playlist_url(url, timeout=8):
 			data = resp.read(8192).decode("utf-8", "ignore")
 
 		audio_types = ("audio/", "application/ogg", "video/")
-		if any(ct.startswith(t) for t in audio_types):
+		# A content-type that already says "this is audio" is trusted
+		# outright - but only when it isn't one of the playlist-ish
+		# audio/* types below (audio/x-mpegurl, audio/x-scpls, ...),
+		# which also start with "audio/" yet are playlists, not streams.
+		playlist_audio_types = (
+			"audio/x-mpegurl", "audio/mpegurl", "audio/x-scpls",
+			"audio/x-ms-wax",
+		)
+		if ct.startswith(audio_types) and ct not in playlist_audio_types:
 			return final_url if final_url != url else url
 
 		from urllib.parse import urljoin as _urljoin
 		base_url = final_url
+		stripped = data.lstrip()
+		next_url = None
 
-		if ct in ("audio/x-mpegurl", "application/x-mpegurl",
-				  "audio/mpegurl", "application/vnd.apple.mpegurl") or \
-				url.lower().endswith((".m3u", ".m3u8")):
+		is_pls = (
+			ct == "audio/x-scpls" or url.lower().endswith(".pls")
+			or stripped[:9].lower().startswith("[playlist")
+		)
+		is_m3u = (
+			not is_pls and (
+				ct in ("audio/x-mpegurl", "application/x-mpegurl",
+					   "audio/mpegurl", "application/vnd.apple.mpegurl")
+				or url.lower().endswith((".m3u", ".m3u8"))
+				or stripped.startswith("#EXTM3U")
+			)
+		)
+		is_asx = (
+			not is_pls and not is_m3u and (
+				ct in ("video/x-ms-asf", "audio/x-ms-wax", "audio/x-ms-wmx")
+				or any(url.lower().endswith(e) for e in (".asx", ".wmx", ".wax"))
+				or stripped[:5].lower().startswith("<asx")
+			)
+		)
+
+		if is_pls:
+			for line in data.splitlines():
+				if line.lower().startswith("file1="):
+					next_url = _urljoin(base_url, line.split("=", 1)[1].strip())
+					break
+
+		elif is_m3u:
 			for line in data.splitlines():
 				line = line.strip()
 				if line and not line.startswith("#"):
-					return _urljoin(base_url, line)
+					next_url = _urljoin(base_url, line)
+					break
 
-		if ct == "audio/x-scpls" or url.lower().endswith(".pls"):
-			for line in data.splitlines():
-				if line.lower().startswith("file1="):
-					return _urljoin(base_url, line.split("=", 1)[1].strip())
-
-		if ct in ("video/x-ms-asf", "audio/x-ms-wax", "audio/x-ms-wmx") or \
-				any(url.lower().endswith(e) for e in (".asx", ".wmx", ".wax")):
+		elif is_asx:
 			import re as _re
 			m = _re.search(r"href\s*=\s*[\"']([^\"']+)[\"']", data, _re.IGNORECASE)
 			if m:
-				return _urljoin(base_url, m.group(1))
+				next_url = _urljoin(base_url, m.group(1))
+
+		if next_url is None:
+			# Last resort: some tuning endpoints - TuneIn's Tune.ashx among
+			# them - return neither a "[playlist]" nor a "#EXTM3U" header,
+			# just a bare newline-separated list of candidate stream URLs.
+			# If the first non-empty line is itself a URL, take it.
+			for line in data.splitlines():
+				line = line.strip()
+				if line:
+					if line.lower().startswith(("http://", "https://")):
+						next_url = _urljoin(base_url, line)
+					break
+
+		if next_url and next_url != url:
+			if _hops > 0:
+				# The link inside might itself be another playlist
+				# (e.g. a tuning endpoint pointing at a second .pls).
+				return _resolve_playlist_url(next_url, timeout=timeout, _hops=_hops - 1)
+			return next_url
 
 	except Exception:
 		pass
 
 	return url
 
+
+def _read_icy_title_via_playlist(url, timeout=_ICY_TIMEOUT):
+	"""Like _read_icy_title(), but first unwraps *url* through
+	_resolve_playlist_url() if it points at a playlist/tuning wrapper
+	(.pls/.m3u/.asx, or a source's own tuning endpoint such as TuneIn's
+	Tune.ashx) rather than a raw audio stream.
+
+	_read_icy_title() alone only works when the given URL is already a
+	direct stream connection that echoes back an "icy-metaint" header -
+	true for Radio Browser's pre-resolved url_resolved, but not for
+	sources like TuneIn whose station "url"/"url_resolved" is a tuning
+	URL that returns a small playlist file instead of audio (see
+	externalSources.search_tunein()). BASS itself unwraps that playlist
+	natively when actually playing the stream, but the plain urllib
+	request _read_icy_title() makes does not - so every "what's playing"
+	fallback call site in trackInfoMixin.py should go through this
+	wrapper instead of calling _read_icy_title() directly.
+
+	Cheap for the common case: _resolve_playlist_url() returns audio URLs
+	unchanged (content-type check) without downloading anything beyond
+	the initial response headers/first chunk.
+	"""
+	resolved = _resolve_playlist_url(url, timeout=timeout)
+	return _read_icy_title(resolved)
 
 
 class _BassSubprocessEngine:

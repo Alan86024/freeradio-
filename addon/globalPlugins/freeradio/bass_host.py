@@ -202,7 +202,17 @@ def _event(**kwargs):
 	_send({"event": True, **kwargs})
 
 
-# Playlist resolver (same logic as radioPlayer.py)
+# Playlist resolver (same logic as radioPlayer.py) - detection is by
+# sniffing the response body, not just content-type/extension, since a
+# tuning endpoint like TuneIn's Tune.ashx (see externalSources.py in the
+# main add-on) returns a PLS-formatted body from a plain ".ashx" URL with
+# no playlist-like content-type guaranteed either. Currently masked in
+# practice by BASS's own built-in M3U/PLS handling in BASS_StreamCreateURL
+# (this function is only a fallback - see the "Resolve chain" comment
+# below, which already loops this call up to a few hops), but fixing the
+# detection here too keeps this in sync with radioPlayer.py's and
+# timeshift.py's copies of the same function, and closes the gap for
+# whatever playlist format BASS's own handling doesn't cover.
 def _resolve_playlist_url(url, timeout=8):
 	try:
 		req = urllib.request.Request(
@@ -216,38 +226,49 @@ def _resolve_playlist_url(url, timeout=8):
 		from urllib.parse import urljoin
 		base_url = final_url
 
-		# Playlist-specific content-types first - audio/x-scpls and the
-		# various M3U mimetypes all start with "audio/" themselves, so
-		# checking the generic "is this already audio" prefix first would
-		# match them too and return before ever parsing the playlist body.
-		# Currently masked in practice by BASS's own built-in M3U/PLS
-		# handling in BASS_StreamCreateURL (this function is only a
-		# fallback - see the "Resolve chain" comment below), but fixing
-		# the ordering here too keeps this in sync with timeshift.py's
-		# copy of the same function, and closes the gap for whatever
-		# playlist format BASS's own handling doesn't cover.
+		# A content-type that already says "this is audio" is trusted -
+		# but only when it isn't one of the playlist-flavoured audio/*
+		# types below, which also start with "audio/" yet are playlists.
+		playlist_audio_types = ("audio/x-mpegurl", "audio/mpegurl",
+								 "audio/x-scpls", "audio/x-ms-wax")
+		audio_types = ("audio/", "application/ogg", "video/")
+		if ct.startswith(audio_types) and ct not in playlist_audio_types:
+			return final_url
+
+		stripped = data.lstrip()
+
+		if ct == "audio/x-scpls" or url.lower().endswith(".pls") \
+				or stripped[:9].lower().startswith("[playlist"):
+			for line in data.splitlines():
+				if line.strip().lower().startswith("file1="):
+					return urljoin(base_url, line.split("=", 1)[1].strip())
+
 		if ct in ("audio/x-mpegurl", "application/x-mpegurl",
 				  "audio/mpegurl", "application/vnd.apple.mpegurl") \
-				or url.lower().endswith((".m3u", ".m3u8")):
+				or url.lower().endswith((".m3u", ".m3u8")) \
+				or stripped.startswith("#EXTM3U"):
 			for line in data.splitlines():
 				line = line.strip()
 				if line and not line.startswith("#"):
 					return urljoin(base_url, line)
 
-		if ct == "audio/x-scpls" or url.lower().endswith(".pls"):
-			for line in data.splitlines():
-				if line.lower().startswith("file1="):
-					return urljoin(base_url, line.split("=", 1)[1].strip())
-
 		if ct in ("video/x-ms-asf", "audio/x-ms-wax", "audio/x-ms-wmx") or \
-				any(url.lower().endswith(e) for e in (".asx", ".wmx", ".wax")):
+				any(url.lower().endswith(e) for e in (".asx", ".wmx", ".wax")) or \
+				stripped[:5].lower().startswith("<asx"):
 			m = re.search(r"href\s*=\s*[\"']([^\"']+)[\"']", data, re.IGNORECASE)
 			if m:
 				return urljoin(base_url, m.group(1))
 
-		audio_types = ("audio/", "application/ogg", "video/")
-		if any(ct.startswith(t) for t in audio_types):
-			return final_url
+		# Last resort: some tuning endpoints - TuneIn's Tune.ashx among
+		# them - return neither a "[playlist]" nor a "#EXTM3U" header at
+		# all, just a bare newline-separated list of candidate stream
+		# URLs. If the first non-empty line is itself a URL, take it.
+		for line in data.splitlines():
+			line = line.strip()
+			if line:
+				if line.lower().startswith(("http://", "https://")):
+					return urljoin(base_url, line)
+				break
 	except Exception:
 		pass
 	return url

@@ -40,30 +40,37 @@ class RecordingMixin:
 		Ctrl+Win+V in place of "add to favourites" when a podcast episode
 		(rather than a radio station) is playing. Works regardless of
 		whether the browser dialog is open."""
+		# Translators: Fallback episode title used for the downloaded filename if the currently playing episode has no name.
 		title = station.get("name", "").strip() or _("Episode")
 		url = station.get("url") or station.get("url_resolved")
 		if not url:
+			# Translators: Spoken when trying to download the current podcast episode but it has no resolvable URL.
 			ui.message(_("This episode has no downloadable URL."))
 			return
 
 		from . import podcast
 		out_path, filename = podcast.episode_download_target(title, url)
 		if os.path.exists(out_path):
+			# Translators: Spoken when the episode was already downloaded before; %s is the existing filename. Same wording as the Podcasts tab download action.
 			ui.message(_("File already exists: %s") % filename)
 			return
 
+		# Translators: Spoken when the Ctrl+Win+V episode download starts; %s is the episode title.
 		ui.message(_("Downloading: %s") % title)
 
 		def _do_download():
 			try:
 				podcast.download_episode_file(url, out_path)
+				# Translators: Spoken when the Ctrl+Win+V episode download finishes; %s is the saved filename.
 				wx.CallAfter(ui.message, _("Download complete: %s") % filename)
 			except Exception as e:
+				# Translators: Spoken when the Ctrl+Win+V episode download fails; %s is the underlying error.
 				wx.CallAfter(ui.message, _("Download failed: %s") % str(e))
 
 		threading.Thread(target=_do_download, daemon=True).start()
 
 	@script(
+		# Translators: Name of an NVDA command (Ctrl+Win+E); single-press toggles a plain instant recording, double-press toggles song-capture recording instead - see this method's logic below.
 		description=_("Start or stop instant recording"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+e",
@@ -91,9 +98,11 @@ class RecordingMixin:
 					if path:
 						wx.CallAfter(
 							_notify,
+							# Translators: Spoken when the user manually ends an in-progress song-capture recording (double-press Ctrl+Win+E while capturing); %s is the saved filename.
 							_("Song recording stopped: %s") % os.path.basename(path),
 						)
 					else:
+						# Translators: Fallback spoken when song-capture is stopped but no output path was returned (e.g. nothing was actually captured).
 						wx.CallAfter(_notify, _("Song recording stopped"))
 				threading.Thread(
 					target=_stop_song_capture,
@@ -103,6 +112,7 @@ class RecordingMixin:
 				return
 
 			if not self._player.has_media():
+				# Translators: Spoken when the delayed single-press action fires and finds nothing is playing.
 				ui.message(_("No station is playing"))
 				return
 
@@ -115,6 +125,7 @@ class RecordingMixin:
 				is_jukebox = station and "jukebox" in station.get("tags", "")
 
 				if is_podcast_or_audiobook:
+					# Translators: Spoken when double-pressing Ctrl+Win+E (song-capture) on a podcast/audiobook episode, which can't be recorded this way; points to the Ctrl+Win+V download command instead.
 					wx.CallAfter(ui.message, _("Podcast or audiobook cannot be recorded. To download the episode or book, press Ctrl+Win+V."))
 					return
 
@@ -123,6 +134,7 @@ class RecordingMixin:
 				# no Ctrl+Win+V download alternative to point the user to
 				# (script_addToFavorites already refuses jukebox tracks too).
 				if is_jukebox:
+					# Translators: Spoken when double-pressing Ctrl+Win+E (song-capture) on a jukebox track, which is already a local file.
 					wx.CallAfter(ui.message, _("Jukebox tracks are already local files and cannot be recorded."))
 					return
 
@@ -134,12 +146,13 @@ class RecordingMixin:
 						or getattr(self._player, "_current_url", None)
 					)
 					if url:
-						icy = _rp._read_icy_title(url)
+						icy = _rp._read_icy_title_via_playlist(url)
 
 				if not icy:
 					# Station does not broadcast ICY metadata — inform the user and abort.
 					wx.CallAfter(
 						ui.message,
+						# Translators: Spoken when trying to start song-capture recording on a station with no ICY track-title metadata, so there's no song boundary to record against.
 						_("This station does not broadcast track metadata. Song recording is not available."),
 					)
 					return
@@ -152,10 +165,12 @@ class RecordingMixin:
 					self._recorder.start_song_capture(self._player, icy, timeshift_buffer=self._player.get_timeshift_buffer())
 					wx.CallAfter(
 						ui.message,
+						# Translators: Spoken when song-capture recording starts; %s is the current ICY track title (artist/song) being captured.
 						_("Song recording started: %s") % icy,
 					)
 				except Exception as exc:
 					log.error("FreeRadio: song capture failed to start: %s", exc)
+					# Translators: Generic fallback spoken if starting song-capture recording raises an unexpected exception.
 					wx.CallAfter(ui.message, _("Could not start song recording"))
 
 			threading.Thread(target=_start_song_capture, daemon=True).start()
@@ -182,14 +197,17 @@ class RecordingMixin:
 				def _stop_recording():
 					path = self._recorder.stop(self._player)
 					if path:
+						# Translators: Spoken when the single-press gesture stops an in-progress plain instant recording; %s is the saved filename.
 						wx.CallAfter(_notify, _("Recording stopped: %s") % os.path.basename(path))
 					else:
+						# Translators: Fallback spoken when a recording is stopped but no output path was returned.
 						wx.CallAfter(_notify, _("Recording stopped"))
 				threading.Thread(target=_stop_recording, daemon=True, name="FreeRadio-RecordingFinalize").start()
 				return
 
 			# No recording; if it's a podcast/audiobook, warn and abort
 			if is_podcast_or_audiobook:
+				# Translators: Same message as the song-capture path above, spoken here when single-pressing Ctrl+Win+E on a podcast/audiobook episode.
 				wx.CallAfter(ui.message, _("Podcast or audiobook cannot be recorded. To download the episode or book, press Ctrl+Win+V."))
 				return
 
@@ -197,25 +215,30 @@ class RecordingMixin:
 			# there's nothing to record - warn and abort rather than
 			# starting a pointless recording of a local file.
 			if is_jukebox:
+				# Translators: Same message as the song-capture path above, spoken here when single-pressing Ctrl+Win+E on a jukebox track.
 				wx.CallAfter(ui.message, _("Jukebox tracks are already local files and cannot be recorded."))
 				return
 
 			if not self._player.has_media():
+				# Translators: Spoken when the double-press (song-capture) gesture is used while nothing is playing.
 				wx.CallAfter(ui.message, _("No station is playing"))
 				return
 
 			name = self._player.get_current_name()
 			try:
 				self._recorder.start(self._player, name, timeshift_buffer=self._player.get_timeshift_buffer())
+				# Translators: Spoken when a plain instant recording starts (single-press Ctrl+Win+E); %s is the station name.
 				wx.CallAfter(_notify, _("Recording started: %s") % name)
 			except Exception as exc:
 				log.error("FreeRadio: instant recording failed to start: %s", exc)
+				# Translators: Generic fallback spoken if starting an instant recording raises an unexpected exception.
 				wx.CallAfter(ui.message, _("Could not start recording"))
 
 		# Delay single-press action by 350 ms so a second press can cancel it.
 		self._record_action_timer = wx.CallLater(350, _do_single_press)
 
 	@script(
+		# Translators: Name of an NVDA command (Ctrl+Win+W); opens the configured recordings folder in File Explorer.
 		description=_("Open FreeRadio recordings folder"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+w",
@@ -230,4 +253,5 @@ class RecordingMixin:
 		try:
 			os.startfile(recordings_dir)
 		except Exception as e:
+			# Translators: Spoken when the Ctrl+Win+W shortcut can't open the recordings folder in Explorer; %s is the underlying error.
 			ui.message(_("Could not open recordings folder: %s") % str(e))

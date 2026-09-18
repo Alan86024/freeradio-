@@ -665,12 +665,17 @@ class _StreamWriter:
 		# to connect (see _run_once / _run_icy / _run_hls).
 		self._connected = threading.Event()
 		
-		# Resolve HLS to final URL if possible
-		resolved = url
-		if url.lower().split("?")[0].endswith(".m3u8"):
-			resolved = _resolve_hls(url)
-		self._is_hls = resolved.lower().split("?")[0].endswith(".m3u8")
-		self._effective_url = resolved if not self._is_hls else url
+		# Resolve HLS master playlists, and any other playlist/tuning
+		# wrapper (.pls, .m3u, or an extensionless tuning endpoint such as
+		# TuneIn's Tune.ashx - see _resolve_playlist()'s docstring), to the
+		# actual URL to record from before starting. _resolve_url() itself
+		# reports whether that URL is HLS (needs _run_hls()'s
+		# segment-by-segment handling) rather than a direct/ICY stream
+		# (needs _run()/_run_icy()'s raw byte copy) - it is sniffed from
+		# the response body while resolving, not re-guessed from the
+		# resolved URL's extension, since an HLS manifest is not always
+		# served from a URL ending in ".m3u8".
+		self._effective_url, self._is_hls = _resolve_url(url)
 		log.debug("FreeRadio Recorder: effective URL for %s: %s, is_hls=%s",
 		          url, self._effective_url, self._is_hls)
 
@@ -1063,31 +1068,118 @@ class _StreamWriter:
 
 
 def _resolve_url(url):
-	"""Resolve playlist/HLS URLs to the best direct stream URL."""
+	"""Resolve playlist/tuning-endpoint URLs to the best URL to record
+	from. Returns (resolved_url, is_hls) - is_hls tells the caller whether
+	to hand resolved_url to _run_hls() (segment-by-segment) rather than
+	_run()/_run_icy() (raw byte copy)."""
 	low = url.lower().split("?")[0]
 	if low.endswith(".m3u8"):
-		return _resolve_hls(url)
-	if low.endswith(".m3u") or low.endswith(".pls"):
-		return _resolve_playlist(url)
-	return url
+		# Already a manifest URL - let _run_hls() do its own master/media
+		# walk (it re-fetches and re-selects on every pass anyway), no
+		# need to pre-resolve here.
+		return url, True
+	return _resolve_playlist(url)
 
 
-def _resolve_playlist(url):
-	"""Resolve .m3u or .pls playlist to first stream URL."""
+def _resolve_playlist(url, _hops=3):
+	"""Resolve a .m3u/.pls/tuning-endpoint URL to the URL to actually
+	record from. Returns (resolved_url, is_hls).
+
+	Detection is by sniffing the response body/content-type rather than by
+	trusting the URL's own extension: some sources' station "url" is a
+	tuning endpoint with no playlist-like extension at all - e.g. TuneIn's
+	Tune.ashx (see externalSources.search_tunein() in the main add-on),
+	which returns a PLS-formatted body from a plain ".ashx" URL - and some
+	CDNs serve an HLS manifest (master or media) from a URL with no .m3u8
+	extension either. Follows up to *_hops* levels in case a playlist
+	points at another playlist (e.g. a tuning endpoint that itself
+	resolves to a second, real .pls, or to an HLS manifest).
+	"""
 	try:
-		# Use primary UA for playlist resolution.
-		req = urllib.request.Request(url, headers={"User-Agent": _USER_AGENT_PRIMARY})
+		req = urllib.request.Request(
+			url, headers={"User-Agent": _USER_AGENT_PRIMARY, "Icy-MetaData": "1"}
+		)
 		with _urlopen(req, 10) as resp:
-			text = resp.read(4096).decode("utf-8", errors="ignore")
-		for line in text.splitlines():
-			line = line.strip()
-			if line.startswith("http") and not line.startswith("#"):
-				return line
-			if line.startswith("File1="):
-				return line[6:].strip()
+			ct = (resp.headers.get("content-type") or "").lower().split(";")[0].strip()
+			text = resp.read(8192).decode("utf-8", errors="ignore")
 	except Exception as e:
 		log.warning("FreeRadio Recorder: playlist resolve failed: %s", e)
-	return url
+		return url, False
+
+	# A content-type that already says "this is audio" - and isn't one of
+	# the playlist-flavoured audio/* types below - means url is already a
+	# direct stream; nothing to unwrap.
+	playlist_audio_types = ("audio/x-mpegurl", "audio/mpegurl", "audio/x-scpls", "audio/x-ms-wax")
+	if ct.startswith(("audio/", "application/ogg", "video/")) and ct not in playlist_audio_types:
+		return url, False
+
+	stripped = text.lstrip()
+
+	# Genuine HLS content (master OR media playlist) - #EXT-X-* tags are
+	# HLS-specific and never appear in a bare/simple M3U (an old-style
+	# radio playlist that just lists one or more direct stream URLs).
+	# Hand the manifest URL itself to _run_hls(), which already knows how
+	# to walk master → media → segments - extracting "the first line" here
+	# the way a simple M3U is handled below would grab a segment or a
+	# sub-manifest URL and feed it to _run()/_run_icy() as if it were a
+	# single direct audio stream, producing a corrupt/truncated recording.
+	if stripped.startswith("#EXTM3U") and (
+		"#EXT-X-STREAM-INF" in text or "#EXT-X-TARGETDURATION" in text or "#EXTINF:" in text
+	):
+		return url, True
+
+	next_url = None
+
+	if stripped[:9].lower().startswith("[playlist") or url.lower().split("?")[0].endswith(".pls"):
+		for line in text.splitlines():
+			if line.strip().lower().startswith("file1="):
+				next_url = line.split("=", 1)[1].strip()
+				break
+
+	if next_url is None and (
+		stripped.startswith("#EXTM3U") or url.lower().split("?")[0].endswith((".m3u", ".m3u8"))
+	):
+		for line in text.splitlines():
+			line = line.strip()
+			if line and not line.startswith("#"):
+				next_url = line
+				break
+
+	if next_url is None and stripped[:5].lower().startswith("<asx"):
+		import re as _re
+		m = _re.search(r"href\s*=\s*[\"']([^\"']+)[\"']", text, _re.IGNORECASE)
+		if m:
+			next_url = m.group(1)
+
+	if next_url is None:
+		# Last resort: some tuning endpoints - TuneIn's Tune.ashx among
+		# them - return neither a "[playlist]" nor a "#EXTM3U" header at
+		# all, just a bare newline-separated list of candidate stream
+		# URLs (often the same handful of bitrate options repeated over
+		# and over, meant to be tried in order on failure). If the first
+		# non-empty line is itself a URL, take it.
+		for line in text.splitlines():
+			line = line.strip()
+			if line:
+				if line.lower().startswith(("http://", "https://")):
+					next_url = line
+				break
+
+	if next_url is None:
+		# Not audio and nothing playlist-shaped recognised - give back the
+		# original url rather than guessing.
+		return url, False
+
+	from urllib.parse import urljoin as _urljoin
+	next_url = _urljoin(url, next_url)
+
+	if next_url != url and _hops > 0:
+		if next_url.lower().split("?")[0].endswith(".m3u8"):
+			return next_url, True
+		# The link inside might itself be another playlist/tuning wrapper.
+		return _resolve_playlist(next_url, _hops=_hops - 1)
+
+	return next_url, next_url.lower().split("?")[0].endswith(".m3u8")
 
 
 _DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -1237,6 +1329,7 @@ class ScheduledRecording:
 
 	def __str__(self):
 		ts   = self.start_time.strftime("%d.%m.%Y %H:%M")
+		# Translators: Same mode word as radioDialog.py's scheduling UI, reused here in this object's debug/log string representation.
 		mode = _("Record only") if self.record_only else _("Listen and record")
 		base = f"{self.station.get('name','?')} — {ts} ({self.duration_minutes} min, {mode})"
 

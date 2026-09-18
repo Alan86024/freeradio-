@@ -47,6 +47,7 @@ def _get_freeradio_plugin():
 
 
 class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
+	# Translators: Title of this settings category as it appears in NVDA's own Settings dialog category tree.
 	title = _("FreeRadio")
 
 	def makeSettings(self, settingsSizer):
@@ -58,6 +59,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		# cassette tape. Requires the BASS backend.
 		self._timeshift_enabled = wx.CheckBox(
 			self,
+			# Translators: Checkbox label for the time-shift/rewind feature setting.
 			label=_("&Enable time-shift buffer (rewind live radio, no effect on potcasts and audio books)")
 		)
 		self._timeshift_enabled.SetValue(config.conf["freeradio"].get("timeshift_enabled", False))
@@ -65,11 +67,13 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 		# --- Time-shift buffer duration ---
 		self._timeshift_duration_seconds = [600, 1800, 3600, 7200, 18000]
+		# Translators: Label for the time-shift buffer-length choice control.
 		duration_label = _("Time-shift buffer duration:")
 		self._timeshift_duration_choice = sHelper.addLabeledControl(
 			duration_label,
 			wx.Choice,
 			choices=[
+				# Translators: Choices for the time-shift buffer-duration control, in the same order as self._timeshift_duration_seconds just above (continues on the next line).
 				_("10 minutes"), _("30 minutes"), _("1 hour"),
 				_("2 hours"), _("5 hours"),
 			],
@@ -83,6 +87,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 		self._timeshift_duration_hint = wx.StaticText(
 			self,
+			# Translators: Grey explanatory hint shown under the buffer-duration choice, warning about disk usage for long buffers.
 			label=_("Longer buffers use more temporary disk space, especially for "
 			        "high-bitrate stations — a 5-hour buffer can use several gigabytes."),
 		)
@@ -91,21 +96,26 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 		# --- Audio output device (BASS only) ---
 		self._audio_devices = []   # (index, name) list — populated from BASS
+		# Translators: Label for the main output-device choice in Settings (same purpose as the in-dialog device picker, but persisted here).
 		device_label = _("Audio output device (BASS backend):")
 		self._device_choice = sHelper.addLabeledControl(
 			device_label,
 			wx.Choice,
+			# Translators: Placeholder shown in the device choice control while devices are still being fetched from BASS in the background.
 			choices=[_("Loading devices...")],
 		)
 		self._device_choice.SetName(device_label)
 
+		# Translators: Label for the choice between the two device-list refresh strategies below.
 		refresh_label = _("Audio device refresh mode (BASS backend):")
 		self._audio_device_refresh_label = wx.StaticText(self, label=refresh_label)
 		sHelper.addItem(self._audio_device_refresh_label)
 		self._audio_device_refresh_choice = wx.Choice(
 			self,
 			choices=[
+				# Translators: One of the two audio-device refresh modes: always re-query BASS for current device numbers, slower but accurate if devices changed since NVDA started.
 				_("Reliable, refresh device numbers live"),
+				# Translators: The other refresh mode: use the device list BASS already has cached, faster but can be stale if devices were plugged/unplugged.
 				_("Fast, use current BASS device list"),
 			],
 		)
@@ -117,6 +127,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		sHelper.addItem(self._audio_device_refresh_choice)
 
 		self._volume = sHelper.addLabeledControl(
+			# Translators: Label for the default-volume spin control.
 			_("Volume (0-100):"),
 			wx.SpinCtrl,
 			min=0,
@@ -125,6 +136,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		)
 
 		# --- Audio effects (BASS only) ---
+		# Translators: Section heading above the audio-effects checklist and EQ controls.
 		self._fx_static = wx.StaticText(self, label=_("Audio Effects (BASS backend only):"))
 		sHelper.addItem(self._fx_static)
 
@@ -132,6 +144,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		             "echo", "flanger", "gargle", "reverb",
 		             "eq_bass", "eq_treble", "eq_vocal"]
 		_fx_display = [
+			# Translators: Names of the audio effects offered in the Settings effects checklist, in the same order as _fx_keys above - same wording as radioDialog.py's in-dialog effects list (continues for the next several lines: Compressor, Distortion, Echo, Flanger, Gargle, Reverb, then the three EQ boost bands).
 			_("Chorus"),
 			_("Compressor"),
 			_("Distortion"),
@@ -145,6 +158,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		]
 		self._fx_keys = _fx_keys
 		self._fx_choice = sHelper.addLabeledControl(
+			# Translators: Label for the audio-effects checklist control.
 			_("Audio &effects:"),
 			nvdaControls.CustomCheckListBox,
 			choices=_fx_display,
@@ -158,6 +172,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 		# --- EQ gain controls (shown only for active EQ bands) ---
 		self._eq_bands_settings = [
+			# Translators: Labels for the three EQ gain spin controls, shown only for whichever bands are checked above (continues for treble and vocal on the next two lines).
 			("eq_bass",   _("&Bass gain (dB):"),   9),
 			("eq_treble", _("&Treble gain (dB):"), 9),
 			("eq_vocal",  _("&Vocal gain (dB):"),  6),
@@ -174,8 +189,10 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			spin.Bind(wx.EVT_SPINCTRL, lambda evt, b=band: self._on_eq_gain_settings(evt, b))
 			self._eq_spins_settings[band] = spin
 			self._eq_spin_labels_settings[band] = lbl
+		# Translators: Label for the station-switch transition (crossfade) choice control.
 		_cf_label = _("Station &switch transition (BASS backend only):")
 		_cf_choices = [
+			# Translators: Choices for the crossfade setting, same wording and order as the in-app toggleStationTransition command's cycle (audioFxMixin.py) - continues for the next three lines.
 			_("Instant cut (no crossfade)"),
 			_("Short crossfade (1 second)"),
 			_("Normal crossfade (2 seconds)"),
@@ -193,12 +210,14 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			self._cf_keys.index(_saved_cf) if _saved_cf in self._cf_keys else 0
 		)
 
+		# Translators: Checkbox label for auto-resuming the last-played station when NVDA starts.
 		self._resume = wx.CheckBox(self, label=_("&Resume last station on NVDA startup"))
 		self._resume.SetValue(config.conf["freeradio"].get("resume_on_start", False))
 		sHelper.addItem(self._resume)
 
 		self._announce_track_changes = wx.CheckBox(
 			self,
+			# Translators: Checkbox label for the track-change announcement setting (same feature as the toggleAnnounceTrackChanges command).
 			label=_("&Auto-announce track changes (ICY metadata)"),
 		)
 		self._announce_track_changes.SetValue(
@@ -206,10 +225,12 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		)
 		sHelper.addItem(self._announce_track_changes)
 
+		# Translators: Label for the choice between NVDA's own synth and a separate SAPI5 voice for track-change announcements.
 		_voice_label = _("Track change &voice:")
 		sHelper.addItem(wx.StaticText(self, label=_voice_label))
 		self._track_change_voice = wx.Choice(
 			self,
+			# Translators: The two voice-source choices for track-change announcements: NVDA's current synthesizer, or a separately selected SAPI5 voice.
 			choices=[_("NVDA"), _("SAPI5")],
 		)
 		self._track_change_voice.SetName(_voice_label)
@@ -221,8 +242,10 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		sHelper.addItem(self._track_change_voice)
 
 		# SAPI5 voice selector — populated on a background thread to avoid blocking UI.
+		# Translators: Label for the specific SAPI5 voice picker, enabled only when SAPI5 is chosen above.
 		_sapi5v_label = _("SAPI5 &voice:")
 		sHelper.addItem(wx.StaticText(self, label=_sapi5v_label))
+		# Translators: Placeholder/first entry in the SAPI5 voice list, meaning 'use whatever the system's default SAPI5 voice is' rather than a specific named voice.
 		self._sapi5_voice_choice = wx.Choice(self, choices=[_("Default (system)")])
 		self._sapi5_voice_choice.SetName(_sapi5v_label)
 		self._sapi5_voice_choice.SetSelection(0)
@@ -239,6 +262,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 					return
 				saved_name = config.conf["freeradio"].get("sapi5_voice_name", "")
 				self._sapi5_voice_names = [""] + voices
+				# Translators: First entry in the SAPI5 voice list once real voices have loaded, meaning 'use the system default SAPI5 voice'.
 				labels = [_("Default (system)")] + voices
 				self._sapi5_voice_choice.Set(labels)
 				sel = 0
@@ -267,6 +291,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 		self._mute_notifications = wx.CheckBox(
 			self,
+			# Translators: Checkbox label for the mute-notifications setting (same feature as the toggleMuteNotifications command).
 			label=_("&Mute notifications (station changes, playback, recording)"),
 		)
 		self._mute_notifications.SetValue(
@@ -276,6 +301,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 		self._braille_messages = wx.CheckBox(
 			self,
+			# Translators: Checkbox label for whether FreeRadio notifications also show on a connected braille display.
 			label=_("&Show FreeRadio messages on the braille display"),
 		)
 		self._braille_messages.SetValue(_braille_messages_enabled())
@@ -283,6 +309,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 		self._save_liked_songs = wx.CheckBox(
 			self,
+			# Translators: Checkbox label for the save-liked-songs setting (same feature as the toggleSaveLikedSongs command).
 			label=_("&Save liked songs to a text file"),
 		)
 		self._save_liked_songs.SetValue(
@@ -290,8 +317,10 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		)
 		sHelper.addItem(self._save_liked_songs)
 
+		# Translators: Label for the choice controlling what a single Ctrl+Win+P press does when nothing is currently playing.
 		hotkey_p_label = _("When Ctrl+Win+P is pressed with no active playback:")
 		hotkey_p_choices = [
+			# Translators: The two choices for a single Ctrl+Win+P press with nothing playing: resume where playback left off, or open the favourites list to pick something.
 			_("Resume last station"),
 			_("Open favourites list"),
 		]
@@ -303,8 +332,10 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		current_action = config.conf["freeradio"].get("hotkey_p_action", "resume")
 		self._hotkey_p_action.SetSelection(0 if current_action == "resume" else 1)
 
+		# Translators: Label for the choice controlling what a double Ctrl+Win+P press does.
 		hotkey_p_double_label = _("When Ctrl+Win+P is pressed twice:")
 		hotkey_p_double_choices = [
+			# Translators: Choices for what a double/triple Ctrl+Win+P press can do - each opens a different FreeRadio tab or performs a quick action; this same nine-item list is reused for both the double-press and triple-press settings (continues for the next eight lines).
 			_("Do nothing"),
 			_("Open favourites list"),
 			_("Open station search"),
@@ -326,6 +357,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			_double_map.index(current_double) if current_double in _double_map else 0
 		)
 
+		# Translators: Label for the choice controlling what a triple Ctrl+Win+P press does; same nine choices as the double-press setting above.
 		hotkey_p_triple_label = _("When Ctrl+Win+P is pressed three times:")
 		hotkey_p_triple_choices = [
 			_("Do nothing"),
@@ -350,7 +382,9 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		)
 
 		# --- Music Recognition ---
+		# Translators: Section heading above the ffmpeg-path setting used by the music-recognition feature.
 		sHelper.addItem(wx.StaticText(self, label=_("Music Recognition via Shazam (Ctrl+Win+I × 3):")))
+		# Translators: Label for the ffmpeg.exe path text field.
 		ffmpeg_label = _("ffmpeg.exe path (optional; auto-used from addon folder if empty):")
 		sHelper.addItem(wx.StaticText(self, label=ffmpeg_label))
 		ffmpeg_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -359,6 +393,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			value=config.conf["freeradio"].get("ffmpeg_path", ""),
 		)
 		self._ffmpeg_path.SetName(ffmpeg_label)
+		# Translators: Button label; opens a file-picker to choose ffmpeg.exe.
 		ffmpeg_browse = wx.Button(self, label=_("Brows&e..."))
 		ffmpeg_sizer.Add(self._ffmpeg_path, 1, wx.EXPAND | wx.RIGHT, 5)
 		ffmpeg_sizer.Add(ffmpeg_browse, 0)
@@ -366,6 +401,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		ffmpeg_browse.Bind(wx.EVT_BUTTON, self._on_browse_ffmpeg)
 
 		# --- Recordings folder ---
+		# Translators: Label for the custom recordings-folder path field.
 		rec_dir_label = _("Recordings folder:")
 		sHelper.addItem(wx.StaticText(self, label=rec_dir_label))
 		rec_dir_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -376,9 +412,11 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self._recordings_dir.SetName(rec_dir_label)
 		_default_hint = wx.StaticText(
 			self,
+			# Translators: Grey hint under the recordings-folder field explaining what happens if it's left empty.
 			label=_("(empty = default: Documents\\FreeRadio Recordings)"),
 		)
 		_default_hint.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
+		# Translators: Button label; opens a folder-picker to choose the recordings folder.
 		rec_dir_browse = wx.Button(self, label=_("Brow&se folder..."))
 		rec_dir_sizer.Add(self._recordings_dir, 1, wx.EXPAND | wx.RIGHT, 5)
 		rec_dir_sizer.Add(rec_dir_browse, 0)
@@ -393,6 +431,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		# minutes, or hang outright if the share is unreachable.
 		self._jukebox_search_network_drives = wx.CheckBox(
 			self,
+			# Translators: Checkbox label for whether the jukebox disk search also scans network drives (off by default - see the comment above about search time).
 			label=_("Include &network drives when searching the jukebox"),
 		)
 		self._jukebox_search_network_drives.SetValue(
@@ -417,9 +456,11 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		# next to each book in the Audio Books tab, rather than
 		# introducing new, differently-worded translations for the same
 		# three names.
+		# Translators: Names in the audio-book-sources checklist below; see the comment above for why these reuse RadioDialog's existing source-label strings rather than new translations.
 		_AUDIOBOOK_SOURCE_DISPLAY = [_("GETEM"), _("LibriVox"), _("Project Gutenberg")]
 		self._audiobook_source_keys = _AUDIOBOOK_SOURCE_KEYS
 		self._audiobook_sources_choice = sHelper.addLabeledControl(
+			# Translators: Label for the audio-book-sources checklist (which catalogs to search/show).
 			_("Audio book &sources:"),
 			nvdaControls.CustomCheckListBox,
 			choices=_AUDIOBOOK_SOURCE_DISPLAY,
@@ -433,8 +474,10 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		# Credentials are not part of config.conf (which is stored as
 		# plain text) - they're saved separately, encrypted with the
 		# Windows Data Protection API; see getem.save_credentials().
+		# Translators: Section heading above the GETEM username/password fields.
 		sHelper.addItem(wx.StaticText(self, label=_("GETEM Audio Books Account:")))
 
+		# Translators: Label for the GETEM account username field.
 		getem_username_label = _("GETEM username:")
 		sHelper.addItem(wx.StaticText(self, label=getem_username_label))
 		_saved_getem_username, _saved_getem_password = getem.load_credentials()
@@ -442,6 +485,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self._getem_username.SetName(getem_username_label)
 		sHelper.addItem(self._getem_username, flag=wx.EXPAND)
 
+		# Translators: Label for the GETEM account password field.
 		getem_password_label = _("GETEM password:")
 		sHelper.addItem(wx.StaticText(self, label=getem_password_label))
 		self._getem_password = wx.TextCtrl(self, value=_saved_getem_password, style=wx.TE_PASSWORD)
@@ -450,18 +494,21 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 		_getem_hint = wx.StaticText(
 			self,
+			# Translators: Grey hint under the GETEM credential fields explaining how they are stored (see the comment above).
 			label=_("Stored encrypted on this computer, for this Windows user only. Leave both fields empty and save to remove them."),
 		)
 		_getem_hint.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
 		sHelper.addItem(_getem_hint)
 
 		# --- Recording output format ---
+		# Translators: Label for the recording-output-format choice control.
 		recording_format_label = _("Recording output format:")
 		self._recording_format_keys = ["original", "audio_only", "mp3"]
 		self._recording_format = sHelper.addLabeledControl(
 			recording_format_label,
 			wx.Choice,
 			choices=[
+				# Translators: Choices for the recording output format: keep the original stream container as-is, keep the original audio codec but strip non-audio data, or convert to MP3 (continues for the next two lines).
 				_("Original stream format (no conversion)"),
 				_("Audio only, original codec (no quality loss)"),
 				_("MP3 (convert audio)"),
@@ -473,6 +520,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			if _saved_recording_format in self._recording_format_keys else 0
 		)
 
+		# Translators: Label for the MP3 bitrate choice, shown only when MP3 output is selected above.
 		mp3_bitrate_label = _("MP3 recording bitrate:")
 		self._mp3_bitrate_values = [96, 128, 160, 192, 256, 320]
 		self._recording_mp3_bitrate = sHelper.addLabeledControl(
@@ -489,6 +537,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		# --- Internet check ---
 		self._disable_internet_check = wx.CheckBox(
 			self,
+			# Translators: Checkbox label for skipping the pre-playback internet reachability check.
 			label=_("&Disable internet connectivity check before playing (recommended if DNS is blocked)"),
 		)
 		self._disable_internet_check.SetValue(
@@ -499,6 +548,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		# --- Updates ---
 		self._auto_check_updates = wx.CheckBox(
 			self,
+			# Translators: Checkbox label for the automatic update-check setting.
 			label=_("&Automatically check for updates on startup"),
 		)
 		self._auto_check_updates.SetValue(
@@ -506,6 +556,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		)
 		sHelper.addItem(self._auto_check_updates)
 
+		# Translators: Button label; triggers an immediate manual update check.
 		self._check_now_btn = wx.Button(self, label=_("Check for Updates &Now"))
 		self._check_now_btn.Bind(wx.EVT_BUTTON, self._on_check_now)
 		sHelper.addItem(self._check_now_btn)
@@ -534,6 +585,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		"""Populate the Choice control with the device list and select the saved device."""
 		if not self or not self._device_choice:
 			return
+		# Translators: Same 'System default' first-entry convention as the other device pickers, used here to populate the Settings panel's device list.
 		self._audio_devices = [(-1, _("System default"))] + list(devices)
 		self._device_choice.Clear()
 		for _idx, name in self._audio_devices:
@@ -580,6 +632,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		if idx != wx.NOT_FOUND:
 			label = self._fx_choice.GetString(idx)
 			is_checked = self._fx_choice.IsChecked(idx)
+			# Translators: Same "%(effect)s %(state)s" announcement pattern as radioDialog.py's _toggle_eq_band; spoken here when hovering an item in the Settings effects checklist. %(state)s is "enabled"/"disabled" below.
 			ui.message(_("%(effect)s %(state)s") % {
 				"effect": label,
 				"state": _("enabled") if is_checked else _("disabled"),
@@ -591,6 +644,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		idx = event.GetInt()
 		is_checked = self._fx_choice.IsChecked(idx)
 		label = self._fx_choice.GetString(idx)
+		# Translators: Same announcement as the hover handler above, spoken here after actually toggling an effect via the checklist checkbox.
 		ui.message(_("%(effect)s %(state)s") % {
 			"effect": label,
 			"state": _("enabled") if is_checked else _("disabled"),
@@ -634,6 +688,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 	def _on_browse_ffmpeg(self, event):
 		with wx.FileDialog(
 			self,
+			# Translators: Title of the file-picker dialog for choosing ffmpeg.exe.
 			_("Select ffmpeg.exe"),
 			wildcard="ffmpeg.exe|ffmpeg.exe|Executable files (*.exe)|*.exe",
 			style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
@@ -644,6 +699,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 	def _on_check_now(self, event):
 		"""Trigger a manual update check from the settings panel."""
 		self._check_now_btn.Disable()
+		# Translators: Temporary label on the Check for Updates Now button while the check is in progress.
 		self._check_now_btn.SetLabel(_("Checking..."))
 		def _run():
 			plugin = _get_freeradio_plugin()
@@ -656,6 +712,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		"""Re-enable the check button after the update check completes."""
 		if self and self._check_now_btn:
 			self._check_now_btn.Enable()
+			# Translators: Restores the button's normal label once the manual update check finishes.
 			self._check_now_btn.SetLabel(_("Check for Updates &Now"))
 
 	def _on_browse_recordings_dir(self, event):
@@ -665,6 +722,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		)
 		with wx.DirDialog(
 			self,
+			# Translators: Title of the folder-picker dialog for choosing the recordings folder.
 			_("Select recordings folder"),
 			defaultPath=start_dir,
 			style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST,
