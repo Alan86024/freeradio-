@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freeradio2026.20.6\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-18 11:33+0300\n"
+"POT-Creation-Date: 2026-09-18 13:17+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Artin Dekker <contact@artin.net>\n"
 "Language-Team: \n"
@@ -3024,7 +3024,7 @@ msgstr ""
 #. Translators: Label for the jukebox disk-search field.
 #: addon\globalPlugins\freeradio\radioDialog.py:6956
 #, fuzzy
-msgid "Search disk:"
+msgid "Search on devices:"
 msgstr "Zoeken:"
 
 #. Translators: Accessible name/hint for the jukebox disk-search field: searches local audio files by filename.
@@ -3036,7 +3036,7 @@ msgstr "Podcasts zoeken. Druk op Enter om te zoeken"
 #. Translators: Accessible name for the disk-search results list.
 #: addon\globalPlugins\freeradio\radioDialog.py:6972
 #, fuzzy
-msgid "Audio files found on disk"
+msgid "Audio files found on your devices"
 msgstr "Er zijn geen audiodelen gevonden voor dit boek."
 
 #. --- Jukebox entries (manually added files/folders) ---
@@ -3084,7 +3084,7 @@ msgstr "&Verwijderen"
 #. Translators: Spoken when a jukebox disk search starts; %s is the search text.
 #: addon\globalPlugins\freeradio\radioDialog.py:7105
 #, fuzzy, python-format
-msgid "Searching disks for \"%s\"..."
+msgid "Searching devices for \"%s\"..."
 msgstr "Podcasts zoeken..."
 
 #. Translators: Placeholder row shown in the results list when a disk search finds nothing.

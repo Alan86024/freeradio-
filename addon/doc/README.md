@@ -58,7 +58,7 @@ All shortcuts can be reassigned from NVDA Menu → Preferences → Input Gesture
 | `Ctrl+Win+R` | Open station browser | Opens the browser window if closed, or brings it to the foreground if already open. |
 | `Ctrl+Win+O` | Open Podcasts tab | Opens the station browser (if closed) or brings it to the foreground, and switches directly to the **Podcasts** tab. |
 | `Ctrl+Win+L` | Open Audio Books tab | Opens the station browser (if closed) or brings it to the foreground, and switches directly to the **Audio Books** tab. |
-| `Ctrl+Win+U` | Open Jukebox tab | Opens the station browser (if closed) or brings it to the foreground, and switches directly to the **Jukebox** tab, focused on the disk search box. |
+| `Ctrl+Win+U` | Open Jukebox tab | Opens the station browser (if closed) or brings it to the foreground, and switches directly to the **Jukebox** tab, focused on the devices search box. |
 | `Ctrl+Win+P` | Pause / resume | Pauses the current station if playing; resumes if paused. If nothing is playing, starts the last station or opens the favourites list depending on your setting. Pressing twice in quick succession jumps directly to a tab of your choice. Pressing three times can trigger a separate action depending on your setting. |
 | `Ctrl+Win+S` | Stop | Fully stops the current station and resets the player. |
 | `Ctrl+Win+→` | Next favourite | Moves to the next station in the favourites list. Wraps around to the beginning at the end of the list. |
@@ -190,7 +190,7 @@ Each shortcut mirrors checking or unchecking the corresponding entry in the **Ef
 | `Alt+5` | Liked Songs | Switches to the Liked Songs tab. |
 | `Alt+6` | Podcasts | Switches to the Podcasts tab. |
 | `Alt+7` | Audio Books | Switches to the Audio Books tab. |
-| `Alt+8` | Jukebox | Switches to the Jukebox tab, focused on the disk search box. |
+| `Alt+8` | Jukebox | Switches to the Jukebox tab, focused on the devices search box. |
 | `Alt+K` | Close | Closes the window; the add-on continues playing in the background. |
 
 ## Favourites
@@ -599,15 +599,15 @@ FreeRadio's **Jukebox** tab gives you two ways to play audio files that are alre
 
 Open the station browser with `Ctrl+Win+R` and switch to the **Jukebox** tab with `Ctrl+Tab` or `Alt+8`, or open it directly from anywhere with the global shortcut `Ctrl+Win+U`. The tab is organised into three main areas:
 
-1. **Search disk** — a text field that searches every locally attached, ready drive for audio files whose filename contains the typed text. Press `Enter` to start the search.
+1. **Search on devices** — a text field that searches every locally attached, ready drive for audio files whose filename contains the typed text. Press `Enter` to start the search.
 2. **Search results** — a list that appears once a search has been run, showing the matching files. Hidden until then, so the tab stays uncluttered when there's nothing to search.
 3. **Jukebox and Tracks** — the persistent list of items you've added, followed by the list of tracks in whichever entry is selected (for a file entry, just that one file; for a folder entry, every audio file found inside it).
 
 The **Add File…**, **Add Folder…** and **Remove** buttons sit below the Tracks list.
 
-### Searching for Files on Disk
+### Searching for Files on Devices
 
-Type any part of a filename into the **Search disk** field and press `Enter`. FreeRadio walks every locally attached drive — fixed disks, USB drives, memory cards, mapped network drives — looking for audio files (`.mp3`, `.wav`, `.ogg`, `.flac`, `.m4a`, `.m4b`, `.aac`, `.wma`, `.opus`, and several more) whose filename contains the search text. The search runs in the background, so NVDA stays responsive.
+Type any part of a filename into the **Search on devices** field and press `Enter`. FreeRadio walks every locally attached drive — fixed disks, USB drives, memory cards, mapped network drives — looking for audio files (`.mp3`, `.wav`, `.ogg`, `.flac`, `.m4a`, `.m4b`, `.aac`, `.wma`, `.opus`, and several more) whose filename contains the search text. The search runs in the background, so NVDA stays responsive.
 
 - **Space** on a search result previews it — starts playback through the normal player. Press **Space** again on the same file to stop the preview.
 - **Enter** on a search result adds it to your jukebox.
@@ -620,7 +620,7 @@ The Jukebox list is your persistent personal library. Two kinds of item can be a
 
 - **Add File…** — opens a file picker that lets you add one or more individual audio files. All chosen files are added in one go.
 - **Add Folder…** — opens a folder picker. Every audio file found inside the chosen folder, including in its subfolders, is treated as one of that folder's **tracks**. The folder itself is a single entry in your Jukebox list; the files inside it are listed in the Tracks list when the folder is selected.
-- **Remove** — deletes the currently selected entry from your Jukebox. Removing a folder entry does not delete any files from disk; it just forgets the folder.
+- **Remove** — deletes the currently selected entry from your Jukebox. Removing a folder entry does not delete any files from disk or device; it just forgets the folder.
 
 Your Jukebox list is saved automatically, so it survives NVDA restarts. Folder contents are scanned on demand and cached, so adding a folder is instantaneous even for very large collections — the full scan happens the first time you select that folder. If you add files to a folder outside FreeRadio, use the **Rescan Folder** item in the folder's context menu to pick them up.
 

@@ -6953,7 +6953,7 @@ class RadioDialog(wx.Dialog):
 		# --- Disk search row ---
 		search_sizer = wx.BoxSizer(wx.HORIZONTAL)
 		# Translators: Label for the jukebox disk-search field.
-		search_sizer.Add(wx.StaticText(panel, label=_("Search disk:")), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 4)
+		search_sizer.Add(wx.StaticText(panel, label=_("Search on devices:")), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 4)
 		self._jukebox_search = wx.TextCtrl(panel)
 		# Translators: Accessible name/hint for the jukebox disk-search field: searches local audio files by filename.
 		self._jukebox_search.SetName(_("Search audio files on your computer by filename. Press enter to search"))
@@ -6969,7 +6969,7 @@ class RadioDialog(wx.Dialog):
 		sizer.Add(self._jukebox_results_label, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 8)
 		self._jukebox_search_results = wx.ListBox(panel, style=wx.LB_SINGLE)
 		# Translators: Accessible name for the disk-search results list.
-		self._jukebox_search_results.SetName(_("Audio files found on disk"))
+		self._jukebox_search_results.SetName(_("Audio files found on your devices"))
 		self._jukebox_search_results.SetMinSize((-1, 100))
 		sizer.Add(self._jukebox_search_results, 0, wx.EXPAND | wx.ALL, 8)
 		self._jukebox_search_sizer = sizer
@@ -7102,7 +7102,7 @@ class RadioDialog(wx.Dialog):
 		# Translators: Placeholder row shown in the results list while a disk search is in progress.
 		self._jukebox_search_results.Append(_("Searching..."))
 		# Translators: Spoken when a jukebox disk search starts; %s is the search text.
-		ui.message(_("Searching disks for \"%s\"...") % query)
+		ui.message(_("Searching devices for \"%s\"...") % query)
 
 		include_network = config.conf["freeradio"].get("jukebox_search_network_drives", False)
 
