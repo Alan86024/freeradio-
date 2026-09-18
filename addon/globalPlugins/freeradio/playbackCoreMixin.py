@@ -42,6 +42,7 @@ class PlaybackCoreMixin:
 	_resume_last_station) that other scripts and dialogs call into."""
 
 	@script(
+		# Translators: Name of an NVDA command; pauses playback (single press), with double/triple-press doing other actions - see the docstring above.
 		description=_("Pause or resume FreeRadio playback"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+p",
@@ -119,9 +120,11 @@ class PlaybackCoreMixin:
 			if _has_media:
 				if _is_playing:
 					self._player.pause()
+					# Translators: Spoken when the pause/resume command pauses playback.
 					_notify(_("Paused"))
 				else:
 					self._player.resume()
+					# Translators: Spoken when the pause/resume command resumes playback.
 					_notify(_("Playing"))
 				return
 			if _action == "favorites":
@@ -139,6 +142,7 @@ class PlaybackCoreMixin:
 		self._pause_resume_timer = wx.CallLater(350, _do_single_press)
 
 	@script(
+		# Translators: Name of an NVDA command; stops FreeRadio playback outright (as opposed to pausing).
 		description=_("Stop FreeRadio playback"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+s",
@@ -152,10 +156,13 @@ class PlaybackCoreMixin:
 			# Active recording(s) in progress — inform user and ask for confirmation
 			parts = []
 			if has_instant:
+				# Translators: Line in the stop-confirmation dialog listing an in-progress, immediately-started recording that will be cut off; %s is the station name.
 				parts.append(_("Instant recording: %s") % self._recorder.get_station_name())
 			for sched_rec in active_sched:
+				# Translators: Line in the stop-confirmation dialog listing an active scheduled recording that will be cut off; %s is the station name.
 				parts.append(_("Scheduled recording: %s") % sched_rec.station.get("name", "").strip())
 			rec_list = "\n".join(parts)
+			# Translators: Body text of the confirmation dialog shown when stopping playback would also cut off one or more active recordings; %s is the newline-joined list of affected recordings built just above.
 			msg = _(
 				"The following recordings are active and will be stopped:\n%s\n\nStop radio and end all recordings?"
 			) % rec_list
@@ -164,6 +171,7 @@ class PlaybackCoreMixin:
 				dlg = wx.MessageDialog(
 					gui.mainFrame,
 					msg,
+					# Translators: Title of the confirmation dialog shown when stopping playback would cut off active recordings.
 					_("Active Recordings"),
 					wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING,
 				)
@@ -177,6 +185,7 @@ class PlaybackCoreMixin:
 						self._player.stop()
 					self._stations      = []
 					self._current_index = -1
+					# Translators: Spoken after confirming the stop when active recordings were involved.
 					_notify(_("Freeradio stopped"))
 
 			wx.CallAfter(_confirm)
@@ -188,9 +197,11 @@ class PlaybackCoreMixin:
 		self._player.stop()
 		self._stations      = []
 		self._current_index = -1
+		# Translators: Spoken when the stop command is used and there were no active recordings to confirm about.
 		_notify(_("Freeradio stopped"))
 
 	@script(
+		# Translators: Name of an NVDA command; skips to the next station in the favourites list.
 		description=_("Play next station"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+rightArrow",
@@ -227,6 +238,7 @@ class PlaybackCoreMixin:
 		self._play_station(favs[self._current_index])
 
 	@script(
+		# Translators: Name of an NVDA command; skips to the previous station in the favourites list.
 		description=_("Play previous station"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+leftArrow",
@@ -601,6 +613,7 @@ class PlaybackCoreMixin:
 			chapter_index = config.conf["freeradio"].get("last_station_getem_chapter_index", 0)
 			rebuilt = self._rebuild_getem_resume_url(detail_url, chapter_index)
 			if not rebuilt:
+				# Translators: Spoken on NVDA startup when resuming the last-played audio book fails because the book is no longer in the user's library.
 				ui.message(_(
 					"Could not resume the last audio book - it may have been "
 					"removed from your library."
@@ -639,12 +652,14 @@ class PlaybackCoreMixin:
 		self._play_station(station)
 
 	def _play_station(self, station, announce=True):
+		# Translators: Fallback station name used in log/error contexts if the station dict has no name field.
 		name         = station.get("name", _("Unknown station")).strip()
 		url_resolved = station.get("url_resolved", "")
 		url          = url_resolved or station.get("url", "")
 		station_uuid = station.get("stationuuid", "")
 
 		if not url:
+			# Translators: Spoken when trying to play a station that has no resolvable stream URL at all.
 			ui.message(_("No stream URL available for this station"))
 			return
 
@@ -655,6 +670,7 @@ class PlaybackCoreMixin:
 		# has disabled this check in settings.
 		if station.get("media_kind") != "jukebox" and not config.conf["freeradio"].get("disable_internet_check", False):
 			if not self._check_internet():
+				# Translators: Spoken when trying to play a station but the internet-connectivity pre-check fails.
 				ui.message(_("No internet connection. Please check your connection and try again."))
 				return
 
@@ -834,11 +850,13 @@ class PlaybackCoreMixin:
 		"""Format a transpose value for announcement, e.g. "+1.25 semitones",
 		"-0.5 semitones", or "Normal pitch" for 0.0."""
 		if abs(semitones) < 0.001:
+			# Translators: Spoken by the pitch-transpose commands when the current transpose value is back to 0 (no pitch shift applied).
 			return _("Normal pitch")
 		# Translators: %.2f = signed semitone value, e.g. "+1.25 semitones"
 		return _("%+.2f semitones") % semitones
 
 	@script(
+		# Translators: Name of an NVDA command; raises the pitch of podcasts/audio books/jukebox tracks without changing playback speed.
 		description=_("Raise pitch transpose (podcasts, audio books and jukebox tracks)"),
 		category=_("FreeRadio"),
 		gesture="kb:shift+windows+k",
@@ -848,13 +866,16 @@ class PlaybackCoreMixin:
 		if applied:
 			_notify(self._format_transpose(value))
 		elif reason == "not_tempo_stream":
+			# Translators: Spoken when the pitch-transpose commands are used while playing a live radio station rather than a podcast/audiobook/jukebox track.
 			_notify(_("Transpose only applies to podcasts, audio books and jukebox tracks"))
 		elif reason == "bass_fx_unavailable":
+			# Translators: Spoken when pitch transpose can't be applied because the optional bass_fx library isn't installed.
 			_notify(_("Transpose requires the bass_fx audio component, which isn't available"))
 		else:
 			_notify(self._format_transpose(value))
 
 	@script(
+		# Translators: Name of an NVDA command; lowers the pitch of podcasts/audio books/jukebox tracks without changing playback speed.
 		description=_("Lower pitch transpose (podcasts, audio books and jukebox tracks)"),
 		category=_("FreeRadio"),
 		gesture="kb:shift+windows+j",
@@ -864,8 +885,10 @@ class PlaybackCoreMixin:
 		if applied:
 			_notify(self._format_transpose(value))
 		elif reason == "not_tempo_stream":
+			# Translators: Same as the transposeUp case above: spoken when transpose is used on a live radio station.
 			_notify(_("Transpose only applies to podcasts, audio books and jukebox tracks"))
 		elif reason == "bass_fx_unavailable":
+			# Translators: Same as the transposeUp case above: spoken when bass_fx isn't installed.
 			_notify(_("Transpose requires the bass_fx audio component, which isn't available"))
 		else:
 			_notify(self._format_transpose(value))
@@ -879,4 +902,5 @@ class PlaybackCoreMixin:
 			# directly rather than via wx.CallAfter) - ui.message needs to
 			# stay marshalled onto the main thread from here since we're not
 			# on it.
+			# Translators: Spoken when actually starting playback of a station/track fails with an exception; %s is the error message.
 			wx.CallAfter(ui.message, _("Could not play station: %s") % str(e))

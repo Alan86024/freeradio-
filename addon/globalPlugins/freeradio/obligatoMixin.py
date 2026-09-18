@@ -61,6 +61,7 @@ class ObligatoDialog(wx.Dialog):
 
 		# --- Background station ---
 		sizer.Add(
+			# Translators: Static label above the favourite-station picker in the Obligato setup dialog.
 			wx.StaticText(self, label=_("Background station:")),
 			0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 8,
 		)
@@ -68,6 +69,7 @@ class ObligatoDialog(wx.Dialog):
 			s.get("name", "").strip() or s.get("url", "") for s in favorites
 		]
 		self._station_list = wx.ListBox(self, choices=station_names, style=wx.LB_SINGLE)
+		# Translators: Accessible name for the favourite-station picker list (same text as the static label above it).
 		self._station_list.SetName(_("Background station:"))
 		sizer.Add(self._station_list, 1, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
 
@@ -83,17 +85,20 @@ class ObligatoDialog(wx.Dialog):
 
 		# --- Audio output ---
 		sizer.Add(
+			# Translators: Static label above the output-device choice in the Obligato setup dialog.
 			wx.StaticText(self, label=_("Audio output:")),
 			0, wx.EXPAND | wx.LEFT | wx.RIGHT, 8,
 		)
 		# ("same" | "default" | device_index, display label)
 		self._device_choices = (
+			# Translators: The two fixed entries in the Obligato output-device choice: play through the same device as the main player, or through a separately chosen device.
 			[("same", _("Same as main output")), ("default", _("System default"))]
 			+ [(idx, name) for (idx, name) in devices]
 		)
 		self._device_combo = wx.Choice(
 			self, choices=[label for (_val, label) in self._device_choices]
 		)
+		# Translators: Accessible name for the output-device choice control.
 		self._device_combo.SetName(_("Audio output:"))
 		sizer.Add(self._device_combo, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
 
@@ -120,6 +125,7 @@ class ObligatoDialog(wx.Dialog):
 
 		# --- Background volume ---
 		sizer.Add(
+			# Translators: Static label above the background-volume choice in the Obligato setup dialog.
 			wx.StaticText(self, label=_("Background volume:")),
 			0, wx.EXPAND | wx.LEFT | wx.RIGHT, 8,
 		)
@@ -134,6 +140,7 @@ class ObligatoDialog(wx.Dialog):
 				# player's current volume, e.g. "50% of main volume". %d is the percentage.
 				ratio_labels.append(_("%d%% of main volume") % r)
 		self._volume_combo = wx.Choice(self, choices=ratio_labels)
+		# Translators: Accessible name for the background-volume choice control.
 		self._volume_combo.SetName(_("Background volume:"))
 		sizer.Add(self._volume_combo, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
 
@@ -146,6 +153,7 @@ class ObligatoDialog(wx.Dialog):
 
 		# --- OK / Cancel ---
 		btn_sizer = wx.StdDialogButtonSizer()
+		# Translators: 'Start' button label in the Obligato setup dialog, confirming the chosen station/device/volume and beginning background playback.
 		ok_btn = wx.Button(self, wx.ID_OK, label=_("&Start"))
 		ok_btn.SetDefault()
 		btn_sizer.AddButton(ok_btn)
@@ -164,6 +172,7 @@ class ObligatoDialog(wx.Dialog):
 
 	def _on_ok(self, event):
 		if not self._favorites or self._station_list.GetSelection() == wx.NOT_FOUND:
+			# Translators: Spoken if the user presses Start without selecting a background station.
 			ui.message(_("Please select a station for the background music."))
 			self._station_list.SetFocus()
 			return
@@ -192,6 +201,7 @@ class ObligatoMixin:
 	the main media."""
 
 	@script(
+		# Translators: Name of an NVDA command (default Ctrl+Shift+Windows+M); starts or stops Obligato background-music mode.
 		description=_("Toggle Obligato background music mode"),
 		category=_("FreeRadio"),
 		# Default binding lives in GlobalPlugin.__gestures - see __init__.py.
@@ -207,6 +217,7 @@ class ObligatoMixin:
 		favorites = self._manager.get_favorites()
 		if not favorites:
 			ui.message(
+				# Translators: Spoken when the toggle command is pressed but the favourites list is empty, since Obligato can only play a saved favourite station.
 				_("No favourite stations. Add a station to favourites first to use Obligato mode.")
 			)
 			return
@@ -269,6 +280,7 @@ class ObligatoMixin:
 		name_display = station.get("name", "").strip()
 
 		if not url:
+			# Translators: Spoken when the chosen background station has no resolvable stream URL to play.
 			ui.message(_("No stream URL available for this station"))
 			return
 
@@ -283,6 +295,7 @@ class ObligatoMixin:
 				if not self._check_internet():
 					wx.CallAfter(
 						ui.message,
+						# Translators: Spoken when starting Obligato mode fails because there is no internet connection to reach the chosen station.
 						_("No internet connection. Please check your connection and try again."),
 					)
 					return
@@ -291,6 +304,7 @@ class ObligatoMixin:
 			try:
 				player = radioPlayer.RadioPlayer(output_device=resolved_device)
 			except Exception:
+				# Translators: Generic fallback spoken when starting Obligato mode fails for an unspecified reason.
 				wx.CallAfter(ui.message, _("Could not start Obligato mode."))
 				return
 			# play() launches the connection on its own background thread
@@ -328,6 +342,7 @@ class ObligatoMixin:
 		)
 		self._obligato_sync_thread.start()
 		if not _notifications_muted():
+			# Translators: Spoken once the background station actually starts playing in Obligato mode; %s is the station name.
 			ui.message(_("Obligato mode started: %s") % name_display)
 
 	def _obligato_sync_loop(self, player, stop_event):
@@ -381,6 +396,7 @@ class ObligatoMixin:
 		already stopped/restarted Obligato just needs that stale instance
 		terminated, not the current session touched."""
 		name = (station or {}).get("name", "").strip() or url
+		# Translators: Spoken if the background station's connection fails outright while in Obligato mode; %(name)s is the station name, %(reason)s a short failure description.
 		ui.message(_("Could not play %(name)s in Obligato mode: %(reason)s") % {
 			"name": name, "reason": reason,
 		})
@@ -408,6 +424,7 @@ class ObligatoMixin:
 				except Exception:
 					pass
 			if not _notifications_muted():
+				# Translators: Spoken when Obligato mode is turned off and the background station stops.
 				wx.CallAfter(ui.message, _("Obligato mode stopped"))
 
 		threading.Thread(target=_shutdown, daemon=True).start()

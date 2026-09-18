@@ -609,6 +609,7 @@ def _compute_signature_uri(pcm_bytes):
 
 	peaks_by_band, num_samples = result
 	if not peaks_by_band:
+		# Translators: Raised internally when the captured audio snippet has no detectable frequency content to fingerprint (e.g. silence or dead air); surfaces as a recognition failure.
 		raise ValueError(_("No frequency peaks found — audio may be silence"))
 
 	binary	= _encode_signature_binary(peaks_by_band, num_samples)
@@ -658,6 +659,7 @@ def _query_shazam(signature_uri, sample_ms):
 
 	track = data.get("track")
 	if not track:
+		# Translators: Raised when Shazam's API responds but has no match for the submitted audio fingerprint.
 		raise ValueError(_("Song not recognized"))
 
 	title  = track.get("title", "")
@@ -722,6 +724,7 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 		if not os.path.isfile(ffmpeg_path):
 			return RecognitionResult(
 				success=False,
+				# Translators: Shown when the recognizer can't find ffmpeg.exe, which it needs to convert the captured audio before fingerprinting; includes the download URL and where to place the file.
 				error_msg=(_(
 					"ffmpeg.exe not found. Download ffmpeg from "
 					"https://ffmpeg.org/download.html and place ffmpeg.exe "

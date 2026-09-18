@@ -148,6 +148,7 @@ def _parse_archive_doc(doc):
 	resolve_media() knows to fetch its chapters from archive.org's
 	metadata API (see _resolve_via_archive_org())."""
 	identifier = _first_str(doc.get("identifier")).strip()
+	# Translators: Fallback book title when archive.org returns no title metadata for a search result.
 	title = _first_str(doc.get("title")).strip() or _("Unknown")
 
 	creators = doc.get("creator")
@@ -184,6 +185,7 @@ def search_librivox(query, limit=RESULTS_PER_QUERY):
 	(list_of_LibrivoxBook, error_message)."""
 	query = (query or "").strip()
 	if not query:
+		# Translators: Error returned by search_librivox() when the user submits an empty search box.
 		return [], _("Please enter a search term.")
 
 	# A quoted phrase match against title/creator approximates what
@@ -243,6 +245,7 @@ class LibrivoxBook:
 
 	def __init__(self, title, detail_url, author="", narrator="", format_label="",
 			description="", publisher="", language="", url_rss="", archive_id=""):
+		# Translators: Fallback LibrivoxBook.title when no title was supplied at construction.
 		self.title = title or _("Unknown")
 		self.detail_url = detail_url
 		self.author = author
@@ -324,6 +327,7 @@ class LibrivoxBook:
 			"audiobook_format": self.format_label,
 			"audiobook_chapter_count": len(self.chapters),
 			"description": self.description,
+			# Translators: Fixed source label for LibriVox audiobooks, shown in the station-details dialog and the Audio Books tab (same role as getem.py's/gutenberg_audiobooks.py's 'audiobook_source').
 			"audiobook_source": _("LibriVox"),
 		}
 
@@ -402,6 +406,7 @@ def get_book_by_url(url):
 	_book_from_metadata(). Returns (book_or_None, error_message)."""
 	match = ARCHIVE_DETAILS_URL_RE.match((url or "").strip())
 	if not match:
+		# Translators: Error returned by get_book_by_url() when the pasted URL doesn't match archive.org's book-details link pattern.
 		return None, _("This doesn't look like an archive.org book link.")
 	return _resolve_book_by_identifier(match.group(1))
 
@@ -420,6 +425,7 @@ def _resolve_book_by_identifier(identifier):
 
 	meta = data.get("metadata") or {}
 	if not meta or not meta.get("identifier"):
+		# Translators: Error returned when the archive.org identifier from a pasted link does not resolve to any item at all.
 		return None, _("Could not find a book at this address on archive.org.")
 
 	book = _parse_archive_doc({
@@ -480,6 +486,7 @@ def _chapters_from_metadata(book, data):
 		chapters.append({"title": title, "url": _file_url(name)})
 
 	if not chapters:
+		# Translators: Error returned by the archive.org metadata path when no playable audio file was found for the resolved book.
 		return book, _("No playable audio file was found for this book on archive.org.")
 
 	book.chapters = chapters
@@ -517,6 +524,7 @@ def _resolve_via_librivox_rss(book):
 	No login is required - LibriVox's RSS feeds and the audio files they
 	link to (almost always hosted on archive.org) are public."""
 	if not book.url_rss:
+		# Translators: Error returned when a LibriVox book has no linked RSS feed (used as a fallback path when archive.org's own file listing didn't work) to read chapters from.
 		return book, _("This book has no LibriVox RSS feed to read chapters from.")
 
 	try:
@@ -531,10 +539,12 @@ def _resolve_via_librivox_rss(book):
 
 	channel = root.find("channel")
 	if channel is None:
+		# Translators: Error returned when the book's LibriVox RSS feed could not be fetched or parsed.
 		return book, _("Could not read this book's chapter list.")
 
 	chapters = []
 	for item in channel.findall("item"):
+		# Translators: Fallback chapter title when an RSS <item> in the LibriVox feed has no <title> element.
 		title = (item.findtext("title") or "").strip() or _("Untitled")
 		enclosure = item.find("enclosure")
 		url = enclosure.get("url") if enclosure is not None else None
@@ -543,6 +553,7 @@ def _resolve_via_librivox_rss(book):
 		chapters.append({"title": title, "url": url})
 
 	if not chapters:
+		# Translators: Error returned when the LibriVox RSS feed was read successfully but contains no playable audio items.
 		return book, _("No playable audio file was found in this book's LibriVox feed.")
 
 	# LibriVox RSS feeds list chapters oldest-first already (matching
@@ -594,6 +605,7 @@ def _fetch_audio_file(chapter_url, dest_path, referer=None, session=None, progre
 			os.remove(tmp_path)
 		except OSError:
 			pass
+		# Translators: Raised internally when a chapter/book download completes but produced a zero-byte file; caught and shown to the user as a download failure.
 		raise RuntimeError(_("The downloaded file was empty."))
 
 	os.replace(tmp_path, dest_path)
@@ -633,6 +645,7 @@ def download_target(book, chapter):
 def book_download_dir(book):
 	from . import recorder
 	out_dir = recorder._recordings_dir()
+	# Translators: Fallback folder name used when saving a downloaded book, if the book's title is empty or has no usable characters.
 	return os.path.join(out_dir, safe_book_title(book) or _("Untitled"))
 
 

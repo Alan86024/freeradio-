@@ -162,6 +162,7 @@ class PodcastEpisode:
 		total = self.duration_seconds
 
 		if listened or position == -1.0:
+			# Translators: Prefix prepended to a podcast episode's list label when it has been fully listened to; shown in place of the elapsed/total duration suffix.
 			return _("[Listened]"), ""
 		if position and position > 0.0:
 			if total > 0:
@@ -313,6 +314,7 @@ class PodcastManager:
 		"""
 		feed = self.get_feed_by_url(url)
 		if feed:
+			# Translators: Error returned by PodcastManager.add_feed() when this exact feed URL is already in the subscription list.
 			return feed, _("Already subscribed.")
 
 		try:
@@ -320,6 +322,7 @@ class PodcastManager:
 			if error:
 				return None, error
 			if not feed.episodes:
+				# Translators: Error returned by PodcastManager.add_feed() when the feed was fetched and parsed but contains zero episodes.
 				return None, _("No episodes found in this feed.")
 			self._feeds.append(feed)
 			self._save()
@@ -353,6 +356,7 @@ class PodcastManager:
 		"""Re-fetch and update episodes for a given feed URL."""
 		feed = self.get_feed_by_url(url)
 		if not feed:
+			# Translators: Error returned by PodcastManager.refresh_feed() when the given feed is not among the current subscriptions.
 			return None, _("Feed not found.")
 
 		try:
@@ -387,6 +391,7 @@ class PodcastManager:
 						existing_feed.last_refresh = time.time()
 						self._save()
 						return existing_feed, None
+					# Translators: Not shown to the user: internal 'no change' result from an HTTP 304 (feed unchanged since last fetch) response, so refresh can skip re-parsing. Kept as a translatable string for consistency with the other returned messages, though callers treat it as a no-op rather than an error to display.
 					return None, _("No new episodes (304).")
 
 				raw = resp.read()
@@ -402,6 +407,7 @@ class PodcastManager:
 				elif root.tag.endswith("feed"):
 					return self._parse_atom(root, url), None
 				else:
+					# Translators: Error returned when a subscribed feed's content can't be parsed as either RSS or Atom XML.
 					return None, _("Unrecognized feed format (not RSS or Atom).")
 		except urllib.error.HTTPError as e:
 			if e.code == 304:
@@ -409,6 +415,7 @@ class PodcastManager:
 					existing_feed.last_refresh = time.time()
 					self._save()
 					return existing_feed, None
+				# Translators: Same 304-not-modified no-op result as above, returned from the Atom parsing branch.
 				return None, _("No new episodes (304).")
 			return None, f"HTTP {e.code}: {e.reason}"
 		except Exception as e:
@@ -436,6 +443,7 @@ class PodcastManager:
 		feed = PodcastFeed(url, title=title, image=image, author=author, description=description)
 
 		for item in channel.findall("item"):
+			# Translators: Fallback episode title when an RSS <item> has no <title> element.
 			title = item.findtext("title") or _("Untitled")
 			enclosure = item.find("enclosure")
 			if enclosure is not None and enclosure.get("url"):
@@ -486,6 +494,7 @@ class PodcastManager:
 		feed = PodcastFeed(url, title=title, image=image, author=author, description=description)
 
 		for entry in root.findall("atom:entry", namespaces=ns):
+			# Translators: Fallback episode title when an Atom <entry> has no <atom:title> element.
 			title = entry.findtext("atom:title", namespaces=ns) or _("Untitled")
 			ep_url = None
 			for link in entry.findall("atom:link", namespaces=ns):
