@@ -426,6 +426,7 @@ def _parse_catalog_results(html_text):
 			continue
 
 		detail_url = _absolute_url(link_node.attrs.get("href", ""))
+		# Translators: Fallback catalog-search result title when GETEM returns no usable link text.
 		title = _clean_html_text(link_node.text()) or _("Unknown")
 
 		narrator = _extract_field_row_text(row, "views-field-field-seslendiren")
@@ -455,6 +456,7 @@ class GetemBook:
 
 	def __init__(self, title, detail_url, author="", narrator="", format_label="", description="", publisher="",
 			original_title="", director="", release_year="", imdb_rating="", actors=""):
+		# Translators: Fallback GetemBook.title when no title was supplied at construction.
 		self.title = title or _("Unknown")
 		self.detail_url = detail_url
 		self.author = author
@@ -562,6 +564,7 @@ class GetemBook:
 			"audiobook_format": self.format_label,
 			"audiobook_chapter_count": len(self.chapters),
 			"description": self.description,
+			# Translators: Fixed source label for GETEM audiobooks, shown in the station-details dialog and the Audio Books tab (same role as gutenberg_audiobooks.py's 'audiobook_source').
 			"audiobook_source": _("GETEM"),
 			# Only non-empty for "Sesli Betimleme" (audio description)
 			# works - see _extract_audiobook_extra_fields() - so a
@@ -645,6 +648,7 @@ class GetemSession:
 	def login(self, username, password):
 		"""Logs in with a Drupal-style login form. Returns (success, error_message)."""
 		if not username or not password:
+			# Translators: Error returned by GetemSession.login() when FreeRadio has no saved GETEM credentials at all.
 			return False, _("Please enter your GETEM username and password in FreeRadio's settings.")
 
 		try:
@@ -678,6 +682,7 @@ class GetemSession:
 			return True, None
 
 		if 'id="edit-name"' in response_html and 'name="form_id" value="user_login"' in response_html:
+			# Translators: Error returned by GetemSession.login() when the GETEM server rejects the saved username/password.
 			return False, _("GETEM login failed. Please check your username and password.")
 
 		# Ambiguous response (e.g. a theme without the expected markup) -
@@ -711,6 +716,7 @@ def ensure_logged_in(session=None):
 		return True, None
 	username, password = load_credentials()
 	if not username or not password:
+		# Translators: Error returned before attempting login when the settings dialog's GETEM username/password fields are empty.
 		return False, _("Please enter your GETEM username and password in FreeRadio's settings first.")
 	return session.login(username, password)
 
@@ -746,12 +752,14 @@ def search_getem(query, session=None, limit=RESULTS_PER_QUERY):
 	no error just means nothing matched)."""
 	query = (query or "").strip()
 	if not query:
+		# Translators: Error returned by search_getem() when the user submits an empty search box.
 		return [], _("Please enter a search term.")
 
 	session = session or get_session()
 
 	audio_formats = get_audio_format_options(session)
 	if not audio_formats:
+		# Translators: Error returned by search_getem() when the GETEM catalog page itself could not be fetched (network failure).
 		return [], _("Could not reach GETEM's catalog. Please check your internet connection.")
 	audio_labels = {_fold(label) for label, _value in audio_formats}
 
@@ -874,6 +882,7 @@ def _label_chapters(book, chapters):
 	total = len(chapters)
 	return [
 		{
+			# Translators: Fallback chapter title for a multi-part work whose parts have no individual names; '{0}' is the book title, '{1}' the 1-based part number.
 			"title": title or (book.title if total == 1 else _("{0} - Part {1}").format(book.title, i + 1)),
 			"url": url,
 		}
@@ -910,6 +919,7 @@ def resolve_media(book, session=None):
 
 	chapters = _parse_chapters_from_detail_html(detail_html)
 	if not chapters:
+		# Translators: Error returned by resolve_media() when the work's GETEM detail page lists no playable audio, only a manual-download link.
 		return book, _(
 			"No playable audio file was found on this work's GETEM page. "
 			"It may require manual download from the site."
@@ -1101,6 +1111,7 @@ def get_book_by_url(url, session=None):
 	(book_or_None, error_message)."""
 	detail_url = _normalize_detail_url(url)
 	if not detail_url:
+		# Translators: Error returned by get_book_by_url() when the pasted URL doesn't look like a GETEM work page link.
 		return None, _("This doesn't look like a GETEM work link.")
 
 	session = session or get_session()
@@ -1118,6 +1129,7 @@ def get_book_by_url(url, session=None):
 
 	extra = _extract_audiobook_extra_fields(detail_html)
 	book = GetemBook(
+		# Translators: Fallback GetemBook.title when the detail page has no parseable title element.
 		title=_extract_node_title(detail_html) or _("Unknown"),
 		detail_url=detail_url,
 		author=_extract_node_field_text(detail_html, "field-name-field-yazar"),
@@ -1134,6 +1146,7 @@ def get_book_by_url(url, session=None):
 
 	chapters = _parse_chapters_from_detail_html(detail_html)
 	if not chapters:
+		# Translators: Same message as in resolve_media() above: shown when get_book_by_url() resolves the work but finds no playable audio on its page.
 		return book, _(
 			"No playable audio file was found on this work's GETEM page. "
 			"It may require manual download from the site."
@@ -1232,6 +1245,7 @@ def _fetch_audio_file(chapter_url, dest_path, referer=None, session=None, progre
 			os.remove(tmp_path)
 		except OSError:
 			pass
+		# Translators: Raised when a chapter download completes but produced a zero-byte file, usually because the GETEM session was not actually logged in.
 		raise RuntimeError(_("The downloaded file was empty. Please check your GETEM login."))
 
 	if content_type.startswith("text/") or content_type == "application/json" or not _looks_like_audio(tmp_path):
@@ -1249,7 +1263,9 @@ def _fetch_audio_file(chapter_url, dest_path, referer=None, session=None, progre
 		except OSError:
 			pass
 		if snippet:
+			# Translators: Raised when the URL fetched for a chapter returns a response that is not audio at all (e.g. an HTML error/login page).
 			raise RuntimeError(_("GETEM did not return audio for this part: %s") % snippet[:200])
+		# Translators: Same failure as the message above (no valid audio came back for this part), used when there is no response snippet available to show.
 		raise RuntimeError(_("GETEM did not return a playable audio file for this part."))
 
 	os.replace(tmp_path, dest_path)
@@ -1498,6 +1514,7 @@ def book_download_dir(book):
 	subfolder of the recordings directory named after the book."""
 	from . import recorder
 	out_dir = recorder._recordings_dir()
+	# Translators: Fallback download folder name used when saving a book, if the book's title is empty or has no usable characters.
 	return os.path.join(out_dir, safe_book_title(book) or _("Untitled"))
 
 

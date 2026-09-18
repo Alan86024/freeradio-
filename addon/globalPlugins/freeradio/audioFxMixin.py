@@ -29,6 +29,7 @@ class AudioFxMixin:
 	transition controls, plus the dialog-sync helpers they share."""
 
 	@script(
+		# Translators: Name of an NVDA command; raises FreeRadio's playback volume by 5 (of 200 max, capped at 100 when saved).
 		description=_("Increase FreeRadio volume by 5"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+upArrow",
@@ -37,10 +38,12 @@ class AudioFxMixin:
 		vol = min(200, self._player.get_volume() + 5)
 		self._player.set_volume(vol)
 		config.conf["freeradio"]["volume"] = min(100, vol)
+		# Translators: Spoken after volume is changed with the volume-up/down commands; %d is the new volume level.
 		_notify(_("Volume %d") % vol)
 		self._sync_dialog_volume(vol)
 
 	@script(
+		# Translators: Name of an NVDA command; lowers FreeRadio's playback volume by 5.
 		description=_("Decrease FreeRadio volume by 5"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+downArrow",
@@ -49,10 +52,12 @@ class AudioFxMixin:
 		vol = max(0, self._player.get_volume() - 5)
 		self._player.set_volume(vol)
 		config.conf["freeradio"]["volume"] = min(100, vol)
+		# Translators: Spoken after volume is changed; %d is the new volume level.
 		_notify(_("Volume %d") % vol)
 		self._sync_dialog_volume(vol)
 
 	@script(
+		# Translators: Name of an NVDA command; speeds up playback rate, podcasts/audiobooks/GETEM chapters only.
 		description=_("Increase podcast playback speed"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+shift+k",
@@ -61,6 +66,7 @@ class AudioFxMixin:
 		self._report_playback_rate(*self._player.increase_playback_rate())
 
 	@script(
+		# Translators: Name of an NVDA command; slows down playback rate, podcasts/audiobooks/GETEM chapters only.
 		description=_("Decrease podcast playback speed"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+shift+j",
@@ -71,15 +77,20 @@ class AudioFxMixin:
 	def _report_playback_rate(self, applied, rate, reason):
 		if applied:
 			if abs(rate - 1.0) < 0.05:
+				# Translators: Spoken when the playback-rate command returns the rate to normal (1.0x).
 				_notify(_("Rate normal"))
 			else:
+				# Translators: Spoken after changing playback rate; %.1f is the new rate, e.g. '1.5' meaning 1.5x speed.
 				_notify(_("Rate %.1f") % rate)
 			return
 		if reason == "bass_fx_unavailable":
+			# Translators: Spoken when playback-rate change fails because the optional bass_fx library used for time-stretching isn't installed.
 			_notify(_("Playback speed control needs the bass_fx add-on library — see the FreeRadio docs."))
 		elif reason in ("not_tempo_stream", "wrong_backend"):
+			# Translators: Spoken when the user tries to change playback rate while playing a live radio station rather than a podcast/audiobook.
 			_notify(_("Playback speed control is only available for podcasts."))
 		else:
+			# Translators: Generic fallback spoken when the playback-rate change fails for an unrecognised reason.
 			_notify(_("Could not change playback speed."))
 
 	def _sync_dialog_volume(self, vol):
@@ -117,27 +128,33 @@ class AudioFxMixin:
 				pass
 
 	@script(
+		# Translators: Name of an NVDA command; toggles a low-frequency EQ boost on/off.
 		description=_("Toggle bass boost"),
 		category=_("FreeRadio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleBassBoost(self, gesture):
+		# Translators: Short label used in the 'X enabled/disabled' announcement (see _toggle_eq_band) when toggling the bass-boost EQ band.
 		self._toggle_eq_band("eq_bass", _("EQ: Bass Boost"))
 
 	@script(
+		# Translators: Name of an NVDA command; toggles a high-frequency EQ boost on/off.
 		description=_("Toggle treble boost"),
 		category=_("FreeRadio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleTrebleBoost(self, gesture):
+		# Translators: Short label used in the 'X enabled/disabled' announcement when toggling the treble-boost EQ band.
 		self._toggle_eq_band("eq_treble", _("EQ: Treble Boost"))
 
 	@script(
+		# Translators: Name of an NVDA command; toggles a mid-range EQ boost tuned for vocal clarity on/off.
 		description=_("Toggle vocal boost"),
 		category=_("FreeRadio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleVocalBoost(self, gesture):
+		# Translators: Short label used in the 'X enabled/disabled' announcement when toggling the vocal-boost EQ band.
 		self._toggle_eq_band("eq_vocal", _("EQ: Vocal Boost"))
 
 	def _toggle_eq_band(self, band, label):
@@ -200,12 +217,15 @@ class AudioFxMixin:
 			eq_gains={band: gain_db},
 		)
 
+		# Translators: Announcement after toggling an EQ band; %(effect)s is one of the 'EQ: ... Boost' labels above, %(state)s is 'enabled'/'disabled' below.
 		ui.message(_("%(effect)s %(state)s") % {
 			"effect": label,
+			# Translators: Second half of the 'X enabled/disabled' announcement in _toggle_eq_band; describes the EQ band's new on/off state.
 			"state": _("enabled") if turning_on else _("disabled"),
 		})
 
 	@script(
+		# Translators: Name of an NVDA command; cycles the sound effect played when switching stations (crossfade/instant cut/tuning effect).
 		description=_("Toggle station switch transition (crossfade)"),
 		category=_("FreeRadio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
@@ -213,9 +233,13 @@ class AudioFxMixin:
 	def script_toggleStationTransition(self, gesture):
 		_cf_order = ["off", "short", "normal", "tuning"]
 		_cf_labels = {
+			# Translators: One of the station-transition modes cycled by the crossfade command: plays no transition sound, cuts instantly.
 			"off":    _("Instant cut (no crossfade)"),
+			# Translators: One of the station-transition modes: a brief 1-second audio crossfade between the old and new station.
 			"short":  _("Short crossfade (1 second)"),
+			# Translators: One of the station-transition modes: a longer 2-second audio crossfade between the old and new station.
 			"normal": _("Normal crossfade (2 seconds)"),
+			# Translators: One of the station-transition modes: plays a radio-tuning sound effect instead of a crossfade.
 			"tuning": _("Station tuning sound effect"),
 		}
 		_cf_map = {"off": 0.0, "short": 1.0, "normal": 2.0, "tuning": 0.0}

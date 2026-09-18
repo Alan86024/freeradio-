@@ -127,6 +127,7 @@ _AUDIO_FORMAT_CANDIDATES = ("MP3", "VBR MP3", "64Kbps MP3")
 # different human reader per chapter) - every book in this collection
 # shares the same kind of narration, so one fixed, honest label is more
 # useful here than an empty field.
+# Translators: Fixed narrator label shown for every book in this AI-narrated collection, in place of a per-book human reader's name.
 _AI_NARRATOR_LABEL = _("AI-generated narration (Microsoft neural text-to-speech)")
 
 
@@ -177,6 +178,7 @@ def _parse_archive_doc(doc):
 	resolve_media() knows to fetch its file listing from archive.org's
 	metadata API (see _resolve_via_archive_org())."""
 	identifier = _first_str(doc.get("identifier")).strip()
+	# Translators: Fallback book title when archive.org returns no title metadata for a search result.
 	title = _first_str(doc.get("title")).strip() or _("Unknown")
 
 	creators = doc.get("creator")
@@ -217,6 +219,7 @@ def search_gutenberg_audiobooks(query, limit=RESULTS_PER_QUERY):
 	error_message)."""
 	query = (query or "").strip()
 	if not query:
+		# Translators: Error returned by search_gutenberg_audiobooks() when the user submits an empty search box.
 		return [], _("Please enter a search term.")
 
 	phrase = query.replace('"', "")
@@ -271,6 +274,7 @@ class GutenbergAudiobook:
 
 	def __init__(self, title, detail_url, author="", format_label="",
 			description="", language="", archive_id="", tts_voice=""):
+		# Translators: Fallback GutenbergAudiobook.title when no title was supplied at construction.
 		self.title = title or _("Unknown")
 		self.detail_url = detail_url
 		self.author = author
@@ -385,6 +389,7 @@ def resolve_media(book, session=None):
 	this the same way it calls getem.resolve_media()/librivox.resolve_media(),
 	with no source-specific branching. Returns (book, error_message)."""
 	if not book.archive_id:
+		# Translators: Error returned by resolve_media() when the book has no linked archive.org item id, so no audio files can be looked up.
 		return book, _("This book has no archive.org item to read audio files from.")
 	return _resolve_via_archive_org(book)
 
@@ -407,6 +412,7 @@ def get_book_by_url(url):
 	error_message)."""
 	match = ARCHIVE_DETAILS_URL_RE.match((url or "").strip())
 	if not match:
+		# Translators: Error returned by get_book_by_url() when the pasted URL doesn't match archive.org's book-details link pattern.
 		return None, _("This doesn't look like an archive.org book link.")
 	return _resolve_book_by_identifier(match.group(1))
 
@@ -425,6 +431,7 @@ def _resolve_book_by_identifier(identifier):
 
 	meta = data.get("metadata") or {}
 	if not meta or not meta.get("identifier"):
+		# Translators: Error returned when the archive.org identifier from a pasted link does not resolve to any item at all.
 		return None, _("Could not find a book at this address on archive.org.")
 
 	collections = meta.get("collection")
@@ -432,6 +439,7 @@ def _resolve_book_by_identifier(identifier):
 		collections = [collections]
 	collections = [str(c).strip().lower() for c in (collections or [])]
 	if collections and COLLECTION.lower() not in collections:
+		# Translators: Error returned when the resolved archive.org item exists but isn't tagged as part of this specific audiobook collection.
 		return None, _("This archive.org item isn't part of the Project Gutenberg Open Audiobook Collection.")
 
 	book = _parse_archive_doc({
@@ -494,6 +502,7 @@ def _chapters_from_metadata(book, data):
 		chapters.append({"title": title, "url": _file_url(name)})
 
 	if not chapters:
+		# Translators: Error returned by the chapter-listing step when archive.org has no playable audio file for the resolved book.
 		return book, _("No playable audio file was found for this book on archive.org.")
 
 	book.chapters = chapters
@@ -558,6 +567,7 @@ def _fetch_audio_file(chapter_url, dest_path, referer=None, session=None, progre
 			os.remove(tmp_path)
 		except OSError:
 			pass
+		# Translators: Raised internally when a chapter/book download completes but produced a zero-byte file; caught and shown to the user as a download failure.
 		raise RuntimeError(_("The downloaded file was empty."))
 
 	os.replace(tmp_path, dest_path)
@@ -597,6 +607,7 @@ def download_target(book, chapter):
 def book_download_dir(book):
 	from . import recorder
 	out_dir = recorder._recordings_dir()
+	# Translators: Fallback folder name used when saving a downloaded book, if the book's title is empty or has no usable characters.
 	return os.path.join(out_dir, safe_book_title(book) or _("Untitled"))
 
 

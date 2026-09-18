@@ -177,7 +177,7 @@ class PlaybackCoreMixin:
 						self._player.stop()
 					self._stations      = []
 					self._current_index = -1
-					_notify(_("Radio stopped"))
+					_notify(_("Freeradio stopped"))
 
 			wx.CallAfter(_confirm)
 			return
@@ -188,7 +188,7 @@ class PlaybackCoreMixin:
 		self._player.stop()
 		self._stations      = []
 		self._current_index = -1
-		_notify(_("Radio stopped"))
+		_notify(_("Freeradio stopped"))
 
 	@script(
 		description=_("Play next station"),

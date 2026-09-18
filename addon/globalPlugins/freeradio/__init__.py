@@ -412,6 +412,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		self._player.set_timeshift_disk_full_callback(
 			lambda: wx.CallAfter(
 				_notify,
+				# Translators: Spoken automatically while a live recording is in progress if the time-shift disk-space limit is reached and old buffered audio is being discarded faster than usual.
 				_("Time-shift buffer: running low on disk space, the oldest audio is being dropped more aggressively."),
 			)
 		)
@@ -497,22 +498,27 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 			ffmpeg_path=config.conf["freeradio"].get("ffmpeg_path", ""),
 		)
 		self._recorder._notify_start  = lambda rec: wx.CallAfter(
+			# Translators: Spoken when a scheduled or manual recording begins; %s is the station name.
 			_notify, _("Recording started: %s") % rec.station.get("name", "")
 		)
 		self._recorder._notify_finish = lambda rec: wx.CallAfter(
+			# Translators: Spoken when a recording finishes normally; %s is the saved output filename.
 			_notify, _("Recording finished: %s") % os.path.basename(rec.output_path or "")
 		)
 		self._recorder._notify_failed = lambda rec: wx.CallAfter(
 			_notify,
+			# Translators: Spoken when a recording never actually started because the stream connection failed for its whole scheduled window; %s is the station name.
 			_("Recording failed: could not connect to %s") % rec.station.get("name", ""),
 		)
 		self._recorder._notify_conversion_error = lambda path, error: wx.CallAfter(
 			_notify,
+			# Translators: Spoken when converting a finished recording to the configured format (e.g. MP3) fails; the original, unconverted file is kept. %s is its filename.
 			_("Recording conversion failed. The original file was kept: %s")
 			% os.path.basename(path or ""),
 		)
 		self._recorder._notify_folder_fallback = lambda rec, requested, reason: wx.CallAfter(
 			_notify,
+			# Translators: Spoken when the folder configured for recordings can't be used (e.g. missing/no permission) and FreeRadio saved to its default folder instead; %(station)s is the station name, %(reason)s is why the folder failed.
 			_("Could not use the selected folder for '%(station)s' (%(reason)s). "
 			  "Saved to the default recordings folder instead.")
 			% {"station": rec.station.get("name", ""), "reason": reason},
@@ -586,6 +592,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		]
 
 		# ── 2. Create / refresh a script for every favourite ─────────────────
+		# Translators: Script category shown in NVDA's Input Gestures dialog, grouping the auto-generated 'play this favourite station' shortcuts separately from FreeRadio's main commands.
 		_CATEGORY = _("FreeRadio Stations")
 
 		for station in favs:
@@ -606,6 +613,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 					)
 					if match is None:
 						ui.message(
+							# Translators: Spoken if a per-favourite-station shortcut is triggered after that station was removed from favourites since the shortcut was created; %s is the station name.
 							_("Station no longer in favourites: %s")
 							% s.get("name", "").strip()
 						)
@@ -615,6 +623,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 					self_plugin._play_station(match)
 				# NVDA reads __doc__ as the script description and
 				# __name__ as the script identifier.
+				# Translators: Auto-generated description of a per-favourite-station shortcut, shown in NVDA's Input Gestures dialog; %s is the station name.
 				_script.__doc__      = _("%s playback shortcut ()") % s.get("name", "").strip()
 				_script.__name__     = script_name
 				_script.category     = _CATEGORY
@@ -736,6 +745,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 
 	@script(
+		# Translators: Name of an NVDA command; opens the FreeRadio station browser dialog on its main Stations tab.
 		description=_("Open FreeRadio station browser"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+r",
@@ -745,6 +755,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 
 	@script(
+		# Translators: Name of an NVDA command; opens the station browser dialog on the Audio Books tab.
 		description=_("Open FreeRadio audio book library"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+l",
@@ -754,6 +765,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 
 	@script(
+		# Translators: Name of an NVDA command; opens the station browser dialog on the Podcasts tab.
 		description=_("Open FreeRadio podcast subscriptions"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+o",
@@ -763,6 +775,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 
 	@script(
+		# Translators: Name of an NVDA command; opens the station browser dialog on the local Jukebox tab.
 		description=_("Open FreeRadio local jukebox"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+u",
@@ -772,6 +785,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 
 	@script(
+		# Translators: Name of an NVDA command whose behaviour depends on what is currently playing: adds a live station to favourites, or downloads the current audio book/podcast episode.
 		description=_("Add currently playing station to favourites, download the whole audio book if one is playing, or download the episode if a podcast is playing"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+v",
@@ -779,6 +793,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 	def script_addToFavorites(self, gesture):
 		station = self._player.get_current_station()
 		if not station:
+			# Translators: Spoken when this shortcut is pressed while nothing is playing.
 			ui.message(_("No station is playing"))
 			return
 		media_kind = station.get("media_kind")
@@ -790,6 +805,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		# favourites branch below, which would have wrongly treated a
 		# jukebox track as a station.
 		if media_kind == "jukebox":
+			# Translators: Spoken when this shortcut is pressed while something is playing that is neither a station, podcast episode, nor audio book (e.g. a local jukebox track).
 			ui.message(_("The shortcut is only for stations, podcasts or audio books"))
 			return
 		# Checked ahead of the plain "podcast" branch below: GETEM/LibriVox
@@ -811,9 +827,11 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 			self._download_current_podcast_episode(station)
 			return
 		if self._manager.is_favorite(station):
+			# Translators: Spoken when the currently playing station is already saved in favourites; %s is the station name.
 			ui.message(_("Already in favourites: %s") % station.get("name", "").strip())
 			return
 		self._manager.add_favorite(station)
+		# Translators: Spoken after successfully adding the currently playing station to favourites; %s is the station name.
 		ui.message(_("Added to favourites: %s") % station.get("name", "").strip())
 		self._rebuild_station_scripts()
 
@@ -828,12 +846,14 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		whenever this is reachable."""
 		detail_url = station.get("getem_detail_url")
 		if not detail_url or not self._dialog:
+			# Translators: Spoken when this shortcut is pressed to download an audio book but no audio book (GETEM/Gutenberg/LibriVox) is currently playing.
 			ui.message(_("No audio book is playing"))
 			return
 		try:
 			self._dialog.download_getem_book_by_detail_url(detail_url)
 		except Exception:
 			log.error("FreeRadio: could not start audio book download", exc_info=True)
+			# Translators: Spoken when downloading the currently playing audio book fails.
 			ui.message(_("Could not download this audio book."))
 
 
@@ -916,6 +936,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 	def _on_play_failed_ui(self, station, url, reason):
 		name = (station or {}).get("name", "").strip() or url
+		# Translators: Spoken when a station's connection attempt fails outright, so the user isn't left thinking it's silently playing; %(name)s is the station name, %(reason)s is a short failure description.
 		ui.message(_("Could not play %(name)s: %(reason)s") % {
 			"name": name, "reason": reason,
 		})
@@ -1104,15 +1125,18 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 				# No releases published on GitHub yet
 				log.warning("FreeRadio: No releases found on GitHub.")
 				if not silent:
+					# Translators: Spoken during a manual update check when the GitHub repository has no published releases yet.
 					wx.CallAfter(ui.message, _("No releases found on GitHub yet."))
 			else:
 				log.warning(f"FreeRadio: Update check HTTP error: {e.code}")
 				if not silent:
+					# Translators: Spoken during a manual update check when the GitHub API request itself returns an HTTP error; %d is the HTTP status code.
 					wx.CallAfter(ui.message, _("Update check failed (HTTP %d).") % e.code)
 			return
 		except Exception as e:
 			log.warning(f"FreeRadio: Update check failed: {e}")
 			if not silent:
+				# Translators: Spoken during a manual update check when the request to GitHub fails outright (e.g. no internet connection).
 				wx.CallAfter(ui.message, _("Update check failed. Please check your internet connection."))
 			return
 
@@ -1128,6 +1152,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 		if not latest_tag:
 			if not silent:
+				# Translators: Spoken during a manual update check when GitHub's release data doesn't include a usable version tag.
 				wx.CallAfter(ui.message, _("Could not determine latest version."))
 			return
 
@@ -1151,6 +1176,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 						"You have version %(current)s.\n\n"
 						"Would you like to download and install it now?"
 					) % {"new": latest_tag, "current": current_version or _("unknown")}
+					# Translators: Button label on the update-available dialog when a direct .nvda-addon download is available, offering to install it right away.
 					yes_label = _("&Install")
 				else:
 					msg = _(
@@ -1159,14 +1185,17 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 						"You have version %(current)s.\n\n"
 						"Would you like to open the download page?"
 					) % {"new": latest_tag, "current": current_version or _("unknown")}
+					# Translators: Button label on the update-available dialog when only a release web page (no direct download) is available, offering to open it in a browser.
 					yes_label = _("&Open Page")
 
 				dlg = wx.MessageDialog(
 					gui.mainFrame,
 					msg,
+					# Translators: Title of the dialog shown when a newer FreeRadio version is available.
 					_("FreeRadio Update Available"),
 					wx.YES_NO | wx.YES_DEFAULT | wx.ICON_INFORMATION,
 				)
+				# Translators: 'Cancel' button label on the update-available dialog, paired with whichever install/open-page label is used as the other button.
 				dlg.SetYesNoLabels(yes_label, _("&Cancel"))
 				if dlg.ShowModal() == wx.ID_YES:
 					if direct_install:
@@ -1182,6 +1211,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 			def _do_install(url, version):
 				import tempfile
+				# Translators: Spoken while the new version is being downloaded for direct install; %s is the version number being downloaded.
 				wx.CallAfter(ui.message, _("Downloading FreeRadio %s…") % version)
 				try:
 					req = urllib.request.Request(
@@ -1200,6 +1230,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 					log.error("FreeRadio: Download failed: %s", e)
 					wx.CallAfter(
 						ui.message,
+						# Translators: Spoken when downloading the new-version installer file fails; %s is the underlying error message.
 						_("Download failed: %s") % str(e),
 					)
 					return
@@ -1210,6 +1241,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 					log.error("FreeRadio: Could not launch installer: %s", e)
 					wx.CallAfter(
 						ui.message,
+						# Translators: Spoken when the downloaded .nvda-addon file can't be handed to NVDA's installer automatically; %s is the path where the file was saved so the user can open it manually.
 						_("Could not launch installer. File saved to: %s") % tmp_path,
 					)
 
@@ -1219,6 +1251,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 				def _up_to_date():
 					dlg = wx.MessageDialog(
 						gui.mainFrame,
+						# Translators: Message and title of the dialog shown after a manual update check finds no newer version; %s is the currently installed version, or the fallback 'unknown' label just below if it could not be determined.
 						_("FreeRadio is up to date. Installed: %s") % (current_version or _("unknown")),
 						_("FreeRadio Update Check"),
 						wx.OK | wx.ICON_INFORMATION,

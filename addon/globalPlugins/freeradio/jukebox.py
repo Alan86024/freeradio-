@@ -1138,10 +1138,13 @@ class JukeboxManager:
 	def add_file(self, path):
 		"""Add a single audio file. Returns (entry, error_message)."""
 		if not os.path.isfile(path):
+			# Translators: Error returned by JukeboxManager.add_file() when the given path does not exist; %s is the file path.
 			return None, _("File not found: %s") % path
 		if not _is_audio_file(path):
+			# Translators: Error returned by JukeboxManager.add_file() when the file's extension isn't one of the supported audio formats; %s is the file path.
 			return None, _("Not a recognized audio file: %s") % path
 		if self.has_path(path):
+			# Translators: Error returned by JukeboxManager.add_file()/add_folder() when that exact path is already saved in the jukebox library.
 			return None, _("Already in the jukebox.")
 		entry = JukeboxEntry(path, "file")
 		self._entries.append(entry)
@@ -1152,12 +1155,15 @@ class JukeboxManager:
 		"""Add a folder; its audio files are scanned on demand (see
 		JukeboxEntry.tracks()). Returns (entry, error_message)."""
 		if not os.path.isdir(path):
+			# Translators: Error returned by JukeboxManager.add_folder() when the given folder path does not exist; %s is the folder path.
 			return None, _("Folder not found: %s") % path
 		if self.has_path(path):
+			# Translators: See the add_file() comment above: same message, returned by add_folder() when the folder is already in the jukebox.
 			return None, _("Already in the jukebox.")
 		entry = JukeboxEntry(path, "folder")
 		tracks = entry.tracks()
 		if not tracks:
+			# Translators: Error returned by JukeboxManager.add_folder() when the folder was scanned but contains no recognized audio files.
 			return None, _("No audio files found in that folder.")
 		self._entries.append(entry)
 		self._save()

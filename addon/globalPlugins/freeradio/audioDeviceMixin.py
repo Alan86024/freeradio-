@@ -26,6 +26,7 @@ class AudioDeviceMixin:
 	"""Output device selection, audio mirroring, and device-loss handling."""
 
 	@script(
+		# Translators: Name of an NVDA command in the Input Gestures dialog; opens a list to pick FreeRadio's main audio output device.
 		description=_("Select the main FreeRadio output device"),
 		category=_("FreeRadio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
@@ -52,11 +53,13 @@ class AudioDeviceMixin:
 		"""Show the picker only when choosing between devices is useful."""
 		if not devices:
 			self._output_device_dialog_open = False
+			# Translators: Spoken when no audio output devices could be found on the system at all.
 			ui.message(_("No audio output devices found"))
 			return
 		if len(devices) == 1:
 			self._output_device_dialog_open = False
 			ui.message(
+				# Translators: Spoken instead of showing a picker, when only one physical audio output device exists.
 				_("Only one physical audio output device is available. FreeRadio uses the system default output.")
 			)
 			return
@@ -64,6 +67,7 @@ class AudioDeviceMixin:
 
 	def _show_output_device_dialog(self, devices):
 		"""Show an accessible, preselected list of the available BASS outputs."""
+		# Translators: First entry in the output-device list; means 'use whatever Windows currently has as its default output'.
 		choices = [(-1, _("System default"))] + list(devices)
 		saved_index = config.conf["freeradio"].get("audio_device", -1)
 		saved_name = config.conf["freeradio"].get("audio_device_name", "")
@@ -88,7 +92,9 @@ class AudioDeviceMixin:
 			gui.mainFrame.prePopup()
 			dlg = wx.SingleChoiceDialog(
 				gui.mainFrame,
+				# Translators: Prompt of the dialog listing devices to choose as FreeRadio's main playback output.
 				_("Select the main output device:"),
+				# Translators: Title of the dialog for choosing FreeRadio's main output device.
 				_("FreeRadio Output Device"),
 				[name for (_index, name) in choices],
 			)
@@ -113,6 +119,7 @@ class AudioDeviceMixin:
 			except Exception:
 				wx.CallAfter(
 					ui.message,
+					# Translators: Spoken when switching the main output device fails; %s is the device name.
 					_("Could not switch to output device: %s") % requested_name,
 				)
 				return
@@ -148,10 +155,13 @@ class AudioDeviceMixin:
 					break
 		except Exception:
 			pass
+		# Translators: Same meaning as 'System default' above; label shown when announcing the currently active output device.
 		display_name = _("System default") if device_index == -1 else device_name
+		# Translators: Spoken after successfully switching the main output device; %s is the device name.
 		ui.message(_("Output device: %s") % display_name)
 
 	@script(
+		# Translators: Name of an NVDA command in the Input Gestures dialog; starts/stops simultaneously playing audio through a second output device.
 		description=_("Mirror audio to an additional output device"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+m",
@@ -160,10 +170,12 @@ class AudioDeviceMixin:
 		# Stop existing mirror if active
 		if self._player.get_mirror_device() is not None:
 			self._player.stop_mirror()
+			# Translators: Spoken when audio mirroring to a secondary device is turned off.
 			ui.message(_("Audio mirror stopped"))
 			return
 
 		if not self._player.has_media():
+			# Translators: Spoken if the user tries to start audio mirroring while nothing is playing.
 			ui.message(_("No station is playing"))
 			return
 
@@ -175,6 +187,7 @@ class AudioDeviceMixin:
 		def _fetch_and_show():
 			devices = self._player.get_audio_devices()
 			if not devices:
+				# Translators: Spoken when no output devices are found while setting up audio mirroring.
 				wx.CallAfter(ui.message, _("No audio output devices found"))
 				self._mirror_dialog_open = False
 				return
@@ -189,7 +202,9 @@ class AudioDeviceMixin:
 			gui.mainFrame.prePopup()
 			dlg = wx.SingleChoiceDialog(
 				gui.mainFrame,
+				# Translators: Prompt of the dialog for choosing the secondary (mirror) output device.
 				_("Select additional output device for audio mirror:"),
+				# Translators: Title of the dialog for choosing the secondary mirror output device.
 				_("Mirror Audio"),
 				choices,
 			)
@@ -218,8 +233,10 @@ class AudioDeviceMixin:
 							if not ok:
 								self._player.resume_timeshift_after_mirror()
 					if ok:
+						# Translators: Spoken once mirroring to the chosen secondary device starts successfully; %s is the device name.
 						wx.CallAfter(ui.message, _("Mirroring to: %s") % dev_name)
 					else:
+						# Translators: Spoken when starting the audio mirror to the chosen device fails; %s is the device name.
 						wx.CallAfter(ui.message, _("Could not mirror to: %s") % dev_name)
 
 				threading.Thread(target=_do_mirror, daemon=True).start()
@@ -252,4 +269,5 @@ class AudioDeviceMixin:
 					break
 		except Exception:
 			pass
+		# Translators: Spoken automatically when the user's selected output device is unplugged; FreeRadio has fallen back to the system default.
 		ui.message(_("Audio device disconnected. Switched to system default."))

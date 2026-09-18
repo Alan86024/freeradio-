@@ -592,7 +592,7 @@ class TrackInfoMixin:
 						self._player.stop()
 					self._stations      = []
 					self._current_index = -1
-					_notify(_("Radio stopped"))
+					_notify(_("Freeradio stopped"))
 
 			wx.CallAfter(_confirm)
 			return
@@ -604,7 +604,7 @@ class TrackInfoMixin:
 		self._player.stop()
 		self._stations      = []
 		self._current_index = -1
-		_notify(_("Radio stopped"))
+		_notify(_("Freeradio stopped"))
 
 	def _announce_now(self):
 		"""Announce the currently playing station name (and ICY track if available).
