@@ -90,10 +90,12 @@ class TimeshiftMixin:
 		if not ok:
 			return None
 		if length > 0:
+			# Translators: Spoken after a podcast/audiobook seek to report the resulting position; see this method's docstring above for why the wording is shared with TrackInfoMixin.script_whatsPlaying().
 			return _("%(elapsed)s elapsed, %(remaining)s remaining") % {
 				"elapsed": _format_duration(pos),
 				"remaining": _format_duration(max(0.0, length - pos)),
 			}
+		# Translators: Same position announcement as above, used when the total length isn't known so only elapsed time can be reported.
 		return _("%(elapsed)s elapsed") % {"elapsed": _format_duration(pos)}
 
 	def _handle_track_boundary(self, seconds):
@@ -178,6 +180,7 @@ class TimeshiftMixin:
 		setattr(self, boundary_attr, now)
 		ok, new_pos = self._player.seek_relative(-pos)
 		if not ok:
+			# Translators: Spoken if seeking to the start of an audio-book part/jukebox track (the boundary clamp itself) fails.
 			_notify(_("Could not seek"))
 			return True
 		# No dedicated "Start of track" wording here - the elapsed/
@@ -185,6 +188,7 @@ class TimeshiftMixin:
 		# elapsed) already makes that obvious on its own. Its
 		# only-if-unavailable fallback reuses the same generic wording
 		# the failure case above already uses.
+		# Translators: Fallback spoken if _announce_seek_position() can't report a position after seeking to the start/end of an audio-book part or jukebox track.
 		_notify(self._announce_seek_position() or _("Could not seek"))
 		return True
 
@@ -206,9 +210,11 @@ class TimeshiftMixin:
 			return
 		ok, pos = self._player.seek_relative(seconds)
 		if not ok:
+			# Translators: Spoken if a plain (non-boundary) podcast/audiobook seek fails.
 			_notify(_("Could not seek"))
 			return
 		fallback = (
+			# Translators: Fallback spoken only if _announce_seek_position() can't report a position; %d is the number of seconds seeked.
 			_("Forwarded %d seconds") % seconds if seconds > 0
 			else _("Rewound %d seconds") % -seconds
 		)
@@ -301,6 +307,7 @@ class TimeshiftMixin:
 		setattr(self, state_attr + "_tap_timer", wx.CallLater(_SEEK_TAP_WINDOW_MS, _commit))
 
 	@script(
+		# Translators: Name of an NVDA command (Ctrl+Win+J); rewinds the live time-shift buffer, or seeks backward within a podcast/audiobook file if one is playing.
 		description=_("Time-shift: rewind 15 seconds (enters time-shift mode if not already active)"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+j",
@@ -314,6 +321,7 @@ class TimeshiftMixin:
 			return
 
 		if not config.conf["freeradio"].get("timeshift_enabled", False):
+			# Translators: Spoken when Ctrl+Win+J (rewind) is pressed while the time-shift feature itself is turned off in settings.
 			_notify(_("Time-shift buffer is disabled. Enable it in FreeRadio settings."))
 			return
 		if not self._player.has_media():
@@ -323,6 +331,7 @@ class TimeshiftMixin:
 		ok, position, buffered, reason = self._player.rewind_timeshift(15)
 		if not ok:
 			_TIMESHIFT_REASON_MESSAGES = {
+				# Translators: One of the reasons a rewind/forward can fail, mapped from rewind_timeshift()'s return reason to a spoken message (continues for the next six lines: feature disabled, wrong backend, HLS unsupported, not enough buffer yet, buffer file not ready, engine error).
 				"bass_disabled":   _("Time-shift requires the BASS audio backend, which is currently disabled."),
 				"feature_disabled": _("Time-shift buffer is disabled. Enable it in FreeRadio settings."),
 				"wrong_backend":   _("Time-shift is not available for the current playback backend."),
@@ -331,11 +340,14 @@ class TimeshiftMixin:
 				"no_buffer_file":  _("Time-shift buffer file is not ready yet."),
 				"engine_error":    _("Could not switch to time-shifted playback."),
 			}
+			# Translators: Generic fallback spoken if the rewind fails for a reason not covered by the specific messages above.
 			_notify(_TIMESHIFT_REASON_MESSAGES.get(reason, _("Could not rewind")))
 			return
+		# Translators: Spoken after a successful rewind, reporting how far behind live the buffer now is; %.0f is the number of seconds.
 		_notify(_("Rewound to %.0f seconds behind live") % (buffered - position))
 
 	@script(
+		# Translators: Name of an NVDA command (Ctrl+Win+K); fast-forwards the live time-shift buffer (snapping to live once caught up), or seeks forward within a podcast/audiobook file if one is playing.
 		description=_("Time-shift: fast-forward 15 seconds, or return to live if already caught up"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+k",
@@ -349,24 +361,30 @@ class TimeshiftMixin:
 			return
 
 		if not config.conf["freeradio"].get("timeshift_enabled", False):
+			# Translators: Same message as the rewind command, spoken here when Ctrl+Win+K (forward) is pressed with time-shift turned off.
 			_notify(_("Time-shift buffer is disabled. Enable it in FreeRadio settings."))
 			return
 		if not self._player.is_timeshifted():
+			# Translators: Spoken when fast-forward is pressed but playback is already at the live edge (not time-shifted).
 			_notify(_("Already listening live"))
 			return
 
 		ok, position, at_live_edge = self._player.forward_timeshift(15)
 		if not ok:
+			# Translators: Generic fallback spoken if the fast-forward operation fails.
 			_notify(_("Could not fast-forward"))
 			return
 		if at_live_edge:
+			# Translators: Spoken when a fast-forward catches all the way up to the live edge.
 			_notify(_("Back to live"))
 		else:
 			buffered = self._player.get_timeshift_buffered_seconds()
+			# Translators: Spoken after a fast-forward that has not yet caught up to live; %.0f is how many seconds behind live remain.
 			_notify(_("Fast-forwarded, still %.0f seconds behind live") %
 				(buffered - position))
 
 	@script(
+		# Translators: Name of an NVDA command (Ctrl+Win+T); toggles the time-shift buffer feature on/off.
 		description=_("Enable or disable the time-shift (rewind) buffer"),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+t",
@@ -391,4 +409,5 @@ class TimeshiftMixin:
 			except Exception:
 				pass
 
+		# Translators: Spoken after toggling the time-shift buffer; the 'enabled'/'disabled' word is the same one used throughout FreeRadio's other toggle announcements.
 		ui.message(_("Time-shift buffer %s") % (_("enabled") if new_value else _("disabled")))

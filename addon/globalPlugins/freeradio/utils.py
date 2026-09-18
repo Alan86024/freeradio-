@@ -278,6 +278,7 @@ def country_name(code: str) -> str:
 	# 1. gettext .po translation
 	msgid = _COUNTRY_MSGID.get(upper)
 	if msgid:
+		# Translators: msgid here is a runtime variable (one of the ~250 English country names in _COUNTRY_MSGID above), not a literal string, so xgettext can't extract these as translatable strings on its own; they'd need to be added to the .pot separately (e.g. from the _COUNTRY_MSGID dict) for translators to see them at all.
 		translated = _(msgid)
 		if translated != msgid:
 			return translated
@@ -319,6 +320,7 @@ def name_to_code(display_name: str) -> str:
 
 	# 2. .po translation
 	for iso, msgid in _COUNTRY_MSGID.items():
+		# Translators: Same runtime-msgid limitation as country_name() above: msgid is a dict value, not a literal, so this lookup depends on translations already existing for the country names in _COUNTRY_MSGID via whatever separate process adds them to the catalog.
 		if _(msgid) == display_name:
 			return iso
 
@@ -332,6 +334,7 @@ def name_to_code(display_name: str) -> str:
 
 def station_label(station: dict) -> str:
 	"""Return the full display label for a station list entry: Name - Country - First tag."""
+	# Translators: Fallback station name when a station dict has none.
 	name    = station.get("name", _("Unknown"))
 	country = station.get("countrycode", "")
 	tags    = station.get("tags", "")

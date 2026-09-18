@@ -44,6 +44,7 @@ class TimerManager:
 		_stop = self._action_stop
 		def _sleep_action():
 			_stop()
+		# Translators: Fallback display label for a sleep timer in the pending-timers list, used when no station name applies (unlike an alarm timer, which is labelled with the station name instead).
 		return self._add(stop_dt, _sleep_action, _("Sleep timer"), notify_callback,
 						kind="sleep", station=None)
 
@@ -168,6 +169,7 @@ class TimerManager:
 		else:
 			self._player.stop()
 			# Use _notify so the message is suppressed when notifications are muted.
+			# Translators: Spoken when a sleep timer fires and stops playback instantly (nothing was playing to fade out).
 			wx.CallAfter(_notify, _("Sleep timer: radio stopped"))
 
 	def _fade_and_stop(self):
@@ -179,6 +181,7 @@ class TimerManager:
 
 		original_volume = self._player.get_volume()
 		# Use _notify so both fade-out messages are suppressed when notifications are muted.
+		# Translators: Spoken when a sleep timer fires while something is playing, before the 60-second volume fade-out begins.
 		wx.CallAfter(_notify, _("Sleep timer: fading out…"))
 
 		for step in range(_FADE_STEPS):
@@ -194,6 +197,7 @@ class TimerManager:
 		self._player.stop()
 		self._player.set_volume(original_volume)
 		# Use _notify so the stop message is suppressed when notifications are muted.
+		# Translators: Spoken at the end of the fade-out, once volume has reached 0 and playback actually stops.
 		wx.CallAfter(_notify, _("Sleep timer: radio stopped"))
 
 	def _loop(self):

@@ -102,6 +102,7 @@ class TrackInfoMixin:
 				label = result.full_label()
 				wx.CallAfter(self._copy_to_clipboard, label)
 			else:
+				# Translators: Spoken when Shazam music recognition finishes without a match; %s is the specific reason from musicRecognizer.py (e.g. "Song not recognized").
 				wx.CallAfter(
 					ui.message,
 					_("Recognition failed: %s") % result.error_msg,
@@ -115,6 +116,7 @@ class TrackInfoMixin:
 		musicRecognizer.recognize_async(stream_url, ffmpeg_path, "", _on_result, local_file=local_snippet)
 
 	@script(
+		# Translators: Name of an NVDA command (Ctrl+Win+I); its behaviour escalates with repeated presses as the description itself explains.
 		description=_("Announce currently playing station. Press twice for full details, three times to copy track info, four times to force music recognition."),
 		category=_("FreeRadio"),
 		gesture="kb:control+windows+i",
@@ -127,11 +129,13 @@ class TrackInfoMixin:
 			# Radio inactive but a scheduled recording may still be running.
 			# These run from the main thread so _speak_on_demand can be called directly.
 			if active_sched:
+				# Translators: First line of the What's Playing announcement when nothing is playing but one or more scheduled recordings are still running silently in the background; station names are appended after it, joined with two spaces.
 				parts = [_("Radio inactive. Active scheduled recordings:")]
 				for sched_rec in active_sched:
 					parts.append(sched_rec.station.get("name", "").strip())
 				_speak_on_demand("  ".join(parts))
 			else:
+				# Translators: Spoken by What's Playing when nothing is playing and no scheduled recording is active either.
 				_speak_on_demand(_("FreeRadio is not active"))
 			return
 		name = self._player.get_current_name()
@@ -154,21 +158,24 @@ class TrackInfoMixin:
 							or getattr(self._player, "_current_url", None)
 						)
 						if url:
-							icy = _rp._read_icy_title(url)
+							icy = _rp._read_icy_title_via_playlist(url)
 					# If token changed, a second (or later) press arrived — abort.
 					if getattr(self, "_whats_playing_token", None) != tok:
 						return
 					if icy:
+						# Translators: Announcement spoken by Ctrl+Win+I (What's Playing) when the station provides an ICY track title; %(station)s is the station name, %(track)s the current track.
 						msg = _("Playing: %(station)s — %(track)s") % {
 							"station": name, "track": icy
 						}
 					else:
+						# Translators: Same What's Playing announcement, used when no ICY track title is available - just the station name.
 						msg = _("Playing: %s") % name
 					# Podcast: append elapsed/remaining time.
 					station = self._player.get_current_station()
 					if _is_seekable_media(station):
 						ok, pos, length = self._player.get_playback_position()
 						if ok and length > 0:
+							# Translators: Appended to the What's Playing announcement for a podcast/audiobook; same elapsed/remaining wording as TimeshiftMixin._announce_seek_position().
 							msg += ". " + _("%(elapsed)s elapsed, %(remaining)s remaining") % {
 								"elapsed": _format_duration(pos),
 								"remaining": _format_duration(max(0.0, length - pos)),
@@ -176,17 +183,20 @@ class TrackInfoMixin:
 					# Announce instant recording if active
 					if self._recorder.is_recording():
 						rec_name = self._recorder.get_station_name()
+						# Translators: Appended to the What's Playing announcement when an instant recording is currently active; %s is the station being recorded.
 						msg += ". " + _("Recording: %s") % rec_name
 					# Announce active scheduled recordings
 					active_sched = self._recorder.get_active_scheduled()
 					for sched_rec in active_sched:
 						sched_name = sched_rec.station.get("name", "").strip()
+						# Translators: Appended to the What's Playing announcement for each active scheduled recording; %s is that recording's station name.
 						msg += ". " + _("Scheduled recording: %s") % sched_name
 					# Use _speak_on_demand so the message is announced even when
 					# NVDA's speech mode is set to 'on demand'.
 					wx.CallAfter(_speak_on_demand, msg)
 				threading.Thread(target=_announce, daemon=True).start()
 			else:
+				# Translators: What's Playing announcement when playback is paused rather than actively playing; %s is the station/track name.
 				msg = _("Paused: %s") % name
 				# Podcast: append elapsed/remaining time even when paused
 				station = self._player.get_current_station()
@@ -200,21 +210,25 @@ class TrackInfoMixin:
 						ok = pos > 0.0
 					if ok and pos > 0.0:
 						if length > 0:
+							# Translators: Same elapsed/remaining wording as the playing-state announcement, appended here when paused with a known total length.
 							msg += ". " + _("%(elapsed)s elapsed, %(remaining)s remaining") % {
 								"elapsed": _format_duration(pos),
 								"remaining": _format_duration(max(0.0, length - pos)),
 							}
 						else:
+							# Translators: Same elapsed-only wording as _announce_seek_position()'s no-length case, appended here when paused with an unknown total length.
 							msg += ". " + _("%(elapsed)s elapsed") % {"elapsed": _format_duration(pos)}
 
 				# Announce instant recording even while paused
 				if self._recorder.is_recording():
 					rec_name = self._recorder.get_station_name()
+					# Translators: Same active-recording announcement as the playing-state case, appended here when paused.
 					msg += ". " + _("Recording: %s") % rec_name
 				# Announce active scheduled recordings
 				active_sched = self._recorder.get_active_scheduled()
 				for sched_rec in active_sched:
 					sched_name = sched_rec.station.get("name", "").strip()
+					# Translators: Same active-scheduled-recording announcement as the playing-state case, appended here when paused.
 					msg += ". " + _("Scheduled recording: %s") % sched_name
 				# Paused state is reported from the main thread, so call
 				# _speak_on_demand directly (no wx.CallAfter needed here).
@@ -253,7 +267,7 @@ class TrackInfoMixin:
 						or getattr(self._player, "_current_url", None)
 					)
 					if url:
-						icy = _rp._read_icy_title(url)
+						icy = _rp._read_icy_title_via_playlist(url)
 
 				# If 4× pressed, token has changed — cancel transaction
 				if getattr(self, "_whats_playing_token", None) != tok:
@@ -269,10 +283,12 @@ class TrackInfoMixin:
 						or getattr(self._player, "_current_url", None)
 					)
 					if not stream_url:
+						# Translators: Spoken by the triple-press (copy/recognize) action when there is no ICY metadata and no stream URL either, so nothing at all can be identified.
 						wx.CallAfter(_speak_on_demand, _("No track info available"))
 						return
 					wx.CallAfter(
 						_speak_on_demand,
+						# Translators: Spoken by the triple-press action before kicking off Shazam recognition, since no ICY track title was available to just copy.
 						_("No track metadata found. Starting music recognition…"),
 					)
 					self._start_music_recognition(stream_url)
@@ -292,8 +308,10 @@ class TrackInfoMixin:
 			)
 			if not stream_url:
 				# Called from the main thread (no wx.CallAfter needed).
+				# Translators: Same as the triple-press case, spoken by the fourth press (force recognition) when there's no stream URL to even attempt recognition on.
 				_speak_on_demand(_("No track info available"))
 			else:
+				# Translators: Spoken when the fourth press starts forced Shazam recognition, regardless of whether ICY metadata exists.
 				_speak_on_demand(_("Starting music recognition…"))
 				self._start_music_recognition(stream_url)
 
@@ -302,11 +320,13 @@ class TrackInfoMixin:
 		# Opens the station details dialog for the currently playing station.
 		# Provided as an unbound gesture so users who have difficulty with
 		# rapid key presses can assign a single keystroke to this action.
+		# Translators: Name of an NVDA command; unbound-gesture equivalent of pressing Ctrl+Win+I (or F2 in the dialog) twice.
 		description=_("Show details of the currently playing station"),
 		category=_("FreeRadio"),
 	)
 	def script_showStationDetails(self, gesture):
 		if not self._player.has_media():
+			# Translators: Same "not active" message as What's Playing, spoken here when this standalone show-details gesture is used with nothing playing.
 			ui.message(_("FreeRadio is not active"))
 			return
 		if not getattr(self, "_whats_playing_dialog_open", False):
@@ -319,12 +339,14 @@ class TrackInfoMixin:
 		# music recognition when no metadata is available.
 		# Provided as an unbound gesture so users who have difficulty with
 		# rapid key presses can assign a single keystroke to this action.
+		# Translators: Name of an NVDA command; unbound-gesture equivalent of pressing Ctrl+Win+I (or F2 in the dialog) three times.
 		description=_("Copy current track info to clipboard, or start music recognition if unavailable"),
 		category=_("FreeRadio"),
 		speakOnDemand=True,
 	)
 	def script_copyTrackInfo(self, gesture):
 		if not self._player.has_media():
+			# Translators: Same "not active" message as elsewhere, spoken here when this standalone copy/recognize gesture is used with nothing playing.
 			_speak_on_demand(_("FreeRadio is not active"))
 			return
 		import time as _time
@@ -340,7 +362,7 @@ class TrackInfoMixin:
 					or getattr(self._player, "_current_url", None)
 				)
 				if url:
-					icy = _rp._read_icy_title(url)
+					icy = _rp._read_icy_title_via_playlist(url)
 			# Abort if a concurrent gesture (e.g. force-recognition) changed the token.
 			if getattr(self, "_whats_playing_token", None) != tok:
 				return
@@ -352,8 +374,10 @@ class TrackInfoMixin:
 					or getattr(self._player, "_current_url", None)
 				)
 				if not stream_url:
+					# Translators: Same as the What's Playing triple-press case, spoken here when this standalone gesture finds no ICY metadata and no stream URL either.
 					wx.CallAfter(_speak_on_demand, _("No track info available"))
 					return
+				# Translators: Same as the What's Playing triple-press case, spoken before starting Shazam recognition.
 				wx.CallAfter(_speak_on_demand, _("No track metadata found. Starting music recognition…"))
 				self._start_music_recognition(stream_url)
 
@@ -364,12 +388,14 @@ class TrackInfoMixin:
 		# Forces Shazam music recognition regardless of whether ICY metadata is present.
 		# Provided as an unbound gesture so users who have difficulty with
 		# rapid key presses can assign a single keystroke to this action.
+		# Translators: Name of an NVDA command; unbound-gesture equivalent of pressing Ctrl+Win+I (or F2 in the dialog) four times.
 		description=_("Force music recognition for the currently playing stream"),
 		category=_("FreeRadio"),
 		speakOnDemand=True,
 	)
 	def script_forceMusicRecognition(self, gesture):
 		if not self._player.has_media():
+			# Translators: Same "not active" message as elsewhere, spoken here when this standalone force-recognition gesture is used with nothing playing.
 			_speak_on_demand(_("FreeRadio is not active"))
 			return
 		stream_url = (
@@ -377,8 +403,10 @@ class TrackInfoMixin:
 			or getattr(self._player, "_current_url", None)
 		)
 		if not stream_url:
+			# Translators: Same as elsewhere, spoken when this standalone gesture has no stream URL to attempt recognition on.
 			_speak_on_demand(_("No track info available"))
 		else:
+			# Translators: Same as elsewhere, spoken when this standalone gesture starts forced Shazam recognition.
 			_speak_on_demand(_("Starting music recognition…"))
 			self._start_music_recognition(stream_url)
 
@@ -402,11 +430,13 @@ class TrackInfoMixin:
 		if not self._player.has_media():
 			# Radio inactive — report any active scheduled recordings.
 			if active_sched:
+				# Translators: Same as the Ctrl+Win+I version, spoken here by the F2 dialog equivalent.
 				parts = [_("Radio inactive. Active scheduled recordings:")]
 				for sched_rec in active_sched:
 					parts.append(sched_rec.station.get("name", "").strip())
 				ui.message("  ".join(parts))
 			else:
+				# Translators: Same "not active" message as elsewhere, spoken here by the F2 dialog equivalent of What's Playing.
 				ui.message(_("FreeRadio is not active"))
 			return
 
@@ -441,31 +471,37 @@ class TrackInfoMixin:
 							or getattr(self._player, "_current_url", None)
 						)
 						if url:
-							icy = _rp._read_icy_title(url)
+							icy = _rp._read_icy_title_via_playlist(url)
 					# Abort if a later press has already changed the token.
 					if getattr(self, "_whats_playing_token", None) != tok:
 						return
 					if icy:
+						# Translators: Same What's Playing announcement as script_whatsPlaying, spoken here by the F2 in-dialog variant (_whats_playing_from_dialog); %(station)s/%(track)s as above.
 						msg = _("Playing: %(station)s — %(track)s") % {
 							"station": name, "track": icy
 						}
 					else:
+						# Translators: Same fallback as script_whatsPlaying, used when no ICY track title is available.
 						msg = _("Playing: %s") % name
 					station = self._player.get_current_station()
 					if _is_seekable_media(station):
 						ok, pos, length = self._player.get_playback_position()
 						if ok and length > 0:
+							# Translators: Same elapsed/remaining wording as script_whatsPlaying, appended here for a podcast/audiobook.
 							msg += ". " + _("%(elapsed)s elapsed, %(remaining)s remaining") % {
 								"elapsed": _format_duration(pos),
 								"remaining": _format_duration(max(0.0, length - pos)),
 							}
 					if self._recorder.is_recording():
+						# Translators: Same active-recording announcement as script_whatsPlaying.
 						msg += ". " + _("Recording: %s") % self._recorder.get_station_name()
 					for sched_rec in self._recorder.get_active_scheduled():
+						# Translators: Same active-scheduled-recording announcement as script_whatsPlaying.
 						msg += ". " + _("Scheduled recording: %s") % sched_rec.station.get("name", "").strip()
 					wx.CallAfter(ui.message, msg)
 				threading.Thread(target=_announce, daemon=True).start()
 			else:
+				# Translators: Same Paused announcement as script_whatsPlaying, spoken here by the F2 dialog equivalent.
 				msg = _("Paused: %s") % name
 				station = self._player.get_current_station()
 				if _is_seekable_media(station):
@@ -477,16 +513,20 @@ class TrackInfoMixin:
 						ok = pos > 0.0
 					if ok and pos > 0.0:
 						if length > 0:
+							# Translators: Same elapsed/remaining wording as script_whatsPlaying's paused case.
 							msg += ". " + _("%(elapsed)s elapsed, %(remaining)s remaining") % {
 								"elapsed": _format_duration(pos),
 								"remaining": _format_duration(max(0.0, length - pos)),
 							}
 						else:
+							# Translators: Same elapsed-only wording as script_whatsPlaying's paused case.
 							msg += ". " + _("%(elapsed)s elapsed") % {"elapsed": _format_duration(pos)}
 
 				if self._recorder.is_recording():
+					# Translators: Same active-recording announcement as script_whatsPlaying's paused case.
 					msg += ". " + _("Recording: %s") % self._recorder.get_station_name()
 				for sched_rec in active_sched:
+					# Translators: Same active-scheduled-recording announcement as script_whatsPlaying's paused case.
 					msg += ". " + _("Scheduled recording: %s") % sched_rec.station.get("name", "").strip()
 				ui.message(msg)
 
@@ -521,7 +561,7 @@ class TrackInfoMixin:
 						or getattr(self._player, "_current_url", None)
 					)
 					if url:
-						icy = _rp._read_icy_title(url)
+						icy = _rp._read_icy_title_via_playlist(url)
 				# If a 4th press arrived the token has already changed — abort.
 				if getattr(self, "_whats_playing_token", None) != tok:
 					return
@@ -533,8 +573,10 @@ class TrackInfoMixin:
 						or getattr(self._player, "_current_url", None)
 					)
 					if not stream_url:
+						# Translators: Same as the Ctrl+Win+I triple-press case, spoken here by the F2 dialog equivalent (3rd press).
 						wx.CallAfter(ui.message, _("No track info available"))
 						return
+					# Translators: Same as the Ctrl+Win+I triple-press case, spoken here by the F2 dialog equivalent before starting Shazam recognition.
 					wx.CallAfter(ui.message, _("No track metadata found. Starting music recognition…"))
 					self._start_music_recognition(stream_url)
 			threading.Thread(target=_copy_or_recognize, daemon=True).start()
@@ -551,8 +593,10 @@ class TrackInfoMixin:
 				or getattr(self._player, "_current_url", None)
 			)
 			if not stream_url:
+				# Translators: Same as the Ctrl+Win+I fourth-press case, spoken here by the F2 dialog equivalent (4th press).
 				ui.message(_("No track info available"))
 			else:
+				# Translators: Same as the Ctrl+Win+I fourth-press case, spoken here by the F2 dialog equivalent.
 				ui.message(_("Starting music recognition…"))
 				self._start_music_recognition(stream_url)
 			# Reset counter so a further press starts from 1× again.
@@ -567,10 +611,13 @@ class TrackInfoMixin:
 		if has_instant or has_scheduled:
 			parts = []
 			if has_instant:
+				# Translators: Line listing an in-progress instant recording in the F8 stop-confirmation dialog; %s is the station name.
 				parts.append(_("Instant recording: %s") % self._recorder.get_station_name())
 			for sched_rec in active_sched:
+				# Translators: Line listing an active scheduled recording in the F8 stop-confirmation dialog; %s is the station name.
 				parts.append(_("Scheduled recording: %s") % sched_rec.station.get("name", "").strip())
 			rec_list = "\n".join(parts)
+			# Translators: Body of the F8 stop-confirmation dialog; %s is the newline-joined list of recordings built just above.
 			msg = _(
 				"The following recordings are active and will be stopped:\n%s\n\nStop radio and end all recordings?"
 			) % rec_list
@@ -579,6 +626,7 @@ class TrackInfoMixin:
 				dlg = wx.MessageDialog(
 					gui.mainFrame,
 					msg,
+					# Translators: Title of the F8 stop-confirmation dialog.
 					_("Active Recordings"),
 					wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING,
 				)
@@ -592,18 +640,21 @@ class TrackInfoMixin:
 						self._player.stop()
 					self._stations      = []
 					self._current_index = -1
+					# Translators: Spoken by F8 (stop) after confirming the stop and ending any active recordings.
 					_notify(_("Freeradio stopped"))
 
 			wx.CallAfter(_confirm)
 			return
 
 		if not self._player.has_media():
+			# Translators: Same "not active" message as elsewhere, spoken here when F8 (stop) is pressed with nothing playing and no recordings active.
 			ui.message(_("FreeRadio is not active"))
 			return
 
 		self._player.stop()
 		self._stations      = []
 		self._current_index = -1
+		# Translators: Spoken by F8 (stop) when there were no active recordings to confirm about.
 		_notify(_("Freeradio stopped"))
 
 	def _announce_now(self):
@@ -612,6 +663,7 @@ class TrackInfoMixin:
 		Mirrors the single-press behaviour of script_whatsPlaying.
 		"""
 		if not self._player.has_media():
+			# Translators: Same "not active" message as elsewhere, spoken here by this hotkey-triggered station announcement.
 			ui.message(_("FreeRadio is not active"))
 			return
 		name = self._player.get_current_name()
@@ -625,17 +677,20 @@ class TrackInfoMixin:
 						or getattr(self._player, "_current_url", None)
 					)
 					if url:
-						icy = _rp._read_icy_title(url)
+						icy = _rp._read_icy_title_via_playlist(url)
 				if icy:
+					# Translators: Same Playing announcement as script_whatsPlaying, spoken here by this hotkey-triggered variant.
 					msg = _("Playing: %(station)s — %(track)s") % {
 						"station": name, "track": icy
 					}
 				else:
+					# Translators: Same fallback as script_whatsPlaying, used when no ICY track title is available.
 					msg = _("Playing: %s") % name
 				station = self._player.get_current_station()
 				if _is_seekable_media(station):
 					ok, pos, length = self._player.get_playback_position()
 					if ok and length > 0:
+						# Translators: Same elapsed/remaining wording as elsewhere, appended here for a podcast/audiobook.
 						msg += ". " + _("%(elapsed)s elapsed, %(remaining)s remaining") % {
 							"elapsed": _format_duration(pos),
 							"remaining": _format_duration(max(0.0, length - pos)),
@@ -643,6 +698,7 @@ class TrackInfoMixin:
 				wx.CallAfter(ui.message, msg)
 			threading.Thread(target=_read_and_announce, daemon=True).start()
 		else:
+			# Translators: Same Paused announcement as elsewhere, spoken here by this hotkey-triggered variant.
 			_notify(_("Paused: %s") % name)
 
 	def _build_station_details(self):
@@ -682,10 +738,12 @@ class TrackInfoMixin:
 
 		name = s.get("name", "").strip()
 		if name:
+			# Translators: Field-name row header in this dialog's station-details table; value is the station name.
 			rows.append((_("Station"), name))
 
 		icy = self._player.get_icy_title()
 		if icy:
+			# Translators: Field-name row header for the current ICY track title, when the station broadcasts one.
 			rows.append((_("Now playing"), icy))
 
 		country_code = s.get("countrycode", "").strip()
@@ -694,12 +752,15 @@ class TrackInfoMixin:
 			display_country = _country_name(country_code)
 			if country and country.lower() != display_country.lower():
 				display_country = "%s (%s)" % (display_country, country)
+			# Translators: Field-name row header for the country field; value is the resolved country name, optionally with the raw code in parentheses.
 			rows.append((_("Country"), display_country))
 		elif country:
+			# Translators: Same field-name row header as above, used when only the raw country string (no resolvable code) is available.
 			rows.append((_("Country"), country))
 
 		language = s.get("language", "").strip()
 		if language:
+			# Translators: Field-name row header for the station's language field.
 			rows.append((_("Language"), language))
 
 		tags = s.get("tags", "").strip()
@@ -707,6 +768,7 @@ class TrackInfoMixin:
 			first_tags = ", ".join(
 				t.strip() for t in tags.split(",")[:5] if t.strip()
 			)
+			# Translators: Field-name row header for the station's tags/genre field; value is the first few comma-joined tags.
 			rows.append((_("Genre"), first_tags))
 
 		bitrate = s.get("bitrate", 0)
@@ -716,18 +778,23 @@ class TrackInfoMixin:
 			bitrate = 0
 		codec = s.get("codec", "").strip()
 		if bitrate and codec:
+			# Translators: Field-name row header shown when both codec and bitrate are known together, e.g. 'MP3, 128 kbps' as the value.
 			rows.append((_("Format"), "%s, %d kbps" % (codec, bitrate)))
 		elif bitrate:
+			# Translators: Field-name row header shown when only the bitrate (no codec) is known.
 			rows.append((_("Bitrate"), "%d kbps" % bitrate))
 		elif codec:
+			# Translators: Field-name row header shown when only the codec (no bitrate) is known.
 			rows.append((_("Codec"), codec))
 
 		homepage = s.get("homepage", "").strip()
 		if homepage:
+			# Translators: Field-name row header for the station's homepage URL.
 			rows.append((_("Website"), homepage))
 
 		stream_url = s.get("url_resolved", "").strip() or s.get("url", "").strip()
 		if stream_url:
+			# Translators: Field-name row header for the resolved audio stream URL.
 			rows.append((_("Stream URL"), stream_url))
 
 		votes = s.get("votes", 0)
@@ -736,6 +803,7 @@ class TrackInfoMixin:
 		except (TypeError, ValueError):
 			votes = 0
 		if votes:
+			# Translators: Field-name row header for the station's Radio Browser vote count.
 			rows.append((_("Votes"), str(votes)))
 
 		return rows
@@ -759,10 +827,12 @@ class TrackInfoMixin:
 
 		name = s.get("name", "").strip()
 		if name:
+			# Translators: Field-name row header in this dialog's podcast-episode details table; value is the episode title.
 			rows.append((_("Episode"), name))
 
 		feed_url = s.get("podcast_feed_url", "").strip()
 		if feed_url:
+			# Translators: Field-name row header for the parent podcast feed's URL.
 			rows.append((_("Podcast"), feed_url))
 
 		published = s.get("episode_published", "").strip()
@@ -773,10 +843,12 @@ class TrackInfoMixin:
 			description=s.get("description", "").strip(),
 		)
 		if lines:
+			# Translators: Field-name row header for the multi-line block of episode metadata (author, published date, duration, description) built by radioDialog.py's _format_podcast_episode_lines().
 			rows.append((_("Episode details"), "\n".join(lines)))
 
 		episode_url = s.get("url_resolved", "").strip() or s.get("url", "").strip()
 		if episode_url:
+			# Translators: Field-name row header for the resolved episode audio URL.
 			rows.append((_("Episode URL"), episode_url))
 
 		return rows
@@ -794,40 +866,49 @@ class TrackInfoMixin:
 
 		name = s.get("name", "").strip()
 		if name:
+			# Translators: Field-name row header for a local jukebox file; value is the track title/filename.
 			rows.append((_("Track"), name))
 
 		path = s.get("url", "").strip()
 		if path:
+			# Translators: Field-name row header for the track's full file path.
 			rows.append((_("File"), path))
 
 		size_bytes = s.get("jukebox_size_bytes")
 		if size_bytes:
+			# Translators: Field-name row header for the track's file size.
 			rows.append((_("Size"), _format_file_size(size_bytes)))
 
 		duration = s.get("jukebox_duration_seconds")
 		if duration:
+			# Translators: Field-name row header for the track's duration.
 			rows.append((_("Duration"), _format_duration(duration)))
 
 		fmt = s.get("jukebox_format", "").strip()
 		if fmt:
+			# Translators: Field-name row header for the track's audio file format/container.
 			rows.append((_("Format"), fmt))
 
 		bitrate = s.get("jukebox_bitrate_kbps")
 		if bitrate:
+			# Translators: Field-name row header for the track's audio bitrate; value has its own %d-based unit string.
 			rows.append((_("Bitrate"), _("%d kbps") % bitrate))
 
 		sample_rate = s.get("jukebox_sample_rate")
 		if sample_rate:
+			# Translators: Field-name row header for the track's sample rate; value has its own %.1f-based unit string.
 			rows.append((_("Sample rate"), _("%.1f kHz") % (sample_rate / 1000.0)))
 
 		channels = s.get("jukebox_channels")
 		if channels:
 			# Translators: shown as a jukebox track's channel count in the details dialog
 			channel_names = {1: _("Mono"), 2: _("Stereo")}
+			# Translators: Field-name row header for the track's channel count (mono/stereo/etc.).
 			rows.append((_("Channels"), channel_names.get(channels, str(channels))))
 
 		bit_depth = s.get("jukebox_bit_depth")
 		if bit_depth:
+			# Translators: Field-name row header for the track's bit depth; value has its own %d-based unit string.
 			rows.append((_("Bit depth"), _("%d-bit") % bit_depth))
 
 		return rows
@@ -853,6 +934,7 @@ class TrackInfoMixin:
 
 		name = s.get("name", "").strip()
 		if name:
+			# Translators: Field-name row header in this dialog's audio-book details table; value is the book title.
 			rows.append((_("Book"), name))
 
 		chapter_title = s.get("audiobook_chapter_title", "").strip()
@@ -861,10 +943,12 @@ class TrackInfoMixin:
 		if chapter_title:
 			if isinstance(chapter_index, int) and chapter_count:
 				rows.append((
+					# Translators: Field-name row header for the current chapter/part when both its position and the total count are known; value is "Title (n/total)".
 					_("Chapter"),
 					"%s (%d/%d)" % (chapter_title, chapter_index + 1, chapter_count),
 				))
 			else:
+				# Translators: Same field-name row header as above, used when the chapter position/total count is not known - just the chapter title.
 				rows.append((_("Chapter"), chapter_title))
 
 		lines = _format_audiobook_lines(
@@ -886,10 +970,12 @@ class TrackInfoMixin:
 			actors=s.get("audiobook_actors", "").strip(),
 		)
 		if lines:
+			# Translators: Field-name row header for the multi-line block of audio-book metadata (author, narrator, publisher, etc.) built by radioDialog.py's _format_audiobook_lines().
 			rows.append((_("Audio book details"), "\n".join(lines)))
 
 		book_url = s.get("getem_detail_url", "").strip()
 		if book_url:
+			# Translators: Field-name row header for the book's GETEM detail-page URL.
 			rows.append((_("Book link"), book_url))
 
 		return rows
@@ -915,11 +1001,13 @@ class TrackInfoMixin:
 		"""Show station details in an accessible dialog window."""
 		rows = self._build_station_details()
 		if not rows:
+			# Translators: Spoken if none of the station/track/podcast/audiobook detail fields have any data to show.
 			ui.message(_("No station detail available"))
 			return
 
 		dlg = wx.Dialog(
 			gui.mainFrame,
+			# Translators: Title of this track-info details dialog.
 			title=_("Station Details"),
 			style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
 		)
@@ -952,12 +1040,14 @@ class TrackInfoMixin:
 		sizer.Add(grid, 1, wx.EXPAND | wx.ALL, 10)
 
 		# "Copy all" button — copies all details to clipboard in one action
+		# Translators: Button label; copies every detail row shown in this dialog to the clipboard as text.
 		copy_btn = wx.Button(dlg, label=_("&Copy all to clipboard"))
 		def _on_copy(evt):
 			text = "\n".join("%s: %s" % (f, v) for f, v in rows)
 			if wx.TheClipboard.Open():
 				wx.TheClipboard.SetData(wx.TextDataObject(text))
 				wx.TheClipboard.Close()
+				# Translators: Spoken after the Copy All button succeeds.
 				ui.message(_("Station details copied to clipboard"))
 		copy_btn.Bind(wx.EVT_BUTTON, _on_copy)
 
@@ -980,6 +1070,7 @@ class TrackInfoMixin:
 		# for it there would just be a wasted background fetch against a
 		# podcast episode URL or a temporary GETEM streaming-proxy address.
 		current_station = self._player.get_current_station() or {}
+		# Translators: Same "Now playing" field-name row header as _build_radio_station_details, referenced here to check whether that row already exists in the dialog.
 		now_playing_label = _("Now playing")
 		if not _is_seekable_media(current_station) and now_playing_label not in field_ctrls:
 			def _fetch_icy_and_update():
@@ -991,13 +1082,14 @@ class TrackInfoMixin:
 						or getattr(self._player, "_current_url", None)
 					)
 					if url:
-						icy = _rp._read_icy_title(url)
+						icy = _rp._read_icy_title_via_playlist(url)
 				if not icy:
 					return
 
 				def _insert_icy():
 					if not dlg or not dlg.IsShown():
 						return
+					# Translators: Same "Station" field-name row header as _build_radio_station_details, referenced here to find that row's position so the "Now playing" row can be inserted right after it.
 					station_label = _("Station")
 					insert_pos = 0
 					for i, (f, v) in enumerate(rows):
@@ -1040,14 +1132,17 @@ class TrackInfoMixin:
 		if rows:
 			ui.message("  ".join("%s: %s" % (k, v) for k, v in rows))
 		else:
+			# Translators: Same "no detail available" message as _show_station_details_dialog, spoken here by this older voice-only variant.
 			ui.message(_("No station detail available"))
 
 	def _copy_to_clipboard(self, text):
 		if wx.TheClipboard.Open():
 			wx.TheClipboard.SetData(wx.TextDataObject(text))
 			wx.TheClipboard.Close()
+			# Translators: Spoken after the triple-press/F2/gesture actions copy the current ICY track title to the clipboard; %s is the copied text.
 			ui.message(_("Copied: %s") % text)
 		else:
+			# Translators: Spoken if the system clipboard can't be opened for the copy.
 			ui.message(_("Could not access clipboard"))
 		# Save to likedSongs.txt if the option is enabled
 		if config.conf["freeradio"].get("save_liked_songs", False):
@@ -1065,6 +1160,7 @@ class TrackInfoMixin:
 					with open(liked_path, encoding="utf-8") as fh:
 						existing = [l.rstrip("\n") for l in fh if l.strip()]
 				if text in existing:
+					# Translators: Spoken instead of saving a duplicate when the copied track is already in likedSongs.txt; %s is the track text.
 					ui.message(_("Already in liked songs: %s") % text)
 				else:
 					with open(liked_path, "a", encoding="utf-8") as fh:
@@ -1091,6 +1187,7 @@ class TrackInfoMixin:
 					if self._recorder.is_song_capture():
 						path = self._recorder.stop_song_capture()
 						if path:
+							# Translators: Spoken when a song-capture recording is auto-finalized because the station itself stopped/paused; %s is the saved filename.
 							wx.CallAfter(
 								ui.message,
 								_("Song recording saved: %s") % os.path.basename(path),
@@ -1106,7 +1203,7 @@ class TrackInfoMixin:
 						or getattr(self._player, "_current_url", None)
 					)
 					if url:
-						icy = _rp._read_icy_title(url)
+						icy = _rp._read_icy_title_via_playlist(url)
 
 				# ---------------------------------------------------------- #
 				# Song-capture auto-stop: end recording when the track changes #
@@ -1117,11 +1214,13 @@ class TrackInfoMixin:
 						# The track has changed — stop the recording automatically.
 						path = self._recorder.stop_song_capture()
 						if path:
+							# Translators: Same message as above, spoken here when song-capture auto-stops because the ICY track title changed (the song ended).
 							wx.CallAfter(
 								ui.message,
 								_("Song recording saved: %s") % os.path.basename(path),
 							)
 						else:
+							# Translators: Fallback spoken when auto-stop finds nothing to save (e.g. capture just started).
 							wx.CallAfter(_notify, _("Song recording stopped"))
 
 				if not icy:
