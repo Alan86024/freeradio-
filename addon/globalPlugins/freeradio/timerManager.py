@@ -90,11 +90,17 @@ class TimerManager:
 					"kind":    meta["kind"],
 					"station": meta.get("station"),
 				})
+		tmp_path = self._save_path + ".tmp"
 		try:
-			with open(self._save_path, "w", encoding="utf-8") as fh:
+			with open(tmp_path, "w", encoding="utf-8") as fh:
 				_json.dump(records, fh, ensure_ascii=False, indent=2)
+			os.replace(tmp_path, self._save_path)
 		except Exception as exc:
 			log.error("FreeRadio: failed to save timers: %s", exc)
+			try:
+				os.remove(tmp_path)
+			except OSError:
+				pass
 
 	def _load(self):
 		"""Load timers from JSON file; skip entries that are already in the past."""
@@ -231,7 +237,12 @@ class TimerManager:
 					except Exception:
 						pass
 
-			# Calculate time remaining until the next timer.
+			# Clear the wakeup flag BEFORE computing the wait time, so a
+			# timer added between the clear() and the wait() below can't
+			# have its _wakeup.set() wiped out by our clear() and get
+			# skipped past by our full timeout - which for the "no timers
+			# left" case can be up to a minute.
+			self._wakeup.clear()
 			with self._lock:
 				if self._timers:
 					next_dt = self._timers[0][1]
@@ -240,5 +251,4 @@ class TimerManager:
 				else:
 					wait = _MAX_SLEEP
 
-			self._wakeup.clear()
 			self._wakeup.wait(timeout=wait)

@@ -684,11 +684,17 @@ class StationManager:
 
 	def _save_favorites(self):
 		path = _get_favorites_path()
+		tmp_path = path + ".tmp"
 		try:
-			with open(path, "w", encoding="utf-8") as f:
+			with open(tmp_path, "w", encoding="utf-8") as f:
 				json.dump(self._favorites, f, ensure_ascii=False, indent=2)
+			os.replace(tmp_path, path)
 		except Exception:
 			log.error("FreeRadio: failed to save favorites", exc_info=True)
+			try:
+				os.remove(tmp_path)
+			except OSError:
+				pass
 
 	def get_favorites(self):
 		return list(self._favorites)

@@ -292,11 +292,17 @@ class PodcastManager:
 	def _save(self):
 		path = self._get_path()
 		data = [f.to_dict() for f in self._feeds]
+		tmp_path = path + ".tmp"
 		try:
-			with open(path, "w", encoding="utf-8") as f:
+			with open(tmp_path, "w", encoding="utf-8") as f:
 				json.dump(data, f, ensure_ascii=False, indent=2)
+			os.replace(tmp_path, path)
 		except Exception as e:
 			log.warning("FreeRadio Podcast: failed to save subscriptions: %s", e)
+			try:
+				os.remove(tmp_path)
+			except OSError:
+				pass
 
 	def get_feeds(self):
 		"""Return a list of subscribed feeds (metadata only, episodes may be empty)."""

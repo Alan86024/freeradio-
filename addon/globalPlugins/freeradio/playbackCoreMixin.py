@@ -36,6 +36,43 @@ from . import podcast
 from .settingsPanel import FreeRadioSettingsPanel
 
 
+# File extensions that reliably mark a URL as a podcast episode / audio
+# book chapter download rather than a live-stream URL. Live streams
+# typically have no extension at all (e.g. AudioBook Radio's
+# "https://audiobookradio.out.airtime.pro/audiobookradio_a") or a
+# playlist extension like ".pls"/".m3u" - neither of which appears here.
+# Used by _looks_like_podcast_episode_url() to distinguish a real
+# seekable file URL from a live stream, so the "resume last station"
+# path can tell them apart even when a tag/position-entry combination
+# would otherwise be ambiguous.
+_PODCAST_LIKE_EXTENSIONS = (
+	".mp3", ".m4a", ".m4b", ".aac", ".ogg", ".oga",
+	".opus", ".wav", ".flac", ".mp4",
+)
+
+
+def _looks_like_podcast_episode_url(url):
+	"""Return True if *url*'s path ends with an audio-file extension
+	typical of a podcast episode / audio-book chapter download.
+
+	Used by _resume_last_station() as a sanity check on both the
+	config-persisted "podcast" tag and the "safety net" that infers
+	"podcast" from a recorded position entry. Without this check, a live
+	stream URL that merely had a stale position entry (or that was ever
+	mis-tagged as "podcast" in a prior config) would be resumed as if it
+	were a seekable podcast episode - showing "Episode"/"Episode URL" in
+	the station-details dialog and refusing to play properly."""
+	if not url:
+		return False
+	try:
+		from urllib.parse import urlparse
+		import os.path
+		path = urlparse(url).path.lower()
+		return os.path.splitext(path)[1] in _PODCAST_LIKE_EXTENSIONS
+	except Exception:
+		return False
+
+
 class PlaybackCoreMixin:
 	"""Pause/resume, stop, next/prev station, and the shared station-playing
 	pipeline (_play_station / _start_playing / _on_station_selected /
@@ -393,7 +430,11 @@ class PlaybackCoreMixin:
 		opened while this is playing,
 		RadioDialog._sync_getem_now_playing_from_player() picks its state
 		back up from the player, same as it does after a startup resume."""
-		if not station or "audiobook" not in station.get("tags", ""):
+		# Keyed off "media_kind" rather than the free-text "tags" field - see
+		# radioPlayer._is_seekable_media()'s docstring for why matching
+		# against "tags" is unsafe (a real Radio Browser station can
+		# legitimately carry "audiobook" as a community-assigned genre tag).
+		if not station or station.get("media_kind") != "audiobook":
 			return False
 		detail_url = station.get("getem_detail_url")
 		if not detail_url:
@@ -537,17 +578,10 @@ class PlaybackCoreMixin:
 		url  = config.conf["freeradio"].get("last_station_url", "").strip()
 		name = config.conf["freeradio"].get("last_station_name", "").strip()
 		uuid = config.conf["freeradio"].get("last_station_uuid", "").strip()
-		tags = config.conf["freeradio"].get("last_station_tags", "").strip()
-		# Safety net for a config saved before "last_station_tags" existed
-		# (or any other reason it came back empty): a URL that has a
-		# recorded podcast resume position is, by construction, a podcast
-		# episode, even without the tag.
-		if "podcast" not in tags and self._player.has_podcast_position_entry(url):
-			tags = "podcast"
-		
+
 		if not url:
 			return
-		
+
 		station = None
 		# First try to find by stationuuid
 		if uuid:
@@ -555,48 +589,113 @@ class PlaybackCoreMixin:
 				if s.get("stationuuid", "") == uuid:
 					station = s
 					break
-		
+
 		# If not found by uuid, try by URL
 		if station is None:
 			for s in self._manager.get_favorites():
 				if s.get("url_resolved", "") == url or s.get("url", "") == url:
 					station = s
 					break
-		
-		# If still not found, create a minimal station object. Podcast
+
+		if station is not None:
+			# Found among the user's own favourites, so by construction a
+			# plain live radio station - podcast episodes/audiobook
+			# chapters/jukebox tracks never end up in favourites (see the
+			# comment on the placeholder branch below) - and is played
+			# exactly as saved, with none of the "tags"/podcast-position
+			# reinterpretation below. That reinterpretation used to run
+			# unconditionally, regardless of whether a real favourited
+			# station had already been found here: a live station whose
+			# own last_station_tags/podcast-position data happened to read
+			# "podcast" (e.g. an older, pre-media_kind config that saved a
+			# real station's raw "tags" field verbatim - see _play_station()
+			# below - or, for a station named/tagged like an audio book
+			# station, e.g. "AudioBook Radio", a stale podcast_positions.json
+			# entry left over from before that fix) got its "media_kind"
+			# overwritten to "podcast"/"audiobook" right here, so it
+			# resumed stuck behind the casette.mp3 resume-wait clip trying
+			# to seek to a position that was never really this station's
+			# own, and its details showed "Episode"/"Episode URL" instead
+			# of the normal station fields (trackInfoMixin._build_station_details()
+			# keys off the same "media_kind"). A favourited station's own
+			# saved dict is trusted as-is instead.
+			self._play_station(station)
+			return
+
+		tags = config.conf["freeradio"].get("last_station_tags", "").strip()
+
+		# Sanity-check a config-persisted "podcast" tag against the URL's
+		# actual shape before trusting it. This value can be stale AND
+		# self-perpetuating: if a live-stream URL ever had a podcast
+		# position entry (however that came about), the "safety net"
+		# block further down would locally infer tags="podcast" from
+		# that entry, _play_station() would then observe
+		# station["media_kind"]=="podcast" and persist
+		# last_station_tags="podcast" back to config - even after the
+		# position entry itself is gone. From that point on, every NVDA
+		# startup trusts the persisted tag and reinstates the wrong
+		# "podcast" classification forever. A live-stream URL with no
+		# audio-file extension and no current position entry is therefore
+		# treated as a stale tag, not a real podcast episode.
+		if tags == "podcast" and not _looks_like_podcast_episode_url(url):
+			if not self._player.has_podcast_position_entry(url):
+				tags = ""
+
+		# Safety net for a config saved before "last_station_tags" existed
+		# (or any other reason it came back empty): a URL that has a
+		# recorded podcast resume position is, by construction, a podcast
+		# episode, even without the tag - but only if the URL itself also
+		# looks like a podcast episode. Without that shape check, a live
+		# stream URL that merely had a stale position entry left over
+		# from an old misclassification would be wrongly promoted back to
+		# "podcast" here. Only reached past the favourites lookup above,
+		# since a favourited station's own kind is never reinterpreted
+		# from this - see the comment there.
+		if tags != "podcast" and _looks_like_podcast_episode_url(url):
+			if self._player.has_podcast_position_entry(url):
+				tags = "podcast"
+
+		# Belt-and-suspenders: collapse anything that isn't exactly one of
+		# the three values this add-on itself ever writes here down to "".
+		# The "==" comparisons below already can't misfire on a multi-word
+		# leftover like "Pop, Haber, audiobook" (unlike the old "in"
+		# substring test they replaced), but normalising up front means
+		# nothing downstream has to reason about any other possible value.
+		if tags not in ("podcast", "audiobook", "jukebox"):
+			tags = ""
+
+		# Not in favourites - create a minimal station object. Podcast
 		# episodes never end up in favourites, so this is always the path
 		# they take - carry over the saved "tags" (e.g. "podcast") so
 		# _play_station()/RadioPlayer.play() still recognise it as a
 		# podcast and seek to the saved position instead of restarting
 		# from 0:00.
-		if station is None:
-			station = {
-				"name": name, 
-				"url": url, 
-				"url_resolved": url,
-				"stationuuid": uuid, 
-				"countrycode": "", 
-				"tags": tags, 
-				"votes": 0
-			}
-			# "tags" here is exactly "podcast" or "jukebox" - not the
-			# free-text, possibly-multi-value list a real Radio Browser
-			# station carries (see radioPlayer._is_seekable_media()'s own
-			# docstring for why that distinction matters) - because it was
-			# set verbatim from PodcastEpisode.to_dict()/JukeboxTrack.to_dict()
-			# by _play_station() below (config.conf["freeradio"]["last_station_tags"]
-			# = station.get("tags", "")) back when this item was last
-			# played. So it doubles as "media_kind" directly here. Without
-			# this, _is_seekable_media() - which only ever checks
-			# "media_kind", never "tags" - doesn't recognise the resumed
-			# item as podcast-like: seek/speed/pitch and resume-to-saved-
-			# position all silently stop working, and it plays back (and
-			# responds to commands) like an ordinary live station instead.
-			# The GETEM "audiobook" case just below replaces this whole
-			# dict with book.to_dict()'s own already-correct "media_kind",
-			# so it doesn't need this.
-			if tags in ("podcast", "jukebox"):
-				station["media_kind"] = tags
+		station = {
+			"name": name, 
+			"url": url, 
+			"url_resolved": url,
+			"stationuuid": uuid, 
+			"countrycode": "", 
+			"tags": tags, 
+			"votes": 0
+		}
+		# "tags" here is exactly "podcast" or "jukebox" - not the
+		# free-text, possibly-multi-value list a real Radio Browser
+		# station carries (see radioPlayer._is_seekable_media()'s own
+		# docstring for why that distinction matters). It's set from
+		# "media_kind" (never from the station's own "tags") by
+		# _play_station() below, so it doubles as "media_kind" directly
+		# here. Without this, _is_seekable_media() - which only ever
+		# checks "media_kind", never "tags" - doesn't recognise the
+		# resumed item as podcast-like: seek/speed/pitch and resume-to-
+		# saved-position all silently stop working, and it plays back
+		# (and responds to commands) like an ordinary live station
+		# instead.
+		# The GETEM "audiobook" case just below replaces this whole
+		# dict with book.to_dict()'s own already-correct "media_kind",
+		# so it doesn't need this.
+		if tags in ("podcast", "jukebox"):
+			station["media_kind"] = tags
 
 		# GETEM audio books need their proxy URL rebuilt fresh every
 		# session - see _rebuild_getem_resume_url(). Bail out rather than
@@ -608,7 +707,7 @@ class PlaybackCoreMixin:
 		# couple of URL fields onto it - see _rebuild_getem_resume_url()'s
 		# docstring for why the placeholder alone left the station-details
 		# dialog showing an incomplete "Audio book details" block.
-		if "audiobook" in tags:
+		if tags == "audiobook":
 			detail_url = config.conf["freeradio"].get("last_station_getem_detail_url", "").strip()
 			chapter_index = config.conf["freeradio"].get("last_station_getem_chapter_index", 0)
 			rebuilt = self._rebuild_getem_resume_url(detail_url, chapter_index)
@@ -620,7 +719,7 @@ class PlaybackCoreMixin:
 				))
 				return
 			station = rebuilt
-		elif "podcast" in tags:
+		elif tags == "podcast":
 			# Likewise, re-apply the subscribed feed's saved audio profile
 			# (if any) - see _on_episode_play()/_play_station(). Unlike the
 			# audiobook case, the episode URL itself is still perfectly
@@ -678,30 +777,46 @@ class PlaybackCoreMixin:
 			config.conf["freeradio"]["last_station_url"]  = url_resolved or url
 			config.conf["freeradio"]["last_station_name"] = name
 			config.conf["freeradio"]["last_station_uuid"] = station_uuid
-			# Needed so a podcast episode resumed on the next NVDA startup is
-			# still recognised as a podcast (see _resume_last_station) -
-			# without this, the reconstructed station dict has no "tags",
-			# the seek-to-saved-position logic never triggers, and the
-			# episode silently restarts from 0:00 instead of resuming.
-			config.conf["freeradio"]["last_station_tags"] = station.get("tags", "")
+			# Needed so a podcast episode/audio book/jukebox track resumed on
+			# the next NVDA startup is still recognised as such (see
+			# _resume_last_station) - without this, the reconstructed station
+			# dict has no usable kind info and resume-to-saved-position never
+			# triggers, so it silently restarts from 0:00 instead of
+			# resuming. Keyed off "media_kind" rather than the free-text
+			# "tags" field - see the comment on _advance_getem_chapter_headless()
+			# above for why matching a live station's real genre tags is
+			# unsafe: a live Radio Browser station (even a favourited one)
+			# can legitimately carry "podcast"/"audiobook"/"jukebox" as a
+			# community-assigned genre tag, and saving its raw "tags" here
+			# verbatim made such a station wrongly get treated as an audio
+			# book/podcast/jukebox item - and then fail to resume at all,
+			# since it has no actual GETEM/podcast/jukebox data behind it -
+			# on the next NVDA startup.
+			_last_media_kind = station.get("media_kind")
+			config.conf["freeradio"]["last_station_tags"] = (
+				_last_media_kind if _last_media_kind in ("podcast", "audiobook", "jukebox") else ""
+			)
 			# GETEM audio books additionally need to know which book/part
 			# this was, so _resume_last_station() can rebuild a fresh proxy
 			# URL for it on the next NVDA startup (last_station_url's proxy
 			# URL from *this* session is dead by then - see
 			# _rebuild_getem_resume_url()). Cleared to blank/0 for anything
 			# else so a stale audiobook resume hint never lingers once the
-			# user moves on to a station or podcast.
-			if "audiobook" in station.get("tags", ""):
+			# user moves on to a station or podcast. Keyed off "media_kind"
+			# rather than "tags" - see the comment on _advance_getem_chapter_headless()
+			# above for why matching a live station's real genre tags is unsafe.
+			if station.get("media_kind") == "audiobook":
 				config.conf["freeradio"]["last_station_getem_detail_url"] = station.get("getem_detail_url", "") or ""
 				config.conf["freeradio"]["last_station_getem_chapter_index"] = int(station.get("getem_chapter_index", 0) or 0)
 			else:
 				config.conf["freeradio"]["last_station_getem_detail_url"] = ""
 				config.conf["freeradio"]["last_station_getem_chapter_index"] = 0
 			# Same idea for a subscribed podcast feed's saved audio profile -
-			# see _on_episode_play()/_resume_last_station(). A GETEM chapter
-			# also carries "podcast" in its tags (see GetemBook.to_dict()),
-			# so this is explicitly the non-audiobook case only.
-			if "podcast" in station.get("tags", "") and "audiobook" not in station.get("tags", ""):
+			# see _on_episode_play()/_resume_last_station(). Keyed off
+			# "media_kind" rather than "tags" for the same reason as above;
+			# GETEM/LibriVox chapters carry media_kind="audiobook" (never
+			# "podcast"), so no separate exclusion is needed here anymore.
+			if station.get("media_kind") == "podcast":
 				config.conf["freeradio"]["last_station_podcast_feed_url"] = station.get("podcast_feed_url", "") or ""
 			else:
 				config.conf["freeradio"]["last_station_podcast_feed_url"] = ""
@@ -726,14 +841,14 @@ class PlaybackCoreMixin:
 
 		# Apply station-specific audio profile if one exists, else restore global settings
 		station_audio = station.get("station_audio")
-		# "jukebox" is included alongside "podcast" here for the same reason
-		# GETEM audiobook chapters carry "podcast" in their tags (see the
-		# comment above): this flag just means "tempo-capable local-ish
-		# media that speed/transpose apply to", and "jukebox" - like
-		# "podcast" - is only ever set internally (jukebox.JukeboxTrack.to_dict()),
-		# never derived from external data, so it's just as safe a marker.
-		is_podcast_like = ("podcast" in station.get("tags", "")
-		                    or "jukebox" in station.get("tags", ""))
+		# This flag just means "tempo-capable local-ish media that
+		# speed/transpose apply to" - podcast episodes, GETEM/LibriVox
+		# audiobook chapters, and jukebox tracks all qualify. Keyed off
+		# "media_kind" rather than "tags": unlike "media_kind", which is
+		# only ever set internally (see radioPlayer._is_seekable_media()'s
+		# docstring), a live Radio Browser station's "tags" is free-text
+		# and can legitimately contain any of these words as a genre tag.
+		is_podcast_like = station.get("media_kind") in ("podcast", "audiobook", "jukebox")
 
 		# Everything below this point either waits on a blocking bass_host
 		# IPC round-trip (RadioPlayer.play() -> _save_current_podcast_position_if_playing()

@@ -361,7 +361,7 @@ def first_tag(station: dict) -> str:
 # ---------------------------------------------------------------------------
 
 # Turkish character order (İ/i, Ğ/ğ, Ş/ş, Ü/ü, Ö/ö, Ç/ç differ from English)
-_TR_ORDER = "aAbBcCçÇdDeEfFgGğĞhHıIiİjJkKlLmMnNoOöÖpPrRsSSşŞtTuUüÜvVyYzZ0123456789"
+_TR_ORDER = "aAbBcCçÇdDeEfFgGğĞhHıIiİjJkKlLmMnNoOöÖpPrRsSşŞtTuUüÜvVyYzZ0123456789"
 _TR_CHAR_KEY: dict[str, int] = {ch: idx for idx, ch in enumerate(_TR_ORDER)}
 
 

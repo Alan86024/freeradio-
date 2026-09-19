@@ -121,8 +121,19 @@ class RecordingMixin:
 				from . import radioPlayer as _rp
 
 				station = self._player.get_current_station()
-				is_podcast_or_audiobook = station and ("podcast" in station.get("tags", "") or "audiobook" in station.get("tags", ""))
-				is_jukebox = station and "jukebox" in station.get("tags", "")
+				# Deliberately keyed off "media_kind" rather than the free-text
+				# "tags" field: a real Radio Browser station can legitimately
+				# carry "podcast"/"audiobook"/"jukebox" as a community-assigned
+				# genre tag on an ordinary live stream (e.g. talk-radio mirrors
+				# of podcast-hosting platforms like Zeno.fm or Qingting.fm) -
+				# matching against "tags" used to make such a station wrongly
+				# refuse song-capture recording. See
+				# radioPlayer._is_seekable_media()'s docstring and
+				# GlobalPlugin.script_addToFavorites() in __init__.py for the
+				# same reasoning already applied elsewhere.
+				media_kind = station.get("media_kind") if station else None
+				is_podcast_or_audiobook = media_kind in ("podcast", "audiobook")
+				is_jukebox = media_kind == "jukebox"
 
 				if is_podcast_or_audiobook:
 					# Translators: Spoken when double-pressing Ctrl+Win+E (song-capture) on a podcast/audiobook episode, which can't be recorded this way; points to the Ctrl+Win+V download command instead.
@@ -189,8 +200,11 @@ class RecordingMixin:
 				return
 
 			station = self._player.get_current_station()
-			is_podcast_or_audiobook = station and ("podcast" in station.get("tags", "") or "audiobook" in station.get("tags", ""))
-			is_jukebox = station and "jukebox" in station.get("tags", "")
+			# See the matching comment in _start_song_capture() above - keyed
+			# off "media_kind" rather than "tags" for the same reason.
+			media_kind = station.get("media_kind") if station else None
+			is_podcast_or_audiobook = media_kind in ("podcast", "audiobook")
+			is_jukebox = media_kind == "jukebox"
 
 			# If a recording is already running, stop it (user may want to end it)
 			if self._recorder.is_recording():

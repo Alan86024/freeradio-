@@ -1040,6 +1040,17 @@ class JukeboxManager:
 		self._track_profiles = {}
 		self._load()
 
+	def _profile_key(self, path):
+		# Match the same normalisation has_path()/get_folder_entry()/
+		# remove_entry()/rescan_folder() already apply to entry paths, so
+		# a profile saved under one casing/path form is still found when
+		# the same file is later referenced through a different one
+		# (case-insensitive filesystems, mapped drives, or callers that
+		# didn't pre-normalise the path).
+		if not path:
+			return path
+		return os.path.normcase(os.path.normpath(path))
+
 	def _get_path(self):
 		return os.path.join(globalVars.appArgs.configPath, "freeradio_jukebox.json")
 
@@ -1070,7 +1081,19 @@ class JukeboxManager:
 					if legacy and item.get("kind", "file") == "file":
 						track_profiles.setdefault(item.get("path"), legacy)
 			self._entries = [JukeboxEntry.from_dict(item) for item in entries_data]
-			self._track_profiles = track_profiles
+			# One-time migration: rewrite every profile key through
+			# _profile_key() so a profile saved verbatim by an earlier
+			# version (before path normalisation was added here) is still
+			# found by get_track_profile() afterwards - a file whose path
+			# happens to come back in a different casing/form on the next
+			# run (case-insensitive filesystem, mapped drive letter, etc.)
+			# would otherwise lose its saved profile silently. Also folds
+			# the legacy entry-level "audio_profile" field (already moved
+			# into track_profiles just above) into the same normalised-key
+			# map.
+			self._track_profiles = {
+				self._profile_key(k): v for k, v in track_profiles.items()
+			}
 		except Exception as e:
 			log.warning("FreeRadio Jukebox: failed to load library: %s", e)
 			self._entries = []
@@ -1082,11 +1105,17 @@ class JukeboxManager:
 			"entries": [e.to_dict() for e in self._entries],
 			"track_profiles": self._track_profiles,
 		}
+		tmp_path = path + ".tmp"
 		try:
-			with open(path, "w", encoding="utf-8") as f:
+			with open(tmp_path, "w", encoding="utf-8") as f:
 				json.dump(data, f, ensure_ascii=False, indent=2)
+			os.replace(tmp_path, path)
 		except Exception as e:
 			log.warning("FreeRadio Jukebox: failed to save library: %s", e)
+			try:
+				os.remove(tmp_path)
+			except OSError:
+				pass
 
 	def save(self):
 		"""Public alias for _save() - callers outside this module (the
@@ -1096,21 +1125,24 @@ class JukeboxManager:
 
 	def get_track_profile(self, path):
 		"""Return the audio profile saved for the file at *path*, or
-		None. Keyed by absolute file path, so two files inside the same
-		folder entry keep independent profiles."""
+		None. Keyed by normalised absolute file path, so two files
+		inside the same folder entry keep independent profiles and a
+		path arriving in a different casing still resolves to the same
+		saved profile."""
 		if not path:
 			return None
-		return self._track_profiles.get(path)
+		return self._track_profiles.get(self._profile_key(path))
 
 	def set_track_profile(self, path, profile):
 		"""Save *profile* for the file at *path*. Passing None (or an
 		empty dict) removes any saved profile. Persists immediately."""
 		if not path:
 			return
+		key = self._profile_key(path)
 		if profile:
-			self._track_profiles[path] = profile
+			self._track_profiles[key] = profile
 		else:
-			self._track_profiles.pop(path, None)
+			self._track_profiles.pop(key, None)
 		self._save()
 
 	def get_folder_entry(self, path):

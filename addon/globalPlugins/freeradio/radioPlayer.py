@@ -2503,13 +2503,19 @@ class RadioPlayer:
 		return {}
 
 	def _write_podcast_positions(self):
+		tmp_path = self._podcast_positions_path + ".tmp"
 		try:
 			with self._podcast_positions_lock:
 				data = dict(self._podcast_positions)
-			with open(self._podcast_positions_path, "w", encoding="utf-8") as fh:
+			with open(tmp_path, "w", encoding="utf-8") as fh:
 				json.dump(data, fh, ensure_ascii=False, indent=2)
+			os.replace(tmp_path, self._podcast_positions_path)
 		except Exception as e:
 			log.error("FreeRadio: failed to save podcast positions: %s", e)
+			try:
+				os.remove(tmp_path)
+			except OSError:
+				pass
 
 	def get_podcast_position(self, url):
 		"""Return the saved resume position (seconds) for *url*, or 0.0."""
@@ -2571,13 +2577,19 @@ class RadioPlayer:
 		return {}
 
 	def _write_jukebox_folder_positions(self):
+		tmp_path = self._jukebox_folder_positions_path + ".tmp"
 		try:
 			with self._jukebox_folder_positions_lock:
 				data = dict(self._jukebox_folder_positions)
-			with open(self._jukebox_folder_positions_path, "w", encoding="utf-8") as fh:
+			with open(tmp_path, "w", encoding="utf-8") as fh:
 				json.dump(data, fh, ensure_ascii=False, indent=2)
+			os.replace(tmp_path, self._jukebox_folder_positions_path)
 		except Exception as e:
 			log.error("FreeRadio: failed to save jukebox folder positions: %s", e)
+			try:
+				os.remove(tmp_path)
+			except OSError:
+				pass
 
 	def save_jukebox_folder_position(self, folder_path, track_index, track_path=""):
 		"""Remember that *track_index* of *folder_path* was just played, so

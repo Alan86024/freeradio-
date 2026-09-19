@@ -8,6 +8,7 @@
 
 import collections
 import datetime
+import globalVars
 import hashlib
 import logging
 import os
@@ -16,6 +17,9 @@ import subprocess
 import threading
 import urllib.request
 import uuid
+
+import addonHandler
+addonHandler.initTranslation()
 
 log = logging.getLogger(__name__)
 
@@ -1354,9 +1358,17 @@ class ScheduledRecording:
 
 
 def _schedules_path():
-	"""The path to the JSON file."""
-	appdata = os.environ.get("APPDATA") or os.path.expanduser("~")
-	return os.path.join(appdata, "nvda", "freeradio_schedules.json")
+	"""The path to the JSON file.
+
+	Resolved through globalVars.appArgs.configPath, the same as every
+	other FreeRadio data file (favourites, podcasts, jukebox library,
+	timers, GETEM cache/library) - NOT %APPDATA%\\nvda directly. Those are
+	the same directory for a normal installed NVDA, but not for a portable
+	copy or for `nvda.exe -c <path>`, where %APPDATA%\\nvda points at the
+	wrong (or a nonexistent) profile while configPath correctly resolves
+	to whichever profile NVDA is actually running with.
+	"""
+	return os.path.join(globalVars.appArgs.configPath, "freeradio_schedules.json")
 
 
 def _save_schedules(schedules):

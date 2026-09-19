@@ -50,6 +50,32 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 	# Translators: Title of this settings category as it appears in NVDA's own Settings dialog category tree.
 	title = _("FreeRadio")
 
+	# The currently open instance of this panel, or None when the FreeRadio
+	# settings category isn't open. Set in postInit()/cleared via the
+	# window-destroy handler below. Lets GlobalPlugin's gesture-toggle
+	# scripts (MiscTogglesMixin, in miscTogglesMixin.py) find and update
+	# this panel's live checkbox/choice controls when a toggle's gesture is
+	# pressed while the panel happens to be open - without this, those
+	# scripts had nothing but self._dialog (the RadioDialog browse window,
+	# an unrelated object with no such controls) to check against, so the
+	# sync silently never ran, and OK'ing the Settings dialog afterwards
+	# would write the panel's now-stale checkbox value back over the
+	# gesture's change, undoing it.
+	_instance = None
+
+	def postInit(self):
+		self.__class__._instance = self
+		self.Bind(wx.EVT_WINDOW_DESTROY, self._onDestroy)
+		try:
+			super().postInit()
+		except AttributeError:
+			pass
+
+	def _onDestroy(self, event):
+		if FreeRadioSettingsPanel._instance is self:
+			FreeRadioSettingsPanel._instance = None
+		event.Skip()
+
 	def makeSettings(self, settingsSizer):
 		sHelper = guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 
@@ -60,7 +86,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self._timeshift_enabled = wx.CheckBox(
 			self,
 			# Translators: Checkbox label for the time-shift/rewind feature setting.
-			label=_("&Enable time-shift buffer (rewind live radio, no effect on potcasts and audio books)")
+			label=_("&Enable time-shift buffer (rewind live radio, no effect on podcasts and audio books)")
 		)
 		self._timeshift_enabled.SetValue(config.conf["freeradio"].get("timeshift_enabled", False))
 		sHelper.addItem(self._timeshift_enabled)
@@ -895,5 +921,3 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 				pass
 			
 			plugin._recorder._volume = vol
-
-

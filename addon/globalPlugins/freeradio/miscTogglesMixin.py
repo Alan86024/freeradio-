@@ -21,6 +21,8 @@ _tr = globals()["_"]
 _ = _tr
 del _tr
 
+from .settingsPanel import FreeRadioSettingsPanel
+
 
 class MiscTogglesMixin:
 	"""Standalone on/off config toggles that don't fit any other mixin:
@@ -57,11 +59,16 @@ class MiscTogglesMixin:
 		config.conf["freeradio"]["announce_track_changes"] = not current
 
 		# Keep the settings panel's checkbox and voice choice in sync if it's open.
-		if self._dialog is not None and hasattr(self._dialog, "_announce_track_changes"):
+		# FreeRadioSettingsPanel._instance is the live panel itself (see
+		# settingsPanel.py) - not self._dialog, which is the unrelated
+		# RadioDialog browse window and never has these controls, so the
+		# hasattr() below used to always be False and this sync never ran.
+		panel = FreeRadioSettingsPanel._instance
+		if panel is not None and hasattr(panel, "_announce_track_changes"):
 			try:
-				self._dialog._announce_track_changes.SetValue(not current)
-				if hasattr(self._dialog, "_track_change_voice"):
-					self._dialog._track_change_voice.Enable(not current)
+				panel._announce_track_changes.SetValue(not current)
+				if hasattr(panel, "_track_change_voice"):
+					panel._track_change_voice.Enable(not current)
 			except Exception:
 				pass
 
@@ -85,9 +92,11 @@ class MiscTogglesMixin:
 		config.conf["freeradio"]["track_change_voice"] = new_value
 
 		# Keep the settings panel's voice choice in sync if it's open.
-		if self._dialog is not None and hasattr(self._dialog, "_track_change_voice"):
+		# See the matching comment in script_toggleAnnounceTrackChanges above.
+		panel = FreeRadioSettingsPanel._instance
+		if panel is not None and hasattr(panel, "_track_change_voice"):
 			try:
-				self._dialog._track_change_voice.SetSelection(0 if new_value != "sapi5" else 1)
+				panel._track_change_voice.SetSelection(0 if new_value != "sapi5" else 1)
 			except Exception:
 				pass
 
@@ -104,9 +113,11 @@ class MiscTogglesMixin:
 		config.conf["freeradio"]["save_liked_songs"] = not current
 
 		# Keep the settings panel's checkbox in sync if it's open.
-		if self._dialog is not None and hasattr(self._dialog, "_save_liked_songs"):
+		# See the matching comment in script_toggleAnnounceTrackChanges above.
+		panel = FreeRadioSettingsPanel._instance
+		if panel is not None and hasattr(panel, "_save_liked_songs"):
 			try:
-				self._dialog._save_liked_songs.SetValue(not current)
+				panel._save_liked_songs.SetValue(not current)
 			except Exception:
 				pass
 
@@ -117,4 +128,3 @@ class MiscTogglesMixin:
 			# Translators: Second half of the toggle announcement; describes the feature's new on/off state.
 			"state": _("enabled") if not current else _("disabled"),
 		})
-

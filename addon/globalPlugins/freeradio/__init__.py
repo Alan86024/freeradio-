@@ -220,9 +220,6 @@ except KeyError:
 
 from . import radioPlayer, stationManager, recorder as recorderModule
 
-if globalVars.appArgs.secure:
-	GlobalPlugin = globalPluginHandler.GlobalPlugin
-
 
 _AUDIO_DEVICE_REFRESH_MODE_KEYS = ["reliable", "fast"]
 
@@ -239,8 +236,8 @@ def _init_config():
 		"last_station_name":"string(default='')",
 		"last_station_uuid":"string(default='')",
 		"last_station_tags":"string(default='')",
-		# Only meaningful when "audiobook" is in last_station_tags - see
-		# GlobalPlugin._rebuild_getem_resume_url() in playbackCoreMixin.py.
+		# Only meaningful when last_station_tags equals "audiobook" exactly -
+		# see GlobalPlugin._rebuild_getem_resume_url() in playbackCoreMixin.py.
 		# GETEM chapters stream through a local proxy whose registered
 		# tokens live only in memory (getem._proxy_chapters), so
 		# last_station_url alone is a dead link by the next NVDA startup;
@@ -248,11 +245,12 @@ def _init_config():
 		# and re-register a fresh proxy URL for the right chapter.
 		"last_station_getem_detail_url":     "string(default='')",
 		"last_station_getem_chapter_index":  "integer(default=0)",
-		# Only meaningful when "podcast" is in last_station_tags and it's
-		# NOT a GETEM audio book (those use the getem_* keys above instead) -
-		# lets the resume path re-apply the subscribed feed's saved audio
-		# profile (volume/effects/EQ/speed), same as _rebuild_getem_resume_url()
-		# does for audio books. See GlobalPlugin._resume_last_station().
+		# Only meaningful when last_station_tags equals "podcast" exactly and
+		# it's NOT a GETEM audio book (those use the getem_* keys above
+		# instead) - lets the resume path re-apply the subscribed feed's
+		# saved audio profile (volume/effects/EQ/speed), same as
+		# _rebuild_getem_resume_url() does for audio books. See
+		# GlobalPlugin._resume_last_station().
 		"last_station_podcast_feed_url":     "string(default='')",
 		"resume_on_start":  "boolean(default=False)",
 		"hotkey_p_action":  "string(default='resume')",
@@ -535,7 +533,14 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		self._obligato_sync_stop   = None
 		self._obligato_sync_thread = None
 		gui.NVDASettingsDialog.categoryClasses.append(FreeRadioSettingsPanel)
-		_timers_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "timers.json")
+		# Written through globalVars.appArgs.configPath, same as every other
+		# FreeRadio data file (favourites, podcasts, jukebox library, GETEM
+		# cache/library) - NOT into the add-on's own install directory.
+		# NVDA removes and re-creates that directory on every add-on update,
+		# so a path built from __file__ here lost every pending sleep/alarm
+		# timer on each update; configPath survives updates the same way it
+		# already does for favourites/podcasts/etc.
+		_timers_path = os.path.join(globalVars.appArgs.configPath, "freeradio_timers.json")
 		self._timer_manager = TimerManager(
 			self._player, self._manager,
 			save_path=_timers_path,
@@ -624,7 +629,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 				# NVDA reads __doc__ as the script description and
 				# __name__ as the script identifier.
 				# Translators: Auto-generated description of a per-favourite-station shortcut, shown in NVDA's Input Gestures dialog; %s is the station name.
-				_script.__doc__      = _("%s playback shortcut ()") % s.get("name", "").strip()
+				_script.__doc__      = _("%s playback shortcut") % s.get("name", "").strip()
 				_script.__name__     = script_name
 				_script.category     = _CATEGORY
 				# No default gesture — user assigns one via Input Gestures dialog.
@@ -991,7 +996,6 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 		if self._dialog is None:
 			from .radioDialog import RadioDialog
-			gui.mainFrame.prePopup()
 			self._dialog = RadioDialog(
 				gui.mainFrame,
 				self._manager,
@@ -1002,9 +1006,10 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 				plugin=self,
 			)
 		if not self._dialog.IsShown():
-			# prePopup() was called once when the dialog was first created.  Every
-			# time the dialog is hidden, radioDialog calls postPopup() to balance it.
-			# So each re-show needs a matching prePopup() call.
+			# prePopup() balances the postPopup() that radioDialog calls on
+			# every Hide(). Called exactly once per Show(), never at
+			# construction time - the very first Show() below needs it just
+			# as much as every later re-show does.
 			gui.mainFrame.prePopup()
 			self._dialog.Show()
 		self._dialog.Raise()
