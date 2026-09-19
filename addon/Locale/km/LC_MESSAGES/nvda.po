@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FreeRadio 2026.24.0\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-19 16:19+0300\n"
+"POT-Creation-Date: 2026-09-19 20:42+0300\n"
 "PO-Revision-Date: 2026-09-15 14:35+0300\n"
 "Last-Translator: \n"
 "Language-Team: Khmer\n"
@@ -34,19 +34,19 @@ msgstr "ជ្រើសរើសឧបករណ៍បញ្ចេញសំឡេ
 #: addon\globalPlugins\freeradio\audioFxMixin.py:143
 #: addon\globalPlugins\freeradio\audioFxMixin.py:153
 #: addon\globalPlugins\freeradio\audioFxMixin.py:230
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:33
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:52
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:79
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:99
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:35
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:54
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:86
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:108
 #: addon\globalPlugins\freeradio\obligatoMixin.py:206
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:47
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:147
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:206
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:84
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:184
 #: addon\globalPlugins\freeradio\playbackCoreMixin.py:243
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:861
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:880
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:280
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:976
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:995
 #: addon\globalPlugins\freeradio\recordingMixin.py:75
-#: addon\globalPlugins\freeradio\recordingMixin.py:243
+#: addon\globalPlugins\freeradio\recordingMixin.py:257
 #: addon\globalPlugins\freeradio\settingsPanel.py:51
 #: addon\globalPlugins\freeradio\timeshiftMixin.py:312
 #: addon\globalPlugins\freeradio\timeshiftMixin.py:352
@@ -55,11 +55,11 @@ msgstr "ជ្រើសរើសឧបករណ៍បញ្ចេញសំឡេ
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:325
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:344
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:393
-#: addon\globalPlugins\freeradio\__init__.py:750
-#: addon\globalPlugins\freeradio\__init__.py:760
-#: addon\globalPlugins\freeradio\__init__.py:770
-#: addon\globalPlugins\freeradio\__init__.py:780
-#: addon\globalPlugins\freeradio\__init__.py:790
+#: addon\globalPlugins\freeradio\__init__.py:755
+#: addon\globalPlugins\freeradio\__init__.py:765
+#: addon\globalPlugins\freeradio\__init__.py:775
+#: addon\globalPlugins\freeradio\__init__.py:785
+#: addon\globalPlugins\freeradio\__init__.py:795
 msgid "FreeRadio"
 msgstr "FreeRadio"
 
@@ -85,7 +85,7 @@ msgstr "មានឧបករណ៍បញ្ចេញសំឡេងតែមួ
 #: addon\globalPlugins\freeradio\audioDeviceMixin.py:159
 #: addon\globalPlugins\freeradio\obligatoMixin.py:95
 #: addon\globalPlugins\freeradio\radioDialog.py:1529
-#: addon\globalPlugins\freeradio\settingsPanel.py:589
+#: addon\globalPlugins\freeradio\settingsPanel.py:615
 msgid "System default"
 msgstr "លំនាំដើមប្រព័ន្ធ"
 
@@ -127,8 +127,8 @@ msgstr "ការចម្លងសំឡេងបានបញ្ឈប់ហើ
 #. Translators: Spoken when this shortcut is pressed while nothing is playing.
 #: addon\globalPlugins\freeradio\audioDeviceMixin.py:179
 #: addon\globalPlugins\freeradio\recordingMixin.py:116
-#: addon\globalPlugins\freeradio\recordingMixin.py:224
-#: addon\globalPlugins\freeradio\__init__.py:797
+#: addon\globalPlugins\freeradio\recordingMixin.py:238
+#: addon\globalPlugins\freeradio\__init__.py:802
 msgid "No station is playing"
 msgstr "មិនមានប៉ុស្តិ៍ណាមួយកំពុងចាក់ទេ"
 
@@ -231,7 +231,7 @@ msgstr "បើក/បិទ ការបង្កើនស្តើងទាប 
 #. Translators: Short label used in the 'X enabled/disabled' announcement (see _toggle_eq_band) when toggling the bass-boost EQ band.
 #: addon\globalPlugins\freeradio\audioFxMixin.py:138
 #: addon\globalPlugins\freeradio\radioDialog.py:699
-#: addon\globalPlugins\freeradio\settingsPanel.py:155
+#: addon\globalPlugins\freeradio\settingsPanel.py:181
 msgid "EQ: Bass Boost"
 msgstr "EQ: Bass Boost"
 
@@ -243,7 +243,7 @@ msgstr "បើក/បិទ ការបង្កើនស្តើងខ្ព�
 #. Translators: Short label used in the 'X enabled/disabled' announcement when toggling the treble-boost EQ band.
 #: addon\globalPlugins\freeradio\audioFxMixin.py:148
 #: addon\globalPlugins\freeradio\radioDialog.py:699
-#: addon\globalPlugins\freeradio\settingsPanel.py:156
+#: addon\globalPlugins\freeradio\settingsPanel.py:182
 msgid "EQ: Treble Boost"
 msgstr "EQ: Treble Boost"
 
@@ -255,7 +255,7 @@ msgstr "បើក/បិទ ការបង្កើនសំឡេងមនុ�
 #. Translators: Short label used in the 'X enabled/disabled' announcement when toggling the vocal-boost EQ band.
 #: addon\globalPlugins\freeradio\audioFxMixin.py:158
 #: addon\globalPlugins\freeradio\radioDialog.py:699
-#: addon\globalPlugins\freeradio\settingsPanel.py:157
+#: addon\globalPlugins\freeradio\settingsPanel.py:183
 msgid "EQ: Vocal Boost"
 msgstr "EQ: Vocal Boost"
 
@@ -268,13 +268,13 @@ msgstr "EQ: Vocal Boost"
 #. Translators: Same "%(effect)s %(state)s" announcement pattern as radioDialog.py's _toggle_eq_band; spoken here when hovering an item in the Settings effects checklist. %(state)s is "enabled"/"disabled" below.
 #. Translators: Same announcement as the hover handler above, spoken here after actually toggling an effect via the checklist checkbox.
 #: addon\globalPlugins\freeradio\audioFxMixin.py:221
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:69
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:114
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:76
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:125
 #: addon\globalPlugins\freeradio\radioDialog.py:1614
 #: addon\globalPlugins\freeradio\radioDialog.py:1627
 #: addon\globalPlugins\freeradio\radioDialog.py:1652
-#: addon\globalPlugins\freeradio\settingsPanel.py:636
-#: addon\globalPlugins\freeradio\settingsPanel.py:648
+#: addon\globalPlugins\freeradio\settingsPanel.py:662
+#: addon\globalPlugins\freeradio\settingsPanel.py:674
 #, python-format
 msgid "%(effect)s %(state)s"
 msgstr "%(effect)s %(state)s"
@@ -284,25 +284,25 @@ msgstr "%(effect)s %(state)s"
 #. Translators: Second half of the toggle announcement; describes the feature's new on/off state.
 #. Translators: The two possible %(state)s values above, and in the two other identical announcements in _on_fx_changed/_toggle_fx_by_index below.
 #: addon\globalPlugins\freeradio\audioFxMixin.py:224
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:73
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:118
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:80
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:129
 #: addon\globalPlugins\freeradio\radioDialog.py:1617
 #: addon\globalPlugins\freeradio\radioDialog.py:1629
 #: addon\globalPlugins\freeradio\radioDialog.py:1654
-#: addon\globalPlugins\freeradio\settingsPanel.py:638
-#: addon\globalPlugins\freeradio\settingsPanel.py:650
+#: addon\globalPlugins\freeradio\settingsPanel.py:664
+#: addon\globalPlugins\freeradio\settingsPanel.py:676
 #: addon\globalPlugins\freeradio\timeshiftMixin.py:413
 msgid "enabled"
 msgstr "បានបើកដំណើរការ"
 
 #: addon\globalPlugins\freeradio\audioFxMixin.py:224
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:73
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:118
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:80
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:129
 #: addon\globalPlugins\freeradio\radioDialog.py:1617
 #: addon\globalPlugins\freeradio\radioDialog.py:1629
 #: addon\globalPlugins\freeradio\radioDialog.py:1654
-#: addon\globalPlugins\freeradio\settingsPanel.py:638
-#: addon\globalPlugins\freeradio\settingsPanel.py:650
+#: addon\globalPlugins\freeradio\settingsPanel.py:664
+#: addon\globalPlugins\freeradio\settingsPanel.py:676
 #: addon\globalPlugins\freeradio\timeshiftMixin.py:413
 msgid "disabled"
 msgstr "បានបិទដំណើរការ"
@@ -315,25 +315,25 @@ msgstr "បើក/បិទ បែបផែនការប្តូរស្ថ�
 #. Translators: One of the station-transition modes cycled by the crossfade command: plays no transition sound, cuts instantly.
 #. Translators: Choices for the crossfade setting, same wording and order as the in-app toggleStationTransition command's cycle (audioFxMixin.py) - continues for the next three lines.
 #: addon\globalPlugins\freeradio\audioFxMixin.py:237
-#: addon\globalPlugins\freeradio\settingsPanel.py:196
+#: addon\globalPlugins\freeradio\settingsPanel.py:222
 msgid "Instant cut (no crossfade)"
 msgstr "កាត់ភ្លាមៗ (គ្មាន crossfade)"
 
 #. Translators: One of the station-transition modes: a brief 1-second audio crossfade between the old and new station.
 #: addon\globalPlugins\freeradio\audioFxMixin.py:239
-#: addon\globalPlugins\freeradio\settingsPanel.py:197
+#: addon\globalPlugins\freeradio\settingsPanel.py:223
 msgid "Short crossfade (1 second)"
 msgstr "Crossfade ខ្លី (១ វិនាទី)"
 
 #. Translators: One of the station-transition modes: a longer 2-second audio crossfade between the old and new station.
 #: addon\globalPlugins\freeradio\audioFxMixin.py:241
-#: addon\globalPlugins\freeradio\settingsPanel.py:198
+#: addon\globalPlugins\freeradio\settingsPanel.py:224
 msgid "Normal crossfade (2 seconds)"
 msgstr "Crossfade ធម្មតា (២ វិនាទី)"
 
 #. Translators: One of the station-transition modes: plays a radio-tuning sound effect instead of a crossfade.
 #: addon\globalPlugins\freeradio\audioFxMixin.py:243
-#: addon\globalPlugins\freeradio\settingsPanel.py:199
+#: addon\globalPlugins\freeradio\settingsPanel.py:225
 msgid "Station tuning sound effect"
 msgstr "បែបផែនការសំឡេងលៃតម្រូវស្ថានីយ"
 
@@ -368,7 +368,7 @@ msgstr "មិនស្គាល់"
 #. Translators: Names in the audio-book-sources checklist below; see the comment above for why these reuse RadioDialog's existing source-label strings rather than new translations.
 #: addon\globalPlugins\freeradio\getem.py:568
 #: addon\globalPlugins\freeradio\radioDialog.py:6258
-#: addon\globalPlugins\freeradio\settingsPanel.py:460
+#: addon\globalPlugins\freeradio\settingsPanel.py:486
 msgid "GETEM"
 msgstr "GETEM"
 
@@ -392,7 +392,7 @@ msgstr "សូមបញ្ចូលឈ្មោះអ្នកប្រើ ន�
 #. Translators: Error returned by search_gutenberg_audiobooks() when the user submits an empty search box.
 #. Translators: Error returned by search_librivox() when the user submits an empty search box.
 #. Translators: Spoken when the search button/enter is used with an empty search box.
-#. Translators: Spoken when the jukebox disk-search is used with an empty search box.
+#. Translators: Spoken when the jukebox device-search is used with an empty search box.
 #: addon\globalPlugins\freeradio\getem.py:756
 #: addon\globalPlugins\freeradio\gutenberg_audiobooks.py:223
 #: addon\globalPlugins\freeradio\librivox.py:189
@@ -451,8 +451,8 @@ msgstr "GETEM មិនបានត្រឡប់ឯកសារសំឡេង
 #: addon\globalPlugins\freeradio\gutenberg_audiobooks.py:611
 #: addon\globalPlugins\freeradio\librivox.py:548
 #: addon\globalPlugins\freeradio\librivox.py:649
-#: addon\globalPlugins\freeradio\podcast.py:447
-#: addon\globalPlugins\freeradio\podcast.py:498
+#: addon\globalPlugins\freeradio\podcast.py:453
+#: addon\globalPlugins\freeradio\podcast.py:504
 msgid "Untitled"
 msgstr "គ្មានចំណងជើង"
 
@@ -535,32 +535,32 @@ msgid "%(name)s (folder, %(count)d tracks)"
 msgstr "%(name)s (ថត, បទ %(count)d)"
 
 #. Translators: Error returned by JukeboxManager.add_file() when the given path does not exist; %s is the file path.
-#: addon\globalPlugins\freeradio\jukebox.py:1142
+#: addon\globalPlugins\freeradio\jukebox.py:1174
 #, python-format
 msgid "File not found: %s"
 msgstr "រកមិនឃើញឯកសារ: %s"
 
 #. Translators: Error returned by JukeboxManager.add_file() when the file's extension isn't one of the supported audio formats; %s is the file path.
-#: addon\globalPlugins\freeradio\jukebox.py:1145
+#: addon\globalPlugins\freeradio\jukebox.py:1177
 #, python-format
 msgid "Not a recognized audio file: %s"
 msgstr "មិនមែនជាឯកសារសំឡេងដែលស្គាល់: %s"
 
 #. Translators: Error returned by JukeboxManager.add_file()/add_folder() when that exact path is already saved in the jukebox library.
 #. Translators: See the add_file() comment above: same message, returned by add_folder() when the folder is already in the jukebox.
-#: addon\globalPlugins\freeradio\jukebox.py:1148
-#: addon\globalPlugins\freeradio\jukebox.py:1162
+#: addon\globalPlugins\freeradio\jukebox.py:1180
+#: addon\globalPlugins\freeradio\jukebox.py:1194
 msgid "Already in the jukebox."
 msgstr "មាននៅក្នុង jukebox រួចហើយ។"
 
 #. Translators: Error returned by JukeboxManager.add_folder() when the given folder path does not exist; %s is the folder path.
-#: addon\globalPlugins\freeradio\jukebox.py:1159
+#: addon\globalPlugins\freeradio\jukebox.py:1191
 #, python-format
 msgid "Folder not found: %s"
 msgstr "រកមិនឃើញថត: %s"
 
 #. Translators: Error returned by JukeboxManager.add_folder() when the folder was scanned but contains no recognized audio files.
-#: addon\globalPlugins\freeradio\jukebox.py:1167
+#: addon\globalPlugins\freeradio\jukebox.py:1199
 msgid "No audio files found in that folder."
 msgstr "រកមិនឃើញឯកសារសំឡេងនៅក្នុងថតនោះទេ។"
 
@@ -568,7 +568,7 @@ msgstr "រកមិនឃើញឯកសារសំឡេងនៅក្នុ
 #. Translators: Source-name label for a book from the LibriVox catalog, shown alongside the audio-book details.
 #: addon\globalPlugins\freeradio\librivox.py:331
 #: addon\globalPlugins\freeradio\radioDialog.py:6253
-#: addon\globalPlugins\freeradio\settingsPanel.py:460
+#: addon\globalPlugins\freeradio\settingsPanel.py:486
 msgid "LibriVox"
 msgstr "LibriVox"
 
@@ -588,7 +588,7 @@ msgid "No playable audio file was found in this book's LibriVox feed."
 msgstr "រកមិនឃើញឯកសារសំឡេងដែលអាចចាក់បាននៅក្នុង feed LibriVox របស់សៀវភៅនេះទេ។"
 
 #. Translators: Name of an NVDA command; mutes/unmutes all of FreeRadio's spoken notifications (station changes, playback state, recording, volume level) at once.
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:32
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:34
 msgid ""
 "Toggle mute notifications (station changes, playback, recording, volume "
 "level)"
@@ -598,41 +598,41 @@ msgstr ""
 
 #. Notifications are now muted — speak this final confirmation before silencing.
 #. Translators: Spoken once, right before notifications go silent, to confirm the toggle happened (further notifications are suppressed after this).
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:42
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:44
 msgid "Notifications muted"
 msgstr "បានបិទសំឡេងការជូនដំណឹង"
 
 #. Translators: Spoken when notifications are turned back on.
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:45
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:47
 msgid "Notifications unmuted"
 msgstr "បាន​បើក​សំឡេង​ការ​ជូន​ដំណឹង"
 
 #. Translators: Name of an NVDA command; toggles whether FreeRadio announces a station's track/song changes from ICY stream metadata.
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:51
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:53
 msgid "Enable or disable auto-announce track changes (ICY metadata)"
 msgstr "បើក ឬបិទ ការប្រកាសដោយស្វ័យប្រវត្តិនៅពេលផ្លាស់ប្តូរចំណិត (ទិន្នន័យ ICY)"
 
 #. Translators: Feature name reused as both the settings-panel checkbox label (with '&' marking its access key) and, with the '&' stripped, as %(effect)s in the toggle announcement above.
 #. Translators: Checkbox label for the track-change announcement setting (same feature as the toggleAnnounceTrackChanges command).
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:71
-#: addon\globalPlugins\freeradio\settingsPanel.py:221
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:78
+#: addon\globalPlugins\freeradio\settingsPanel.py:247
 msgid "&Auto-announce track changes (ICY metadata)"
 msgstr "ប្រកាសការផ្លាស់ប្តូរបទចម្រៀង ឬតន្ត្រីដោយស្វ័យប្រវត្តិ (ICY metadata) &A"
 
 #. Translators: Name of an NVDA command; switches which voice (NVDA's current synth, or a separate SAPI5 voice) speaks track-change announcements.
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:78
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:85
 msgid "Switch track change announcement voice"
 msgstr "ប្តូរសំឡេងប្រកាសការផ្លាស់ប្តូរចំណិត"
 
 #. Translators: Name of an NVDA command; toggles whether liked/favourited songs are also appended to a plain text file on disk.
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:98
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:107
 msgid "Turn on or off saving liked songs to a text file"
 msgstr "បើក ឬបិទ ការរក្សាទុកបទចម្រៀងដែលចូលចិត្តទៅក្នុងឯកសារអត្ថបទ"
 
 #. Translators: Feature name for the save-liked-songs toggle, used the same way as the track-change one above (checkbox label with '&' access key, and %(effect)s with it stripped).
 #. Translators: Checkbox label for the save-liked-songs setting (same feature as the toggleSaveLikedSongs command).
-#: addon\globalPlugins\freeradio\miscTogglesMixin.py:116
-#: addon\globalPlugins\freeradio\settingsPanel.py:313
+#: addon\globalPlugins\freeradio\miscTogglesMixin.py:127
+#: addon\globalPlugins\freeradio\settingsPanel.py:339
 msgid "&Save liked songs to a text file"
 msgstr "រក្សាទុកបទចម្រៀងដែលចូលចិត្តទៅក្នុងឯកសារអត្ថបទ &S"
 
@@ -726,14 +726,14 @@ msgstr ""
 #. Translators: Spoken when the chosen background station has no resolvable stream URL to play.
 #. Translators: Spoken when trying to play a station that has no resolvable stream URL at all.
 #: addon\globalPlugins\freeradio\obligatoMixin.py:284
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:663
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:762
 msgid "No stream URL available for this station"
 msgstr "គ្មាន stream URL សម្រាប់ស្ថានីយ៍វិទ្យុនេះទេ"
 
 #. Translators: Spoken when starting Obligato mode fails because there is no internet connection to reach the chosen station.
 #. Translators: Spoken when trying to play a station but the internet-connectivity pre-check fails.
 #: addon\globalPlugins\freeradio\obligatoMixin.py:299
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:674
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:773
 msgid "No internet connection. Please check your connection and try again."
 msgstr "គ្មានការតភ្ជាប់អ៊ីនធឺណិតទេ។ សូមពិនិត្យមើលការតភ្ជាប់របស់អ្នក ហើយព្យាយាមម្តងទៀត។"
 
@@ -760,7 +760,7 @@ msgid "Obligato mode stopped"
 msgstr "របៀប Obligato បានបញ្ឈប់"
 
 #. Translators: Name of an NVDA command; pauses playback (single press), with double/triple-press doing other actions - see the docstring above.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:46
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:83
 msgid "Pause or resume FreeRadio playback"
 msgstr "ផ្អាក ឬបន្តការចាក់សំឡេងរបស់ FreeRadio"
 
@@ -773,7 +773,7 @@ msgstr "ផ្អាក ឬបន្តការចាក់សំឡេងរ�
 #. Translators: Same "Paused" wording as elsewhere; spoken here when Space pauses playback from the audio-book library list.
 #. Translators: Same "Paused" wording as elsewhere; spoken here when Space pauses playback from the jukebox library list.
 #. Translators: Same "Paused" wording as elsewhere; spoken here when Space pauses playback from the jukebox tracks list.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:124
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:161
 #: addon\globalPlugins\freeradio\radioDialog.py:3265
 #: addon\globalPlugins\freeradio\radioDialog.py:3805
 #: addon\globalPlugins\freeradio\radioDialog.py:4267
@@ -787,19 +787,19 @@ msgstr "បានផ្អាក"
 
 #. Translators: Spoken when the pause/resume command resumes playback.
 #. Translators: Spoken when F7 resumes playback from inside the dialog.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:128
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:165
 #: addon\globalPlugins\freeradio\radioDialog.py:3810
 msgid "Playing"
 msgstr "កំពុងចាក់"
 
 #. Translators: Name of an NVDA command; stops FreeRadio playback outright (as opposed to pausing).
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:146
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:183
 msgid "Stop FreeRadio playback"
 msgstr "បញ្ឈប់ការចាក់សំឡេងរបស់ FreeRadio"
 
 #. Translators: Line in the stop-confirmation dialog listing an in-progress, immediately-started recording that will be cut off; %s is the station name.
 #. Translators: Line listing an in-progress instant recording in the F8 stop-confirmation dialog; %s is the station name.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:160
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:197
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:615
 #, python-format
 msgid "Instant recording: %s"
@@ -811,7 +811,7 @@ msgstr "ការថតភ្លាមៗ: %s"
 #. Translators: Same active-scheduled-recording announcement as script_whatsPlaying.
 #. Translators: Same active-scheduled-recording announcement as script_whatsPlaying's paused case.
 #. Translators: Line listing an active scheduled recording in the F8 stop-confirmation dialog; %s is the station name.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:163
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:200
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:193
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:232
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:500
@@ -821,7 +821,7 @@ msgstr "ការថតភ្លាមៗ: %s"
 msgid "Scheduled recording: %s"
 msgstr "ការកំណត់ពេលថត: %s"
 
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:167
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:204
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:622
 #, python-format
 msgid ""
@@ -837,7 +837,7 @@ msgstr ""
 
 #. Translators: Title of the confirmation dialog shown when stopping playback would cut off active recordings.
 #. Translators: Title of the F8 stop-confirmation dialog.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:175
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:212
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:630
 msgid "Active Recordings"
 msgstr "កំពុងដំណើរការថត"
@@ -846,8 +846,8 @@ msgstr "កំពុងដំណើរការថត"
 #. Translators: Spoken when the stop command is used and there were no active recordings to confirm about.
 #. Translators: Spoken by F8 (stop) after confirming the stop and ending any active recordings.
 #. Translators: Spoken by F8 (stop) when there were no active recordings to confirm about.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:189
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:201
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:226
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:238
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:644
 #: addon\globalPlugins\freeradio\trackInfoMixin.py:658
 #, fuzzy
@@ -855,58 +855,58 @@ msgid "Freeradio stopped"
 msgstr "វិទ្យុបានបញ្ឈប់ហើយ"
 
 #. Translators: Name of an NVDA command; skips to the next station in the favourites list.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:205
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:242
 msgid "Play next station"
 msgstr "ចាក់ស្ថានីយ៍វិទ្យុបន្ទាប់"
 
 #. Translators: Name of an NVDA command; skips to the previous station in the favourites list.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:242
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:279
 msgid "Play previous station"
 msgstr "ចាក់ស្ថានីយ៍វិទ្យុមុន"
 
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:618
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:717
 msgid ""
 "Could not resume the last audio book - it may have been removed from your "
 "library."
 msgstr "មិនអាចបន្តសៀវភៅជាសំឡេងចុងក្រោយបានទេ - វាអាចត្រូវបានដកចេញពីបណ្ណាល័យរបស់អ្នក។"
 
 #. Translators: Fallback station name used in log/error contexts if the station dict has no name field.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:656
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:755
 msgid "Unknown station"
 msgstr "ស្ថានីយ៍វិទ្យុដែលមិនស្គាល់"
 
 #. Translators: Spoken by the pitch-transpose commands when the current transpose value is back to 0 (no pitch shift applied).
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:854
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:969
 msgid "Normal pitch"
 msgstr "កម្ពស់សំឡេងធម្មតា"
 
 #. Translators: %.2f = signed semitone value, e.g. "+1.25 semitones"
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:856
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:971
 #, python-format
 msgid "%+.2f semitones"
 msgstr "%+.2f សេមីតូន"
 
 #. Translators: Name of an NVDA command; raises the pitch of podcasts/audio books/jukebox tracks without changing playback speed.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:860
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:975
 msgid "Raise pitch transpose (podcasts, audio books and jukebox tracks)"
 msgstr "លើកកម្ពស់សំឡេង (សម្រាប់ផតខាស់ សៀវភៅជាសំឡេង និងបទក្នុង jukebox)"
 
 #. Translators: Spoken when the pitch-transpose commands are used while playing a live radio station rather than a podcast/audiobook/jukebox track.
 #. Translators: Same as the transposeUp case above: spoken when transpose is used on a live radio station.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:870
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:889
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:985
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:1004
 msgid "Transpose only applies to podcasts, audio books and jukebox tracks"
 msgstr "ការប្ដូរកម្ពស់សំឡេងអនុវត្តចំពោះតែផតខាស់ សៀវភៅជាសំឡេង និងបទក្នុង jukebox ប៉ុណ្ណោះ"
 
 #. Translators: Spoken when pitch transpose can't be applied because the optional bass_fx library isn't installed.
 #. Translators: Same as the transposeUp case above: spoken when bass_fx isn't installed.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:873
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:892
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:988
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:1007
 msgid "Transpose requires the bass_fx audio component, which isn't available"
 msgstr "ការប្ដូរកម្ពស់សំឡេងត្រូវការសមាសធាតុសំឡេង bass_fx ដែលមិនមាន"
 
 #. Translators: Name of an NVDA command; lowers the pitch of podcasts/audio books/jukebox tracks without changing playback speed.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:879
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:994
 msgid "Lower pitch transpose (podcasts, audio books and jukebox tracks)"
 msgstr "បន្ថយកម្ពស់សំឡេង (សម្រាប់ផតខាស់ សៀវភៅជាសំឡេង និងបទក្នុង jukebox)"
 
@@ -916,7 +916,7 @@ msgstr "បន្ថយកម្ពស់សំឡេង (សម្រាប់�
 #. stay marshalled onto the main thread from here since we're not
 #. on it.
 #. Translators: Spoken when actually starting playback of a station/track fails with an exception; %s is the error message.
-#: addon\globalPlugins\freeradio\playbackCoreMixin.py:906
+#: addon\globalPlugins\freeradio\playbackCoreMixin.py:1021
 #, python-format
 msgid "Could not play station: %s"
 msgstr "មិនអាចចាក់ស្ថានីយ៍វិទ្យុបានទេ: %s"
@@ -927,29 +927,29 @@ msgid "[Listened]"
 msgstr "[បានស្ដាប់]"
 
 #. Translators: Error returned by PodcastManager.add_feed() when this exact feed URL is already in the subscription list.
-#: addon\globalPlugins\freeradio\podcast.py:318
+#: addon\globalPlugins\freeradio\podcast.py:324
 msgid "Already subscribed."
 msgstr "បានជាវរួចហើយ។"
 
 #. Translators: Error returned by PodcastManager.add_feed() when the feed was fetched and parsed but contains zero episodes.
-#: addon\globalPlugins\freeradio\podcast.py:326
+#: addon\globalPlugins\freeradio\podcast.py:332
 msgid "No episodes found in this feed."
 msgstr "រកមិនឃើញភាគណាមួយនៅក្នុងហ្វីតនេះទេ។"
 
 #. Translators: Error returned by PodcastManager.refresh_feed() when the given feed is not among the current subscriptions.
-#: addon\globalPlugins\freeradio\podcast.py:360
+#: addon\globalPlugins\freeradio\podcast.py:366
 msgid "Feed not found."
 msgstr "រកមិនឃើញហ្វីតទេ។"
 
 #. Translators: Not shown to the user: internal 'no change' result from an HTTP 304 (feed unchanged since last fetch) response, so refresh can skip re-parsing. Kept as a translatable string for consistency with the other returned messages, though callers treat it as a no-op rather than an error to display.
 #. Translators: Same 304-not-modified no-op result as above, returned from the Atom parsing branch.
-#: addon\globalPlugins\freeradio\podcast.py:395
-#: addon\globalPlugins\freeradio\podcast.py:419
+#: addon\globalPlugins\freeradio\podcast.py:401
+#: addon\globalPlugins\freeradio\podcast.py:425
 msgid "No new episodes (304)."
 msgstr "គ្មានភាគថ្មីទេ (304)។"
 
 #. Translators: Error returned when a subscribed feed's content can't be parsed as either RSS or Atom XML.
-#: addon\globalPlugins\freeradio\podcast.py:411
+#: addon\globalPlugins\freeradio\podcast.py:417
 msgid "Unrecognized feed format (not RSS or Atom)."
 msgstr "ទម្រង់ហ្វីតមិនស្គាល់ (មិនមែន RSS ឬ Atom)។"
 
@@ -981,7 +981,7 @@ msgstr "រុករក... &w"
 #. Translators: Title of the folder-picker dialog used by the Browse button next to a custom recordings-folder path.
 #. Translators: Title of the folder-picker dialog for choosing the recordings folder.
 #: addon\globalPlugins\freeradio\radioDialog.py:297
-#: addon\globalPlugins\freeradio\settingsPanel.py:726
+#: addon\globalPlugins\freeradio\settingsPanel.py:752
 msgid "Select recordings folder"
 msgstr "ជ្រើសរើសឯកសារថត"
 
@@ -1000,7 +1000,7 @@ msgstr "បានទទួលចម្លើយ ប៉ុន្តែប្រ�
 #. Translators: Error returned when the server responds with an HTTP error status; %d is the status code, %s its reason phrase.
 #: addon\globalPlugins\freeradio\radioDialog.py:398
 #, fuzzy, python-format
-msgid "HTTP error %d: %s"
+msgid "HTTP error %(e.code)d: %(e.reason)s"
 msgstr "កំហុស HTTP %d៖ %s"
 
 #. Translators: Error returned when the connection to the URL fails outright (DNS, refused, timeout); %s is the underlying reason.
@@ -1184,37 +1184,37 @@ msgstr "បែបផែន:"
 
 #. Translators: Names of the audio effects offered in the Settings effects checklist, in the same order as _fx_keys above - same wording as radioDialog.py's in-dialog effects list (continues for the next several lines: Compressor, Distortion, Echo, Flanger, Gargle, Reverb, then the three EQ boost bands).
 #: addon\globalPlugins\freeradio\radioDialog.py:697
-#: addon\globalPlugins\freeradio\settingsPanel.py:148
+#: addon\globalPlugins\freeradio\settingsPanel.py:174
 msgid "Chorus"
 msgstr "បន្ទរ"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:697
-#: addon\globalPlugins\freeradio\settingsPanel.py:149
+#: addon\globalPlugins\freeradio\settingsPanel.py:175
 msgid "Compressor"
 msgstr "Compressor"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:697
-#: addon\globalPlugins\freeradio\settingsPanel.py:150
+#: addon\globalPlugins\freeradio\settingsPanel.py:176
 msgid "Distortion"
 msgstr "ការប្ដូរទ្រង់ទ្រាយសំឡេង"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:698
-#: addon\globalPlugins\freeradio\settingsPanel.py:151
+#: addon\globalPlugins\freeradio\settingsPanel.py:177
 msgid "Echo"
 msgstr "Echo"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:698
-#: addon\globalPlugins\freeradio\settingsPanel.py:152
+#: addon\globalPlugins\freeradio\settingsPanel.py:178
 msgid "Flanger"
 msgstr "Flanger"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:698
-#: addon\globalPlugins\freeradio\settingsPanel.py:153
+#: addon\globalPlugins\freeradio\settingsPanel.py:179
 msgid "Gargle"
 msgstr "Gargle"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:698
-#: addon\globalPlugins\freeradio\settingsPanel.py:154
+#: addon\globalPlugins\freeradio\settingsPanel.py:180
 msgid "Reverb"
 msgstr "Reverb"
 
@@ -1633,14 +1633,14 @@ msgstr[0] "%d ចំណូលចិត្ត"
 #: addon\globalPlugins\freeradio\radioDialog.py:1812
 #: addon\globalPlugins\freeradio\radioDialog.py:1954
 #: addon\globalPlugins\freeradio\radioDialog.py:2004
-#: addon\globalPlugins\freeradio\recorder.py:1333
+#: addon\globalPlugins\freeradio\recorder.py:1337
 msgid "Record only"
 msgstr "ថតតែមួយមុខប៉ុណ្ណោះ"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:1812
 #: addon\globalPlugins\freeradio\radioDialog.py:1954
 #: addon\globalPlugins\freeradio\radioDialog.py:2004
-#: addon\globalPlugins\freeradio\recorder.py:1333
+#: addon\globalPlugins\freeradio\recorder.py:1337
 msgid "Listen and record"
 msgstr "ស្តាប់ និងថតក្នុងពេលដំណាលគ្នា"
 
@@ -2518,7 +2518,7 @@ msgstr "ស្វែងរកផតខាស់ ឬបញ្ចូល URL ហ្
 #. Hidden until a search is actually performed - see
 #. _set_jukebox_results_visible(), mirroring
 #. _set_podcast_results_visible()'s reasoning exactly.
-#. Translators: Label above the list of audio files found by the disk search.
+#. Translators: Label above the list of audio files found by the device search.
 #: addon\globalPlugins\freeradio\radioDialog.py:5105
 #: addon\globalPlugins\freeradio\radioDialog.py:6307
 #: addon\globalPlugins\freeradio\radioDialog.py:7455
@@ -2716,7 +2716,7 @@ msgstr "ការទាញយកបានបញ្ចប់៖ %s"
 #: addon\globalPlugins\freeradio\radioDialog.py:5722
 #: addon\globalPlugins\freeradio\radioDialog.py:7424
 #: addon\globalPlugins\freeradio\recordingMixin.py:68
-#: addon\globalPlugins\freeradio\__init__.py:1234
+#: addon\globalPlugins\freeradio\__init__.py:1239
 #, python-format
 msgid "Download failed: %s"
 msgstr "ការទាញយកបានបរាជ័យ: %s"
@@ -2761,7 +2761,7 @@ msgstr "រកមិនឃើញភាគណាមួយទេ។"
 
 #. Translators: Same Preview/Stop Preview toggle pattern as the GETEM/jukebox context menus, applied to a podcast episode preview.
 #. Translators: Context-menu item label toggles between these two: 'Preview' plays a short sample of the selected search result before adding it, 'Stop Preview' appears while that sample is playing.
-#. Translators: Same Preview/Stop Preview toggle pattern as the GETEM search-result context menu, applied to a jukebox disk-search result.
+#. Translators: Same Preview/Stop Preview toggle pattern as the GETEM search-result context menu, applied to a jukebox device-search result.
 #: addon\globalPlugins\freeradio\radioDialog.py:5906
 #: addon\globalPlugins\freeradio\radioDialog.py:6704
 #: addon\globalPlugins\freeradio\radioDialog.py:7681
@@ -2862,7 +2862,7 @@ msgstr "បានចម្លងទៅក្ដារតម្បៀតខ្ទ
 
 #. Translators: Source-name label for a book from the Project Gutenberg Open Audiobook Collection.
 #: addon\globalPlugins\freeradio\radioDialog.py:6256
-#: addon\globalPlugins\freeradio\settingsPanel.py:460
+#: addon\globalPlugins\freeradio\settingsPanel.py:486
 msgid "Project Gutenberg"
 msgstr "គម្រោង Gutenberg"
 
@@ -2905,7 +2905,7 @@ msgstr ""
 "មិនមានប្រភពសៀវភៅជាសំឡេងណាមួយត្រូវបានបើកទេ។ សូមបើកយ៉ាងហោចណាស់មួយនៅក្នុងការកំណត់ FreeRadio។"
 
 #. Translators: Spoken while a keyword search across the enabled audio-book sources is in progress.
-#. Translators: Placeholder row shown in the results list while a disk search is in progress.
+#. Translators: Placeholder row shown in the results list while a device search is in progress.
 #: addon\globalPlugins\freeradio\radioDialog.py:6567
 #: addon\globalPlugins\freeradio\radioDialog.py:7590
 msgid "Searching..."
@@ -3082,21 +3082,21 @@ msgstr ""
 "បានទាញយក %(saved)d ក្នុងចំណោម %(total)d ផ្នែកនៃ %(book.title)s។ កំហុសចុងក្រោយ៖ %"
 "(error)s"
 
-#. Translators: Label for the jukebox disk-search field.
+#. Translators: Label for the jukebox device-search field.
 #: addon\globalPlugins\freeradio\radioDialog.py:7443
 #, fuzzy
-msgid "Search disk:"
-msgstr "ស្វែងរក:"
+msgid "Search on devices:"
+msgstr "ស្វែងរកក្នុងថាស:"
 
-#. Translators: Accessible name/hint for the jukebox disk-search field: searches local audio files by filename.
+#. Translators: Accessible name/hint for the jukebox device-search field: searches local audio files by filename.
 #: addon\globalPlugins\freeradio\radioDialog.py:7446
 msgid "Search audio files on your computer by filename. Press enter to search"
 msgstr "ស្វែងរកឯកសារសំឡេងនៅលើកុំព្យូទ័ររបស់អ្នកតាមឈ្មោះឯកសារ។ ចុច Enter ដើម្បីស្វែងរក"
 
-#. Translators: Accessible name for the disk-search results list.
+#. Translators: Accessible name for the device-search results list.
 #: addon\globalPlugins\freeradio\radioDialog.py:7459
 #, fuzzy
-msgid "Audio files found on disk"
+msgid "Audio files found on your devices"
 msgstr "ឯកសារសំឡេងដែលរកឃើញនៅលើថាស"
 
 #. --- Jukebox entries (manually added files/folders) ---
@@ -3139,27 +3139,27 @@ msgstr "បន្ថែម&ថត..."
 msgid "&Remove"
 msgstr "ដកចេញ &R"
 
-#. Translators: Spoken when a jukebox disk search starts; %s is the search text.
+#. Translators: Spoken when a jukebox device search starts; %s is the search text.
 #: addon\globalPlugins\freeradio\radioDialog.py:7592
 #, fuzzy, python-format
-msgid "Searching disks for \"%s\"..."
+msgid "Searching devices for \"%s\"..."
 msgstr "កំពុងស្វែងរកក្នុងថាសសម្រាប់ \"%s\"..."
 
-#. Translators: Placeholder row shown in the results list when a disk search finds nothing.
+#. Translators: Placeholder row shown in the results list when a device search finds nothing.
 #. Translators: Spoken alongside the placeholder row above.
 #: addon\globalPlugins\freeradio\radioDialog.py:7612
 #: addon\globalPlugins\freeradio\radioDialog.py:7614
 msgid "No matching audio files found."
 msgstr "រកមិនឃើញឯកសារសំឡេងដែលត្រូវគ្នាទេ។"
 
-#. Translators: Plural forms spoken after a successful disk search; %d is how many audio files were found.
+#. Translators: Plural forms spoken after a successful device search; %d is how many audio files were found.
 #: addon\globalPlugins\freeradio\radioDialog.py:7620
 #, python-format
 msgid "%d file found."
 msgid_plural "%d files found."
 msgstr[0] "រកឃើញ %d ឯកសារ។"
 
-#. Translators: Same confirmation as adding a folder; spoken here after adding a single audio file from a disk-search result.
+#. Translators: Same confirmation as adding a folder; spoken here after adding a single audio file from a device-search result.
 #. Translators: Same confirmation as adding a single file; spoken here after adding a single folder to the jukebox.
 #: addon\globalPlugins\freeradio\radioDialog.py:7670
 #: addon\globalPlugins\freeradio\radioDialog.py:8075
@@ -3167,7 +3167,7 @@ msgstr[0] "រកឃើញ %d ឯកសារ។"
 msgid "Added to jukebox: %s"
 msgstr "បានបន្ថែមទៅ jukebox: %s"
 
-#. Translators: Context-menu item; adds the selected disk-search result to the jukebox library.
+#. Translators: Context-menu item; adds the selected device-search result to the jukebox library.
 #: addon\globalPlugins\freeradio\radioDialog.py:7686
 msgid "&Add to Jukebox"
 msgstr "បន្ថែមទៅ Jukebox &A"
@@ -3261,7 +3261,7 @@ msgstr "តើអ្នកចង់លុប \"%s\" ចេញពីម៉ាស�
 msgid "Removed from jukebox: %s"
 msgstr "បានដកចេញពី jukebox: %s"
 
-#. Translators: Spoken after re-scanning a jukebox folder entry for changes on disk; %s is the folder's title.
+#. Translators: Spoken after re-scanning a jukebox folder entry for changes on device; %s is the folder's title.
 #: addon\globalPlugins\freeradio\radioDialog.py:8127
 #, python-format
 msgid "Rescanned: %s"
@@ -3279,7 +3279,7 @@ msgstr "ទម្រង់សំឡេងត្រូវបានរក្សា
 msgid "Audio profile cleared for %(file)s"
 msgstr "ទម្រង់សំឡេងត្រូវបានសម្អាតសម្រាប់ %(file)s"
 
-#. Translators: Context-menu item; re-scans a jukebox folder entry for added/removed files on disk.
+#. Translators: Context-menu item; re-scans a jukebox folder entry for added/removed files on device.
 #: addon\globalPlugins\freeradio\radioDialog.py:8207
 msgid "&Rescan Folder"
 msgstr "ស្កេនថតឡើងវិញ &R"
@@ -3408,8 +3408,8 @@ msgstr "ការ​ថត​បទចម្រៀង​បាន​បញ្ឈ
 
 #. Translators: Spoken when double-pressing Ctrl+Win+E (song-capture) on a podcast/audiobook episode, which can't be recorded this way; points to the Ctrl+Win+V download command instead.
 #. Translators: Same message as the song-capture path above, spoken here when single-pressing Ctrl+Win+E on a podcast/audiobook episode.
-#: addon\globalPlugins\freeradio\recordingMixin.py:129
-#: addon\globalPlugins\freeradio\recordingMixin.py:211
+#: addon\globalPlugins\freeradio\recordingMixin.py:140
+#: addon\globalPlugins\freeradio\recordingMixin.py:225
 msgid ""
 "Podcast or audiobook cannot be recorded. To download the episode or book, "
 "press Ctrl+Win+V."
@@ -3417,13 +3417,13 @@ msgstr "ផតខាស់ ឬសៀវភៅជាសំឡេង មិនអ�
 
 #. Translators: Spoken when double-pressing Ctrl+Win+E (song-capture) on a jukebox track, which is already a local file.
 #. Translators: Same message as the song-capture path above, spoken here when single-pressing Ctrl+Win+E on a jukebox track.
-#: addon\globalPlugins\freeradio\recordingMixin.py:138
-#: addon\globalPlugins\freeradio\recordingMixin.py:219
+#: addon\globalPlugins\freeradio\recordingMixin.py:149
+#: addon\globalPlugins\freeradio\recordingMixin.py:233
 msgid "Jukebox tracks are already local files and cannot be recorded."
 msgstr "បទនៅក្នុង jukebox ជាឯកសារមូលដ្ឋានរួចហើយ ដូច្នេះមិនអាចថតបានទេ។"
 
 #. Translators: Spoken when trying to start song-capture recording on a station with no ICY track-title metadata, so there's no song boundary to record against.
-#: addon\globalPlugins\freeradio\recordingMixin.py:156
+#: addon\globalPlugins\freeradio\recordingMixin.py:167
 msgid ""
 "This station does not broadcast track metadata. Song recording is not "
 "available."
@@ -3432,88 +3432,89 @@ msgstr ""
 "ដំណើរការថតបទចម្រៀងមិនអាចចាប់ផ្ដើមបានទេ។"
 
 #. Translators: Spoken when song-capture recording starts; %s is the current ICY track title (artist/song) being captured.
-#: addon\globalPlugins\freeradio\recordingMixin.py:169
+#: addon\globalPlugins\freeradio\recordingMixin.py:180
 #, python-format
 msgid "Song recording started: %s"
 msgstr "ដំណើរការថតបទចម្រៀងបានចាប់ផ្តើមហើយ: %s"
 
 #. Translators: Generic fallback spoken if starting song-capture recording raises an unexpected exception.
-#: addon\globalPlugins\freeradio\recordingMixin.py:174
+#: addon\globalPlugins\freeradio\recordingMixin.py:185
 msgid "Could not start song recording"
 msgstr "មិនអាចចាប់ផ្តើមដំណើរការថតបទចម្រៀងបានទេ"
 
 #. Translators: Spoken when the single-press gesture stops an in-progress plain instant recording; %s is the saved filename.
-#: addon\globalPlugins\freeradio\recordingMixin.py:201
+#: addon\globalPlugins\freeradio\recordingMixin.py:215
 #, python-format
 msgid "Recording stopped: %s"
 msgstr "ដំណើរការថតបានបញ្ឈប់ហើយ: %s"
 
 #. Translators: Fallback spoken when a recording is stopped but no output path was returned.
-#: addon\globalPlugins\freeradio\recordingMixin.py:204
+#: addon\globalPlugins\freeradio\recordingMixin.py:218
 msgid "Recording stopped"
 msgstr "ដំណើរការថតបានបញ្ឈប់ហើយ"
 
 #. Translators: Spoken when a plain instant recording starts (single-press Ctrl+Win+E); %s is the station name.
 #. Translators: Spoken when a scheduled or manual recording begins; %s is the station name.
-#: addon\globalPlugins\freeradio\recordingMixin.py:231
-#: addon\globalPlugins\freeradio\__init__.py:502
+#: addon\globalPlugins\freeradio\recordingMixin.py:245
+#: addon\globalPlugins\freeradio\__init__.py:500
 #, python-format
 msgid "Recording started: %s"
 msgstr "ដំណើរការថតបានចាប់ផ្ដើមហើយ: %s"
 
 #. Translators: Generic fallback spoken if starting an instant recording raises an unexpected exception.
-#: addon\globalPlugins\freeradio\recordingMixin.py:235
+#: addon\globalPlugins\freeradio\recordingMixin.py:249
 msgid "Could not start recording"
 msgstr "មិនអាចចាប់ផ្តើមដំណើរការថតបានទេ"
 
 #. Translators: Name of an NVDA command (Ctrl+Win+W); opens the configured recordings folder in File Explorer.
-#: addon\globalPlugins\freeradio\recordingMixin.py:242
+#: addon\globalPlugins\freeradio\recordingMixin.py:256
 msgid "Open FreeRadio recordings folder"
 msgstr "បើកឯកសារថតរបស់ FreeRadio"
 
 #. Translators: Spoken when the Ctrl+Win+W shortcut can't open the recordings folder in Explorer; %s is the underlying error.
-#: addon\globalPlugins\freeradio\recordingMixin.py:257
+#: addon\globalPlugins\freeradio\recordingMixin.py:271
 #, python-format
 msgid "Could not open recordings folder: %s"
 msgstr "មិនអាចបើកឯកសារថតបានទេ: %s"
 
 #. Translators: Checkbox label for the time-shift/rewind feature setting.
-#: addon\globalPlugins\freeradio\settingsPanel.py:63
+#: addon\globalPlugins\freeradio\settingsPanel.py:89
+#, fuzzy
 msgid ""
-"&Enable time-shift buffer (rewind live radio, no effect on potcasts and "
+"&Enable time-shift buffer (rewind live radio, no effect on podcasts and "
 "audio books)"
 msgstr ""
 "បើក&តំបន់ផ្ទុកបណ្ដោះអាសន្នសម្រាប់ប្ដូរពេលវេលា (រំកិលថយក្រោយវិទ្យុផ្ទាល់ គ្មានឥទ្ធិពលលើផតខាស់ "
 "និងសៀវភៅជាសំឡេង)"
 
 #. Translators: Label for the time-shift buffer-length choice control.
-#: addon\globalPlugins\freeradio\settingsPanel.py:71
+#: addon\globalPlugins\freeradio\settingsPanel.py:97
 msgid "Time-shift buffer duration:"
 msgstr "រយៈពេលនៃតំបន់ផ្ទុកបណ្ដោះអាសន្នសម្រាប់ប្ដូរពេលវេលា៖"
 
 #. Translators: Choices for the time-shift buffer-duration control, in the same order as self._timeshift_duration_seconds just above (continues on the next line).
-#: addon\globalPlugins\freeradio\settingsPanel.py:77
+#: addon\globalPlugins\freeradio\settingsPanel.py:103
 msgid "10 minutes"
 msgstr "១០ នាទី"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:77
+#: addon\globalPlugins\freeradio\settingsPanel.py:103
 msgid "30 minutes"
 msgstr "៣០ នាទី"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:77
+#: addon\globalPlugins\freeradio\settingsPanel.py:103
 msgid "1 hour"
 msgstr "១ ម៉ោង"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:78
+#: addon\globalPlugins\freeradio\settingsPanel.py:104
 msgid "2 hours"
 msgstr "២ ម៉ោង"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:78
+#: addon\globalPlugins\freeradio\settingsPanel.py:104
 msgid "5 hours"
 msgstr "៥ ម៉ោង"
 
 #. Translators: Grey explanatory hint shown under the buffer-duration choice, warning about disk usage for long buffers.
-#: addon\globalPlugins\freeradio\settingsPanel.py:91
+#: addon\globalPlugins\freeradio\settingsPanel.py:117
 msgid ""
 "Longer buffers use more temporary disk space, especially for high-bitrate "
 "stations — a 5-hour buffer can use several gigabytes."
@@ -3525,212 +3526,212 @@ msgstr ""
 #. --- Audio output device (BASS only) ---
 #. (index, name) list — populated from BASS
 #. Translators: Label for the main output-device choice in Settings (same purpose as the in-dialog device picker, but persisted here).
-#: addon\globalPlugins\freeradio\settingsPanel.py:100
+#: addon\globalPlugins\freeradio\settingsPanel.py:126
 msgid "Audio output device (BASS backend):"
 msgstr "ឧបករណ៍បញ្ចេញសំឡេង (BASS backend):"
 
 #. Translators: Placeholder shown in the device choice control while devices are still being fetched from BASS in the background.
-#: addon\globalPlugins\freeradio\settingsPanel.py:105
+#: addon\globalPlugins\freeradio\settingsPanel.py:131
 msgid "Loading devices..."
 msgstr "កំពុងដំណើរការឧបករណ៍..."
 
 #. Translators: Label for the choice between the two device-list refresh strategies below.
-#: addon\globalPlugins\freeradio\settingsPanel.py:110
+#: addon\globalPlugins\freeradio\settingsPanel.py:136
 msgid "Audio device refresh mode (BASS backend):"
 msgstr "របៀបធ្វើឱ្យឧបករណ៍អូឌីយ៉ូស្រស់ (BASS backend):"
 
 #. Translators: One of the two audio-device refresh modes: always re-query BASS for current device numbers, slower but accurate if devices changed since NVDA started.
-#: addon\globalPlugins\freeradio\settingsPanel.py:117
+#: addon\globalPlugins\freeradio\settingsPanel.py:143
 msgid "Reliable, refresh device numbers live"
 msgstr "គួរឱ្យទុកចិត្ត ធ្វើឱ្យលេខឧបករណ៍ស្រស់ភ្លាមៗ"
 
 #. Translators: The other refresh mode: use the device list BASS already has cached, faster but can be stale if devices were plugged/unplugged.
-#: addon\globalPlugins\freeradio\settingsPanel.py:119
+#: addon\globalPlugins\freeradio\settingsPanel.py:145
 msgid "Fast, use current BASS device list"
 msgstr "លឿន ប្រើបញ្ជីឧបករណ៍ BASS បច្ចុប្បន្ន"
 
 #. Translators: Label for the default-volume spin control.
-#: addon\globalPlugins\freeradio\settingsPanel.py:131
+#: addon\globalPlugins\freeradio\settingsPanel.py:157
 msgid "Volume (0-100):"
 msgstr "កម្រិតសំឡេង (0-100):"
 
 #. --- Audio effects (BASS only) ---
 #. Translators: Section heading above the audio-effects checklist and EQ controls.
-#: addon\globalPlugins\freeradio\settingsPanel.py:140
+#: addon\globalPlugins\freeradio\settingsPanel.py:166
 msgid "Audio Effects (BASS backend only):"
 msgstr "បែបផែនសំឡេង (BASS backend only):"
 
 #. Translators: Label for the audio-effects checklist control.
-#: addon\globalPlugins\freeradio\settingsPanel.py:162
+#: addon\globalPlugins\freeradio\settingsPanel.py:188
 msgid "Audio &effects:"
 msgstr "បែបផែនសំឡេង &e"
 
 #. Translators: Labels for the three EQ gain spin controls, shown only for whichever bands are checked above (continues for treble and vocal on the next two lines).
-#: addon\globalPlugins\freeradio\settingsPanel.py:176
+#: addon\globalPlugins\freeradio\settingsPanel.py:202
 msgid "&Bass gain (dB):"
 msgstr "ការ&ពង្រឹងសំឡេងទំនាប (dB):"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:177
+#: addon\globalPlugins\freeradio\settingsPanel.py:203
 msgid "&Treble gain (dB):"
 msgstr "ការ&ពង្រឹងសំឡេងខ្ពស់ (dB):"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:178
+#: addon\globalPlugins\freeradio\settingsPanel.py:204
 msgid "&Vocal gain (dB):"
 msgstr "ការ&ពង្រឹងសំឡេងមនុស្ស (dB):"
 
 #. Translators: Label for the station-switch transition (crossfade) choice control.
-#: addon\globalPlugins\freeradio\settingsPanel.py:193
+#: addon\globalPlugins\freeradio\settingsPanel.py:219
 msgid "Station &switch transition (BASS backend only):"
 msgstr "ការផ្លាស់ប្តូរស្ថានីយវិទ្យុ (BASS backend only): &s"
 
 #. Translators: Checkbox label for auto-resuming the last-played station when NVDA starts.
-#: addon\globalPlugins\freeradio\settingsPanel.py:214
+#: addon\globalPlugins\freeradio\settingsPanel.py:240
 msgid "&Resume last station on NVDA startup"
 msgstr "បន្តស្ថានីយ៍វិទ្យុចុងក្រោយនៅពេលចាប់ផ្តើមកម្មវិធី NVDA &R"
 
 #. Translators: Label for the choice between NVDA's own synth and a separate SAPI5 voice for track-change announcements.
-#: addon\globalPlugins\freeradio\settingsPanel.py:229
+#: addon\globalPlugins\freeradio\settingsPanel.py:255
 msgid "Track change &voice:"
 msgstr "តាមដានការផ្លាស់ប្តូរសំឡេង: &v"
 
 #. Translators: The two voice-source choices for track-change announcements: NVDA's current synthesizer, or a separately selected SAPI5 voice.
-#: addon\globalPlugins\freeradio\settingsPanel.py:234
+#: addon\globalPlugins\freeradio\settingsPanel.py:260
 msgid "NVDA"
 msgstr "NVDA"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:234
+#: addon\globalPlugins\freeradio\settingsPanel.py:260
 msgid "SAPI5"
 msgstr "SAPI5"
 
 #. SAPI5 voice selector — populated on a background thread to avoid blocking UI.
 #. Translators: Label for the specific SAPI5 voice picker, enabled only when SAPI5 is chosen above.
-#: addon\globalPlugins\freeradio\settingsPanel.py:246
+#: addon\globalPlugins\freeradio\settingsPanel.py:272
 msgid "SAPI5 &voice:"
 msgstr "សំឡេង SAPI5: &v"
 
 #. Translators: Placeholder/first entry in the SAPI5 voice list, meaning 'use whatever the system's default SAPI5 voice is' rather than a specific named voice.
 #. Translators: First entry in the SAPI5 voice list once real voices have loaded, meaning 'use the system default SAPI5 voice'.
-#: addon\globalPlugins\freeradio\settingsPanel.py:249
-#: addon\globalPlugins\freeradio\settingsPanel.py:266
+#: addon\globalPlugins\freeradio\settingsPanel.py:275
+#: addon\globalPlugins\freeradio\settingsPanel.py:292
 msgid "Default (system)"
 msgstr "លំនាំដើម (system)"
 
 #. Translators: Checkbox label for the mute-notifications setting (same feature as the toggleMuteNotifications command).
-#: addon\globalPlugins\freeradio\settingsPanel.py:295
+#: addon\globalPlugins\freeradio\settingsPanel.py:321
 msgid "&Mute notifications (station changes, playback, recording)"
 msgstr "បិទការជូនដំណឹង (station changes, playback, recording) &M"
 
 #. Translators: Checkbox label for whether FreeRadio notifications also show on a connected braille display.
-#: addon\globalPlugins\freeradio\settingsPanel.py:305
+#: addon\globalPlugins\freeradio\settingsPanel.py:331
 msgid "&Show FreeRadio messages on the braille display"
 msgstr "បង្ហាញសារ FreeRadio នៅលើឧបករណ៍បង្ហាញអក្សរប្រៃយ៍ &S"
 
 #. Translators: Label for the choice controlling what a single Ctrl+Win+P press does when nothing is currently playing.
-#: addon\globalPlugins\freeradio\settingsPanel.py:321
+#: addon\globalPlugins\freeradio\settingsPanel.py:347
 msgid "When Ctrl+Win+P is pressed with no active playback:"
 msgstr "នៅពេលដែល Ctrl+Win+P ត្រូវបានចុច គឺវាគ្មានសកម្មភាពចាក់នោះទេ:"
 
 #. Translators: The two choices for a single Ctrl+Win+P press with nothing playing: resume where playback left off, or open the favourites list to pick something.
-#: addon\globalPlugins\freeradio\settingsPanel.py:324
+#: addon\globalPlugins\freeradio\settingsPanel.py:350
 msgid "Resume last station"
 msgstr "បន្តស្ថានីយវិទ្យុចុងក្រោយទៀត"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:325
-#: addon\globalPlugins\freeradio\settingsPanel.py:340
-#: addon\globalPlugins\freeradio\settingsPanel.py:364
+#: addon\globalPlugins\freeradio\settingsPanel.py:351
+#: addon\globalPlugins\freeradio\settingsPanel.py:366
+#: addon\globalPlugins\freeradio\settingsPanel.py:390
 msgid "Open favourites list"
 msgstr "បើកបញ្ជីចំណូលចិត្ត"
 
 #. Translators: Label for the choice controlling what a double Ctrl+Win+P press does.
-#: addon\globalPlugins\freeradio\settingsPanel.py:336
+#: addon\globalPlugins\freeradio\settingsPanel.py:362
 msgid "When Ctrl+Win+P is pressed twice:"
 msgstr "នៅពេលដែល Ctrl+Win+P ត្រូវបានចុចពីរដង:"
 
 #. Translators: Choices for what a double/triple Ctrl+Win+P press can do - each opens a different FreeRadio tab or performs a quick action; this same nine-item list is reused for both the double-press and triple-press settings (continues for the next eight lines).
-#: addon\globalPlugins\freeradio\settingsPanel.py:339
-#: addon\globalPlugins\freeradio\settingsPanel.py:363
+#: addon\globalPlugins\freeradio\settingsPanel.py:365
+#: addon\globalPlugins\freeradio\settingsPanel.py:389
 msgid "Do nothing"
 msgstr "គ្មានសកម្មភាពអ្វីទាំងអស់"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:341
-#: addon\globalPlugins\freeradio\settingsPanel.py:365
+#: addon\globalPlugins\freeradio\settingsPanel.py:367
+#: addon\globalPlugins\freeradio\settingsPanel.py:391
 msgid "Open station search"
 msgstr "បើកការស្វែងរកស្ថានីយ៍វិទ្យុ"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:342
-#: addon\globalPlugins\freeradio\settingsPanel.py:366
+#: addon\globalPlugins\freeradio\settingsPanel.py:368
+#: addon\globalPlugins\freeradio\settingsPanel.py:392
 msgid "Open recording tab"
 msgstr "បើកផ្ទាំងថត"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:343
-#: addon\globalPlugins\freeradio\settingsPanel.py:367
+#: addon\globalPlugins\freeradio\settingsPanel.py:369
+#: addon\globalPlugins\freeradio\settingsPanel.py:393
 msgid "Open timer tab"
 msgstr "បើកផ្ទាំងកម្មវិធីកំណត់ម៉ោង"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:344
-#: addon\globalPlugins\freeradio\settingsPanel.py:368
+#: addon\globalPlugins\freeradio\settingsPanel.py:370
+#: addon\globalPlugins\freeradio\settingsPanel.py:394
 msgid "Open liked songs tab"
 msgstr "បើកផ្ទាំងចម្រៀងដែលចូលចិត្ត"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:345
-#: addon\globalPlugins\freeradio\settingsPanel.py:369
+#: addon\globalPlugins\freeradio\settingsPanel.py:371
+#: addon\globalPlugins\freeradio\settingsPanel.py:395
 msgid "Open addon settings"
 msgstr "បើកការកំណត់របស់កម្មវិធីជំនួយ"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:346
-#: addon\globalPlugins\freeradio\settingsPanel.py:370
+#: addon\globalPlugins\freeradio\settingsPanel.py:372
+#: addon\globalPlugins\freeradio\settingsPanel.py:396
 msgid "Announce currently playing station"
 msgstr "ប្រាប់អំពីព័ត៌មានស្ថានីយ៍វិទ្យុដែលកំពុងចាក់"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:347
-#: addon\globalPlugins\freeradio\settingsPanel.py:371
+#: addon\globalPlugins\freeradio\settingsPanel.py:373
+#: addon\globalPlugins\freeradio\settingsPanel.py:397
 msgid "Stop radio"
 msgstr "បញ្ឈប់វិទ្យុ"
 
 #. Translators: Label for the choice controlling what a triple Ctrl+Win+P press does; same nine choices as the double-press setting above.
-#: addon\globalPlugins\freeradio\settingsPanel.py:361
+#: addon\globalPlugins\freeradio\settingsPanel.py:387
 msgid "When Ctrl+Win+P is pressed three times:"
 msgstr "នៅពេលដែល Ctrl+Win+P ត្រូវបានចុចបីដង:"
 
 #. --- Music Recognition ---
 #. Translators: Section heading above the ffmpeg-path setting used by the music-recognition feature.
-#: addon\globalPlugins\freeradio\settingsPanel.py:386
+#: addon\globalPlugins\freeradio\settingsPanel.py:412
 msgid "Music Recognition via Shazam (Ctrl+Win+I × 3):"
 msgstr "ការស្វែងរកបទចម្រៀង ឬតន្ត្រីដែលមិនស្គាល់ចំណងជើងតាមរយៈ Shazam (Ctrl+Win+I × 3):"
 
 #. Translators: Label for the ffmpeg.exe path text field.
-#: addon\globalPlugins\freeradio\settingsPanel.py:388
+#: addon\globalPlugins\freeradio\settingsPanel.py:414
 msgid "ffmpeg.exe path (optional; auto-used from addon folder if empty):"
 msgstr "ផ្លូវ ffmpeg.exe (ស្រេចចិត្ត; ប្រើដោយស្វ័យប្រវត្តិពីថតកម្មវិធីជំនួយ បើទទេ):"
 
 #. Translators: Button label; opens a file-picker to choose ffmpeg.exe.
-#: addon\globalPlugins\freeradio\settingsPanel.py:397
+#: addon\globalPlugins\freeradio\settingsPanel.py:423
 msgid "Brows&e..."
 msgstr "រុករក... &e"
 
 #. --- Recordings folder ---
 #. Translators: Label for the custom recordings-folder path field.
-#: addon\globalPlugins\freeradio\settingsPanel.py:405
+#: addon\globalPlugins\freeradio\settingsPanel.py:431
 msgid "Recordings folder:"
 msgstr "ឯកសារថត:"
 
 #. Translators: Grey hint under the recordings-folder field explaining what happens if it's left empty.
-#: addon\globalPlugins\freeradio\settingsPanel.py:416
+#: addon\globalPlugins\freeradio\settingsPanel.py:442
 msgid "(empty = default: Documents\\FreeRadio Recordings)"
 msgstr "(ទទេ = លំនាំដើម: Documents\\FreeRadio Recordings)"
 
 #. Translators: Button label; opens a folder-picker to choose the recordings folder.
-#: addon\globalPlugins\freeradio\settingsPanel.py:420
+#: addon\globalPlugins\freeradio\settingsPanel.py:446
 msgid "Brow&se folder..."
 msgstr "រកមើលឯកសារ... &s"
 
 #. Translators: Checkbox label for whether the jukebox disk search also scans network drives (off by default - see the comment above about search time).
-#: addon\globalPlugins\freeradio\settingsPanel.py:435
+#: addon\globalPlugins\freeradio\settingsPanel.py:461
 msgid "Include &network drives when searching the jukebox"
 msgstr "រួមបញ្ចូលដ្រាយបណ្តាញនៅពេលស្វែងរកប្រអប់ចម្រៀង"
 
 #. Translators: Label for the audio-book-sources checklist (which catalogs to search/show).
-#: addon\globalPlugins\freeradio\settingsPanel.py:464
+#: addon\globalPlugins\freeradio\settingsPanel.py:490
 msgid "Audio book &sources:"
 msgstr "ប្រភពសៀវភៅជាសំឡេង &s:"
 
@@ -3739,22 +3740,22 @@ msgstr "ប្រភពសៀវភៅជាសំឡេង &s:"
 #. plain text) - they're saved separately, encrypted with the
 #. Windows Data Protection API; see getem.save_credentials().
 #. Translators: Section heading above the GETEM username/password fields.
-#: addon\globalPlugins\freeradio\settingsPanel.py:478
+#: addon\globalPlugins\freeradio\settingsPanel.py:504
 msgid "GETEM Audio Books Account:"
 msgstr "គណនីសៀវភៅជាសំឡេង GETEM:"
 
 #. Translators: Label for the GETEM account username field.
-#: addon\globalPlugins\freeradio\settingsPanel.py:481
+#: addon\globalPlugins\freeradio\settingsPanel.py:507
 msgid "GETEM username:"
 msgstr "ឈ្មោះអ្នកប្រើ GETEM:"
 
 #. Translators: Label for the GETEM account password field.
-#: addon\globalPlugins\freeradio\settingsPanel.py:489
+#: addon\globalPlugins\freeradio\settingsPanel.py:515
 msgid "GETEM password:"
 msgstr "ពាក្យសម្ងាត់ GETEM:"
 
 #. Translators: Grey hint under the GETEM credential fields explaining how they are stored (see the comment above).
-#: addon\globalPlugins\freeradio\settingsPanel.py:498
+#: addon\globalPlugins\freeradio\settingsPanel.py:524
 msgid ""
 "Stored encrypted on this computer, for this Windows user only. Leave both "
 "fields empty and save to remove them."
@@ -3764,54 +3765,54 @@ msgstr ""
 
 #. --- Recording output format ---
 #. Translators: Label for the recording-output-format choice control.
-#: addon\globalPlugins\freeradio\settingsPanel.py:505
+#: addon\globalPlugins\freeradio\settingsPanel.py:531
 msgid "Recording output format:"
 msgstr "ទម្រង់លទ្ធផលការថត៖"
 
 #. Translators: Choices for the recording output format: keep the original stream container as-is, keep the original audio codec but strip non-audio data, or convert to MP3 (continues for the next two lines).
-#: addon\globalPlugins\freeradio\settingsPanel.py:512
+#: addon\globalPlugins\freeradio\settingsPanel.py:538
 msgid "Original stream format (no conversion)"
 msgstr "ទម្រង់ស្ទ្រីមដើម (មិនបំប្លែង)"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:513
+#: addon\globalPlugins\freeradio\settingsPanel.py:539
 msgid "Audio only, original codec (no quality loss)"
 msgstr "តែសំឡេងប៉ុណ្ណោះ កូដិកដើម (គ្មានការបាត់បង់គុណភាព)"
 
-#: addon\globalPlugins\freeradio\settingsPanel.py:514
+#: addon\globalPlugins\freeradio\settingsPanel.py:540
 msgid "MP3 (convert audio)"
 msgstr "MP3 (បំប្លែងសំឡេង)"
 
 #. Translators: Label for the MP3 bitrate choice, shown only when MP3 output is selected above.
-#: addon\globalPlugins\freeradio\settingsPanel.py:524
+#: addon\globalPlugins\freeradio\settingsPanel.py:550
 msgid "MP3 recording bitrate:"
 msgstr "អត្រាប៊ីតការថត MP3៖"
 
 #. Translators: Checkbox label for skipping the pre-playback internet reachability check.
-#: addon\globalPlugins\freeradio\settingsPanel.py:541
+#: addon\globalPlugins\freeradio\settingsPanel.py:567
 msgid ""
 "&Disable internet connectivity check before playing (recommended if DNS is "
 "blocked)"
 msgstr "បិទការត្រួតពិនិត្យការតភ្ជាប់អ៊ីនធឺណិតមុនពេលចាក់ (recommended if DNS is blocked) &D"
 
 #. Translators: Checkbox label for the automatic update-check setting.
-#: addon\globalPlugins\freeradio\settingsPanel.py:552
+#: addon\globalPlugins\freeradio\settingsPanel.py:578
 msgid "&Automatically check for updates on startup"
 msgstr "ពិនិត្យដោយស្វ័យប្រវត្តិសម្រាប់ការធ្វើបច្ចុប្បន្នភាពនៅពេលចាប់ផ្តើម &A"
 
 #. Translators: Button label; triggers an immediate manual update check.
 #. Translators: Restores the button's normal label once the manual update check finishes.
-#: addon\globalPlugins\freeradio\settingsPanel.py:560
-#: addon\globalPlugins\freeradio\settingsPanel.py:716
+#: addon\globalPlugins\freeradio\settingsPanel.py:586
+#: addon\globalPlugins\freeradio\settingsPanel.py:742
 msgid "Check for Updates &Now"
 msgstr "ពិនិត្យមើលការធ្វើបច្ចុប្បន្នភាពឥឡូវនេះ &N"
 
 #. Translators: Title of the file-picker dialog for choosing ffmpeg.exe.
-#: addon\globalPlugins\freeradio\settingsPanel.py:692
+#: addon\globalPlugins\freeradio\settingsPanel.py:718
 msgid "Select ffmpeg.exe"
 msgstr "ជ្រើសរើស ffmpeg.exe"
 
 #. Translators: Temporary label on the Check for Updates Now button while the check is in progress.
-#: addon\globalPlugins\freeradio\settingsPanel.py:703
+#: addon\globalPlugins\freeradio\settingsPanel.py:729
 msgid "Checking..."
 msgstr "កំពុងពិនិត្យ..."
 
@@ -3819,14 +3820,14 @@ msgstr "កំពុងពិនិត្យ..."
 #. Translators: Spoken when a sleep timer fires and stops playback instantly (nothing was playing to fade out).
 #. Use _notify so the stop message is suppressed when notifications are muted.
 #. Translators: Spoken at the end of the fade-out, once volume has reached 0 and playback actually stops.
-#: addon\globalPlugins\freeradio\timerManager.py:173
-#: addon\globalPlugins\freeradio\timerManager.py:201
+#: addon\globalPlugins\freeradio\timerManager.py:179
+#: addon\globalPlugins\freeradio\timerManager.py:207
 msgid "Sleep timer: radio stopped"
 msgstr "កម្មវិធីកំណត់ម៉ោងផ្អាក: វិទ្យុបានឈប់"
 
 #. Use _notify so both fade-out messages are suppressed when notifications are muted.
 #. Translators: Spoken when a sleep timer fires while something is playing, before the 60-second volume fade-out begins.
-#: addon\globalPlugins\freeradio\timerManager.py:185
+#: addon\globalPlugins\freeradio\timerManager.py:191
 msgid "Sleep timer: fading out…"
 msgstr "កម្មវិធីកំណត់ម៉ោងផ្អាក់: បន្ថយសំឡេងជាសន្សឹមៗ…"
 
@@ -4240,7 +4241,7 @@ msgid "Song recording saved: %s"
 msgstr "ការ​ថត​ចម្រៀង​ត្រូវ​បាន​រក្សា​ទុក: %s"
 
 #. Translators: Spoken automatically while a live recording is in progress if the time-shift disk-space limit is reached and old buffered audio is being discarded faster than usual.
-#: addon\globalPlugins\freeradio\__init__.py:416
+#: addon\globalPlugins\freeradio\__init__.py:414
 msgid ""
 "Time-shift buffer: running low on disk space, the oldest audio is being "
 "dropped more aggressively."
@@ -4249,25 +4250,25 @@ msgstr ""
 "សំឡេងចាស់ជាងគេកំពុងត្រូវបានលុបចេញយ៉ាងខ្លាំងក្លា។"
 
 #. Translators: Spoken when a recording finishes normally; %s is the saved output filename.
-#: addon\globalPlugins\freeradio\__init__.py:506
+#: addon\globalPlugins\freeradio\__init__.py:504
 #, python-format
 msgid "Recording finished: %s"
 msgstr "ដំណើរការថតបានបញ្ចប់ហើយ: %s"
 
 #. Translators: Spoken when a recording never actually started because the stream connection failed for its whole scheduled window; %s is the station name.
-#: addon\globalPlugins\freeradio\__init__.py:511
+#: addon\globalPlugins\freeradio\__init__.py:509
 #, python-format
 msgid "Recording failed: could not connect to %s"
 msgstr "ការថតបានបរាជ័យ៖ មិនអាចភ្ជាប់ទៅ %s បានទេ"
 
 #. Translators: Spoken when converting a finished recording to the configured format (e.g. MP3) fails; the original, unconverted file is kept. %s is its filename.
-#: addon\globalPlugins\freeradio\__init__.py:516
+#: addon\globalPlugins\freeradio\__init__.py:514
 #, python-format
 msgid "Recording conversion failed. The original file was kept: %s"
 msgstr "ការបំប្លែងការថតបានបរាជ័យ។ ឯកសារដើមត្រូវបានរក្សាទុក៖ %s"
 
 #. Translators: Spoken when the folder configured for recordings can't be used (e.g. missing/no permission) and FreeRadio saved to its default folder instead; %(station)s is the station name, %(reason)s is why the folder failed.
-#: addon\globalPlugins\freeradio\__init__.py:522
+#: addon\globalPlugins\freeradio\__init__.py:520
 #, python-format
 msgid ""
 "Could not use the selected folder for '%(station)s' (%(reason)s). Saved to "
@@ -4278,12 +4279,12 @@ msgstr ""
 
 #. ── 2. Create / refresh a script for every favourite ─────────────────
 #. Translators: Script category shown in NVDA's Input Gestures dialog, grouping the auto-generated 'play this favourite station' shortcuts separately from FreeRadio's main commands.
-#: addon\globalPlugins\freeradio\__init__.py:596
+#: addon\globalPlugins\freeradio\__init__.py:601
 msgid "FreeRadio Stations"
 msgstr "ស្ថានីយ៍ FreeRadio"
 
 #. Translators: Spoken if a per-favourite-station shortcut is triggered after that station was removed from favourites since the shortcut was created; %s is the station name.
-#: addon\globalPlugins\freeradio\__init__.py:617
+#: addon\globalPlugins\freeradio\__init__.py:622
 #, python-format
 msgid "Station no longer in favourites: %s"
 msgstr "ស្ថានីយ៍លែងនៅក្នុងបញ្ជីចូលចិត្តទៀតហើយ: %s"
@@ -4291,53 +4292,53 @@ msgstr "ស្ថានីយ៍លែងនៅក្នុងបញ្ជីច
 #. NVDA reads __doc__ as the script description and
 #. __name__ as the script identifier.
 #. Translators: Auto-generated description of a per-favourite-station shortcut, shown in NVDA's Input Gestures dialog; %s is the station name.
-#: addon\globalPlugins\freeradio\__init__.py:627
-#, python-format
-msgid "%s playback shortcut ()"
+#: addon\globalPlugins\freeradio\__init__.py:632
+#, fuzzy, python-format
+msgid "%s playback shortcut"
 msgstr "ផ្លូវកាត់សម្រាប់ចាក់ %s ()"
 
 #. Translators: Menu item that opens the FreeRadio station browser dialog
-#: addon\globalPlugins\freeradio\__init__.py:657
+#: addon\globalPlugins\freeradio\__init__.py:662
 msgid "Station &Browser...\tCtrl+Win+R"
 msgstr "ស្ថានីយ៍ & ការរុករក...\tCtrl+Win+R"
 
 #. Translators: Menu item that opens FreeRadio settings in NVDA preferences
-#: addon\globalPlugins\freeradio\__init__.py:666
+#: addon\globalPlugins\freeradio\__init__.py:671
 msgid "FreeRadio &Settings..."
 msgstr "FreeRadio & ការកំណត់..."
 
 #. Translators: Menu item that manually triggers the update check
-#: addon\globalPlugins\freeradio\__init__.py:675
+#: addon\globalPlugins\freeradio\__init__.py:680
 msgid "Check for &Updates..."
 msgstr "ពិនិត្យរកមើល &ការធ្វើបច្ចុប្បន្នភាព..."
 
 #. Translators: Label of the FreeRadio submenu in NVDA Tools menu
-#: addon\globalPlugins\freeradio\__init__.py:688
+#: addon\globalPlugins\freeradio\__init__.py:693
 msgid "&FreeRadio"
 msgstr "&FreeRadio"
 
 #. Translators: Name of an NVDA command; opens the FreeRadio station browser dialog on its main Stations tab.
-#: addon\globalPlugins\freeradio\__init__.py:749
+#: addon\globalPlugins\freeradio\__init__.py:754
 msgid "Open FreeRadio station browser"
 msgstr "បើកការរុករកស្ថានីយ៍វិទ្យុរបស់ FreeRadio"
 
 #. Translators: Name of an NVDA command; opens the station browser dialog on the Audio Books tab.
-#: addon\globalPlugins\freeradio\__init__.py:759
+#: addon\globalPlugins\freeradio\__init__.py:764
 msgid "Open FreeRadio audio book library"
 msgstr "បើកបណ្ណាល័យសៀវភៅជាសំឡេង FreeRadio"
 
 #. Translators: Name of an NVDA command; opens the station browser dialog on the Podcasts tab.
-#: addon\globalPlugins\freeradio\__init__.py:769
+#: addon\globalPlugins\freeradio\__init__.py:774
 msgid "Open FreeRadio podcast subscriptions"
 msgstr "បើកការជាវផតខាស់ FreeRadio"
 
 #. Translators: Name of an NVDA command; opens the station browser dialog on the local Jukebox tab.
-#: addon\globalPlugins\freeradio\__init__.py:779
+#: addon\globalPlugins\freeradio\__init__.py:784
 msgid "Open FreeRadio local jukebox"
 msgstr "បើក jukebox មូលដ្ឋានរបស់ FreeRadio"
 
 #. Translators: Name of an NVDA command whose behaviour depends on what is currently playing: adds a live station to favourites, or downloads the current audio book/podcast episode.
-#: addon\globalPlugins\freeradio\__init__.py:789
+#: addon\globalPlugins\freeradio\__init__.py:794
 msgid ""
 "Add currently playing station to favourites, download the whole audio book "
 "if one is playing, or download the episode if a podcast is playing"
@@ -4346,61 +4347,61 @@ msgstr ""
 "ឬទាញយកភាគប្រសិនបើមានផតខាស់កំពុងចាក់"
 
 #. Translators: Spoken when this shortcut is pressed while something is playing that is neither a station, podcast episode, nor audio book (e.g. a local jukebox track).
-#: addon\globalPlugins\freeradio\__init__.py:809
+#: addon\globalPlugins\freeradio\__init__.py:814
 msgid "The shortcut is only for stations, podcasts or audio books"
 msgstr "ផ្លូវកាត់នេះសម្រាប់តែស្ថានីយ៍វិទ្យុ ផតខាស់ ឬសៀវភៅជាសំឡេងប៉ុណ្ណោះ"
 
 #. Translators: Spoken when the currently playing station is already saved in favourites; %s is the station name.
-#: addon\globalPlugins\freeradio\__init__.py:831
+#: addon\globalPlugins\freeradio\__init__.py:836
 #, python-format
 msgid "Already in favourites: %s"
 msgstr "មាននៅក្នុងចំណូលចិត្តរួចហើយ: %s"
 
 #. Translators: Spoken after successfully adding the currently playing station to favourites; %s is the station name.
-#: addon\globalPlugins\freeradio\__init__.py:835
+#: addon\globalPlugins\freeradio\__init__.py:840
 #, python-format
 msgid "Added to favourites: %s"
 msgstr "បានបន្ថែមទៅក្នុងចំណូលចិត្តរួចហើយ: %s"
 
 #. Translators: Spoken when this shortcut is pressed to download an audio book but no audio book (GETEM/Gutenberg/LibriVox) is currently playing.
-#: addon\globalPlugins\freeradio\__init__.py:850
+#: addon\globalPlugins\freeradio\__init__.py:855
 msgid "No audio book is playing"
 msgstr "មិនមានសៀវភៅជាសំឡេងណាមួយកំពុងចាក់ទេ"
 
 #. Translators: Spoken when downloading the currently playing audio book fails.
-#: addon\globalPlugins\freeradio\__init__.py:857
+#: addon\globalPlugins\freeradio\__init__.py:862
 msgid "Could not download this audio book."
 msgstr "មិនអាចទាញយកសៀវភៅជាសំឡេងនេះបានទេ។"
 
 #. Translators: Spoken when a station's connection attempt fails outright, so the user isn't left thinking it's silently playing; %(name)s is the station name, %(reason)s is a short failure description.
-#: addon\globalPlugins\freeradio\__init__.py:940
+#: addon\globalPlugins\freeradio\__init__.py:945
 #, python-format
 msgid "Could not play %(name)s: %(reason)s"
 msgstr "មិនអាចចាក់ %(name)s បានទេ៖ %(reason)s"
 
 #. Translators: Spoken during a manual update check when the GitHub repository has no published releases yet.
-#: addon\globalPlugins\freeradio\__init__.py:1129
+#: addon\globalPlugins\freeradio\__init__.py:1134
 msgid "No releases found on GitHub yet."
 msgstr "មិនទាន់រកឃើញការចេញផ្សាយនៅលើ GitHub នៅឡើយទេ។"
 
 #. Translators: Spoken during a manual update check when the GitHub API request itself returns an HTTP error; %d is the HTTP status code.
-#: addon\globalPlugins\freeradio\__init__.py:1134
+#: addon\globalPlugins\freeradio\__init__.py:1139
 #, python-format
 msgid "Update check failed (HTTP %d)."
 msgstr "ការត្រួតពិនិត្យការធ្វើបច្ចុប្បន្នភាពបានបរាជ័យ (HTTP %d)."
 
 #. Translators: Spoken during a manual update check when the request to GitHub fails outright (e.g. no internet connection).
-#: addon\globalPlugins\freeradio\__init__.py:1140
+#: addon\globalPlugins\freeradio\__init__.py:1145
 msgid "Update check failed. Please check your internet connection."
 msgstr "ការត្រួតពិនិត្យការធ្វើបច្ចុប្បន្នភាពបានបរាជ័យ។ សូមពិនិត្យមើលការតភ្ជាប់អ៊ីនធឺណិតរបស់អ្នក។"
 
 #. Translators: Spoken during a manual update check when GitHub's release data doesn't include a usable version tag.
-#: addon\globalPlugins\freeradio\__init__.py:1156
+#: addon\globalPlugins\freeradio\__init__.py:1161
 msgid "Could not determine latest version."
 msgstr "មិនអាចកំណត់កំណែចុងក្រោយបំផុតបានទេ។"
 
 #. Translators: Update dialog message when direct install is available. %(new)s=new version, %(current)s=current version
-#: addon\globalPlugins\freeradio\__init__.py:1175
+#: addon\globalPlugins\freeradio\__init__.py:1180
 #, python-format
 msgid ""
 "A new version of FreeRadio is available: %(new)s.\n"
@@ -4413,19 +4414,19 @@ msgstr ""
 "\n"
 "តើអ្នកចង់ទាញយក និងដំឡើងវាឥឡូវនេះទេ?"
 
-#: addon\globalPlugins\freeradio\__init__.py:1178
-#: addon\globalPlugins\freeradio\__init__.py:1187
-#: addon\globalPlugins\freeradio\__init__.py:1255
+#: addon\globalPlugins\freeradio\__init__.py:1183
+#: addon\globalPlugins\freeradio\__init__.py:1192
+#: addon\globalPlugins\freeradio\__init__.py:1260
 msgid "unknown"
 msgstr "មិនស្គាល់"
 
 #. Translators: Button label on the update-available dialog when a direct .nvda-addon download is available, offering to install it right away.
-#: addon\globalPlugins\freeradio\__init__.py:1180
+#: addon\globalPlugins\freeradio\__init__.py:1185
 msgid "&Install"
 msgstr "ដំឡើង &I"
 
 #. Translators: Update dialog message when only a download page is available. %(new)s=new version, %(current)s=current version
-#: addon\globalPlugins\freeradio\__init__.py:1184
+#: addon\globalPlugins\freeradio\__init__.py:1189
 #, python-format
 msgid ""
 "A new version of FreeRadio is available: %(new)s.\n"
@@ -4439,39 +4440,39 @@ msgstr ""
 "តើអ្នកចង់បើកទំព័រទាញយកទេ?"
 
 #. Translators: Button label on the update-available dialog when only a release web page (no direct download) is available, offering to open it in a browser.
-#: addon\globalPlugins\freeradio\__init__.py:1189
+#: addon\globalPlugins\freeradio\__init__.py:1194
 msgid "&Open Page"
 msgstr "បើកទំព័រ &O"
 
 #. Translators: Title of the dialog shown when a newer FreeRadio version is available.
-#: addon\globalPlugins\freeradio\__init__.py:1195
+#: addon\globalPlugins\freeradio\__init__.py:1200
 msgid "FreeRadio Update Available"
 msgstr "មានការធ្វើបច្ចុប្បន្នភាព FreeRadio ហើយ"
 
 #. Translators: 'Cancel' button label on the update-available dialog, paired with whichever install/open-page label is used as the other button.
-#: addon\globalPlugins\freeradio\__init__.py:1199
+#: addon\globalPlugins\freeradio\__init__.py:1204
 msgid "&Cancel"
 msgstr "បោះបង់ &C"
 
 #. Translators: Spoken while the new version is being downloaded for direct install; %s is the version number being downloaded.
-#: addon\globalPlugins\freeradio\__init__.py:1215
+#: addon\globalPlugins\freeradio\__init__.py:1220
 #, python-format
 msgid "Downloading FreeRadio %s…"
 msgstr "កំពុងទាញយក FreeRadio %s…"
 
 #. Translators: Spoken when the downloaded .nvda-addon file can't be handed to NVDA's installer automatically; %s is the path where the file was saved so the user can open it manually.
-#: addon\globalPlugins\freeradio\__init__.py:1245
+#: addon\globalPlugins\freeradio\__init__.py:1250
 #, python-format
 msgid "Could not launch installer. File saved to: %s"
 msgstr "មិនអាចបើកកម្មវិធីដំឡើងបានទេ។ ឯកសារត្រូវបានរក្សាទុកទៅក្នុង: %s"
 
 #. Translators: Message and title of the dialog shown after a manual update check finds no newer version; %s is the currently installed version, or the fallback 'unknown' label just below if it could not be determined.
-#: addon\globalPlugins\freeradio\__init__.py:1255
+#: addon\globalPlugins\freeradio\__init__.py:1260
 #, python-format
 msgid "FreeRadio is up to date. Installed: %s"
 msgstr "FreeRadio គឺទាន់សម័យហើយ។ បានដំឡើងរួចរាល់ហើយ: %s"
 
-#: addon\globalPlugins\freeradio\__init__.py:1256
+#: addon\globalPlugins\freeradio\__init__.py:1261
 msgid "FreeRadio Update Check"
 msgstr "ពិនិត្យមើលការធ្វើបច្ចុប្បន្នភាពរបស់ FreeRadio"
 
@@ -4587,8 +4588,8 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-#~ msgid "Search on devices:"
-#~ msgstr "ស្វែងរកក្នុងថាស:"
+#~ msgid "Search disk:"
+#~ msgstr "ស្វែងរក:"
 
 #~ msgid ""
 #~ "\n"

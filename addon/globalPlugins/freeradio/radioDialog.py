@@ -395,7 +395,7 @@ def check_stream_url(url, timeout=8):
 
 	except _err.HTTPError as e:
 		# Translators: Error returned when the server responds with an HTTP error status; %d is the status code, %s its reason phrase.
-		return False, _("HTTP error %d: %s") % (e.code, e.reason)
+		return False, _("HTTP error %(e.code)d: %(e.reason)s") % (e.code, e.reason)
 	except _err.URLError as e:
 		# Translators: Error returned when the connection to the URL fails outright (DNS, refused, timeout); %s is the underlying reason.
 		return False, _("Connection failed: %s") % str(e.reason)
@@ -7439,10 +7439,10 @@ class RadioDialog(wx.Dialog):
 
 		# --- Disk search row ---
 		search_sizer = wx.BoxSizer(wx.HORIZONTAL)
-		# Translators: Label for the jukebox disk-search field.
-		search_sizer.Add(wx.StaticText(panel, label=_("Search disk:")), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 4)
+		# Translators: Label for the jukebox device-search field.
+		search_sizer.Add(wx.StaticText(panel, label=_("Search on devices:")), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 4)
 		self._jukebox_search = wx.TextCtrl(panel)
-		# Translators: Accessible name/hint for the jukebox disk-search field: searches local audio files by filename.
+		# Translators: Accessible name/hint for the jukebox device-search field: searches local audio files by filename.
 		self._jukebox_search.SetName(_("Search audio files on your computer by filename. Press enter to search"))
 		search_sizer.Add(self._jukebox_search, 1, wx.EXPAND)
 		sizer.Add(search_sizer, 0, wx.EXPAND | wx.ALL, 8)
@@ -7451,12 +7451,12 @@ class RadioDialog(wx.Dialog):
 		# Hidden until a search is actually performed - see
 		# _set_jukebox_results_visible(), mirroring
 		# _set_podcast_results_visible()'s reasoning exactly.
-		# Translators: Label above the list of audio files found by the disk search.
+		# Translators: Label above the list of audio files found by the device search.
 		self._jukebox_results_label = wx.StaticText(panel, label=_("Search results:"))
 		sizer.Add(self._jukebox_results_label, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 8)
 		self._jukebox_search_results = wx.ListBox(panel, style=wx.LB_SINGLE)
-		# Translators: Accessible name for the disk-search results list.
-		self._jukebox_search_results.SetName(_("Audio files found on disk"))
+		# Translators: Accessible name for the device-search results list.
+		self._jukebox_search_results.SetName(_("Audio files found on your devices"))
 		self._jukebox_search_results.SetMinSize((-1, 100))
 		sizer.Add(self._jukebox_search_results, 0, wx.EXPAND | wx.ALL, 8)
 		self._jukebox_search_sizer = sizer
@@ -7536,7 +7536,7 @@ class RadioDialog(wx.Dialog):
 		event.Skip()
 
 	def _set_jukebox_results_visible(self, visible):
-		"""Show or hide the disk-search results list (with its label) in
+		"""Show or hide the device-search results list (with its label) in
 		the Jukebox tab - mirrors _set_podcast_results_visible()."""
 		sizer = getattr(self, "_jukebox_search_sizer", None)
 		widgets = (self._jukebox_results_label, self._jukebox_search_results)
@@ -7572,7 +7572,7 @@ class RadioDialog(wx.Dialog):
 		results overwriting a newer one."""
 		query = self._jukebox_search.GetValue().strip()
 		if not query:
-			# Translators: Spoken when the jukebox disk-search is used with an empty search box.
+			# Translators: Spoken when the jukebox device-search is used with an empty search box.
 			ui.message(_("Please enter a search term."))
 			return
 
@@ -7586,10 +7586,10 @@ class RadioDialog(wx.Dialog):
 		self._jukebox_results = []
 		self._set_jukebox_results_visible(True)
 		self._jukebox_search_results.Clear()
-		# Translators: Placeholder row shown in the results list while a disk search is in progress.
+		# Translators: Placeholder row shown in the results list while a device search is in progress.
 		self._jukebox_search_results.Append(_("Searching..."))
-		# Translators: Spoken when a jukebox disk search starts; %s is the search text.
-		ui.message(_("Searching disks for \"%s\"...") % query)
+		# Translators: Spoken when a jukebox device search starts; %s is the search text.
+		ui.message(_("Searching devices for \"%s\"...") % query)
 
 		include_network = config.conf["freeradio"].get("jukebox_search_network_drives", False)
 
@@ -7608,7 +7608,7 @@ class RadioDialog(wx.Dialog):
 		self._jukebox_search_results.Clear()
 		self._jukebox_results = results
 		if not results:
-			# Translators: Placeholder row shown in the results list when a disk search finds nothing.
+			# Translators: Placeholder row shown in the results list when a device search finds nothing.
 			self._jukebox_search_results.Append(_("No matching audio files found."))
 			# Translators: Spoken alongside the placeholder row above.
 			ui.message(_("No matching audio files found."))
@@ -7616,7 +7616,7 @@ class RadioDialog(wx.Dialog):
 		for path in results:
 			self._jukebox_search_results.Append(os.path.basename(path))
 		self._jukebox_search_results.SetSelection(0)
-		# Translators: Plural forms spoken after a successful disk search; %d is how many audio files were found.
+		# Translators: Plural forms spoken after a successful device search; %d is how many audio files were found.
 		ui.message(ngettext("%d file found.", "%d files found.", len(results)) % len(results))
 
 	def _is_previewing_jukebox_path(self, path):
@@ -7656,7 +7656,7 @@ class RadioDialog(wx.Dialog):
 		self._play_callback(station_dict, [station_dict], 0, announce=True)
 
 	def _on_jukebox_add_from_results(self, event):
-		"""Add the selected disk-search result to the jukebox - reached
+		"""Add the selected device-search result to the jukebox - reached
 		via the search results' context menu or Enter."""
 		idx = self._jukebox_search_results.GetSelection()
 		if idx == wx.NOT_FOUND or idx >= len(self._jukebox_results):
@@ -7666,23 +7666,23 @@ class RadioDialog(wx.Dialog):
 		if error:
 			ui.message(error)
 			return
-		# Translators: Same confirmation as adding a folder; spoken here after adding a single audio file from a disk-search result.
+		# Translators: Same confirmation as adding a folder; spoken here after adding a single audio file from a device-search result.
 		ui.message(_("Added to jukebox: %s") % entry.title)
 		self._refresh_jukebox_list(select_path=path)
 
 	def _show_jukebox_result_context_menu(self):
-		"""Context menu for the selected item in the disk-search results list."""
+		"""Context menu for the selected item in the device-search results list."""
 		idx = self._jukebox_search_results.GetSelection()
 		if idx == wx.NOT_FOUND or idx >= len(self._jukebox_results):
 			return
 
 		menu = wx.Menu()
-		# Translators: Same Preview/Stop Preview toggle pattern as the GETEM search-result context menu, applied to a jukebox disk-search result.
+		# Translators: Same Preview/Stop Preview toggle pattern as the GETEM search-result context menu, applied to a jukebox device-search result.
 		label = _("&Stop Preview") if self._is_previewing_jukebox_path(self._jukebox_results[idx]) else _("&Preview")
 		item_preview = menu.Append(wx.ID_ANY, label)
 		self.Bind(wx.EVT_MENU, self._on_jukebox_preview_toggle, item_preview)
 
-		# Translators: Context-menu item; adds the selected disk-search result to the jukebox library.
+		# Translators: Context-menu item; adds the selected device-search result to the jukebox library.
 		item_add = menu.Append(wx.ID_ANY, _("&Add to Jukebox"))
 		self.Bind(wx.EVT_MENU, self._on_jukebox_add_from_results, item_add)
 
@@ -8123,7 +8123,7 @@ class RadioDialog(wx.Dialog):
 		if not entry or entry.kind != "folder":
 			return
 		self._jukebox_manager.rescan_folder(entry.path)
-		# Translators: Spoken after re-scanning a jukebox folder entry for changes on disk; %s is the folder's title.
+		# Translators: Spoken after re-scanning a jukebox folder entry for changes on device; %s is the folder's title.
 		ui.message(_("Rescanned: %s") % entry.title)
 		self._refresh_jukebox_list(select_path=entry.path)
 
@@ -8203,7 +8203,7 @@ class RadioDialog(wx.Dialog):
 		self.Bind(wx.EVT_MENU, self._on_jukebox_entry_play, item_play)
 
 		if entry.kind == "folder":
-			# Translators: Context-menu item; re-scans a jukebox folder entry for added/removed files on disk.
+			# Translators: Context-menu item; re-scans a jukebox folder entry for added/removed files on device.
 			item_rescan = menu.Append(wx.ID_ANY, _("&Rescan Folder"))
 			self.Bind(wx.EVT_MENU, self._on_jukebox_rescan_folder, item_rescan)
 
