@@ -58,7 +58,7 @@ Tous les raccourcis peuvent être réassignés depuis le Menu NVDA → Préfére
 | `Ctrl+Win+R` | Ouvrir le navigateur de stations | Ouvre la fenêtre du navigateur si elle est fermée, ou la met au premier plan si elle est déjà ouverte. |
 | `Ctrl+Win+O` | Ouvrir l'onglet Podcasts | Ouvre le navigateur de stations (s'il est fermé) ou le met au premier plan, et bascule directement vers l'onglet **Podcasts**. |
 | `Ctrl+Win+L` | Ouvrir l'onglet Livres audio | Ouvre le navigateur de stations (s'il est fermé) ou le met au premier plan, et bascule directement vers l'onglet **Livres audio**. |
-| `Ctrl+Win+U` | Ouvrir l'onglet Jukebox | Ouvre le navigateur de stations (s'il est fermé) ou le met au premier plan, et bascule directement vers l'onglet **Jukebox**, focalisé sur la boîte de recherche du disque. |
+| `Ctrl+Win+U` | Ouvrir l'onglet Jukebox | Ouvre le navigateur de stations (s'il est fermé) ou le met au premier plan, et bascule directement vers l'onglet **Jukebox**, focalisé sur la boîte de recherche d'appareils. |
 | `Ctrl+Win+P` | Mettre en pause / reprendre | Met en pause la station actuelle si elle est en cours de lecture ; reprend en cas de pause. Si rien ne joue, démarre la dernière station ou ouvre la liste des favoris en fonction de votre réglage. En appuyant deux fois de suite, vous accédez directement à un onglet de votre choix. Appuyer trois fois peut déclencher une action distincte en fonction de votre réglage. |
 | `Ctrl+Win+S` | Arrêter | Arrête complètement la station actuelle et réinitialise le lecteur. |
 | `Ctrl+Win+→` | Suivant favori | Passe à la station suivante dans la liste des favoris. Revient  au début et à la fin de la liste. |
@@ -190,7 +190,7 @@ Chaque raccourci reflète cocher ou décocher dans l'entrée correspondante dans
 | `Alt+5` | Morceaux aimés | Passe à l'onglet Morceaux aimés. |
 | `Alt+6` | Podcasts | Passe à l'onglet Podcasts. |
 | `Alt+7` | Livres audio | Passe à l'onglet Livres audio. |
-| `Alt+8` | Jukebox | Passe à l'onglet Jukebox, focalisé sur la boîte de recherche du disque. |
+| `Alt+8` | Jukebox | Passe à l'onglet Jukebox, focalisé sur la boîte de recherche d'appareils. |
 | `Alt+K` | Fermer | Ferme la fenêtre ; l'extension continue de jouer en arrière-plan. |
 
 ## Favoris
@@ -341,6 +341,7 @@ Cette fonctionnalité est **désactivée par défaut**. Activez-la depuis le Men
 ### Comment ça fonctionne
 
 Une fois activé, FreeRadio capture en continu la station en cours de lecture dans une mémoire tampon locale tournante en arrière-plan. Celle-ci contient environ les **10 dernières minutes** d'audio ; l'audio le plus ancien est automatiquement supprimé à mesure que le nouveau arrive, de sorte que la mémoire tampon représente toujours le « passé récent » par rapport au bord du direct.
+La durée de la mémoire tampon est définie dans les paramètres.
 
 - **`Ctrl+Win+J`** — Reculer de 15 secondes. La première pulsation vous fait passer de la lecture en direct à la lecture en décalage temporel, en commençant 15 secondes derrière le bord du direct. Chaque pulsation supplémentaire recule de 15 secondes supplémentaires.
 - **`Ctrl+Win+K`** — Avancer de 15 secondes en mode décalage temporel. Une fois le bord du direct atteint, la lecture revient automatiquement au flux en direct et NVDA annonce "Retour au direct".
@@ -598,15 +599,15 @@ L'onglet **Jukebox** de FreeRadio propose deux façons de lire les fichiers audi
 
 Ouvrez le navigateur de stations avec `Ctrl+Win+R` et passez à l'onglet **Jukebox** avec `Ctrl+Tab` ou `Alt+8`, ou ouvrez-le directement depuis n'importe où avec le raccourci global `Ctrl+Win+U`. L'onglet est organisé en trois zones principales:
 
-1. **Recherche sur disque** — un champ de texte qui recherche les fichiers audio sur tous les disques connectés localement et prêts à l'emploi dont le nom contient le texte saisi. Appuyez sur `Entrée` pour lancer la recherche.
+1. **Rechercher sur les appareils** — un champ de texte qui recherche les fichiers audio sur tous les appareils connectés localement et prêts à l'emploi dont le nom contient le texte saisi. Appuyez sur `Entrée` pour lancer la recherche.
 2. **Résultats de la recherche** — liste affichant les fichiers correspondants une fois la recherche terminée. Elle reste masquée jusque-là, afin que l'onglet demeure vide lorsqu'aucune recherche n'est effectuée.
 3. **Jukebox et Morceaux** — liste permanente des éléments ajoutés, suivie de la liste des morceaux de l'entrée sélectionnée (pour une entrée de fichier, juste ce fichier ; pour une entrée de dossier, chaque fichier audio trouvé à l'intérieur).
 
 Les boutons **Ajouter un fichier…**, **Ajouter un dossier…** et **Supprimer** se trouvent sous la liste des morceaux.
 
-### Recherche de Fichiers sur le Disque
+### Recherche de Fichiers sur les Appareils
 
-Saisissez une partie d'un nom de fichier dans le champ **Recherche sur disque** et appuyez sur `Entrée`. FreeRadio recherche sur tous les périphériques connectés localement — disques durs, clés USB, cartes mémoire, lecteurs réseau mappés — à la recherche de fichiers audio (`.mp3`, `.wav`, `.ogg`, `.flac`, `.m4a`, `.m4b`, `.aac`, `.wma`, `.opus`, et plusieurs autres) dont le nom de fichier contient le texte recherché. La recherche s'effectue en arrière-plan, NVDA continue donc de fonctionner sans problème.
+Saisissez une partie d'un nom de fichier dans le champ **Rechercher sur les appareils** et appuyez sur `Entrée`. FreeRadio recherche sur tous les appareils connectés localement — disques durs, clés USB, cartes mémoire, lecteurs réseau mappés — à la recherche de fichiers audio (`.mp3`, `.wav`, `.ogg`, `.flac`, `.m4a`, `.m4b`, `.aac`, `.wma`, `.opus`, et plusieurs autres) dont le nom de fichier contient le texte recherché. La recherche s'effectue en arrière-plan, NVDA continue donc de fonctionner sans problème.
 
 - **Espace** sur un résultat de recherche pour le prévisualiser — et lancez la lecture avec le lecteur habituel. Appuyez de nouveau sur **Espace** sur le même fichier pour arrêter l'aperçu.
 - **Entrée** sur un résultat de recherche pour l'ajouter à votre jukebox.
@@ -619,7 +620,7 @@ La liste du Jukebox est votre bibliothèque personnelle permanente. Vous pouvez 
 
 - **Ajouter un fichier…** — ouvre un sélecteur de fichiers vous permettant d'ajouter un ou plusieurs fichiers audio. Tous les fichiers sélectionnés sont ajoutés simultanément.
 - **Ajouter un dossier…** — ouvre un sélecteur de dossiers. Chaque fichier audio du dossier sélectionné, y compris ses sous-dossiers, est considéré comme un des **morceaux** de ce dossier. Le dossier lui-même constitue une entrée unique dans votre liste du Jukebox ; les fichiers qu'il contient s'affichent dans la liste des morceaux lorsque le dossier est sélectionné.
-- **Supprimer** — supprime l'entrée actuellement sélectionnée de votre Jukebox. La suppression d'une entrée de dossier ne supprime aucun fichier de votre disque ; elle oublie tout simplement le dossier.
+- **Supprimer** — supprime l'entrée actuellement sélectionnée de votre Jukebox. La suppression d'une entrée de dossier ne supprime aucun fichier sur le disque ou l'appareil ; elle oublie tout simplement le dossier.
 
 Votre liste du Jukebox est automatiquement enregistrée et conservée même après le redémarrage de NVDA. Le contenu des dossiers est analysé à la demande et mis en cache, ce qui rend l'ajout d'un dossier instantané, même pour les collections volumineuses — une analyse complète est effectuée lors de la première sélection du dossier. Si vous ajoutez des fichiers à un dossier en dehors de FreeRadio, utilisez l'élément **Réanalyser le dossier** du menu contextuel du dossier pour les inclure.
 

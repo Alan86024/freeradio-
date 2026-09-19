@@ -32,6 +32,190 @@ from html import unescape
 _ = _tr
 del _tr
 
+# --- Native multi-folder picker -------------------------------------------------
+# wx.DirDialog has no multi-select mode (unlike wx.FileDialog's FD_MULTIPLE), so
+# to give jukebox folder-adding the same "pick several, confirm once" experience
+# as file-adding, we call the Windows Common Item Dialog (IFileOpenDialog) with
+# FOS_PICKFOLDERS | FOS_ALLOWMULTISELECT directly via comtypes. This dialog has
+# no ready-made comtypes/pywin32 wrapper, so the interfaces are declared here by
+# hand from the documented vtable layout. If anything about this fails on a given
+# system (missing comtypes, a COM error, etc.), callers fall back to looping
+# wx.DirDialog, so this is a pure enhancement and never a hard requirement.
+_SIGDN_FILESYSPATH = 0x80058000
+_FOS_PICKFOLDERS = 0x00000020
+_FOS_FORCEFILESYSTEM = 0x00000040
+_FOS_ALLOWMULTISELECT = 0x00000200
+# HRESULT for "the user closed the dialog without making a selection".
+_ERROR_CANCELLED_HRESULT = -2147023673  # HRESULT_FROM_WIN32(ERROR_CANCELLED), i.e. 0x800704C7
+
+
+def _build_ifileopendialog_classes():
+	"""Builds and returns the (IFileOpenDialog, CLSID_FileOpenDialog) pair used by
+	_pick_folders_native(). Kept in its own function so any failure to import
+	comtypes, or to build these interfaces, is an ordinary exception the caller
+	can catch, rather than breaking this module for every other feature at
+	import time."""
+	import comtypes
+	from comtypes import GUID, COMMETHOD, IUnknown
+	from ctypes import HRESULT, POINTER, c_void_p, c_int, c_uint, c_ulong, c_wchar_p
+	from ctypes.wintypes import DWORD, HWND
+
+	class IModalWindow(IUnknown):
+		_iid_ = GUID("{B4DB1657-70D7-485E-8E3E-6FCB5A5C1802}")
+		_methods_ = [
+			COMMETHOD([], HRESULT, "Show", (["in"], HWND, "hwndOwner")),
+		]
+
+	class IShellItem(IUnknown):
+		_iid_ = GUID("{43826D1E-E718-42EE-BC55-A1E261C37BFE}")
+		_methods_ = [
+			COMMETHOD(
+				[], HRESULT, "BindToHandler",
+				(["in"], POINTER(IUnknown), "pbc"),
+				(["in"], POINTER(GUID), "bhid"),
+				(["in"], POINTER(GUID), "riid"),
+				(["out"], POINTER(c_void_p), "ppv"),
+			),
+			COMMETHOD([], HRESULT, "GetParent", (["out"], POINTER(POINTER(IUnknown)), "ppsi")),
+			COMMETHOD(
+				[], HRESULT, "GetDisplayName",
+				(["in"], c_int, "sigdnName"),
+				(["out"], POINTER(c_wchar_p), "ppszName"),
+			),
+			COMMETHOD(
+				[], HRESULT, "GetAttributes",
+				(["in"], c_ulong, "sfgaoMask"),
+				(["out"], POINTER(c_ulong), "psfgaoAttribs"),
+			),
+			COMMETHOD(
+				[], HRESULT, "Compare",
+				(["in"], POINTER(IUnknown), "psi"),
+				(["in"], c_uint, "hint"),
+				(["out"], POINTER(c_int), "piOrder"),
+			),
+		]
+
+	class IShellItemArray(IUnknown):
+		_iid_ = GUID("{B63EA76D-1F85-456F-A19C-48159EFA858B}")
+		_methods_ = [
+			COMMETHOD(
+				[], HRESULT, "BindToHandler",
+				(["in"], POINTER(IUnknown), "pbc"),
+				(["in"], POINTER(GUID), "bhid"),
+				(["in"], POINTER(GUID), "riid"),
+				(["out"], POINTER(c_void_p), "ppvOut"),
+			),
+			COMMETHOD(
+				[], HRESULT, "GetPropertyStore",
+				(["in"], c_int, "flags"),
+				(["in"], POINTER(GUID), "riid"),
+				(["out"], POINTER(c_void_p), "ppv"),
+			),
+			COMMETHOD(
+				[], HRESULT, "GetPropertyDescriptionList",
+				(["in"], POINTER(GUID), "keyType"),
+				(["in"], POINTER(GUID), "riid"),
+				(["out"], POINTER(c_void_p), "ppv"),
+			),
+			COMMETHOD(
+				[], HRESULT, "GetAttributes",
+				(["in"], c_int, "AttribFlags"),
+				(["in"], c_ulong, "sfgaoMask"),
+				(["out"], POINTER(c_ulong), "psfgaoAttribs"),
+			),
+			COMMETHOD([], HRESULT, "GetCount", (["out"], POINTER(DWORD), "pdwNumItems")),
+			COMMETHOD(
+				[], HRESULT, "GetItemAt",
+				(["in"], DWORD, "dwIndex"),
+				(["out"], POINTER(POINTER(IShellItem)), "ppsi"),
+			),
+			COMMETHOD([], HRESULT, "EnumItems", (["out"], POINTER(POINTER(IUnknown)), "ppenumShellItems")),
+		]
+
+	class IFileDialog(IModalWindow):
+		_iid_ = GUID("{42F85136-DB7E-439C-85F1-E4075D135FC8}")
+		_methods_ = [
+			COMMETHOD(
+				[], HRESULT, "SetFileTypes",
+				(["in"], c_uint, "cFileTypes"),
+				(["in"], c_void_p, "rgFilterSpec"),
+			),
+			COMMETHOD([], HRESULT, "SetFileTypeIndex", (["in"], c_uint, "iFileType")),
+			COMMETHOD([], HRESULT, "GetFileTypeIndex", (["out"], POINTER(c_uint), "piFileType")),
+			COMMETHOD(
+				[], HRESULT, "Advise",
+				(["in"], POINTER(IUnknown), "pfde"),
+				(["out"], POINTER(DWORD), "pdwCookie"),
+			),
+			COMMETHOD([], HRESULT, "Unadvise", (["in"], DWORD, "dwCookie")),
+			COMMETHOD([], HRESULT, "SetOptions", (["in"], DWORD, "fos")),
+			COMMETHOD([], HRESULT, "GetOptions", (["out"], POINTER(DWORD), "pfos")),
+			COMMETHOD([], HRESULT, "SetDefaultFolder", (["in"], POINTER(IShellItem), "psi")),
+			COMMETHOD([], HRESULT, "SetFolder", (["in"], POINTER(IShellItem), "psi")),
+			COMMETHOD([], HRESULT, "GetFolder", (["out"], POINTER(POINTER(IShellItem)), "ppsi")),
+			COMMETHOD([], HRESULT, "GetCurrentSelection", (["out"], POINTER(POINTER(IShellItem)), "ppsi")),
+			COMMETHOD([], HRESULT, "SetFileName", (["in"], c_wchar_p, "pszName")),
+			COMMETHOD([], HRESULT, "GetFileName", (["out"], POINTER(c_wchar_p), "pszName")),
+			COMMETHOD([], HRESULT, "SetTitle", (["in"], c_wchar_p, "pszTitle")),
+			COMMETHOD([], HRESULT, "SetOkButtonLabel", (["in"], c_wchar_p, "pszText")),
+			COMMETHOD([], HRESULT, "SetFileNameLabel", (["in"], c_wchar_p, "pszLabel")),
+			COMMETHOD([], HRESULT, "GetResult", (["out"], POINTER(POINTER(IShellItem)), "ppsi")),
+			COMMETHOD(
+				[], HRESULT, "AddPlace",
+				(["in"], POINTER(IShellItem), "psi"),
+				(["in"], c_int, "fdap"),
+			),
+			COMMETHOD([], HRESULT, "SetDefaultExtension", (["in"], c_wchar_p, "pszDefaultExtension")),
+			COMMETHOD([], HRESULT, "Close", (["in"], HRESULT, "hr")),
+			COMMETHOD([], HRESULT, "SetClientGuid", (["in"], POINTER(GUID), "guid")),
+			COMMETHOD([], HRESULT, "ClearClientData"),
+			COMMETHOD([], HRESULT, "SetFilter", (["in"], POINTER(IUnknown), "pFilter")),
+		]
+
+	class IFileOpenDialog(IFileDialog):
+		_iid_ = GUID("{D57C7288-D4AD-4768-BE02-9D969532D960}")
+		_methods_ = [
+			COMMETHOD([], HRESULT, "GetResults", (["out"], POINTER(POINTER(IShellItemArray)), "ppenum")),
+			COMMETHOD([], HRESULT, "GetSelectedItems", (["out"], POINTER(POINTER(IShellItemArray)), "ppsai")),
+		]
+
+	clsid_file_open_dialog = GUID("{DC1C5A9C-E88A-4DDE-A5A1-60F82A20AEF7}")
+	return comtypes, IFileOpenDialog, IShellItem, clsid_file_open_dialog
+
+
+def _pick_folders_native(parent, title):
+	"""Shows the native Windows "pick folders" dialog with multi-select enabled
+	and returns a list of the chosen folder paths (empty if the user cancelled).
+	Returns None - rather than raising - if the native dialog could not be used
+	at all on this system, so callers know to fall back to another approach."""
+	try:
+		comtypes, IFileOpenDialog, IShellItem, clsid_file_open_dialog = _build_ifileopendialog_classes()
+		dialog = comtypes.CoCreateInstance(
+			clsid_file_open_dialog, interface=IFileOpenDialog, clsctx=comtypes.CLSCTX_INPROC_SERVER
+		)
+		options = dialog.GetOptions()
+		dialog.SetOptions(options | _FOS_PICKFOLDERS | _FOS_FORCEFILESYSTEM | _FOS_ALLOWMULTISELECT)
+		dialog.SetTitle(title)
+		try:
+			hwnd = parent.GetHandle()
+		except Exception:
+			hwnd = 0
+		try:
+			dialog.Show(hwnd)
+		except comtypes.COMError as e:
+			if e.hresult == _ERROR_CANCELLED_HRESULT:
+				return []
+			raise
+		results = dialog.GetResults()
+		count = results.GetCount()
+		paths = []
+		for i in range(count):
+			item = results.GetItemAt(i)
+			paths.append(item.GetDisplayName(_SIGDN_FILESYSPATH))
+		return paths
+	except Exception:
+		return None
+
 # stationManager is part of this package; We cannot do relative import because
 # radioDialog is loaded directly as a module. We get it from sys.modules.
 # If it is not loaded yet (theoretical) we use the Exception base class.
@@ -211,7 +395,7 @@ def check_stream_url(url, timeout=8):
 
 	except _err.HTTPError as e:
 		# Translators: Error returned when the server responds with an HTTP error status; %d is the status code, %s its reason phrase.
-		return False, _("HTTP error %(e.code)d: %(e.reason)s") % (e.code, e.reason)
+		return False, _("HTTP error %d: %s") % (e.code, e.reason)
 	except _err.URLError as e:
 		# Translators: Error returned when the connection to the URL fails outright (DNS, refused, timeout); %s is the underlying reason.
 		return False, _("Connection failed: %s") % str(e.reason)
@@ -405,6 +589,20 @@ class RadioDialog(wx.Dialog):
 		self._total_found = None  # Total stations found by API (may exceed displayed limit)
 		self._country_station_counts = {}  # code -> stationcount from API, populated by _fetch_countries
 		self._sched_index_map = []  # Maps schedule listbox rows to ScheduledRecording objects (None for headers)
+
+		# Multi-mark state for the "mark several items with '.', then remove
+		# them all at once with Delete or the context menu's Remove Selected"
+		# flow - see _toggle_*_mark()/_on_*_remove_selected() below. Each set
+		# holds a stable identity key for the marked rows in that list, not
+		# list indices, since indices shift on every refresh:
+		#   favourites         -> station "stationuuid"
+		#   liked songs        -> the raw song line as stored in likedSongs.txt
+		#   audio-book library -> book.identity_key()
+		#   jukebox entries    -> entry.path
+		self._fav_marked     = set()
+		self._liked_marked   = set()
+		self._getem_marked   = set()
+		self._jukebox_marked = set()
 
 		self._build_ui()
 		self._prepopulate_country_combo()
@@ -1623,7 +1821,7 @@ class RadioDialog(wx.Dialog):
 					when = _("Every %s") % ", ".join(_FULL_DAY_NAMES[d] for d in days)
 				t    = rec.start_time.strftime("%H:%M")
 				# Translators: One line of the scheduled-recordings list for a recurring entry; see the docstring's examples above for the exact layout ('Station — Every ... — HH:MM, N min, Mode').
-				line = _("%(station)s — %(when)s — %(t)s, %(rec.duration_minutes)d min, %(mode)s") % (station, when, t, rec.duration_minutes, mode)
+				line = _("%s — %s — %s, %d min, %s") % (station, when, t, rec.duration_minutes, mode)
 			else:
 				ts   = rec.start_time.strftime("%d.%m.%Y %H:%M")
 				line = "%s — %s — %d min, %s" % (station, ts, rec.duration_minutes, mode)
@@ -2161,7 +2359,9 @@ class RadioDialog(wx.Dialog):
 
 		self._fav_list.Clear()
 		for s in filtered:
-			self._fav_list.Append(_station_label(s))
+			label = _station_label(s)
+			label = self._with_marked_suffix(label, s.get("stationuuid") in self._fav_marked)
+			self._fav_list.Append(label)
 
 		# Restore selection: prefer the previously selected station; fall back to 0.
 		if filtered:
@@ -2203,7 +2403,9 @@ class RadioDialog(wx.Dialog):
 
 		self._fav_list.Clear()
 		for s in filtered:
-			self._fav_list.Append(_station_label(s))
+			label = _station_label(s)
+			label = self._with_marked_suffix(label, s.get("stationuuid") in self._fav_marked)
+			self._fav_list.Append(label)
 		self._update_fav_button()
 
 	def _show_error(self):
@@ -3245,6 +3447,44 @@ class RadioDialog(wx.Dialog):
 		dlg.ShowModal()
 		dlg.Destroy()
 
+	def _marked_suffix(self):
+		# Translators: Short suffix appended to a list row's display text
+		# when the row is marked for bulk removal (see
+		# _toggle_*_mark()/_on_*_remove_selected()). Read aloud by screen
+		# readers right after the row's name, so the marked state is
+		# announced while simply arrowing through the list, not only at
+		# the moment '.' is pressed.
+		return _(" (marked)")
+
+	def _with_marked_suffix(self, label, marked):
+		"""Append the "(marked)" suffix to *label* when *marked* is True."""
+		return (label + self._marked_suffix()) if marked else label
+
+	def _strip_marked_suffix(self, text):
+		"""Undo _with_marked_suffix() - used wherever a list row's raw
+		display text is also used as data (the Liked Songs list stores
+		the song itself as the row text)."""
+		suffix = self._marked_suffix()
+		if suffix and text.endswith(suffix):
+			return text[: -len(suffix)]
+		return text
+
+	def _confirm_bulk_remove(self, count, title, message):
+		"""Shared "are you sure?" prompt for the multi-mark bulk-removal
+		flows below (favourites/liked songs/audio books/jukebox). *message*
+		is the already-formatted body text (it needs *count* to build the
+		wording, so callers build it themselves via ngettext). Returns True
+		if the user confirmed."""
+		if count <= 0:
+			return False
+		dlg = wx.MessageDialog(
+			self, message, title,
+			wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION,
+		)
+		result = dlg.ShowModal()
+		dlg.Destroy()
+		return result == wx.ID_YES
+
 	def _on_delete_station(self, event):
 		station, _idx = self._get_selected_station()
 		if not station or not self._manager.is_favorite(station):
@@ -3264,6 +3504,7 @@ class RadioDialog(wx.Dialog):
 			# Remember the deleted index so we can restore focus afterwards.
 			deleted_idx = _idx
 			self._manager.remove_favorite(station)
+			self._fav_marked.discard(station.get("stationuuid"))
 			# Translators: Spoken after a custom station is deleted.
 			ui.message(_("Station deleted"))
 			self._refresh_fav_list()
@@ -3369,6 +3610,11 @@ class RadioDialog(wx.Dialog):
 		item_del_fav.Enable(is_fav)
 		self.Bind(wx.EVT_MENU, self._on_delete_station, item_del_fav)
 
+		# Translators: Context-menu item; bulk-deletes every favourite station marked with '.', asking for confirmation once for the whole batch.
+		item_del_selected = menu.Append(wx.ID_ANY, _("Remove &Selected"))
+		item_del_selected.Enable(is_fav_tab and bool(self._fav_marked))
+		self.Bind(wx.EVT_MENU, self._on_fav_remove_selected, item_del_selected)
+
 		# Translators: Context-menu item; same action as the Rename Station button.
 		item_rename = menu.Append(wx.ID_ANY, _("Re&name Station"))
 		item_rename.Enable(is_fav_tab and is_fav)
@@ -3459,6 +3705,26 @@ class RadioDialog(wx.Dialog):
 		if key == ord(",") and focused == self._fav_list:
 			self._handle_fav_move_x()
 			return
+
+		# '.' marks/unmarks the focused row for the "mark several items,
+		# then remove them all at once" flow in the Favourites, Liked
+		# Songs, Audio Books library, and Jukebox lists - handled globally
+		# here (same as ',' above) since these lists' own EVT_KEY_DOWN
+		# handlers don't reliably see the period key on every keyboard
+		# layout.
+		if key == ord("."):
+			if focused == self._fav_list:
+				self._toggle_fav_mark()
+				return
+			if focused == self._liked_list:
+				self._toggle_liked_mark()
+				return
+			if focused == self._getem_library_ctrl:
+				self._toggle_getem_mark()
+				return
+			if focused == self._jukebox_list:
+				self._toggle_jukebox_mark()
+				return
 
 		if key in (wx.WXK_F3, wx.WXK_F4):
 			tab = self._notebook.GetSelection()
@@ -4109,11 +4375,77 @@ class RadioDialog(wx.Dialog):
 			self._update_fav_button()
 			self._update_save_audio_btn()
 		elif key == wx.WXK_DELETE:
-			if self._del_btn.IsEnabled():
+			if self._fav_marked:
+				self._on_fav_remove_selected(event)
+			elif self._del_btn.IsEnabled():
 				self._on_delete_station(event)
 		else:
 			event.Skip()
 
+	def _toggle_fav_mark(self):
+		"""Mark/unmark the focused favourite station with '.' for the
+		Remove Selected bulk-delete flow (Delete key or context menu).
+		Updates the row's display text immediately (see
+		_with_marked_suffix()) so the marked state is visible/announced
+		while simply arrowing through the list afterwards, not only at
+		the moment of marking."""
+		station, idx = self._get_selected_station()
+		if not station or idx < 0:
+			return
+		uuid = station.get("stationuuid")
+		if not uuid:
+			return
+		name = _station_label(station)
+		if uuid in self._fav_marked:
+			self._fav_marked.discard(uuid)
+			# Translators: Spoken after unmarking a favourite station in the multi-select removal flow; %s is the station name.
+			ui.message(_("Unmarked: %s") % name)
+		else:
+			self._fav_marked.add(uuid)
+			# Translators: Spoken after marking a favourite station in the multi-select removal flow; %s is the station name.
+			ui.message(_("Marked: %s") % name)
+		self._fav_list.SetString(idx, self._with_marked_suffix(name, uuid in self._fav_marked))
+		self._fav_list.SetSelection(idx)
+
+	def _on_fav_remove_selected(self, event=None):
+		"""Bulk-remove every favourite station currently marked with '.',
+		asking for confirmation once for the whole batch."""
+		marked = self._fav_marked
+		if not marked:
+			return
+		favs = self._manager.get_favorites()
+		stations = [s for s in favs if s.get("stationuuid") in marked]
+		count = len(stations)
+		if count == 0:
+			self._fav_marked.clear()
+			return
+		# Translators: Body of the bulk-delete confirmation dialog for favourite stations; %d is how many stations are marked.
+		message = ngettext(
+			"Do you want to delete the %d marked station?",
+			"Do you want to delete the %d marked stations?",
+			count,
+		) % count
+		# Translators: Title of the bulk-delete confirmation dialog for favourite stations.
+		if not self._confirm_bulk_remove(count, _("Delete Stations"), message):
+			return
+		for s in stations:
+			self._manager.remove_favorite(s)
+		self._fav_marked.clear()
+		if self._plugin is not None:
+			try:
+				self._plugin._rebuild_station_scripts()
+			except Exception:
+				pass
+		# Translators: Spoken after bulk-deleting marked favourite stations; %d is how many were removed.
+		ui.message(ngettext("%d station deleted", "%d stations deleted", count) % count)
+		self._refresh_fav_list()
+		self._update_fav_button()
+		count_left = self._fav_list.GetCount()
+		if count_left > 0:
+			self._fav_list.SetSelection(0)
+			self._fav_list.SetFocus()
+		else:
+			self._play_btn.SetFocus()
 
 	def _timer_action_changed_update(self):
 		"""Show/hide station area and update label according to Start/Stop selection."""
@@ -4429,7 +4761,8 @@ class RadioDialog(wx.Dialog):
 				if query:
 					lines = [l for l in lines if query in l.lower()]
 				for line in lines:
-					self._liked_list.Append(line)
+					label = self._with_marked_suffix(line, line in self._liked_marked)
+					self._liked_list.Append(label)
 				if not lines:
 					# Translators: Placeholder row shown when the liked-songs filter matches nothing.
 					self._liked_list.Append(_("No results found."))
@@ -4487,11 +4820,12 @@ class RadioDialog(wx.Dialog):
 		event.Skip()
 
 	def _get_liked_selection(self):
-		"""Return the selected song string, or None."""
+		"""Return the selected song string (with any "(marked)" suffix
+		stripped), or None."""
 		idx = self._liked_list.GetSelection()
 		if idx == wx.NOT_FOUND:
 			return None
-		text = self._liked_list.GetString(idx)
+		text = self._strip_marked_suffix(self._liked_list.GetString(idx))
 		# Translators: Same two placeholder rows as in _on_liked_remove/_get_liked_selection callers, treated as "nothing selected".
 		if text in (_("No liked songs yet."), _("No results found.")):
 			return None
@@ -4524,17 +4858,82 @@ class RadioDialog(wx.Dialog):
 		webbrowser.open(url)
 
 	def _on_liked_list_key(self, event):
-		"""Liked Songs list — Delete key triggers Remove button when enabled;
-		Applications key / Shift+F10 opens the context menu."""
+		"""Liked Songs list — Delete removes every marked song (or, if
+		none are marked, triggers the Remove button as before); '.' is
+		handled globally in _on_char_hook(), same as the Favourites list's
+		','; Applications key / Shift+F10 opens the context menu."""
 		key = event.GetKeyCode()
 		if key == wx.WXK_DELETE:
-			if self._liked_remove_btn.IsEnabled():
+			if self._liked_marked:
+				self._on_liked_remove_selected(event)
+			elif self._liked_remove_btn.IsEnabled():
 				self._on_liked_remove(event)
 			return
 		if key == wx.WXK_WINDOWS_MENU or (key == wx.WXK_F10 and event.ShiftDown()):
 			self._show_liked_context_menu()
 			return
 		event.Skip()
+
+	def _toggle_liked_mark(self):
+		"""Mark/unmark the focused liked song with '.' for the Remove
+		Selected bulk-delete flow (Delete key or context menu). Updates
+		the row's display text immediately so the marked state is
+		visible/announced while simply arrowing through the list
+		afterwards, not only at the moment of marking."""
+		idx = self._liked_list.GetSelection()
+		song = self._get_liked_selection()
+		if not song:
+			return
+		if song in self._liked_marked:
+			self._liked_marked.discard(song)
+			# Translators: Spoken after unmarking a liked song in the multi-select removal flow; %s is the song string.
+			ui.message(_("Unmarked: %s") % song)
+		else:
+			self._liked_marked.add(song)
+			# Translators: Spoken after marking a liked song in the multi-select removal flow; %s is the song string.
+			ui.message(_("Marked: %s") % song)
+		self._liked_list.SetString(idx, self._with_marked_suffix(song, song in self._liked_marked))
+		self._liked_list.SetSelection(idx)
+
+	def _on_liked_remove_selected(self, event=None):
+		"""Bulk-remove every liked song currently marked with '.', asking
+		for confirmation once for the whole batch."""
+		marked = self._liked_marked
+		if not marked:
+			return
+		count = len(marked)
+		# Translators: Body of the bulk-remove confirmation dialog for liked songs; %d is how many songs are marked.
+		message = ngettext(
+			"Do you want to remove the %d marked song from liked songs?",
+			"Do you want to remove the %d marked songs from liked songs?",
+			count,
+		) % count
+		# Translators: Title of the bulk-remove confirmation dialog for liked songs.
+		if not self._confirm_bulk_remove(count, _("Remove Songs"), message):
+			return
+		path = self._liked_songs_path()
+		try:
+			with open(path, encoding="utf-8") as fh:
+				lines = [l.rstrip("\n") for l in fh]
+			new_lines = [l for l in lines if l not in marked]
+			with open(path, "w", encoding="utf-8") as fh:
+				fh.write("\n".join(new_lines))
+				if new_lines:
+					fh.write("\n")
+		except Exception as e:
+			# Translators: Spoken if writing the updated liked-songs file back to disk fails; %s is the underlying error message.
+			ui.message(_("Could not remove song: %s") % str(e))
+			return
+		self._liked_marked.clear()
+		# Translators: Spoken after bulk-removing marked liked songs; %d is how many were removed.
+		ui.message(ngettext("%d song removed", "%d songs removed", count) % count)
+		self._refresh_liked_list()
+		if self._liked_list.GetCount() > 0:
+			self._liked_list.SetSelection(0)
+			self._on_liked_selected(wx.CommandEvent())
+			self._liked_list.SetFocus()
+		else:
+			self._liked_refresh_btn.SetFocus()
 
 	def _show_liked_context_menu(self):
 		"""Context menu for the selected item in the Liked Songs list.
@@ -4569,6 +4968,11 @@ class RadioDialog(wx.Dialog):
 		item_remove.Enable(bool(song))
 		self.Bind(wx.EVT_MENU, self._on_liked_remove, item_remove)
 
+		# Translators: Context-menu item; bulk-removes every liked song marked with '.', asking for confirmation once for the whole batch.
+		item_remove_selected = menu.Append(wx.ID_ANY, _("Remove &Selected"))
+		item_remove_selected.Enable(bool(self._liked_marked))
+		self.Bind(wx.EVT_MENU, self._on_liked_remove_selected, item_remove_selected)
+
 		menu.AppendSeparator()
 
 		# Translators: Context-menu item; same action as the Refresh button.
@@ -4582,7 +4986,7 @@ class RadioDialog(wx.Dialog):
 		idx = self._liked_list.GetSelection()
 		if idx == wx.NOT_FOUND:
 			return
-		song = self._liked_list.GetString(idx)
+		song = self._strip_marked_suffix(self._liked_list.GetString(idx))
 		# Translators: Two placeholder rows shown in the (otherwise empty or filtered-empty) liked-songs list; both are checked here so trying to remove a placeholder row is silently ignored instead of erroring.
 		if song in (_("No liked songs yet."), _("No results found.")):
 			return
@@ -4621,6 +5025,7 @@ class RadioDialog(wx.Dialog):
 			return
 		# Remember the deleted index so we can restore focus afterwards.
 		deleted_idx = idx
+		self._liked_marked.discard(song)
 		self._refresh_liked_list()
 		# Translators: Spoken after successfully removing a song; %s is the removed song string.
 		ui.message(_("Removed: %s") % song)
@@ -6353,7 +6758,9 @@ class RadioDialog(wx.Dialog):
 		self._getem_library_ctrl.Clear()
 		books = self._merged_library_books()
 		for book in books:
-			self._getem_library_ctrl.Append(self._format_getem_result_label(book))
+			label = self._format_getem_result_label(book)
+			label = self._with_marked_suffix(label, book.identity_key() in self._getem_marked)
+			self._getem_library_ctrl.Append(label)
 
 		if not books:
 			self._getem_details.ChangeValue("")
@@ -6376,11 +6783,17 @@ class RadioDialog(wx.Dialog):
 		self._maybe_fetch_getem_extra_fields(book)
 
 	def _on_getem_library_key(self, event):
+		# '.' (mark for bulk removal) is handled globally in
+		# _on_char_hook(), same as the Favourites list's ','.
 		key = event.GetKeyCode()
 		if key == wx.WXK_DELETE:
 			# Delete / Shift+Delete both remove the selected book from the
-			# library — the keycode is the same either way.
-			self._on_getem_remove_from_library(event)
+			# library — the keycode is the same either way. If one or more
+			# books are marked, remove all of them at once instead.
+			if self._getem_marked:
+				self._on_getem_remove_selected(event)
+			else:
+				self._on_getem_remove_from_library(event)
 			return
 		if key in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
 			self._on_getem_play(None)
@@ -6398,6 +6811,74 @@ class RadioDialog(wx.Dialog):
 				self._on_getem_play(None)
 			return
 		event.Skip()
+
+	def _toggle_getem_mark(self):
+		"""Mark/unmark the focused audio book with '.' for the Remove
+		Selected bulk-delete flow (Delete key or context menu). Updates
+		the row's display text immediately so the marked state is
+		visible/announced while simply arrowing through the list
+		afterwards, not only at the moment of marking."""
+		idx = self._getem_library_ctrl.GetSelection()
+		books = self._merged_library_books()
+		if idx == wx.NOT_FOUND or idx >= len(books):
+			return
+		book = books[idx]
+		key = book.identity_key()
+		if key in self._getem_marked:
+			self._getem_marked.discard(key)
+			# Translators: Spoken after unmarking an audio book in the multi-select removal flow; %s is the book title.
+			ui.message(_("Unmarked: %s") % book.title)
+		else:
+			self._getem_marked.add(key)
+			# Translators: Spoken after marking an audio book in the multi-select removal flow; %s is the book title.
+			ui.message(_("Marked: %s") % book.title)
+		label = self._format_getem_result_label(book)
+		self._getem_library_ctrl.SetString(idx, self._with_marked_suffix(label, key in self._getem_marked))
+		self._getem_library_ctrl.SetSelection(idx)
+
+	def _on_getem_remove_selected(self, event=None):
+		"""Bulk-remove every audio book currently marked with '.', asking
+		for confirmation once for the whole batch."""
+		marked = self._getem_marked
+		if not marked:
+			return
+		books = [b for b in self._merged_library_books() if b.identity_key() in marked]
+		count = len(books)
+		if count == 0:
+			self._getem_marked.clear()
+			return
+		# Translators: Body of the bulk-remove confirmation dialog for audio books; %d is how many books are marked.
+		message = ngettext(
+			"Do you want to remove the %d marked book from the library?",
+			"Do you want to remove the %d marked books from the library?",
+			count,
+		) % count
+		# Translators: Title of the bulk-remove confirmation dialog for audio books.
+		if not self._confirm_bulk_remove(count, _("Remove From Library"), message):
+			return
+		removed = 0
+		for book in books:
+			library = self._audiobook_library_for(book)
+			module = self._audiobook_module_for(book)
+			if library.remove_book(book):
+				removed += 1
+				if book.chapters and self._player:
+					urls = [
+						module.get_stream_url(ch["url"], referer=book.detail_url)
+						for ch in book.chapters if ch.get("url")
+					]
+					self._player.clear_podcast_positions(urls)
+		self._getem_marked.clear()
+		# Translators: Spoken after bulk-removing marked audio books from the library; %d is how many were removed.
+		ui.message(ngettext("%d book removed", "%d books removed", removed) % removed)
+		self._refresh_getem_library_list()
+		count_left = self._getem_library_ctrl.GetCount()
+		if count_left > 0:
+			self._getem_library_ctrl.SetSelection(0)
+			self._on_getem_library_selected(None)
+			self._getem_library_ctrl.SetFocus()
+		else:
+			self._getem_search.SetFocus()
 
 	def _on_getem_play(self, event):
 		idx = self._getem_library_ctrl.GetSelection()
@@ -6750,6 +7231,11 @@ class RadioDialog(wx.Dialog):
 		item_remove = menu.Append(wx.ID_ANY, _("&Remove from the Library"))
 		self.Bind(wx.EVT_MENU, self._on_getem_remove_from_library, item_remove)
 
+		# Translators: Context-menu item; bulk-removes every audio book marked with '.', asking for confirmation once for the whole batch.
+		item_remove_selected = menu.Append(wx.ID_ANY, _("Remove &Selected"))
+		item_remove_selected.Enable(bool(self._getem_marked))
+		self.Bind(wx.EVT_MENU, self._on_getem_remove_selected, item_remove_selected)
+
 		self.PopupMenu(menu, self._getem_library_ctrl.GetScreenPosition() - self.GetScreenPosition())
 		menu.Destroy()
 
@@ -6797,6 +7283,7 @@ class RadioDialog(wx.Dialog):
 		library = self._audiobook_library_for(book)
 		module = self._audiobook_module_for(book)
 		if library.remove_book(book):
+			self._getem_marked.discard(book.identity_key())
 			# The book's own audio profile is discarded automatically along
 			# with the rest of the book object above. Its per-chapter
 			# resume positions live separately, in RadioPlayer's own store
@@ -6953,7 +7440,7 @@ class RadioDialog(wx.Dialog):
 		# --- Disk search row ---
 		search_sizer = wx.BoxSizer(wx.HORIZONTAL)
 		# Translators: Label for the jukebox disk-search field.
-		search_sizer.Add(wx.StaticText(panel, label=_("Search on devices:")), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 4)
+		search_sizer.Add(wx.StaticText(panel, label=_("Search disk:")), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 4)
 		self._jukebox_search = wx.TextCtrl(panel)
 		# Translators: Accessible name/hint for the jukebox disk-search field: searches local audio files by filename.
 		self._jukebox_search.SetName(_("Search audio files on your computer by filename. Press enter to search"))
@@ -6969,7 +7456,7 @@ class RadioDialog(wx.Dialog):
 		sizer.Add(self._jukebox_results_label, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 8)
 		self._jukebox_search_results = wx.ListBox(panel, style=wx.LB_SINGLE)
 		# Translators: Accessible name for the disk-search results list.
-		self._jukebox_search_results.SetName(_("Audio files found on your devices"))
+		self._jukebox_search_results.SetName(_("Audio files found on disk"))
 		self._jukebox_search_results.SetMinSize((-1, 100))
 		sizer.Add(self._jukebox_search_results, 0, wx.EXPAND | wx.ALL, 8)
 		self._jukebox_search_sizer = sizer
@@ -7102,7 +7589,7 @@ class RadioDialog(wx.Dialog):
 		# Translators: Placeholder row shown in the results list while a disk search is in progress.
 		self._jukebox_search_results.Append(_("Searching..."))
 		# Translators: Spoken when a jukebox disk search starts; %s is the search text.
-		ui.message(_("Searching devices for \"%s\"...") % query)
+		ui.message(_("Searching disks for \"%s\"...") % query)
 
 		include_network = config.conf["freeradio"].get("jukebox_search_network_drives", False)
 
@@ -7217,7 +7704,8 @@ class RadioDialog(wx.Dialog):
 		self._jukebox_list.Clear()
 		entries = self._jukebox_manager.get_entries()
 		for entry in entries:
-			self._jukebox_list.Append(entry.display_label())
+			label = self._with_marked_suffix(entry.display_label(), entry.path in self._jukebox_marked)
+			self._jukebox_list.Append(label)
 
 		restore_idx = wx.NOT_FOUND
 		if current_path:
@@ -7363,9 +7851,10 @@ class RadioDialog(wx.Dialog):
 	def _on_jukebox_list_key(self, event):
 		"""Jukebox entries list - Space pauses if something is playing,
 		otherwise plays the focused entry; Enter always plays directly;
-		Delete / Shift+Delete removes the focused entry (with
-		confirmation) when the Remove button is enabled. Mirrors
-		_on_episode_key()'s Space/Enter handling and
+		'.' marks/unmarks the focused entry for bulk removal; Delete
+		removes every marked entry (or, if none are marked, the focused
+		entry, with confirmation) when the Remove button is enabled.
+		Mirrors _on_episode_key()'s Space/Enter handling and
 		_on_liked_list_key()'s Delete handling - wx reports Shift+Delete
 		with the same WXK_DELETE key code, so both are handled here."""
 		key = event.GetKeyCode()
@@ -7381,10 +7870,69 @@ class RadioDialog(wx.Dialog):
 				self._on_jukebox_entry_play(None)
 			return
 		if key == wx.WXK_DELETE:
-			if self._jukebox_remove_btn.IsEnabled():
+			if self._jukebox_marked:
+				self._on_jukebox_remove_selected(event)
+			elif self._jukebox_remove_btn.IsEnabled():
 				self._on_jukebox_remove_entry(event)
 			return
 		event.Skip()
+
+	def _toggle_jukebox_mark(self):
+		"""Mark/unmark the focused jukebox entry with '.' for the Remove
+		Selected bulk-delete flow (Delete key or context menu). Updates
+		the row's display text immediately so the marked state is
+		visible/announced while simply arrowing through the list
+		afterwards, not only at the moment of marking."""
+		idx = self._jukebox_list.GetSelection()
+		entry = self._get_selected_jukebox_entry()
+		if not entry:
+			return
+		if entry.path in self._jukebox_marked:
+			self._jukebox_marked.discard(entry.path)
+			# Translators: Spoken after unmarking a jukebox entry in the multi-select removal flow; %s is the entry title.
+			ui.message(_("Unmarked: %s") % entry.title)
+		else:
+			self._jukebox_marked.add(entry.path)
+			# Translators: Spoken after marking a jukebox entry in the multi-select removal flow; %s is the entry title.
+			ui.message(_("Marked: %s") % entry.title)
+		label = self._with_marked_suffix(entry.display_label(), entry.path in self._jukebox_marked)
+		self._jukebox_list.SetString(idx, label)
+		self._jukebox_list.SetSelection(idx)
+
+	def _on_jukebox_remove_selected(self, event=None):
+		"""Bulk-remove every jukebox entry currently marked with '.',
+		asking for confirmation once for the whole batch."""
+		marked = self._jukebox_marked
+		if not marked:
+			return
+		entries = [e for e in self._jukebox_manager.get_entries() if e.path in marked]
+		count = len(entries)
+		if count == 0:
+			self._jukebox_marked.clear()
+			return
+		# Translators: Body of the bulk-remove confirmation dialog for jukebox entries; %d is how many entries are marked.
+		message = ngettext(
+			"Do you want to remove the %d marked entry from the jukebox?",
+			"Do you want to remove the %d marked entries from the jukebox?",
+			count,
+		) % count
+		# Translators: Title of the bulk-remove confirmation dialog for jukebox entries.
+		if not self._confirm_bulk_remove(count, _("Remove From Jukebox"), message):
+			return
+		for entry in entries:
+			self._jukebox_manager.remove_entry(entry.path)
+			self._player.clear_jukebox_folder_position(entry.path)
+		self._jukebox_marked.clear()
+		# Translators: Spoken after bulk-removing marked jukebox entries; %d is how many were removed.
+		ui.message(ngettext("%d entry removed", "%d entries removed", count) % count)
+		self._refresh_jukebox_list()
+		count_left = self._jukebox_list.GetCount()
+		if count_left > 0:
+			self._jukebox_list.SetSelection(0)
+			self._on_jukebox_entry_selected(None)
+			self._jukebox_list.SetFocus()
+		else:
+			self._jukebox_add_file_btn.SetFocus()
 
 	def _on_jukebox_track_play(self, event):
 		idx = self._jukebox_tracks_list.GetSelection()
@@ -7478,22 +8026,56 @@ class RadioDialog(wx.Dialog):
 			# Translators: Plural forms spoken after adding files to the jukebox via the file picker; %d is how many were added.
 			ui.message(ngettext("%d file added.", "%d files added.", added) % added)
 
-	def _on_jukebox_add_folder(self, event):
-		# Translators: Title of the folder-picker dialog for adding a folder to the jukebox.
-		dlg = wx.DirDialog(self, _("Add a folder to the jukebox"))
-		if dlg.ShowModal() != wx.ID_OK:
+	def _pick_folders_via_loop(self, title):
+		"""Fallback for when the native multi-select folder picker isn't
+		available: reopens wx.DirDialog next to the last pick, one folder
+		at a time, until the user cancels it."""
+		paths = []
+		start_dir = ""
+		while True:
+			dlg = wx.DirDialog(self, title, defaultPath=start_dir)
+			if dlg.ShowModal() != wx.ID_OK:
+				dlg.Destroy()
+				break
+			path = dlg.GetPath()
 			dlg.Destroy()
-			return
-		path = dlg.GetPath()
-		dlg.Destroy()
+			# Reopen next to the folder just picked, so adding several
+			# sibling folders doesn't mean renavigating from scratch each time.
+			start_dir = os.path.dirname(path)
+			paths.append(path)
+		return paths
 
-		entry, error = self._jukebox_manager.add_folder(path)
-		if error:
-			ui.message(error)
-			return
-		# Translators: Same confirmation as adding a single file; spoken here after adding a whole folder to the jukebox.
-		ui.message(_("Added to jukebox: %s") % entry.title)
-		self._refresh_jukebox_list(select_path=entry.path)
+	def _on_jukebox_add_folder(self, event):
+		"""Lets the user add several folders at once, the same way multiple
+		files can be added: tries the native Windows multi-select folder
+		picker first, and only falls back to reopening the ordinary folder
+		picker (one folder at a time, until cancelled) if that native
+		dialog isn't available on this system."""
+		# Translators: Title of the dialog used to add one or more folders to the jukebox at once.
+		title = _("Add folders to the jukebox")
+		paths = _pick_folders_native(self, title)
+		if paths is None:
+			paths = self._pick_folders_via_loop(title)
+
+		added_entries = []
+		errors = []
+		for path in paths:
+			entry, error = self._jukebox_manager.add_folder(path)
+			if error:
+				errors.append("%s: %s" % (os.path.basename(path), error))
+			else:
+				added_entries.append(entry)
+
+		if added_entries:
+			self._refresh_jukebox_list(select_path=added_entries[-1].path)
+		if errors:
+			ui.message("; ".join(errors))
+		elif len(added_entries) == 1:
+			# Translators: Same confirmation as adding a single file; spoken here after adding a single folder to the jukebox.
+			ui.message(_("Added to jukebox: %s") % added_entries[0].title)
+		elif added_entries:
+			# Translators: Plural forms spoken after adding several folders to the jukebox in one go (one folder picker used repeatedly); %d is how many folders were added.
+			ui.message(ngettext("%d folder added.", "%d folders added.", len(added_entries)) % len(added_entries))
 
 	def _on_jukebox_remove_entry(self, event):
 		entry = self._get_selected_jukebox_entry()
@@ -7518,6 +8100,7 @@ class RadioDialog(wx.Dialog):
 		# entry takes its place afterwards.
 		deleted_idx = self._jukebox_list.GetSelection()
 		self._jukebox_manager.remove_entry(entry.path)
+		self._jukebox_marked.discard(entry.path)
 		self._player.clear_jukebox_folder_position(entry.path)
 		# Translators: Spoken after successfully removing a jukebox entry; %s is its title.
 		ui.message(_("Removed from jukebox: %s") % title)
@@ -7627,6 +8210,11 @@ class RadioDialog(wx.Dialog):
 		# Translators: Context-menu item; removes the selected entry from the jukebox library.
 		item_remove = menu.Append(wx.ID_ANY, _("Re&move"))
 		self.Bind(wx.EVT_MENU, self._on_jukebox_remove_entry, item_remove)
+
+		# Translators: Context-menu item; bulk-removes every jukebox entry marked with '.', asking for confirmation once for the whole batch.
+		item_remove_selected = menu.Append(wx.ID_ANY, _("Remove &Selected"))
+		item_remove_selected.Enable(bool(self._jukebox_marked))
+		self.Bind(wx.EVT_MENU, self._on_jukebox_remove_selected, item_remove_selected)
 
 		menu.AppendSeparator()
 

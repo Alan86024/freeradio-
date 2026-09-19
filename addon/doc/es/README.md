@@ -58,7 +58,7 @@ Todos los atajos se pueden reasignar desde el Menú NVDA → Preferencias → Ge
 | `Ctrl+Win+R` | Abrir el navegador de estaciones | Abre la ventana del navegador si está cerrada o la trae al segundo plano si ya está abierta. |
 | `Ctrl+Win+O` | Abrir la pestaña Podcasts | Abre el navegador de estaciones (si está cerrado) o lo trae al primer plano y cambia directamente a la pestaña **Podcasts**. |
 | `Ctrl+Win+L` | Abrir la pestaña Audiolibros | Abre el navegador de estaciones (si está cerrado) o lo trae al primer plano y cambia directamente a la pestaña **Audiolibros**. |
-| `Ctrl+Win+U` | Abrir la pestaña Jukebox | Abre el navegador de estaciones (si está cerrado) o lo trae al primer plano y cambia directamente a la pestaña **Jukebox**, enfocado en el cuadro de búsqueda del disco. |
+| `Ctrl+Win+U` | Abrir la pestaña Jukebox | Abre el navegador de estaciones (si está cerrado) o lo trae al primer plano y cambia directamente a la pestaña **Jukebox**, enfocado en el cuadro de búsqueda de dispositivos. |
 | `Ctrl+Win+P` | Pausar / reanudar | Pausa la estación actual si se está reproduciendo; se reanuda cuando está en pausa. Si no se reproduce nada, inicia la última estación o abre la lista de favoritos según su configuración. Al pulsar dos veces en sucesión rápida, irás directamente a la pestaña que elijas. Pulsar tres veces puede activar una acción separada dependiendo de su configuración. |
 | `Ctrl+Win+S` | Detener | Detiene completamente la estación actual y reinicia el reproductor. |
 | `Ctrl+Win+→` | Siguiente favorito | Salta  a la siguiente estación en la lista de favoritos. Vuelve al principio y al final de la lista. |
@@ -190,7 +190,7 @@ Cada atajo refleja marcado o desmarcado en la entrada correspondiente en la list
 | `Alt+5` | Canciones favoritas | Cambia a la pestaña Canciones favoritas. |
 | `Alt+6` | Podcasts | Cambia a la pestaña Podcasts. |
 | `Alt+7` | Audiolibros | Cambia a la pestaña Audiolibros. |
-| `Alt+8` | Jukebox | Cambia a la pestaña Jukebox, enfocado en el cuadro de búsqueda del disco. |
+| `Alt+8` | Jukebox | Cambia a la pestaña Jukebox, enfocado en el cuadro de búsqueda de dispositivos. |
 | `Alt+K` | Cerrar | Cierra la ventana; el complemento continúa reproduciéndose en segundo plano. |
 
 ## Favoritos
@@ -341,6 +341,7 @@ Esta función está **deshabilitada por defecto**. Actívala desde el Menú NVDA
 ### Cómo funciona
 
 Una vez habilitado, FreeRadio captura continuamente la emisora en reproducción a un búfer local rotativo en segundo plano. El búfer almacena aproximadamente los **últimos 10 minutos** de audio; el audio más antiguo se descarta automáticamente por el frente a medida que llega audio nuevo, de modo que el búfer siempre representa el "pasado reciente" relativo al borde del directo.
+El tiempo de búfer se determina en los ajustes.
 
 - **`Ctrl+Win+J`** — Retroceder 15 segundos. La primera pulsación te lleva de la reproducción en directo a la reproducción con desplazamiento temporal, comenzando 15 segundos detrás del borde del directo. Cada pulsación adicional retrocede 15 segundos más.
 - **`Ctrl+Win+K`** — Avanzar 15 segundos en modo desplazamiento temporal. Al alcanzar el borde del directo, la reproducción vuelve automáticamente al stream en directo y NVDA anuncia «Volver al directo».
@@ -598,15 +599,15 @@ La pestaña **Jukebox** de FreeRadio te ofrece dos maneras de reproducir archivo
 
 Abra el navegador de estaciones con `Ctrl+Win+R` y cambia a la pestaña **Jukebox** con `Ctrl+Tab` o `Alt+8`, o ábrela directamente desde cualquier lugar con el atajo global `Ctrl+Win+U`. La pestaña está organizada en tres áreas principales:
 
-1. **Buscar en disco** — un campo de texto que busca archivos de audio en todas las unidades conectadas localmente y listas para usar cuyo nombre contenga el texto escrito. Pulsa `Intro` para iniciar la búsqueda.
+1. **Buscar en dispositivos** — un campo de texto que busca archivos de audio en todas las unidades conectadas localmente y listas para usar cuyo nombre contenga el texto escrito. Pulsa `Intro` para iniciar la búsqueda.
 2. **Resultados de la búsqueda** — una lista que aparece una vez realizada la búsqueda, mostrando los archivos coincidentes. Permanece oculta hasta entonces, para que la pestaña se mantenga despejada cuando no haya nada que buscar.
 3. **Jukebox y Pistas** — la lista permanente de elementos que has añadido, seguida de la lista de pistas de la entrada seleccionada (para una entrada de archivo, solo ese archivo; para una entrada de carpeta, cada archivo de audio encontrado en su interior).
 
 Los botones **Añadir un archivo…**, **Añadir una carpeta…** y **Eliminar** se encuentran debajo de la lista de pistas.
 
-### Buscando Archivos en el Disco
+### Buscando Archivos en Dispositivos
 
-Escribe cualquier parte del nombre de un archivo en el campo **Buscar en disco** y pulsa `Intro`. FreeRadio busca en todas las unidades conectadas localmente — discos duros, unidades USB, tarjetas de memoria, unidades de red mapeadas — buscando archivos de audio (`.mp3`, `.wav`, `.ogg`, `.flac`, `.m4a`, `.m4b`, `.aac`, `.wma`, `.opus`, y varios más) cuyo nombre contenga el texto de búsqueda. La búsqueda se ejecuta en segundo plano, por lo que NVDA sigue funcionando sin problemas.
+Escribe cualquier parte del nombre de un archivo en el campo **Buscar en dispositivos** y pulsa `Intro`. FreeRadio busca en todas las unidades conectadas localmente — discos duros, unidades USB, tarjetas de memoria, unidades de red mapeadas — buscando archivos de audio (`.mp3`, `.wav`, `.ogg`, `.flac`, `.m4a`, `.m4b`, `.aac`, `.wma`, `.opus`, y varios más) cuyo nombre contenga el texto de búsqueda. La búsqueda se ejecuta en segundo plano, por lo que NVDA sigue funcionando sin problemas.
 
 - **Espacio** en un resultado de búsqueda para previsualizarlo — e iniciar la reproducción con el reproductor normal. Vuelve a pulsar **Espacio** en el mismo archivo para detener la previsualización.
 - **Intro** en un resultado de búsqueda para añadirlo a tu jukebox.
@@ -619,7 +620,7 @@ La lista del Jukebox es tu biblioteca personal permanente. Se pueden añadir dos
 
 - **Añadir un archivo…** — abre un selector de archivos que te permite añadir uno o más archivos de audio individuales. Todos los archivos seleccionados se añaden a la vez.
 - **Añadir una carpeta…** — abre un selector de carpetas. Cada archivo de audio que se encuentre dentro de la carpeta seleccionada, incluyendo sus subcarpetas, se trata como una de las **pistas** de esa carpeta. La carpeta en sí es una sola entrada en tu lista del Jukebox; los archivos que contiene se muestran en la lista de pistas cuando se selecciona la carpeta.
-- **Eliminar** — elimina la entrada seleccionada actualmente de tu Jukebox. Eliminar una entrada de carpeta no elimina ningún archivo del disco; simplemente olvida la carpeta.
+- **Eliminar** — elimina la entrada seleccionada actualmente de tu Jukebox. Eliminar una entrada de carpeta no elimina ningún archivo del disco o dispositivo; simplemente olvida la carpeta.
 
 Tu lista del Jukebox se guarda automáticamente, por lo que se conserva incluso después de reiniciar NVDA. El contenido de las carpetas se escanea bajo demanda y se almacena en caché, por lo que añadir una carpeta es instantáneo, incluso para colecciones muy grandes — el escaneo completo se realiza la primera vez que seleccionas esa carpeta. Si añades archivos a una carpeta fuera de FreeRadio, usa el elemento **Volver a escanear la carpeta** en el menú contextual de la carpeta para que se incluyan.
 

@@ -5,14 +5,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FreeRadio 2026.24.1\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-18 15:08+0300\n"
-"PO-Revision-Date: 2026-09-18 09:40+0200\n"
+"POT-Creation-Date: 2026-09-18 13:17+0300\n"
+"PO-Revision-Date: 2026-09-18 13:11+0200\n"
 "Last-Translator: Rémy Ruiz <remyruiz@gmail.com>\n"
 "Language-Team: Rémy Ruiz <remyruiz@gmail.com>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
 "X-Poedit-Basepath: ../../../..\n"
@@ -50,13 +50,13 @@ msgstr "Seleccione el dispositivo de salida principal de FreeRadio"
 #: addon\globalPlugins\freeradio\recordingMixin.py:75
 #: addon\globalPlugins\freeradio\recordingMixin.py:243
 #: addon\globalPlugins\freeradio\settingsPanel.py:51
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:312
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:352
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:389
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:121
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:325
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:344
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:393
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:305
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:340
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:371
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:119
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:306
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:323
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:368
 #: addon\globalPlugins\freeradio\__init__.py:750
 #: addon\globalPlugins\freeradio\__init__.py:760
 #: addon\globalPlugins\freeradio\__init__.py:770
@@ -299,7 +299,7 @@ msgstr "%(effect)s %(state)s"
 #: addon\globalPlugins\freeradio\radioDialog.py:1456
 #: addon\globalPlugins\freeradio\settingsPanel.py:638
 #: addon\globalPlugins\freeradio\settingsPanel.py:650
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:413
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:394
 msgid "enabled"
 msgstr "activado"
 
@@ -311,7 +311,7 @@ msgstr "activado"
 #: addon\globalPlugins\freeradio\radioDialog.py:1456
 #: addon\globalPlugins\freeradio\settingsPanel.py:638
 #: addon\globalPlugins\freeradio\settingsPanel.py:650
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:413
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:394
 msgid "disabled"
 msgstr "desactivado"
 
@@ -353,7 +353,6 @@ msgstr "Efecto de sonido de sintonización de estación"
 #. Translators: Fallback book title when archive.org returns no title metadata for a search result.
 #. Translators: Fallback LibrivoxBook.title when no title was supplied at construction.
 #. Translators: Fallback station name (used only for the confirmation message below) if the station has no name field at all.
-#. Translators: Fallback station name when a station dict has none.
 #: addon\globalPlugins\freeradio\getem.py:430
 #: addon\globalPlugins\freeradio\getem.py:460
 #: addon\globalPlugins\freeradio\getem.py:1133
@@ -362,7 +361,7 @@ msgstr "Efecto de sonido de sintonización de estación"
 #: addon\globalPlugins\freeradio\librivox.py:152
 #: addon\globalPlugins\freeradio\librivox.py:249
 #: addon\globalPlugins\freeradio\radioDialog.py:3253
-#: addon\globalPlugins\freeradio\utils.py:338
+#: addon\globalPlugins\freeradio\utils.py:335
 msgid "Unknown"
 msgstr "Desconocido"
 
@@ -686,9 +685,9 @@ msgid ""
 "and place ffmpeg.exe in the FreeRadio addon folder, or set the path in "
 "settings."
 msgstr ""
-"ffmpeg.exe no encontrado. Descargar ffmpeg desde https://ffmpeg.org/download."
-"html y coloque ffmpeg.exe en la carpeta del complemento FreeRadio, o "
-"establezca la ruta en las opciones."
+"ffmpeg.exe no encontrado. Descargar ffmpeg desde https://ffmpeg.org/"
+"download.html y coloque ffmpeg.exe en la carpeta del complemento FreeRadio, "
+"o establezca la ruta en las opciones."
 
 #. Translators: Title of the Obligato mode setup dialog.
 #: addon\globalPlugins\freeradio\obligatoMixin.py:55
@@ -836,31 +835,25 @@ msgstr "Detener la reproducción de FreeRadio"
 # ── Kayıt sekmesi (radioDialog.py)
 # ───────────────────────────────────────────
 #. Translators: Line in the stop-confirmation dialog listing an in-progress, immediately-started recording that will be cut off; %s is the station name.
-#. Translators: Line listing an in-progress instant recording in the F8 stop-confirmation dialog; %s is the station name.
 #: addon\globalPlugins\freeradio\playbackCoreMixin.py:160
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:615
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:570
 #, python-format
 msgid "Instant recording: %s"
 msgstr "Grabación instantánea: %s"
 
 #. Translators: Line in the stop-confirmation dialog listing an active scheduled recording that will be cut off; %s is the station name.
-#. Translators: Appended to the What's Playing announcement for each active scheduled recording; %s is that recording's station name.
-#. Translators: Same active-scheduled-recording announcement as the playing-state case, appended here when paused.
-#. Translators: Same active-scheduled-recording announcement as script_whatsPlaying.
-#. Translators: Same active-scheduled-recording announcement as script_whatsPlaying's paused case.
-#. Translators: Line listing an active scheduled recording in the F8 stop-confirmation dialog; %s is the station name.
 #: addon\globalPlugins\freeradio\playbackCoreMixin.py:163
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:193
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:232
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:500
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:530
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:618
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:184
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:218
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:465
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:490
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:572
 #, python-format
 msgid "Scheduled recording: %s"
 msgstr "Grabación programada: %s"
 
 #: addon\globalPlugins\freeradio\playbackCoreMixin.py:167
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:622
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:575
 #, python-format
 msgid ""
 "The following recordings are active and will be stopped:\n"
@@ -874,20 +867,17 @@ msgstr ""
 "¿Detener la radio y finalizar todas las grabaciones?"
 
 #. Translators: Title of the confirmation dialog shown when stopping playback would cut off active recordings.
-#. Translators: Title of the F8 stop-confirmation dialog.
 #: addon\globalPlugins\freeradio\playbackCoreMixin.py:175
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:630
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:582
 msgid "Active Recordings"
 msgstr "Grabaciones activas"
 
 #. Translators: Spoken after confirming the stop when active recordings were involved.
 #. Translators: Spoken when the stop command is used and there were no active recordings to confirm about.
-#. Translators: Spoken by F8 (stop) after confirming the stop and ending any active recordings.
-#. Translators: Spoken by F8 (stop) when there were no active recordings to confirm about.
 #: addon\globalPlugins\freeradio\playbackCoreMixin.py:189
 #: addon\globalPlugins\freeradio\playbackCoreMixin.py:201
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:644
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:658
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:595
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:607
 msgid "Freeradio stopped"
 msgstr "Freeradio parada"
 
@@ -2014,8 +2004,8 @@ msgid ""
 "Supported files (*.json;*.m3u)|*.json;*.m3u|JSON favourites (*.json)|*.json|"
 "M3U playlist (*.m3u)|*.m3u"
 msgstr ""
-"Archivos soportados (*.json;*.m3u)|*.json;*.m3u|Favoritos JSON (*.json)|*."
-"json|Lista de reproducción M3U (*.m3u)|*.m3u"
+"Archivos soportados (*.json;*.m3u)|*.json;*.m3u|Favoritos JSON (*.json)|"
+"*.json|Lista de reproducción M3U (*.m3u)|*.m3u"
 
 #. Translators: Title of the file-picker dialog for importing favourites.
 #. Translators: Title of the merge-vs-replace confirmation dialog (same title as the file-picker above).
@@ -2102,109 +2092,96 @@ msgid "Added to favorites"
 msgstr "Añadido a favoritos"
 
 #. Translators: Field-name row header in the station-details dialog's info table (see _show_station_details_for docstring); value is the station name.
-#. Translators: Field-name row header in this dialog's station-details table; value is the station name.
-#. Translators: Same "Station" field-name row header as _build_radio_station_details, referenced here to find that row's position so the "Now playing" row can be inserted right after it.
 #: addon\globalPlugins\freeradio\radioDialog.py:3134
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:742
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1093
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:685
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:1001
 msgid "Station"
 msgstr "Estación"
 
 #. Translators: Field-name row header for the country field; value is the resolved country name, optionally with the raw code in parentheses.
 #. Translators: Same field-name row header as above, used when only the raw country string (no resolvable code) is available.
-#. Translators: Field-name row header for the country field; value is the resolved country name, optionally with the raw code in parentheses.
-#. Translators: Same field-name row header as above, used when only the raw country string (no resolvable code) is available.
 #: addon\globalPlugins\freeradio\radioDialog.py:3142
 #: addon\globalPlugins\freeradio\radioDialog.py:3145
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:756
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:759
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:697
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:699
 msgid "Country"
 msgstr "País"
 
 #. Translators: Field-name row header for the station's language field.
 #: addon\globalPlugins\freeradio\radioDialog.py:3149
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:764
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:703
 msgid "Language"
 msgstr "Idioma"
 
 #. Translators: Field-name row header for the station's tags/genre field; value is the first few comma-joined tags.
 #: addon\globalPlugins\freeradio\radioDialog.py:3154
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:772
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:710
 msgid "Genre"
 msgstr "Género"
 
 #. Translators: Field label used when both codec and bitrate are known together, e.g. 'MP3, 128 kbps' as the value.
-#. Translators: Field-name row header shown when both codec and bitrate are known together, e.g. 'MP3, 128 kbps' as the value.
-#. Translators: Field-name row header for the track's audio file format/container.
 #: addon\globalPlugins\freeradio\radioDialog.py:3163
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:782
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:890
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:719
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:813
 msgid "Format"
 msgstr "Formato"
 
 #. Translators: Field-name row header shown when only the bitrate (no codec) is known; value is e.g. '128 kbps'.
-#. Translators: Field-name row header shown when only the bitrate (no codec) is known.
-#. Translators: Field-name row header for the track's audio bitrate; value has its own %d-based unit string.
 #: addon\globalPlugins\freeradio\radioDialog.py:3166
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:785
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:895
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:721
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:817
 msgid "Bitrate"
 msgstr "Bitrate"
 
 #. Translators: Field-name row header shown when only the codec (no bitrate) is known.
 #: addon\globalPlugins\freeradio\radioDialog.py:3169
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:788
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:723
 msgid "Codec"
 msgstr "Codec"
 
 #. Translators: Field-name row header for the station's homepage URL.
 #: addon\globalPlugins\freeradio\radioDialog.py:3173
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:793
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:727
 msgid "Website"
 msgstr "Sitio web"
 
 #. Translators: Field-name row header for the resolved audio stream URL.
 #: addon\globalPlugins\freeradio\radioDialog.py:3177
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:798
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:731
 msgid "Stream URL"
 msgstr "Stream URL"
 
 #. Translators: Field-name row header for the station's Radio Browser vote count.
 #: addon\globalPlugins\freeradio\radioDialog.py:3185
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:807
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:739
 msgid "Votes"
 msgstr "Votos"
 
 # ── İstasyon detayları (__init__.py)
 # ─────────────────────────────────────────
 #. Translators: Spoken if none of the above fields have any data to show for this station.
-#. Translators: Spoken if none of the station/track/podcast/audiobook detail fields have any data to show.
-#. Translators: Same "no detail available" message as _show_station_details_dialog, spoken here by this older voice-only variant.
 #: addon\globalPlugins\freeradio\radioDialog.py:3189
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1005
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1136
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:918
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:1043
 msgid "No station detail available"
 msgstr "No hay detalles de la estación disponibles"
 
 #. Translators: Title of the station-details dialog.
-#. Translators: Title of this track-info details dialog.
 #: addon\globalPlugins\freeradio\radioDialog.py:3195
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1011
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:923
 msgid "Station Details"
 msgstr "Detalles de la estación"
 
 #. Translators: Button label; copies all the detail rows above (as text) to the clipboard.
 #. "Copy all" button — copies all details to clipboard in one action
-#. Translators: Button label; copies every detail row shown in this dialog to the clipboard as text.
 #: addon\globalPlugins\freeradio\radioDialog.py:3223
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1044
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:955
 msgid "&Copy all to clipboard"
 msgstr "&Copiar todo al portapapeles"
 
 #. Translators: Spoken after the Copy button in the station-details dialog succeeds.
-#. Translators: Spoken after the Copy All button succeeds.
 #: addon\globalPlugins\freeradio\radioDialog.py:3230
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1051
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:961
 msgid "Station details copied to clipboard"
 msgstr "Detalles de la estación copiados al portapapeles"
 
@@ -2299,9 +2276,8 @@ msgid "Stop time (HH:MM):"
 msgstr "Hora de parada (HH:MM):"
 
 #. Translators: Internal marker value distinguishing a sleep-timer entry from an alarm entry in the timer list; not itself user-visible (the visible strings are built separately below).
-#. Translators: Fallback display label for a sleep timer in the pending-timers list, used when no station name applies (unlike an alarm timer, which is labelled with the station name instead).
 #: addon\globalPlugins\freeradio\radioDialog.py:4171
-#: addon\globalPlugins\freeradio\timerManager.py:48
+#: addon\globalPlugins\freeradio\timerManager.py:47
 msgid "Sleep timer"
 msgstr "Temporizador de apagado"
 
@@ -2563,9 +2539,8 @@ msgid "Podcast episodes"
 msgstr "Episodios de podcasts"
 
 #. Translators: Accessible name for the read-only episode-details text field.
-#. Translators: Field-name row header for the multi-line block of episode metadata (author, published date, duration, description) built by radioDialog.py's _format_podcast_episode_lines().
 #: addon\globalPlugins\freeradio\radioDialog.py:4767
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:847
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:776
 msgid "Episode details"
 msgstr "Detalles del episodio"
 
@@ -2879,9 +2854,8 @@ msgid "Audio books library"
 msgstr "Biblioteca de audiolibros"
 
 #. Translators: Accessible name for the read-only audio-book details text field.
-#. Translators: Field-name row header for the multi-line block of audio-book metadata (author, narrator, publisher, etc.) built by radioDialog.py's _format_audiobook_lines().
 #: addon\globalPlugins\freeradio\radioDialog.py:5928
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:974
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:889
 msgid "Audio book details"
 msgstr "Detalles del audiolibro"
 
@@ -3045,17 +3019,16 @@ msgstr "Descargando libro: %s"
 #: addon\globalPlugins\freeradio\radioDialog.py:6934
 #, python-format
 msgid ""
-"Downloaded %(saved)d of %(total)d parts of %(book.title)s. Last error: %"
-"(error)s"
+"Downloaded %(saved)d of %(total)d parts of %(book.title)s. Last error: "
+"%(error)s"
 msgstr ""
-"Descargado %(saved)d de %(total)d partes de %(book.title)s. Último error: %"
-"(error)s"
+"Descargado %(saved)d de %(total)d partes de %(book.title)s. Último error: "
+"%(error)s"
 
 #. Translators: Label for the jukebox disk-search field.
 #: addon\globalPlugins\freeradio\radioDialog.py:6956
-#, fuzzy
 msgid "Search on devices:"
-msgstr "Buscar en disco:"
+msgstr "Buscar en dispositivos:"
 
 #. Translators: Accessible name/hint for the jukebox disk-search field: searches local audio files by filename.
 #: addon\globalPlugins\freeradio\radioDialog.py:6959
@@ -3066,9 +3039,8 @@ msgstr ""
 
 #. Translators: Accessible name for the disk-search results list.
 #: addon\globalPlugins\freeradio\radioDialog.py:6972
-#, fuzzy
 msgid "Audio files found on your devices"
-msgstr "Archivos de audio encontrados en el disco"
+msgstr "Archivos de audio encontrados en tus dispositivos"
 
 #. --- Jukebox entries (manually added files/folders) ---
 #. Translators: Label above the list of files/folders already added to the jukebox library.
@@ -3112,9 +3084,9 @@ msgstr "&Eliminar"
 
 #. Translators: Spoken when a jukebox disk search starts; %s is the search text.
 #: addon\globalPlugins\freeradio\radioDialog.py:7105
-#, fuzzy, python-format
+#, python-format
 msgid "Searching devices for \"%s\"..."
-msgstr "Buscando discos para \"%s\"..."
+msgstr "Buscando dispositivos para \"%s\"..."
 
 #. Translators: Placeholder row shown in the results list when a disk search finds nothing.
 #. Translators: Spoken alongside the placeholder row above.
@@ -3329,9 +3301,8 @@ msgid "&Save"
 msgstr "&Guardar"
 
 #. Translators: Fallback episode title used for the downloaded filename if the currently playing episode has no name.
-#. Translators: Field-name row header in this dialog's podcast-episode details table; value is the episode title.
 #: addon\globalPlugins\freeradio\recordingMixin.py:44
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:831
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:762
 msgid "Episode"
 msgstr "Episodio"
 
@@ -3354,9 +3325,8 @@ msgid "Song recording stopped: %s"
 msgstr "Se detuvo la grabación de la canción: %s"
 
 #. Translators: Fallback spoken when song-capture is stopped but no output path was returned (e.g. nothing was actually captured).
-#. Translators: Fallback spoken when auto-stop finds nothing to save (e.g. capture just started).
 #: addon\globalPlugins\freeradio\recordingMixin.py:106
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1224
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:1125
 msgid "Song recording stopped"
 msgstr "Se detuvo la grabación de la canción"
 
@@ -3779,106 +3749,86 @@ msgid "Checking..."
 msgstr "Comprobación..."
 
 #. Use _notify so the message is suppressed when notifications are muted.
-#. Translators: Spoken when a sleep timer fires and stops playback instantly (nothing was playing to fade out).
 #. Use _notify so the stop message is suppressed when notifications are muted.
-#. Translators: Spoken at the end of the fade-out, once volume has reached 0 and playback actually stops.
-#: addon\globalPlugins\freeradio\timerManager.py:173
-#: addon\globalPlugins\freeradio\timerManager.py:201
+#: addon\globalPlugins\freeradio\timerManager.py:171
+#: addon\globalPlugins\freeradio\timerManager.py:197
 msgid "Sleep timer: radio stopped"
 msgstr "Temporizador de apagado: radio parada"
 
 #. Use _notify so both fade-out messages are suppressed when notifications are muted.
-#. Translators: Spoken when a sleep timer fires while something is playing, before the 60-second volume fade-out begins.
-#: addon\globalPlugins\freeradio\timerManager.py:185
+#: addon\globalPlugins\freeradio\timerManager.py:182
 msgid "Sleep timer: fading out…"
 msgstr "Temporizador de apagado: fundido encadenado…"
 
-#. Translators: Spoken after a podcast/audiobook seek to report the resulting position; see this method's docstring above for why the wording is shared with TrackInfoMixin.script_whatsPlaying().
-#. Translators: Appended to the What's Playing announcement for a podcast/audiobook; same elapsed/remaining wording as TimeshiftMixin._announce_seek_position().
-#. Translators: Same elapsed/remaining wording as the playing-state announcement, appended here when paused with a known total length.
-#. Translators: Same elapsed/remaining wording as script_whatsPlaying, appended here for a podcast/audiobook.
-#. Translators: Same elapsed/remaining wording as script_whatsPlaying's paused case.
-#. Translators: Same elapsed/remaining wording as elsewhere, appended here for a podcast/audiobook.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:94
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:179
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:214
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:491
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:517
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:694
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:93
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:172
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:203
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:458
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:480
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:639
 #, python-format
 msgid "%(elapsed)s elapsed, %(remaining)s remaining"
 msgstr "%(elapsed)s transcurrido, %(remaining)s restante"
 
-#. Translators: Same position announcement as above, used when the total length isn't known so only elapsed time can be reported.
-#. Translators: Same elapsed-only wording as _announce_seek_position()'s no-length case, appended here when paused with an unknown total length.
-#. Translators: Same elapsed-only wording as script_whatsPlaying's paused case.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:99
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:220
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:523
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:97
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:208
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:485
 #, python-format
 msgid "%(elapsed)s elapsed"
 msgstr "%(elapsed)s transcurrido"
 
 # ── Kayıt sekmesi (radioDialog.py)
 # ───────────────────────────────────────────
-#. Translators: Spoken if seeking to the start of an audio-book part/jukebox track (the boundary clamp itself) fails.
 #. No dedicated "Start of track" wording here - the elapsed/
 #. remaining position _announce_seek_position() reports (0:00
 #. elapsed) already makes that obvious on its own. Its
 #. only-if-unavailable fallback reuses the same generic wording
 #. the failure case above already uses.
-#. Translators: Fallback spoken if _announce_seek_position() can't report a position after seeking to the start/end of an audio-book part or jukebox track.
-#. Translators: Spoken if a plain (non-boundary) podcast/audiobook seek fails.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:184
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:192
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:214
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:181
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:188
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:209
 msgid "Could not seek"
 msgstr "No se pudo buscar"
 
-#. Translators: Fallback spoken only if _announce_seek_position() can't report a position; %d is the number of seconds seeked.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:218
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:212
 #, python-format
 msgid "Forwarded %d seconds"
 msgstr "Avanzado %d segundos"
 
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:219
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:213
 #, python-format
 msgid "Rewound %d seconds"
 msgstr "Retrocedido %d segundos"
 
-#. Translators: Name of an NVDA command (Ctrl+Win+J); rewinds the live time-shift buffer, or seeks backward within a podcast/audiobook file if one is playing.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:311
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:304
 msgid ""
 "Time-shift: rewind 15 seconds (enters time-shift mode if not already active)"
 msgstr ""
 "Desplazamiento temporal: rebobinar 15 segundos (activa el modo de "
 "desplazamiento temporal si no lo está ya)"
 
-#. Translators: Spoken when Ctrl+Win+J (rewind) is pressed while the time-shift feature itself is turned off in settings.
-#. Translators: Same message as the rewind command, spoken here when Ctrl+Win+K (forward) is pressed with time-shift turned off.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:325
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:336
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:365
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:317
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:327
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:352
 msgid "Time-shift buffer is disabled. Enable it in FreeRadio settings."
 msgstr ""
 "El búfer de desplazamiento temporal está desactivado. Actívelo en los "
 "ajustes de FreeRadio."
 
-#. Translators: One of the reasons a rewind/forward can fail, mapped from rewind_timeshift()'s return reason to a spoken message (continues for the next six lines: feature disabled, wrong backend, HLS unsupported, not enough buffer yet, buffer file not ready, engine error).
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:335
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:326
 msgid ""
 "Time-shift requires the BASS audio backend, which is currently disabled."
 msgstr ""
 "El desplazamiento temporal requiere el BASS audio backend, que está "
 "desactivado actualmente."
 
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:337
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:328
 msgid "Time-shift is not available for the current playback backend."
 msgstr ""
 "El desplazamiento temporal no está disponible para el backend de "
 "reproducción actual."
 
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:338
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:329
 msgid ""
 "Time-shift is not supported for this station's stream (no seekable audio "
 "could be extracted)."
@@ -3886,7 +3836,7 @@ msgstr ""
 "El desplazamiento temporal no está soportado para el stream de esta estación "
 "(no se pudo extraer ningún audio buscable)."
 
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:339
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:330
 msgid ""
 "Not enough buffered audio to rewind yet. Wait a few seconds after the "
 "station starts playing and try again."
@@ -3894,74 +3844,64 @@ msgstr ""
 "No hay suficiente audio almacenado para rebobinar todavía. Espere unos "
 "segundos después de iniciar la estación e inténtelo de nuevo."
 
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:340
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:331
 msgid "Time-shift buffer file is not ready yet."
 msgstr "El archivo del búfer de desplazamiento temporal no está listo todavía."
 
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:341
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:332
 msgid "Could not switch to time-shifted playback."
 msgstr "No se pudo cambiar a la reproducción con desplazamiento temporal."
 
 # ── Kayıt sekmesi (radioDialog.py)
 # ───────────────────────────────────────────
-#. Translators: Generic fallback spoken if the rewind fails for a reason not covered by the specific messages above.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:344
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:334
 msgid "Could not rewind"
 msgstr "No se pudo rebobinar"
 
-#. Translators: Spoken after a successful rewind, reporting how far behind live the buffer now is; %.0f is the number of seconds.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:347
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:336
 #, python-format
 msgid "Rewound to %.0f seconds behind live"
 msgstr "Rebobinado a %.0f segundos antes de la emisión en directo"
 
-#. Translators: Name of an NVDA command (Ctrl+Win+K); fast-forwards the live time-shift buffer (snapping to live once caught up), or seeks forward within a podcast/audiobook file if one is playing.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:351
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:339
 msgid ""
 "Time-shift: fast-forward 15 seconds, or return to live if already caught up"
 msgstr ""
 "Desplazamiento temporal: avanzar 15 segundos o volver al directo si ya se ha "
 "alcanzado"
 
-#. Translators: Spoken when fast-forward is pressed but playback is already at the live edge (not time-shifted).
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:369
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:355
 msgid "Already listening live"
 msgstr "Ya está escuchando en directo"
 
-#. Translators: Generic fallback spoken if the fast-forward operation fails.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:375
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:360
 msgid "Could not fast-forward"
 msgstr "No se pudo avanzar rápido"
 
-#. Translators: Spoken when a fast-forward catches all the way up to the live edge.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:379
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:363
 msgid "Back to live"
 msgstr "Volver al directo"
 
-#. Translators: Spoken after a fast-forward that has not yet caught up to live; %.0f is how many seconds behind live remain.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:383
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:366
 #, python-format
 msgid "Fast-forwarded, still %.0f seconds behind live"
 msgstr "Avanzado, todavía %.0f segundos antes de la emisión en directo"
 
-#. Translators: Name of an NVDA command (Ctrl+Win+T); toggles the time-shift buffer feature on/off.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:388
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:370
 msgid "Enable or disable the time-shift (rewind) buffer"
 msgstr "Activar o desactivar el búfer de desplazamiento temporal (rebobinado)"
 
-#. Translators: Spoken after toggling the time-shift buffer; the 'enabled'/'disabled' word is the same one used throughout FreeRadio's other toggle announcements.
-#: addon\globalPlugins\freeradio\timeshiftMixin.py:413
+#: addon\globalPlugins\freeradio\timeshiftMixin.py:394
 #, python-format
 msgid "Time-shift buffer %s"
 msgstr "Búfer de desplazamiento temporal %s"
 
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:108
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:107
 #, python-format
 msgid "Recognition failed: %s"
 msgstr "El reconocimiento falló: %s"
 
-#. Translators: Name of an NVDA command (Ctrl+Win+I); its behaviour escalates with repeated presses as the description itself explains.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:120
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:118
 msgid ""
 "Announce currently playing station. Press twice for full details, three "
 "times to copy track info, four times to force music recognition."
@@ -3970,103 +3910,70 @@ msgstr ""
 "para obtener todos los detalles, tres veces para copiar la información de la "
 "pista y cuatro veces para forzar el reconocimiento de música."
 
-#. Translators: First line of the What's Playing announcement when nothing is playing but one or more scheduled recordings are still running silently in the background; station names are appended after it, joined with two spaces.
-#. Translators: Same as the Ctrl+Win+I version, spoken here by the F2 dialog equivalent.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:133
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:434
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:130
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:405
 msgid "Radio inactive. Active scheduled recordings:"
 msgstr "Radio inactiva. Grabaciones programadas activas:"
 
-#. Translators: Spoken by What's Playing when nothing is playing and no scheduled recording is active either.
-#. Translators: Same "not active" message as What's Playing, spoken here when this standalone show-details gesture is used with nothing playing.
-#. Translators: Same "not active" message as elsewhere, spoken here when this standalone copy/recognize gesture is used with nothing playing.
-#. Translators: Same "not active" message as elsewhere, spoken here when this standalone force-recognition gesture is used with nothing playing.
-#. Translators: Same "not active" message as elsewhere, spoken here by the F2 dialog equivalent of What's Playing.
-#. Translators: Same "not active" message as elsewhere, spoken here when F8 (stop) is pressed with nothing playing and no recordings active.
-#. Translators: Same "not active" message as elsewhere, spoken here by this hotkey-triggered station announcement.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:139
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:330
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:350
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:399
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:440
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:651
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:667
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:135
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:310
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:328
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:373
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:410
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:601
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:615
 msgid "FreeRadio is not active"
 msgstr "FreeRadio no está activo"
 
-#. Translators: Announcement spoken by Ctrl+Win+I (What's Playing) when the station provides an ICY track title; %(station)s is the station name, %(track)s the current track.
-#. Translators: Same What's Playing announcement as script_whatsPlaying, spoken here by the F2 in-dialog variant (_whats_playing_from_dialog); %(station)s/%(track)s as above.
-#. Translators: Same Playing announcement as script_whatsPlaying, spoken here by this hotkey-triggered variant.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:167
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:480
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:683
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:162
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:449
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:630
 #, python-format
 msgid "Playing: %(station)s — %(track)s"
 msgstr "Reproduciendo:: %(station)s — %(track)s"
 
-#. Translators: Same What's Playing announcement, used when no ICY track title is available - just the station name.
-#. Translators: Same fallback as script_whatsPlaying, used when no ICY track title is available.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:172
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:485
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:688
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:166
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:453
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:634
 #, python-format
 msgid "Playing: %s"
 msgstr "Reproduciendo: %s"
 
-#. Translators: Appended to the What's Playing announcement when an instant recording is currently active; %s is the station being recorded.
-#. Translators: Same active-recording announcement as the playing-state case, appended here when paused.
-#. Translators: Same active-recording announcement as script_whatsPlaying.
-#. Translators: Same active-recording announcement as script_whatsPlaying's paused case.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:187
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:226
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:497
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:527
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:179
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:213
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:463
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:488
 #, python-format
 msgid "Recording: %s"
 msgstr "Grabación: %s"
 
-#. Translators: What's Playing announcement when playback is paused rather than actively playing; %s is the station/track name.
-#. Translators: Same Paused announcement as script_whatsPlaying, spoken here by the F2 dialog equivalent.
-#. Translators: Same Paused announcement as elsewhere, spoken here by this hotkey-triggered variant.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:200
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:505
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:702
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:190
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:469
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:646
 #, python-format
 msgid "Paused: %s"
 msgstr "En pausa: %s"
 
-#. Translators: Spoken by the triple-press (copy/recognize) action when there is no ICY metadata and no stream URL either, so nothing at all can be identified.
 #. Called from the main thread (no wx.CallAfter needed).
-#. Translators: Same as the triple-press case, spoken by the fourth press (force recognition) when there's no stream URL to even attempt recognition on.
-#. Translators: Same as the What's Playing triple-press case, spoken here when this standalone gesture finds no ICY metadata and no stream URL either.
-#. Translators: Same as elsewhere, spoken when this standalone gesture has no stream URL to attempt recognition on.
-#. Translators: Same as the Ctrl+Win+I triple-press case, spoken here by the F2 dialog equivalent (3rd press).
-#. Translators: Same as the Ctrl+Win+I fourth-press case, spoken here by the F2 dialog equivalent (4th press).
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:287
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:312
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:378
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:407
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:577
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:597
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:272
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:295
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:355
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:380
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:536
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:554
 msgid "No track info available"
 msgstr "No hay información de la pista disponible"
 
-#. Translators: Spoken by the triple-press action before kicking off Shazam recognition, since no ICY track title was available to just copy.
-#. Translators: Same as the What's Playing triple-press case, spoken before starting Shazam recognition.
-#. Translators: Same as the Ctrl+Win+I triple-press case, spoken here by the F2 dialog equivalent before starting Shazam recognition.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:292
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:381
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:580
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:276
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:357
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:538
 msgid "No track metadata found. Starting music recognition…"
 msgstr ""
 "No se encontraron metadatos de pista. Iniciando el reconocimiento de música…"
 
-#. Translators: Spoken when the fourth press starts forced Shazam recognition, regardless of whether ICY metadata exists.
-#. Translators: Same as elsewhere, spoken when this standalone gesture starts forced Shazam recognition.
-#. Translators: Same as the Ctrl+Win+I fourth-press case, spoken here by the F2 dialog equivalent.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:315
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:410
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:600
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:297
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:382
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:556
 msgid "Starting music recognition…"
 msgstr "Iniciar el reconocimiento de música…"
 
@@ -4074,8 +3981,7 @@ msgstr "Iniciar el reconocimiento de música…"
 #. Opens the station details dialog for the currently playing station.
 #. Provided as an unbound gesture so users who have difficulty with
 #. rapid key presses can assign a single keystroke to this action.
-#. Translators: Name of an NVDA command; unbound-gesture equivalent of pressing Ctrl+Win+I (or F2 in the dialog) twice.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:324
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:305
 msgid "Show details of the currently playing station"
 msgstr "Mostrar detalles de la estación que se está reproduciendo actualmente"
 
@@ -4084,8 +3990,7 @@ msgstr "Mostrar detalles de la estación que se está reproduciendo actualmente"
 #. music recognition when no metadata is available.
 #. Provided as an unbound gesture so users who have difficulty with
 #. rapid key presses can assign a single keystroke to this action.
-#. Translators: Name of an NVDA command; unbound-gesture equivalent of pressing Ctrl+Win+I (or F2 in the dialog) three times.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:343
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:322
 msgid ""
 "Copy current track info to clipboard, or start music recognition if "
 "unavailable"
@@ -4097,127 +4002,108 @@ msgstr ""
 #. Forces Shazam music recognition regardless of whether ICY metadata is present.
 #. Provided as an unbound gesture so users who have difficulty with
 #. rapid key presses can assign a single keystroke to this action.
-#. Translators: Name of an NVDA command; unbound-gesture equivalent of pressing Ctrl+Win+I (or F2 in the dialog) four times.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:392
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:367
 msgid "Force music recognition for the currently playing stream"
 msgstr ""
 "Forzar el reconocimiento de música para el stream de transmisión que se está "
 "reproduciendo actualmente"
 
-#. Translators: Field-name row header for the current ICY track title, when the station broadcasts one.
-#. Translators: Same "Now playing" field-name row header as _build_radio_station_details, referenced here to check whether that row already exists in the dialog.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:747
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1074
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:689
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:983
 msgid "Now playing"
 msgstr "Ahora está sonando"
 
-#. Translators: Field-name row header for the parent podcast feed's URL.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:836
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:766
 msgid "Podcast"
 msgstr "Podcast"
 
-#. Translators: Field-name row header for the resolved episode audio URL.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:852
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:780
 msgid "Episode URL"
 msgstr "URL del episodio"
 
 # | msgid "Tracks:"
-#. Translators: Field-name row header for a local jukebox file; value is the track title/filename.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:870
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:797
 msgid "Track"
 msgstr "Pista"
 
-#. Translators: Field-name row header for the track's full file path.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:875
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:801
 msgid "File"
 msgstr "Archivo"
 
-#. Translators: Field-name row header for the track's file size.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:880
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:805
 msgid "Size"
 msgstr "Tamaño"
 
 # | msgid "Duration: %s"
-#. Translators: Field-name row header for the track's duration.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:885
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:809
 msgid "Duration"
 msgstr "Duración"
 
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:895
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:817
 #, python-format
 msgid "%d kbps"
 msgstr "%d kbps"
 
-#. Translators: Field-name row header for the track's sample rate; value has its own %.1f-based unit string.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:900
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:821
 msgid "Sample rate"
 msgstr "Frecuencia de muestreo"
 
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:900
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:821
 #, python-format
 msgid "%.1f kHz"
 msgstr "%.1f kHz"
 
 #. Translators: shown as a jukebox track's channel count in the details dialog
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:905
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:826
 msgid "Mono"
 msgstr "Mono"
 
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:905
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:826
 msgid "Stereo"
 msgstr "Estéreo"
 
-#. Translators: Field-name row header for the track's channel count (mono/stereo/etc.).
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:907
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:827
 msgid "Channels"
 msgstr "Canales"
 
-#. Translators: Field-name row header for the track's bit depth; value has its own %d-based unit string.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:912
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:831
 msgid "Bit depth"
 msgstr "Profundidad de bits"
 
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:912
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:831
 #, python-format
 msgid "%d-bit"
 msgstr "%d-bit"
 
-#. Translators: Field-name row header in this dialog's audio-book details table; value is the book title.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:938
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:856
 msgid "Book"
 msgstr "Libro"
 
-#. Translators: Field-name row header for the current chapter/part when both its position and the total count are known; value is "Title (n/total)".
-#. Translators: Same field-name row header as above, used when the chapter position/total count is not known - just the chapter title.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:947
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:952
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:864
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:868
 msgid "Chapter"
 msgstr "Capítulo"
 
-#. Translators: Field-name row header for the book's GETEM detail-page URL.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:979
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:893
 msgid "Book link"
 msgstr "Enlace al libro"
 
-#. Translators: Spoken after the triple-press/F2/gesture actions copy the current ICY track title to the clipboard; %s is the copied text.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1143
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:1049
 #, python-format
 msgid "Copied: %s"
 msgstr "Copiado: %s"
 
-#. Translators: Spoken if the system clipboard can't be opened for the copy.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1146
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:1051
 msgid "Could not access clipboard"
 msgstr "No se pudo acceder al portapapeles"
 
-#. Translators: Spoken instead of saving a duplicate when the copied track is already in likedSongs.txt; %s is the track text.
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1164
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:1068
 #, python-format
 msgid "Already in liked songs: %s"
 msgstr "Ya en las canciones favoritas: %s"
 
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1193
-#: addon\globalPlugins\freeradio\trackInfoMixin.py:1220
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:1096
+#: addon\globalPlugins\freeradio\trackInfoMixin.py:1122
 #, python-format
 msgid "Song recording saved: %s"
 msgstr "Grabación de canción guardada: %s"
@@ -4549,11 +4435,12 @@ msgid ""
 "## Added\n"
 "- **Jukebox folders now resume from the last track played**, not always "
 "track 1. The track index is remembered per folder (new "
-"`jukebox_folder_positions.json`, alongside the existing `podcast_positions."
-"json`) and updated every time a track starts playing as part of a folder "
-"sequence - including automatic advance while the dialog is closed. Cleared "
-"once the folder is played through to its last track, so it starts over next "
-"time; also cleared if the folder is removed from the jukebox library.\n"
+"`jukebox_folder_positions.json`, alongside the existing "
+"`podcast_positions.json`) and updated every time a track starts playing as "
+"part of a folder sequence - including automatic advance while the dialog is "
+"closed. Cleared once the folder is played through to its last track, so it "
+"starts over next time; also cleared if the folder is removed from the "
+"jukebox library.\n"
 "- An explicit selection already made in the tracks list still wins over the "
 "remembered position - this only kicks in when nothing's selected.\n"
 "- Within-track resume position (the existing per-file feature) applies on "
@@ -4691,17 +4578,17 @@ msgstr ""
 #~ "semitonos. Requiere el bass_fx.dll.\n"
 #~ "- Atajos de teclado para la pestaña Jukebox: F3 / F4 se mueven entre las "
 #~ "pistas dentro del elemento seleccionado del Jukebox; Shift+F3 / Shift+F4 "
-#~ "permite navegar entre las entradas de la lista de reproducción; Ctrl"
-#~ "+Izquierda / Ctrl+Derecha realiza la misma función que F3 / F4 mientras "
-#~ "la lista de pistas o entradas está seleccionada. La barra espaciadora "
-#~ "muestra una vista previa del resultado de la búsqueda en disco o pausa la "
-#~ "reproducción actual; Intro añade un resultado de la búsqueda en disco a "
-#~ "la lista de reproducción o reproduce directamente el elemento "
-#~ "seleccionado.\n"
+#~ "permite navegar entre las entradas de la lista de reproducción; "
+#~ "Ctrl+Izquierda / Ctrl+Derecha realiza la misma función que F3 / F4 "
+#~ "mientras la lista de pistas o entradas está seleccionada. La barra "
+#~ "espaciadora muestra una vista previa del resultado de la búsqueda en "
+#~ "disco o pausa la reproducción actual; Intro añade un resultado de la "
+#~ "búsqueda en disco a la lista de reproducción o reproduce directamente el "
+#~ "elemento seleccionado.\n"
 #~ "\n"
 #~ "Mejoras:\n"
-#~ "- Los atajos de velocidad de reproducción (Ctrl+Win+Shift+K / Ctrl+Win"
-#~ "+Shift+J) ahora también se aplican a las pistas de la lista de "
+#~ "- Los atajos de velocidad de reproducción (Ctrl+Win+Shift+K / "
+#~ "Ctrl+Win+Shift+J) ahora también se aplican a las pistas de la lista de "
 #~ "reproducción, no solo a podcasts y audiolibros.\n"
 #~ "- Ctrl+Win+V (Añadir a Favoritos / Descargar el Medio) ahora indica "
 #~ "explícitamente al usuario que el atajo solo se aplica a emisoras, "
@@ -4709,8 +4596,8 @@ msgstr ""
 #~ "de reproducción.En lugar de tratar silenciosamente la pista del jukebox "
 #~ "como una emisora.\n"
 #~ "- El navegador de emisoras ahora contiene ocho pestañas en lugar de "
-#~ "siete; los atajos de navegación entre pestañas van desde Alt+1 hasta Alt"
-#~ "+8.\n"
+#~ "siete; los atajos de navegación entre pestañas van desde Alt+1 hasta "
+#~ "Alt+8.\n"
 #~ "- El cambio de pestañas con Ctrl+Tab / Ctrl+Shift+Tab ahora incluye la "
 #~ "pestaña del Jukebox .\n"
 #~ "- Ctrl+Win+I (¿Qué se está reproduciendo?) ahora también anuncia los "
