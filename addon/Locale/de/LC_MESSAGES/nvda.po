@@ -4,25 +4,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FreeRadio 2026.24.1\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-<<<<<<< HEAD
 "POT-Creation-Date: 2026-09-19 16:19+0300\n"
-"PO-Revision-Date: 2026-09-10 12:00+0200\n"
-=======
-"POT-Creation-Date: 2026-09-18 15:08+0300\n"
-"PO-Revision-Date: 2026-09-18 12:00+0200\n"
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
-"Last-Translator: Philipp H <20210202@htlwrn.ac.at>\n"
-"Language-Team: German <20210202@htlwrn.ac.at>\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
-"X-Poedit-Basepath: ../../../..\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPath-1: buildVars.py\n"
 
 #. Translators: Name of an NVDA command in the Input Gestures dialog; opens a list to pick FreeRadio's main audio output device.
 #: addon\globalPlugins\freeradio\audioDeviceMixin.py:30
@@ -498,8 +489,7 @@ msgstr "KI-Sprachausgabe"
 #, python-format
 msgid "AI-generated narration (Microsoft neural text-to-speech, %s voice)"
 msgstr ""
-"KI-erzeugte Sprachausgabe (neuronale Sprachsynthese von Microsoft, Stimme "
-"%s)"
+"KI-erzeugte Sprachausgabe (neuronale Sprachsynthese von Microsoft, Stimme %s)"
 
 #. Translators: shown as this book's source in the station-details
 #. dialog and the Audio Books tab - kept distinct from bare
@@ -681,9 +671,9 @@ msgid ""
 "and place ffmpeg.exe in the FreeRadio addon folder, or set the path in "
 "settings."
 msgstr ""
-"ffmpeg.exe wurde nicht gefunden. ffmpeg unter https://ffmpeg.org/download."
-"html herunterladen und ffmpeg.exe im FreeRadio-Add-on-Ordner ablegen oder "
-"den Pfad in den Einstellungen angeben."
+"ffmpeg.exe wurde nicht gefunden. ffmpeg unter https://ffmpeg.org/"
+"download.html herunterladen und ffmpeg.exe im FreeRadio-Add-on-Ordner "
+"ablegen oder den Pfad in den Einstellungen angeben."
 
 #. Translators: Title of the Obligato mode setup dialog.
 #: addon\globalPlugins\freeradio\obligatoMixin.py:55
@@ -1034,17 +1024,10 @@ msgid "Response received but content type is not audio: %s"
 msgstr "Antwort erhalten, aber der Inhaltstyp ist kein Audio: %s"
 
 #. Translators: Error returned when the server responds with an HTTP error status; %d is the status code, %s its reason phrase.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:398
 #, fuzzy, python-format
 msgid "HTTP error %d: %s"
 msgstr "HTTP-Fehler %d: %s"
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:214
-#, python-format
-msgid "HTTP error %(e.code)d: %(e.reason)s"
-msgstr "HTTP-Fehler %(e.code)d: %(e.reason)s"
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 
 #. Translators: Error returned when the connection to the URL fails outright (DNS, refused, timeout); %s is the underlying reason.
 #: addon\globalPlugins\freeradio\radioDialog.py:401
@@ -1077,13 +1060,8 @@ msgid "Author: %s"
 msgstr "Autor: %s"
 
 #. Translators: Field:value line for the book's director (GETEM audio-description works only, e.g. an audio-described film).
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:466
 #, fuzzy, python-format
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:282
-#, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Director: %s"
 msgstr "Regie: %s"
 
@@ -1094,13 +1072,8 @@ msgid "Narrator: %s"
 msgstr "Sprecher: %s"
 
 #. Translators: Field label for the 'actors' value specifically (GETEM audio-description works only); kept short as 'Cast' rather than 'Actors' to match common media-details wording.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:472
 #, fuzzy, python-format
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:288
-#, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Cast: %s"
 msgstr "Besetzung: %s"
 
@@ -1117,24 +1090,14 @@ msgid "Type: %s"
 msgstr "Typ: %s"
 
 #. Translators: Field:value line for the work's release year (GETEM audio-description works only).
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:481
 #, fuzzy, python-format
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:297
-#, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Release year: %s"
 msgstr "Erscheinungsjahr: %s"
 
 #. Translators: Field:value line for the work's IMDB rating (GETEM audio-description works only).
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:484
 #, fuzzy, python-format
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:300
-#, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "IMDB rating: %s"
 msgstr "IMDb-Bewertung: %s"
 
@@ -1724,14 +1687,8 @@ msgstr "Jeden %s"
 #. Translators: One line of the scheduled-recordings list for a recurring entry; see the docstring's examples above for the exact layout ('Station — Every ... — HH:MM, N min, Mode').
 #: addon\globalPlugins\freeradio\radioDialog.py:1824
 #, python-format
-<<<<<<< HEAD
 msgid "%s — %s — %s, %d min, %s"
 msgstr "%s — %s — %s, %d Min., %s"
-=======
-msgid "%(station)s — %(when)s — %(t)s, %(rec.duration_minutes)d min, %(mode)s"
-msgstr ""
-"%(station)s — %(when)s — %(t)s, %(rec.duration_minutes)d Min., %(mode)s"
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 
 #. Translators: Spoken when the recording-schedule station filter matches nothing.
 #. Translators: Spoken when the timer station filter matches nothing.
@@ -1934,72 +1891,44 @@ msgid "Pitch transpose only"
 msgstr "Nur Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save volume level and the current pitch transpose
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:2965
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:2763
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Volume and pitch transpose"
 msgstr "Lautstärke und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save effects (FX/EQ) and the current pitch transpose
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:2967
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:2765
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Effects and pitch transpose"
 msgstr "Effekte und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save the current playback speed and pitch transpose
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:2969
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:2767
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Playback speed and pitch transpose"
 msgstr "Wiedergabetempo und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save volume, effects, and the current pitch transpose
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:2971
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:2769
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Volume, effects, and pitch transpose"
 msgstr "Lautstärke, Effekte und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save volume, playback speed, and pitch transpose
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:2973
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:2771
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Volume, playback speed, and pitch transpose"
 msgstr "Lautstärke, Wiedergabetempo und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save effects, playback speed, and pitch transpose
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:2975
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:2773
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Effects, playback speed, and pitch transpose"
 msgstr "Effekte, Wiedergabetempo und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save volume, effects, playback speed, and pitch transpose
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:2977
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:2775
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Volume, effects, playback speed, and pitch transpose"
 msgstr "Lautstärke, Effekte, Wiedergabetempo und Tonhöhe"
 
@@ -2070,8 +1999,8 @@ msgid ""
 "Supported files (*.json;*.m3u)|*.json;*.m3u|JSON favourites (*.json)|*.json|"
 "M3U playlist (*.m3u)|*.m3u"
 msgstr ""
-"Unterstützte Dateien (*.json;*.m3u)|*.json;*.m3u|JSON-Favoriten (*.json)|*."
-"json|M3U-Wiedergabeliste (*.m3u)|*.m3u"
+"Unterstützte Dateien (*.json;*.m3u)|*.json;*.m3u|JSON-Favoriten (*.json)|"
+"*.json|M3U-Wiedergabeliste (*.m3u)|*.m3u"
 
 #. Translators: Title of the file-picker dialog for importing favourites.
 #. Translators: Title of the merge-vs-replace confirmation dialog (same title as the file-picker above).
@@ -2955,42 +2884,26 @@ msgid "&Copy Feed URL"
 msgstr "Feed-Adresse ko&pieren"
 
 #. Translators: Spoken when trying to play the previous jukebox track while already on the first one.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:6079
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:5674
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Already at first track"
 msgstr "Bereits beim ersten Titel"
 
 #. Translators: Spoken when trying to play the next jukebox track while already on the last one.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:6097
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:5692
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Already at last track"
 msgstr "Bereits beim letzten Titel"
 
 #. Translators: Spoken when cycling to the previous jukebox library entry while already on the first one.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:6108
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:5703
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Already at first item"
 msgstr "Bereits beim ersten Eintrag"
 
 #. Translators: Spoken when cycling to the next jukebox library entry while already on the last one.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:6133
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:5728
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Already at last item"
 msgstr "Bereits beim letzten Eintrag"
 
@@ -3228,14 +3141,13 @@ msgstr "Buch wird heruntergeladen: %s"
 #: addon\globalPlugins\freeradio\radioDialog.py:7421
 #, python-format
 msgid ""
-"Downloaded %(saved)d of %(total)d parts of %(book.title)s. Last error: %"
-"(error)s"
+"Downloaded %(saved)d of %(total)d parts of %(book.title)s. Last error: "
+"%(error)s"
 msgstr ""
 "%(saved)d von %(total)d Teilen von %(book.title)s heruntergeladen. Letzter "
 "Fehler: %(error)s"
 
 #. Translators: Label for the jukebox disk-search field.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7443
 #, fuzzy
 msgid "Search disk:"
@@ -3243,31 +3155,16 @@ msgstr "Suche:"
 
 #. Translators: Accessible name/hint for the jukebox disk-search field: searches local audio files by filename.
 #: addon\globalPlugins\freeradio\radioDialog.py:7446
-#, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:6956
-msgid "Search on devices:"
-msgstr "Auf Datenträgern suchen:"
-
-#. Translators: Accessible name/hint for the jukebox disk-search field: searches local audio files by filename.
-#: addon\globalPlugins\freeradio\radioDialog.py:6959
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Search audio files on your computer by filename. Press enter to search"
 msgstr ""
 "Audiodateien auf dem Computer nach Dateinamen durchsuchen. Zum Suchen die "
 "Eingabetaste drücken"
 
 #. Translators: Accessible name for the disk-search results list.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7459
 #, fuzzy
 msgid "Audio files found on disk"
 msgstr "Für dieses Buch wurden keine Audioteile gefunden."
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:6972
-msgid "Audio files found on your devices"
-msgstr "Auf den Datenträgern gefundene Audiodateien"
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 
 #. --- Jukebox entries (manually added files/folders) ---
 #. Translators: Label above the list of files/folders already added to the jukebox library.
@@ -3295,12 +3192,8 @@ msgid "Tracks in the selected jukebox item"
 msgstr "Titel im ausgewählten Jukebox-Eintrag"
 
 #. Translators: Button label; adds a single audio file (via a file picker) to the jukebox library.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7491
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7004
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Add &File..."
 msgstr "&Datei hinzufügen..."
 
@@ -3310,17 +3203,12 @@ msgid "Add F&older..."
 msgstr "&Ordner hinzufügen..."
 
 #. Translators: Button label; removes the selected file/folder from the jukebox library.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7495
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7008
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "&Remove"
 msgstr "Ent&fernen"
 
 #. Translators: Spoken when a jukebox disk search starts; %s is the search text.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7592
 #, fuzzy, python-format
 msgid "Searching disks for \"%s\"..."
@@ -3330,66 +3218,34 @@ msgstr "Podcasts werden gesucht..."
 #. Translators: Spoken alongside the placeholder row above.
 #: addon\globalPlugins\freeradio\radioDialog.py:7612
 #: addon\globalPlugins\freeradio\radioDialog.py:7614
-#, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7105
-#, python-format
-msgid "Searching devices for \"%s\"..."
-msgstr "Datenträger werden nach „%s“ durchsucht..."
-
-#. Translators: Placeholder row shown in the results list when a disk search finds nothing.
-#. Translators: Spoken alongside the placeholder row above.
-#: addon\globalPlugins\freeradio\radioDialog.py:7125
-#: addon\globalPlugins\freeradio\radioDialog.py:7127
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "No matching audio files found."
 msgstr "Keine passenden Audiodateien gefunden."
 
 #. Translators: Plural forms spoken after a successful disk search; %d is how many audio files were found.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7620
 #, fuzzy, python-format
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7133
-#, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "%d file found."
 msgid_plural "%d files found."
 msgstr[0] "%d Datei gefunden."
 msgstr[1] "%d Dateien gefunden."
 
 #. Translators: Same confirmation as adding a folder; spoken here after adding a single audio file from a disk-search result.
-<<<<<<< HEAD
 #. Translators: Same confirmation as adding a single file; spoken here after adding a single folder to the jukebox.
 #: addon\globalPlugins\freeradio\radioDialog.py:7670
 #: addon\globalPlugins\freeradio\radioDialog.py:8075
 #, fuzzy, python-format
-=======
-#. Translators: Same confirmation as adding a single file; spoken here after adding a whole folder to the jukebox.
-#: addon\globalPlugins\freeradio\radioDialog.py:7183
-#: addon\globalPlugins\freeradio\radioDialog.py:7495
-#, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Added to jukebox: %s"
 msgstr "Zur Jukebox hinzugefügt: %s"
 
 #. Translators: Context-menu item; adds the selected disk-search result to the jukebox library.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7686
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7199
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "&Add to Jukebox"
 msgstr "Zur &Jukebox hinzufügen"
 
 #. Translators: Spoken when trying to play a jukebox library entry that has no usable audio files.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7834
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7346
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "No playable audio in this item."
 msgstr "Dieser Eintrag enthält kein abspielbares Audio."
 
@@ -3406,7 +3262,11 @@ msgstr[1] "Soll „%s“ aus den Lieblingstiteln entfernt werden?"
 #: addon\globalPlugins\freeradio\radioDialog.py:8092
 #, fuzzy
 msgid "Remove From Jukebox"
-msgstr "Aus der Bibliothek &entfernen"
+msgstr ""
+"#-#-#-#-#  catalog.po (FreeRadio 2026.24.1)  #-#-#-#-#\n"
+"Aus der Bibliothek &entfernen\n"
+"#-#-#-#-#  catalog.po (FreeRadio 2026.24.1)  #-#-#-#-#\n"
+"Aus der Jukebox entfernen"
 
 #. Translators: Spoken after bulk-removing marked jukebox entries; %d is how many were removed.
 #: addon\globalPlugins\freeradio\radioDialog.py:7927
@@ -3418,40 +3278,25 @@ msgstr[1] "Timer entfernt"
 
 #. Translators: Context-menu item; plays the selected track from within a jukebox folder entry.
 #. Translators: Context-menu item; plays the selected jukebox file/folder.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7972
 #: addon\globalPlugins\freeradio\radioDialog.py:8202
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7424
-#: addon\globalPlugins\freeradio\radioDialog.py:7619
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "&Play"
 msgstr "&Wiedergeben"
 
 #. Translators: Jukebox track context menu item - saves an audio profile (volume/effects/speed/transpose) that applies to this file
 #. Translators: Jukebox context menu item - saves an audio profile (volume/effects/speed/transpose) that applies to this file
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7978
 #: addon\globalPlugins\freeradio\radioDialog.py:8225
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7430
-#: addon\globalPlugins\freeradio\radioDialog.py:7637
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Save Audio Pr&ofile for This File"
 msgstr "Audiopr&ofil für diese Datei speichern"
 
 #. Translators: Context-menu item; copies the selected track's file path to the clipboard.
 #. Translators: Context-menu item; copies the selected entry's file/folder path to the clipboard.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:7988
 #: addon\globalPlugins\freeradio\radioDialog.py:8236
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7440
-#: addon\globalPlugins\freeradio\radioDialog.py:7648
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "&Copy Path"
 msgstr "Pfad &kopieren"
 
@@ -3474,7 +3319,6 @@ msgid_plural "%d files added."
 msgstr[0] "%d Datei hinzugefügt."
 msgstr[1] "%d Dateien hinzugefügt."
 
-<<<<<<< HEAD
 #. Translators: Title of the dialog used to add one or more folders to the jukebox at once.
 #: addon\globalPlugins\freeradio\radioDialog.py:8055
 #, fuzzy
@@ -3491,77 +3335,37 @@ msgstr[1] "Die Hilfedatei wurde nicht gefunden."
 
 #. Translators: Body of the remove-confirmation dialog; %s is the jukebox entry title.
 #: addon\globalPlugins\freeradio\radioDialog.py:8090
-#, fuzzy, python-format
-=======
-#. Translators: Title of the folder-picker dialog for adding a folder to the jukebox.
-#: addon\globalPlugins\freeradio\radioDialog.py:7483
-msgid "Add a folder to the jukebox"
-msgstr "Einen Ordner zur Jukebox hinzufügen"
-
-#. Translators: Body of the remove-confirmation dialog; %s is the jukebox entry title.
-#: addon\globalPlugins\freeradio\radioDialog.py:7508
 #, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Do you want to remove \"%s\" from the jukebox?"
 msgstr "Soll „%s“ aus der Jukebox entfernt werden?"
 
-<<<<<<< HEAD
 #. Translators: Spoken after successfully removing a jukebox entry; %s is its title.
 #: addon\globalPlugins\freeradio\radioDialog.py:8106
-#, fuzzy, python-format
-=======
-#. Translators: Title of the jukebox remove-confirmation dialog.
-#: addon\globalPlugins\freeradio\radioDialog.py:7510
-msgid "Remove From Jukebox"
-msgstr "Aus der Jukebox entfernen"
-
-#. Translators: Spoken after successfully removing a jukebox entry; %s is its title.
-#: addon\globalPlugins\freeradio\radioDialog.py:7523
 #, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Removed from jukebox: %s"
 msgstr "Aus der Jukebox entfernt: %s"
 
 #. Translators: Spoken after re-scanning a jukebox folder entry for changes on disk; %s is the folder's title.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:8127
 #, fuzzy, python-format
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7544
-#, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Rescanned: %s"
 msgstr "Neu eingelesen: %s"
 
 #. Translators: Spoken after saving an audio profile for a single jukebox file; %(file)s is its display name.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:8141
 #, fuzzy, python-format
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7558
-#, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Audio profile saved for %(file)s"
 msgstr "Audioprofil für %(file)s gespeichert"
 
 #. Translators: Spoken after clearing a jukebox file's saved audio profile; %(file)s is its display name.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:8150
 #, fuzzy, python-format
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7567
-#, python-format
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "Audio profile cleared for %(file)s"
 msgstr "Audioprofil für %(file)s gelöscht"
 
 #. Translators: Context-menu item; re-scans a jukebox folder entry for added/removed files on disk.
-<<<<<<< HEAD
 #: addon\globalPlugins\freeradio\radioDialog.py:8207
 #, fuzzy
-=======
-#: addon\globalPlugins\freeradio\radioDialog.py:7624
->>>>>>> 5803ae4e6e5e61d99cf78073a46a7ec529126dcf
 msgid "&Rescan Folder"
 msgstr "Ordner &neu einlesen"
 
@@ -4569,8 +4373,8 @@ msgid ""
 "Could not use the selected folder for '%(station)s' (%(reason)s). Saved to "
 "the default recordings folder instead."
 msgstr ""
-"Der gewählte Ordner ließ sich für „%(station)s“ nicht verwenden (%(reason)"
-"s). Die Aufnahme liegt stattdessen im Standard-Aufnahmeordner."
+"Der gewählte Ordner ließ sich für „%(station)s“ nicht verwenden "
+"(%(reason)s). Die Aufnahme liegt stattdessen im Standard-Aufnahmeordner."
 
 #. ── 2. Create / refresh a script for every favourite ─────────────────
 #. Translators: Script category shown in NVDA's Input Gestures dialog, grouping the auto-generated 'play this favourite station' shortcuts separately from FreeRadio's main commands.
@@ -4802,25 +4606,25 @@ msgid ""
 "lyrics lookup. All controls and shortcuts are designed for NVDA "
 "accessibility."
 msgstr ""
-"FreeRadio ist ein Add-on für NVDA rund um Internetradio, Podcasts, "
-"Hörbücher und die eigene Musiksammlung. Es öffnet den Zugang zu tausenden "
-"Radiosendern über das offene Verzeichnis von Radio Browser, zu RSS- und "
-"Atom-Podcast-Feeds, zu den digitalen Bibliotheken LibriVox und GETEM für "
-"blinde und sehbehinderte Menschen sowie – über die eingebaute Jukebox – zu "
-"den eigenen Audiodateien und -ordnern. Der vollständig barrierefreie "
-"Senderbrowser bietet Suche, Länderfilter, eine Favoritenverwaltung und "
-"eigene Audioprofile je Sender, Podcast, Hörbuch und Jukebox-Titel. Podcast-"
-"Folgen, Hörbuchkapitel und Jukebox-Titel laufen automatisch an der zuletzt "
-"gehörten Stelle weiter – bei Jukebox-Ordnern sogar mit dem zuletzt "
-"gespielten Titel –, das Wiedergabetempo lässt sich tonhöhenerhaltend "
-"anpassen und die Tonhöhe unabhängig davon in Halbtönen verschieben. Für die "
-"Wiedergabe sorgt BASS – mit Lautstärkeregelung, Audioeffekten, Auswahl des "
-"Ausgabegeräts und gleichzeitiger Ausgabe auf einem zweiten Gerät. Dazu "
-"kommen Sofortaufnahme und geplante Aufnahmen, Timeshift zum Zurückspulen "
-"des laufenden Programms, Sleeptimer und Wecker, automatische Ansage der ICY-"
-"Metadaten, Musikerkennung auf Shazam-Basis sowie eine Liste der "
-"Lieblingstitel samt Songtext-Abruf. Sämtliche Bedienelemente und "
-"Tastenbefehle sind auf die Bedienung mit NVDA ausgelegt."
+"FreeRadio ist ein Add-on für NVDA rund um Internetradio, Podcasts, Hörbücher "
+"und die eigene Musiksammlung. Es öffnet den Zugang zu tausenden Radiosendern "
+"über das offene Verzeichnis von Radio Browser, zu RSS- und Atom-Podcast-"
+"Feeds, zu den digitalen Bibliotheken LibriVox und GETEM für blinde und "
+"sehbehinderte Menschen sowie – über die eingebaute Jukebox – zu den eigenen "
+"Audiodateien und -ordnern. Der vollständig barrierefreie Senderbrowser "
+"bietet Suche, Länderfilter, eine Favoritenverwaltung und eigene Audioprofile "
+"je Sender, Podcast, Hörbuch und Jukebox-Titel. Podcast-Folgen, "
+"Hörbuchkapitel und Jukebox-Titel laufen automatisch an der zuletzt gehörten "
+"Stelle weiter – bei Jukebox-Ordnern sogar mit dem zuletzt gespielten Titel "
+"–, das Wiedergabetempo lässt sich tonhöhenerhaltend anpassen und die Tonhöhe "
+"unabhängig davon in Halbtönen verschieben. Für die Wiedergabe sorgt BASS – "
+"mit Lautstärkeregelung, Audioeffekten, Auswahl des Ausgabegeräts und "
+"gleichzeitiger Ausgabe auf einem zweiten Gerät. Dazu kommen Sofortaufnahme "
+"und geplante Aufnahmen, Timeshift zum Zurückspulen des laufenden Programms, "
+"Sleeptimer und Wecker, automatische Ansage der ICY-Metadaten, Musikerkennung "
+"auf Shazam-Basis sowie eine Liste der Lieblingstitel samt Songtext-Abruf. "
+"Sämtliche Bedienelemente und Tastenbefehle sind auf die Bedienung mit NVDA "
+"ausgelegt."
 
 #. Brief changelog for this version
 #. Translators: what's new content for the add-on version
@@ -4841,11 +4645,12 @@ msgid ""
 "## Added\n"
 "- **Jukebox folders now resume from the last track played**, not always "
 "track 1. The track index is remembered per folder (new "
-"`jukebox_folder_positions.json`, alongside the existing `podcast_positions."
-"json`) and updated every time a track starts playing as part of a folder "
-"sequence - including automatic advance while the dialog is closed. Cleared "
-"once the folder is played through to its last track, so it starts over next "
-"time; also cleared if the folder is removed from the jukebox library.\n"
+"`jukebox_folder_positions.json`, alongside the existing "
+"`podcast_positions.json`) and updated every time a track starts playing as "
+"part of a folder sequence - including automatic advance while the dialog is "
+"closed. Cleared once the folder is played through to its last track, so it "
+"starts over next time; also cleared if the folder is removed from the "
+"jukebox library.\n"
 "- An explicit selection already made in the tracks list still wins over the "
 "remembered position - this only kicks in when nothing's selected.\n"
 "- Within-track resume position (the existing per-file feature) applies on "
@@ -4877,11 +4682,11 @@ msgstr ""
 "- **Falsche Dauer/Bitrate/Abtastrate/Kanalzahl bei manchen MP3s** (z. B. "
 "12:44 statt 4:46, Mono statt Stereo, 32 kbit/s / 8 kHz statt der "
 "tatsächlichen Werte). Ursache war ein fehlender Eintrag in der MPEG-"
-"Bitratentabelle für Dateien der Version 2/2.5 Layer III (häufig bei MP3s "
-"mit niedriger Abtastrate): Die Frame-Erkennung schlug dadurch fehl und "
-"griff irgendwo sonst in der Datei zufällige Bytes ab.\n"
-"- **VBR-Dateien konnten die Platzhalter-Bitrate** des leeren „Xing“-/„Info“-"
-"/„VBRI“-Kopf-Frames melden statt der tatsächlichen mittleren Bitrate des "
+"Bitratentabelle für Dateien der Version 2/2.5 Layer III (häufig bei MP3s mit "
+"niedriger Abtastrate): Die Frame-Erkennung schlug dadurch fehl und griff "
+"irgendwo sonst in der Datei zufällige Bytes ab.\n"
+"- **VBR-Dateien konnten die Platzhalter-Bitrate** des leeren „Xing“-/„Info“-/"
+"„VBRI“-Kopf-Frames melden statt der tatsächlichen mittleren Bitrate des "
 "Titels.\n"
 "- **Dateien ohne ID3v2-Tag konnten ab der falschen Byte-Position ausgelesen "
 "werden**, was Dauer, Bitrate, Abtastrate und Kanalzahl verfälschte.\n"
@@ -4890,11 +4695,10 @@ msgstr ""
 "mehr immer bei Titel 1. Der Titelindex wird je Ordner gemerkt (neue Datei "
 "`jukebox_folder_positions.json`, neben der bereits vorhandenen "
 "`podcast_positions.json`) und jedes Mal aktualisiert, wenn ein Titel als "
-"Teil einer Ordnerwiedergabe startet – auch beim automatischen "
-"Weiterschalten bei geschlossenem Dialog. Ist der Ordner bis zum letzten "
-"Titel durchgelaufen, wird der Wert zurückgesetzt, sodass es beim nächsten "
-"Mal wieder von vorn losgeht; ebenso beim Entfernen des Ordners aus der "
-"Jukebox.\n"
+"Teil einer Ordnerwiedergabe startet – auch beim automatischen Weiterschalten "
+"bei geschlossenem Dialog. Ist der Ordner bis zum letzten Titel "
+"durchgelaufen, wird der Wert zurückgesetzt, sodass es beim nächsten Mal "
+"wieder von vorn losgeht; ebenso beim Entfernen des Ordners aus der Jukebox.\n"
 "- Eine bereits getroffene Auswahl in der Titelliste hat weiterhin Vorrang "
 "vor der gemerkten Position – diese greift nur, wenn nichts ausgewählt ist.\n"
 "- Die Fortsetzungsposition innerhalb eines Titels (die bestehende Funktion "
@@ -4907,10 +4711,10 @@ msgstr ""
 "## Neu\n"
 "- Die Auswahl in der Titelliste folgt dem laufenden Titel jetzt auch dann, "
 "wenn dieser von selbst wechselt: beim automatischen Weiterschalten nach dem "
-"Ende eines Titels oder wenn ein Sprung mit Strg+Windows+J/K in einen "
-"anderen Titel führt. Das geschieht nur, wenn der weitergeschaltete Ordner "
-"derjenige ist, der gerade in der Titelliste steht; der Tastaturfokus wird "
-"nie verschoben.\n"
+"Ende eines Titels oder wenn ein Sprung mit Strg+Windows+J/K in einen anderen "
+"Titel führt. Das geschieht nur, wenn der weitergeschaltete Ordner derjenige "
+"ist, der gerade in der Titelliste steht; der Tastaturfokus wird nie "
+"verschoben.\n"
 "## Behoben\n"
 "- Die Wiedergabe eines Jukebox-Titels (einzelne Datei oder Ordner) setzt "
 "keine Internetverbindung mehr voraus. Die Verbindungsprüfung in "
@@ -4924,9 +4728,33 @@ msgstr ""
 "obwohl die normale Wiedergabe einwandfrei lief. Das gewöhnliche Hören war "
 "davon nie betroffen.\n"
 
+#, python-format
+#~ msgid "HTTP error %(e.code)d: %(e.reason)s"
+#~ msgstr "HTTP-Fehler %(e.code)d: %(e.reason)s"
+
+#~ msgid ""
+#~ "%(station)s — %(when)s — %(t)s, %(rec.duration_minutes)d min, %(mode)s"
+#~ msgstr ""
+#~ "%(station)s — %(when)s — %(t)s, %(rec.duration_minutes)d Min., %(mode)s"
+
 #, fuzzy
 #~ msgid "Search on devices:"
-#~ msgstr "Suche:"
+#~ msgstr ""
+#~ "#-#-#-#-#  catalog.po (FreeRadio 2026.24.1)  #-#-#-#-#\n"
+#~ "Auf Datenträgern suchen:\n"
+#~ "#-#-#-#-#  catalog.po (FreeRadio 2026.24.1)  #-#-#-#-#\n"
+#~ "Suche:"
+
+#~ msgid "Audio files found on your devices"
+#~ msgstr "Auf den Datenträgern gefundene Audiodateien"
+
+#, fuzzy, python-format
+#~ msgid "Searching devices for \"%s\"..."
+#~ msgstr "Datenträger werden nach „%s“ durchsucht..."
+
+#, fuzzy, python-format
+#~ msgid "Add a folder to the jukebox"
+#~ msgstr "Einen Ordner zur Jukebox hinzufügen"
 
 #~ msgid "freeRadio"
 #~ msgstr "freeRadio"
