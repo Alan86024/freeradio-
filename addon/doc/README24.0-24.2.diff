@@ -1,0 +1,149 @@
+--- a/README.md
++++ b/README.md
+@@ -6,7 +6,7 @@
+ 
+ - **Internet radio** — Browse and search over 50,000 stations from the [Radio Browser](https://www.radio-browser.info/) directory, with results supplemented by TuneIn and iHeartRadio. Save favourites, reorder them, and jump straight to any of them with a global keyboard shortcut from anywhere in Windows — see [Radio Browser Directory](#radio-browser-directory) and [Favourites](#favourites).
+ - **Podcasts** — Subscribe to any RSS/Atom feed, or search Apple's podcast directory and preview episodes before subscribing. Playback position is saved automatically and resumes where you left off — see [Podcasts](#podcasts).
+-- **Audio books** — Search and stream or download books from two sources: [GETEM](https://getem.boun.edu.tr/), Boğaziçi University's digital library for the visually impaired, and [LibriVox](https://librivox.org/), the volunteer-read public-domain audiobook project (no account needed), with automatic resume across multi-part works — see [Audio Books (GETEM and LibriVox)](#audio-books-getem-and-librivox).
++- **Audio books** — Search and stream or download books from three sources: [GETEM](https://getem.boun.edu.tr/), Boğaziçi University's digital library for the visually impaired, [LibriVox](https://librivox.org/), the volunteer-read public-domain audiobook project, and the Project Gutenberg Open Audiobook Collection — the latter two need no account — with automatic resume across multi-part works — see [Audio Books (GETEM, LibriVox and Project Gutenberg)](#audio-books-getem-librivox-and-project-gutenberg).
+ - **Local Jukebox** — Search audio files stored on any attached drive by filename, or build a personal library of files and folders, and play them back with the same resume, seek, speed and pitch tools podcasts and audio books use — see [Local Jukebox](#local-jukebox).
+ - **Recording** — Record what's playing instantly, capture a single song automatically when it starts and stops, or schedule one-off and recurring recordings — all without interrupting playback — see [Recording](#recording).
+ - **Time-shift (rewind live radio)** — Pause and rewind a live station like a DVR, then catch back up to live whenever you want — see [Time-Shift (Rewind Live Radio)](#time-shift-rewind-live-radio).
+@@ -201,6 +201,17 @@
+ 
+ To delete a station from the favourites list, select it and press the **Delete Station** button or the `Delete` key. After deletion, focus and selection automatically move to the next station in the list. If the deleted station was the last one, focus moves to the previous station. If the list becomes empty, focus moves to the Play button.
+ 
++### Marking and Removing Multiple Items
++
++Favourites, Liked Songs, the Audio Books library, and the Jukebox list all support marking several items and removing them together in one step:
++
++- Press **`.`** (period) on a highlighted item to mark or unmark it. NVDA announces the change, and a marked item's row is labelled "(marked)" so its status stays clear while you keep arrowing through the list.
++- Press **`Delete`** to remove every marked item at once. If nothing is marked, `Delete` still removes just the currently selected item, as before.
++- The right‑click context menu (Applications key / `Shift+F10`) of each list includes a **Remove Selected** command, enabled only when at least one item is marked, that does the same thing.
++- Before anything is deleted, a single confirmation dialog summarizes how many items are about to be removed.
++
++Marks are per-list and are cleared once you remove the items (or unmark them individually); they are not saved between sessions.
++
+ ### Exporting and Importing Favourites
+ 
+ The Favourites tab includes two buttons for backing up and restoring your station list:
+@@ -510,24 +521,25 @@
+ 
+ Your subscriptions are stored in `freeradio_podcasts.json` in the NVDA user configuration folder. Episode positions are stored separately in `podcast_positions.json` in the same location. Both files are plain JSON and can be backed up or transferred to another computer.
+ 
+-## Audio Books (GETEM and LibriVox)
++## Audio Books (GETEM, LibriVox and Project Gutenberg)
+ 
+-FreeRadio includes an audio book player that searches, plays, and downloads books from two sources:
++FreeRadio includes an audio book player that searches, plays, and downloads books from three sources:
+ 
+ - **[GETEM](https://getem.boun.edu.tr/)** — the digital library run by Boğaziçi University's Center for the Visually Impaired. Requires a free membership to stream or download a book's audio (browsing does not) — see [Signing In](#signing-in) below.
+ - **[LibriVox](https://librivox.org/)** — the volunteer-read public-domain audiobook project. No account or sign-in of any kind is needed; its whole catalogue, including the audio files themselves, is public domain and openly reachable.
++- **Project Gutenberg Open Audiobook Collection** — human- and computer-narrated public-domain audiobooks hosted on [archive.org](https://archive.org/), companion to the Project Gutenberg text library. Like LibriVox, no account or sign-in is needed.
+ 
+-Results from both sources appear together in a single merged **Search results** list and a single merged **Library** list — there is no separate tab or dropdown to switch between them. Each book's source (GETEM or LibriVox) is shown as a label next to its title, and in its details, so you can always tell which one you're looking at. You can search, preview, add, play, and download books from either source exactly the same way; play multi-part works with automatic resume across parts; and download books for offline listening — all fully accessible.
++Results from all three sources appear together in a single merged **Search results** list and a single merged **Library** list — there is no separate tab or dropdown to switch between them. Each book's source (GETEM, LibriVox or Project Gutenberg) is shown as a label next to its title, and in its details, so you can always tell which one you're looking at. You can search, preview, add, play, and download books from any source exactly the same way; play multi-part works with automatic resume across parts; and download books for offline listening — all fully accessible.
+ 
+-Either source can be turned off from **NVDA Menu → Preferences → Settings → FreeRadio** with the **Audio book sources** checklist, if you only want to search one of them. Both are enabled by default.
++Any source can be turned off individually from **NVDA Menu → Preferences → Settings → FreeRadio** with the **Audio book sources** checklist, if you only want to search some of them. All three are enabled by default.
+ 
+-> **Note:** Listening to a GETEM book requires a free GETEM membership. Browsing GETEM's catalogue does not need an account, but resolving and playing a GETEM book's audio does — see [Signing In](#signing-in) below. LibriVox books never require an account.
++> **Note:** Listening to a GETEM book requires a free GETEM membership. Browsing GETEM's catalogue does not need an account, but resolving and playing a GETEM book's audio does — see [Signing In](#signing-in) below. LibriVox and Project Gutenberg books never require an account.
+ 
+ ### Accessing the Audio Books Tab
+ 
+ Open the station browser with `Ctrl+Win+R` and switch to the **Audio Books** tab using `Ctrl+Tab` or `Alt+7`. The tab has three main areas:
+ 
+-1. **Search** — a text field to search both enabled catalogues at once, with a results list that appears once a search is run.
++1. **Search** — a text field to search all enabled catalogues at once, with a results list that appears once a search is run.
+ 2. **Library** — the list of books you have added from either source, where you play, download and manage them.
+ 3. **Details** — a read-only box showing the source, title, author, narrator, publisher, format, number of parts, description and catalogue URL of whichever book is selected, in either list.
+ 
+@@ -535,7 +547,7 @@
+ 
+ GETEM requires being a registered member to stream or download a book's actual audio, even though the catalogue itself can be searched freely. Enter your GETEM username and password once in **NVDA Menu → Preferences → Settings → FreeRadio**; they are stored encrypted on disk (via the Windows Data Protection API, tied to your Windows user account) and reused automatically afterward. If you try to play or download a GETEM book before entering credentials, FreeRadio tells you to add them in Settings first.
+ 
+-LibriVox needs no sign-in step at all — its results and audio can be searched, previewed, played and downloaded immediately, with no credentials to enter.
++LibriVox and Project Gutenberg need no sign-in step at all — their results and audio can be searched, previewed, played and downloaded immediately, with no credentials to enter.
+ 
+ ### Searching for Audio Books
+ 
+@@ -543,6 +555,9 @@
+ 
+ - **GETEM** is searched by title, author, narrator, subject and publisher at once, since GETEM's own search form only supports narrowing by all of them together rather than a single search across any of them. Only works that are actually available as audio (human or computer narration, audio description, radio drama, DAISY talking books, etc.) are shown; braille, large-print and other non-audio formats are filtered out automatically.
+ - **LibriVox** is searched by title or author/reader against its public-domain catalogue.
++- **Project Gutenberg** is searched by title or author against the Open Audiobook Collection on archive.org.
++
++Pasting a book's catalogue/detail page URL directly into the search field (a GETEM catalogue page, or an archive.org "details" page for a LibriVox or Project Gutenberg title) resolves that single book directly instead of running a keyword search.
+ 
+ NVDA announces how many audio books were found in total.
+ 
+@@ -563,10 +578,12 @@
+ **Context menu for library entries:** Right‑click a book, or select it and press the Applications key / `Shift+F10`, to open a menu with:
+ - **Play Media** — start playing, same as `Enter`.
+ - **Download Book** — download every part of the book; see [Downloading Audio Books](#downloading-audio-books) below.
+-- **Copy the URL** — copy the book's catalogue page URL to the clipboard (the GETEM catalogue page for a GETEM book, or the archive.org details page for a LibriVox book).
++- **Copy the URL** — copy the book's catalogue page URL to the clipboard (the GETEM catalogue page for a GETEM book, or the archive.org details page for a LibriVox or Project Gutenberg book).
+ - **Save Audio Profile for This Book** / **Clear Audio Profile** — see [Audio Book Audio Profile](#audio-book-audio-profile) below.
+ - **Remove from the Library** — delete the book from your library.
+ 
++You can also mark several books at once and remove them all together — see [Marking and Removing Multiple Items](#marking-and-removing-multiple-items) under Favourites.
++
+ ### Playback and Resuming
+ 
+ A multi-part work is treated as a single item in the player, not one row per part — the same way a podcast episode is a single item regardless of how it's delivered. FreeRadio remembers which part you last listened to and resumes there automatically the next time you play that book, even across an NVDA restart.
+@@ -589,7 +606,7 @@
+ 
+ ### Audio Book Data Storage
+ 
+-Each source keeps its own library file, even though they're displayed merged in the Audio Books tab. Your GETEM library (added books and their listening progress) is stored in `freeradio_getem_library.json`, and your LibriVox library is stored separately in `freeradio_librivox_library.json`, both in the NVDA user configuration folder. Your encrypted GETEM credentials are stored separately in `freeradio_getem_credentials.bin` in the same location, and can only be decrypted by the same Windows user account that saved them. LibriVox has no credentials file, since it requires no account.
++Each source keeps its own library file, even though they're displayed merged in the Audio Books tab. Your GETEM library (added books and their listening progress) is stored in `freeradio_getem_library.json`, your LibriVox library is stored separately in `freeradio_librivox_library.json`, and your Project Gutenberg library is stored separately in `freeradio_gutenberg_library.json` — all three in the NVDA user configuration folder. Your encrypted GETEM credentials are stored separately in `freeradio_getem_credentials.bin` in the same location, and can only be decrypted by the same Windows user account that saved them. LibriVox and Project Gutenberg have no credentials file, since neither requires an account.
+ 
+ ## Local Jukebox
+ 
+@@ -619,8 +636,8 @@
+ The Jukebox list is your persistent personal library. Two kinds of item can be added:
+ 
+ - **Add File…** — opens a file picker that lets you add one or more individual audio files. All chosen files are added in one go.
+-- **Add Folder…** — opens a folder picker. Every audio file found inside the chosen folder, including in its subfolders, is treated as one of that folder's **tracks**. The folder itself is a single entry in your Jukebox list; the files inside it are listed in the Tracks list when the folder is selected.
+-- **Remove** — deletes the currently selected entry from your Jukebox. Removing a folder entry does not delete any files from disk or device; it just forgets the folder.
++- **Add Folder…** — opens a folder picker that lets you select multiple folders at once. Every audio file found inside each chosen folder, including in its subfolders, is treated as one of that folder's **tracks**. Each folder is added as its own single entry in your Jukebox list; the files inside it are listed in the Tracks list when the folder is selected. NVDA announces how many folders were added once the picker closes.
++- **Remove** — deletes the currently selected entry from your Jukebox. Removing a folder entry does not delete any files from disk or device; it just forgets the folder. You can also mark several entries at once and remove them all together — see [Marking and Removing Multiple Items](#marking-and-removing-multiple-items) under Favourites.
+ 
+ Your Jukebox list is saved automatically, so it survives NVDA restarts. Folder contents are scanned on demand and cached, so adding a folder is instantaneous even for very large collections — the full scan happens the first time you select that folder. If you add files to a folder outside FreeRadio, use the **Rescan Folder** item in the folder's context menu to pick them up.
+ 
+@@ -677,7 +694,7 @@
+ - **Play on Spotify:** Tries to open the Spotify desktop app directly. If the app is not installed, falls back to the Spotify website and automatically starts playing the first result.
+ - **Play on YouTube (`Alt+O`):** Searches YouTube for the selected track and opens the results in the default browser.
+ - **Show Lyrics:** Fetches and displays the lyrics for the selected track. Lyrics are retrieved from [lrclib.net](https://lrclib.net) (free, no account required). A short "Fetching lyrics…" message is announced while the search runs in the background. If lyrics are found, they open in a read-only dialog where you can read them with NVDA and copy them to the clipboard. If no lyrics are found, NVDA announces this. The button is temporarily disabled while a fetch is in progress to prevent duplicate requests.
+-- **Remove (`Alt+M`):** Deletes the selected track from `likedSongs.txt` and updates the list. The `Delete` key also triggers this button when the list is focused.
++- **Remove (`Alt+M`):** Deletes the selected track from `likedSongs.txt` and updates the list. The `Delete` key also triggers this button when the list is focused. You can also mark several songs at once and remove them all together — see [Marking and Removing Multiple Items](#marking-and-removing-multiple-items) under Favourites.
+ - **Refresh (`Alt+E`):** Reloads the list from the file.
+ 
+ The Spotify, YouTube, Show Lyrics, and Remove buttons are only enabled when a real track is selected in the list.
+@@ -721,8 +738,8 @@
+ | Check for updates automatically | When enabled, a background update check runs each time NVDA starts; you are notified if a new version is found. When disabled, automatic checks stop but manual checks remain available. |
+ | ffmpeg.exe path | Path to the ffmpeg.exe used for music recognition. If left blank, an ffmpeg.exe in the add-on folder is used automatically. |
+ | Recordings folder | Sets the folder where recorded files are saved. If left blank, the default location `Documents\FreeRadio Recordings\` is used. A Browse button lets you select the folder interactively. Changes take effect immediately after saving. |
+-| Audio book sources | A checklist selecting which audio-book sources (**GETEM**, **LibriVox**) are searched and shown in the Audio Books tab. Both are enabled by default. Unchecking a source hides its books from the merged search results and library list without deleting anything you've already added from it — see [Audio Books (GETEM and LibriVox)](#audio-books-getem-and-librivox). |
+-| GETEM username / GETEM password | Your [GETEM](https://getem.boun.edu.tr/) audio-book membership credentials, needed to stream or download a book's audio — see [Signing In](#signing-in). Stored encrypted on disk via the Windows Data Protection API, tied to your Windows user account; never stored as plain text. Leaving both fields empty and saving removes any stored credentials. LibriVox requires no account and has no equivalent field. |
++| Audio book sources | A checklist selecting which audio-book sources (**GETEM**, **LibriVox**, **Project Gutenberg**) are searched and shown in the Audio Books tab. All three are enabled by default. Unchecking a source hides its books from the merged search results and library list without deleting anything you've already added from it — see [Audio Books (GETEM, LibriVox and Project Gutenberg)](#audio-books-getem-librivox-and-project-gutenberg). |
++| GETEM username / GETEM password | Your [GETEM](https://getem.boun.edu.tr/) audio-book membership credentials, needed to stream or download a book's audio — see [Signing In](#signing-in). Stored encrypted on disk via the Windows Data Protection API, tied to your Windows user account; never stored as plain text. Leaving both fields empty and saving removes any stored credentials. LibriVox and Project Gutenberg require no account and have no equivalent field. |
+ | Recording output format | Keeps the original stream, extracts audio without changing its codec, or converts completed recordings to MP3. The default is the original stream format. |
+ | MP3 recording bitrate | Sets the bitrate used when the recording output format is MP3. The default is 128 kb/s. |
+ | Disable internet connectivity check before playing | Recommended for users who experience a delay before a station starts playing. Also useful when DNS is blocked. |
+@@ -772,6 +789,14 @@
+ 
+ **To disable automatic checks:** Turn off the **Check for updates automatically** option from NVDA Menu → Preferences → Settings → FreeRadio.
+ 
++## Changelog
++
++**Bulk folder adding for the Jukebox**
++- The **Add Folder…** button in the Jukebox tab now lets you select multiple folders at once instead of adding them one at a time. All selected folders are added in a single operation, with one summary announcement reporting how many were added.
++
++**Mark and remove multiple items (Favourites, Liked Songs, Audio Books, Jukebox)**
++- In the Favourites, Liked Songs, Audio Books library, and Jukebox lists, you can now mark multiple items before removing them: press `.` to mark/unmark the highlighted item (marked rows are labelled "(marked)"), then press `Delete` or use the **Remove Selected** context-menu command to remove every marked item at once, after a single confirmation dialog. See [Marking and Removing Multiple Items](#marking-and-removing-multiple-items) under Favourites for details.
++
+ ## Acknowledgments & Credits
+ 
+ * **Original Foundation & Concepts:** Sincere thanks to **Gary Mp** ([GaryMp/freeradio](https://github.com/GaryMp/freeradio)) for the original radio add-on concepts and core favorite management structures that served as a foundational base for this project.

@@ -597,7 +597,7 @@ msgstr "Tato kniha nemá kanál RSS LibriVox pro čtení kapitol."
 #. Translators: Error returned when a LibriVox RSS feed contains XML entity declarations, which are rejected as a security measure against entity-expansion attacks.
 #: addon\globalPlugins\freeradio\librivox.py:548
 msgid "The feed contains XML entity declarations and was rejected."
-msgstr ""
+msgstr "Kanál obsahuje deklarace entit XML a byl odmítnut."
 
 #. Translators: Error returned when the book's LibriVox RSS feed could not be fetched or parsed.
 #: addon\globalPlugins\freeradio\librivox.py:558
@@ -981,12 +981,12 @@ msgstr "Žádné nové epizody (304)."
 #. Translators: Error returned when a subscribed feed's response is larger than the 10 MB safety cap (a real feed never is).
 #: addon\globalPlugins\freeradio\podcast.py:424
 msgid "Feed is too large (>10 MB)."
-msgstr ""
+msgstr "Kanál je příliš velký (> 10 MB)."
 
 #. Translators: Error returned when a subscribed feed contains XML entity declarations, which are rejected as a security measure against entity-expansion attacks.
 #: addon\globalPlugins\freeradio\podcast.py:438
 msgid "Feed contains XML entity declarations and was rejected."
-msgstr ""
+msgstr "Kanál obsahuje deklarace entit XML a byl odmítnut."
 
 #. Translators: Error returned when a subscribed feed's content can't be parsed as either RSS or Atom XML.
 #: addon\globalPlugins\freeradio\podcast.py:447
@@ -1001,7 +1001,7 @@ msgstr "Uložit nahrávku do:"
 #. Translators: Radio button: save this recording to FreeRadio's default recordings folder.
 #: addon\globalPlugins\freeradio\radioDialog.py:265
 msgid "&Default recordings folder"
-msgstr "Výchozí složka nahrávek"
+msgstr "Výchozí &složka nahrávek"
 
 #. Translators: Radio button: save this recording to a specific folder chosen below.
 #: addon\globalPlugins\freeradio\radioDialog.py:268
@@ -1301,7 +1301,7 @@ msgstr "Přidat do oblí&bených"
 #: addon\globalPlugins\freeradio\radioDialog.py:748
 #: addon\globalPlugins\freeradio\radioDialog.py:3597
 msgid "Station Detai&ls"
-msgstr "Podrobnosti o stanici"
+msgstr "Po&drobnosti o stanici"
 
 #. Translators: Button label; opens the dialog for manually adding a custom station by stream URL.
 #: addon\globalPlugins\freeradio\radioDialog.py:751
@@ -3665,7 +3665,7 @@ msgstr "&Zesílení vokálů (dB):"
 #. Translators: Label for the station-switch transition (crossfade) choice control.
 #: addon\globalPlugins\freeradio\settingsPanel.py:219
 msgid "Station &switch transition (BASS backend only):"
-msgstr "Přechod při přepnutí stanice (pouze backend BASS):"
+msgstr "Přechod při &přepnutí stanice (pouze backend BASS):"
 
 #. Translators: Checkbox label for auto-resuming the last-played station when NVDA starts.
 #: addon\globalPlugins\freeradio\settingsPanel.py:240
@@ -3675,7 +3675,7 @@ msgstr "&Obnovit poslední stanici při spuštění NVDA"
 #. Translators: Label for the choice between NVDA's own synth and a separate SAPI5 voice for track-change announcements.
 #: addon\globalPlugins\freeradio\settingsPanel.py:255
 msgid "Track change &voice:"
-msgstr "Hlas pro oznámení změny skladby:"
+msgstr "&Hlas pro oznámení změny skladby:"
 
 #. Translators: The two voice-source choices for track-change announcements: NVDA's current synthesizer, or a separately selected SAPI5 voice.
 #: addon\globalPlugins\freeradio\settingsPanel.py:260
@@ -4404,7 +4404,7 @@ msgstr "Nastavení &FreeRadia..."
 #. Translators: Menu item that manually triggers the update check
 #: addon\globalPlugins\freeradio\__init__.py:719
 msgid "Check for &Updates..."
-msgstr "Zkontrolovat dostupnost aktualizací..."
+msgstr "Zkontrolovat dostupnost &aktualizací..."
 
 #. Translators: Label of the FreeRadio submenu in NVDA Tools menu
 #: addon\globalPlugins\freeradio\__init__.py:732

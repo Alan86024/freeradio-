@@ -6,8 +6,8 @@ FreeRadio, ekran okuyucu NVDA için geliştirilmiş, tüm özellikleriyle donan�
 
 - **İnternet radyosu** — [Radio Browser](https://www.radio-browser.info/) dizinindeki 50.000'i aşkın istasyona göz atın ve arama yapın; sonuçlar TuneIn ve iHeartRadio ile desteklenir. İstasyonları favorilere ekleyin, yeniden sıralayın ve Windows'ta herhangi bir yerden genel bir klavye kısayoluyla doğrudan çalmaya başlayın — bkz. [Radio Browser Dizini](#radio-browser-dizini) ve [Favoriler](#favoriler).
 - **Podcastler** — Herhangi bir RSS/Atom akışına abone olun veya Apple'ın podcast dizininde arama yaparak abone olmadan önce bölümleri önizleyin. Oynatma konumu otomatik olarak kaydedilir ve kaldığınız yerden devam eder — bkz. [Podcastler](#podcastler).
-- **Sesli kitaplar** — İki kaynaktan kitap arayın, akışla dinleyin veya indirin: Boğaziçi Üniversitesi'nin görme engelliler için dijital kütüphanesi [GETEM](https://getem.boun.edu.tr/) ve hesap gerektirmeyen, gönüllülerin seslendirdiği kamu malı sesli kitap projesi [LibriVox](https://librivox.org/); çok bölümlü eserlerde otomatik devam etme özelliği vardır — bkz. [Sesli Kitaplar (GETEM ve LibriVox)](#sesli-kitaplar-getem-ve-librivox).
-- **Yerel Müzik Kutusu** — Bilgisayarınıza bağlı herhangi bir sürücüdeki ses dosyalarını dosya adına göre arayın veya dosya ve klasörlerden kişisel bir kitaplık oluşturun; çalınan parçalar podcastler ve sesli kitaplarla aynı devam etme, atlama, hız ve perde araçlarına sahip olur — bkz. [Yerel Müzik Kutusu](#yerel-Müzik-Kutusu).
+- **Sesli kitaplar** — Üç kaynaktan kitap arayın, akışla dinleyin veya indirin: Boğaziçi Üniversitesi'nin görme engelliler için dijital kütüphanesi [GETEM](https://getem.boun.edu.tr/), gönüllülerin seslendirdiği kamu malı sesli kitap projesi [LibriVox](https://librivox.org/) ve Project Gutenberg Açık Sesli Kitap Koleksiyonu — son ikisi hesap gerektirmez — çok bölümlü eserlerde otomatik devam etme özelliği vardır — bkz. [Sesli Kitaplar (GETEM, LibriVox ve Project Gutenberg)](#sesli-kitaplar-getem-librivox-ve-project-gutenberg).
+- **Yerel Müzik Kutusu** — Bilgisayarınıza bağlı herhangi bir sürücüdeki ses dosyalarını dosya adına göre arayın veya dosya ve klasörlerden kişisel bir kitaplık oluşturun; çalınan parçalar podcastler ve sesli kitaplarla aynı devam etme, atlama, hız ve perde araçlarına sahip olur — bkz. [Yerel Müzik Kutusu](#yerel-müzik-kutusu).
 - **Kayıt** — Çalan içeriği anında kaydedin, bir şarkıyı başladığında ve bittiğinde otomatik olarak tek başına yakalayın veya tek seferlik ya da tekrarlanan kayıtlar planlayın — tüm bunlar oynatmayı kesintiye uğratmadan gerçekleşir — bkz. [Kayıt](#kayıt).
 - **Zaman kaydırma (canlı radyoyu geri sarma)** — Canlı bir istasyonu bir DVR gibi duraklatın ve geri sarın, ardından istediğinizde canlıya tekrar yetişin — bkz. [Zaman Kaydırma (Canlı Radyoyu Geri Sarma)](#zaman-kaydırma-canlı-radyoyu-geri-sarma).
 - **Müzik tanıma ve beğenilen şarkılar** — Metadata bulunmayan parçaları Shazam tabanlı tanıma ile belirleyin, beğendiğiniz şarkıları bir metin dosyasına kaydedin ve sözlerini bulun — bkz. [Müzik Tanıma](#müzik-tanıma) ve [Beğenilen Şarkılar](#beğenilen-şarkılar).
@@ -190,7 +190,7 @@ Her kısayol, **Efektler** listesindeki ilgili öğeyi işaretlemek veya işaret
 | `Alt+5` | Beğenilen Şarkılar | Beğenilen Şarkılar sekmesine geçer. |
 | `Alt+6` | Podcastler | Podcastler sekmesine geçer. |
 | `Alt+7` | Sesli Kitaplar | Sesli Kitaplar sekmesine geçer. |
-| `Alt+8` | müzik kutusu | Müzik Kutusu sekmesine, disk arama kutusu odaklanmış olarak geçer. |
+| `Alt+8` | Müzik Kutusu | Müzik Kutusu sekmesine, disk arama kutusu odaklanmış olarak geçer. |
 | `Alt+K` | Kapat | Pencereyi kapatır; eklenti arka planda çalmaya devam eder. |
 
 ## Favoriler
@@ -200,6 +200,17 @@ Favoriler listesi, kalıcı olarak saklanan kişisel bir istasyon koleksiyonudur
 Favoriler `Ctrl+Win+→` ve `Ctrl+Win+←` ile çalınabilir; bu kısayollar tarayıcı penceresi açık olmasa da çalışır.
 
 Favoriler listesinden bir istasyonu silmek için istasyonu seçip **İstasyonu Sil** düğmesine veya `Delete` tuşuna basın. Silme işleminin ardından odak ve seçim listedeki bir sonraki istasyona otomatik olarak taşınır. Silinen istasyon listedeki sonuncusuysa odak bir önceki istasyona geçer. Liste tamamen boşalırsa odak Çal düğmesine taşınır.
+
+### Birden Fazla Öğeyi İşaretleme ve Kaldırma
+
+Favoriler, Beğenilen Şarkılar, Sesli Kitaplar kitaplığı ve Müzik Kutusu listesi, birden fazla öğeyi işaretleyip tek adımda kaldırma özelliğini destekler:
+
+- Vurgulanan bir öğe üzerinde **`.`** (nokta) tuşuna basarak işaretleyin veya işareti kaldırın. NVDA değişikliği bildirir ve işaretli bir öğenin satırı "(işaretli)" olarak etiketlenir; böylece listede gezinirken durumu net kalır.
+- **`Delete`** tuşuna basarak işaretli tüm öğeleri tek seferde kaldırın. Hiçbir şey işaretli değilse, `Delete` yine de yalnızca o an seçili öğeyi kaldırır.
+- Her listenin sağ tıklama bağlam menüsünde (Uygulamalar tuşu / `Shift+F10`), yalnızca en az bir öğe işaretliyken etkinleşen ve aynı işlemi yapan bir **Seçilenleri Kaldır** komutu bulunur.
+- Silme işleminden önce, kaç öğenin kaldırılacağını özetleyen tek bir onay iletişim kutusu açılır.
+
+İşaretler liste başınadır ve öğeler kaldırıldığında (veya tek tek işaretleri kaldırıldığında) temizlenir; oturumlar arasında saklanmaz.
 
 ### Favorileri Dışa ve İçe Aktarma
 
@@ -509,32 +520,33 @@ Yalnızca seçtiğiniz parçalar profile yazılır; dışarıda bıraktığını
 
 Abonelikleriniz, NVDA kullanıcı yapılandırma klasöründeki `freeradio_podcasts.json` dosyasında saklanır. Bölüm konumları ayrı olarak aynı konumdaki `podcast_positions.json` dosyasında saklanır. Her iki dosya da düz JSON'dur ve yedeklenebilir veya başka bir bilgisayara aktarılabilir.
 
-## Sesli Kitaplar (GETEM ve LibriVox)
+## Sesli Kitaplar (GETEM, LibriVox ve Project Gutenberg)
 
-FreeRadio, iki kaynaktan kitap arayan, çalan ve indiren bir sesli kitap oynatıcısı içerir:
+FreeRadio, üç kaynaktan kitap arayan, çalan ve indiren bir sesli kitap oynatıcısı içerir:
 
 - **[GETEM](https://getem.boun.edu.tr/)** — Boğaziçi Üniversitesi Görme Engelliler Teknoloji ve Eğitim Laboratuvarı tarafından işletilen dijital kütüphane. Bir kitabın sesini akışla dinlemek veya indirmek için ücretsiz bir üyelik gerektirir (göz atmak gerektirmez) — aşağıdaki [Oturum Açma](#oturum-açma) bölümüne bakın.
 - **[LibriVox](https://librivox.org/)** — gönüllülerin seslendirdiği, kamu malı sesli kitap projesi. Herhangi bir hesap veya oturum açma gerekmez; kataloğunun tamamı, ses dosyalarının kendisi dahil, kamu malıdır ve serbestçe erişilebilir.
+- **Project Gutenberg Açık Sesli Kitap Koleksiyonu** — [archive.org](https://archive.org/) üzerinde barındırılan, insan ve bilgisayar tarafından seslendirilmiş kamu malı sesli kitaplar; Project Gutenberg metin kütüphanesinin tamamlayıcısıdır. LibriVox gibi, hesap veya oturum açma gerektirmez.
 
-Her iki kaynaktan gelen sonuçlar, ayrı bir sekme veya açılır liste olmadan tek bir birleşik **Arama sonuçları** listesinde ve tek bir birleşik **Kitaplık** listesinde birlikte görünür. Her kitabın kaynağı (GETEM veya LibriVox), başlığının yanında ve ayrıntılarında bir etiket olarak gösterilir; böylece hangisine baktığınızı her zaman anlayabilirsiniz. Her iki kaynaktan kitapları tamamen aynı şekilde arayabilir, önizleyebilir, ekleyebilir, çalabilir ve indirebilirsiniz; çok bölümlü eserleri bölümler arası otomatik devam etme özelliğiyle oynatabilir ve kitapları çevrimdışı dinlemek için indirebilirsiniz — tümü tam erişilebilir şekilde.
+Her üç kaynaktan gelen sonuçlar, ayrı bir sekme veya açılır liste olmadan tek bir birleşik **Arama sonuçları** listesinde ve tek bir birleşik **Kitaplık** listesinde birlikte görünür. Her kitabın kaynağı (GETEM, LibriVox veya Project Gutenberg), başlığının yanında ve ayrıntılarında bir etiket olarak gösterilir; böylece hangisine baktığınızı her zaman anlayabilirsiniz. Her üç kaynaktan kitapları tamamen aynı şekilde arayabilir, önizleyebilir, ekleyebilir, çalabilir ve indirebilirsiniz; çok bölümlü eserleri bölümler arası otomatik devam etme özelliğiyle oynatabilir ve kitapları çevrimdışı dinlemek için indirebilirsiniz — tümü tam erişilebilir şekilde.
 
-Yalnızca birini aramak isterseniz, **NVDA Menüsü → Tercihler → Ayarlar → FreeRadio** bölümündeki **Sesli kitap kaynakları** onay kutuları listesinden her iki kaynak da ayrı ayrı kapatılabilir. Varsayılan olarak ikisi de açıktır.
+Yalnızca bazılarını aramak isterseniz, **NVDA Menüsü → Tercihler → Ayarlar → FreeRadio** bölümündeki **Sesli kitap kaynakları** onay kutuları listesinden her kaynak ayrı ayrı kapatılabilir. Varsayılan olarak üçü de açıktır.
 
-> **Not:** Bir GETEM kitabını dinlemek için ücretsiz bir GETEM üyeliği gereklidir. GETEM kataloğuna göz atmak için hesap gerekmez, ancak bir GETEM kitabının sesini çözmek ve oynatmak için gereklidir — aşağıdaki [Oturum Açma](#oturum-açma) bölümüne bakın. LibriVox kitapları hiçbir zaman hesap gerektirmez.
+> **Not:** Bir GETEM kitabını dinlemek için ücretsiz bir GETEM üyeliği gereklidir. GETEM kataloğuna göz atmak için hesap gerekmez, ancak bir GETEM kitabının sesini çözmek ve oynatmak için gereklidir — aşağıdaki [Oturum Açma](#oturum-açma) bölümüne bakın. LibriVox ve Project Gutenberg kitapları hiçbir zaman hesap gerektirmez.
 
 ### Sesli Kitaplar Sekmesine Erişim
 
 İstasyon tarayıcısını `Ctrl+Win+R` ile açın ve **Sesli Kitaplar** sekmesine geçmek için `Ctrl+Tab` veya `Alt+7` kullanın. Sekme üç ana alandan oluşur:
 
-1. **Arama** — açık olan her iki kataloğu birden aramak için bir metin alanı ve arama yapıldığında görünen bir sonuç listesi.
-2. **Kitaplık** — her iki kaynaktan da eklediğiniz kitapların listesi; burada oynatabilir, indirebilir ve yönetebilirsiniz.
+1. **Arama** — etkin olan tüm katalogları birden aramak için bir metin alanı ve arama yapıldığında görünen bir sonuç listesi.
+2. **Kitaplık** — her üç kaynaktan da eklediğiniz kitapların listesi; burada oynatabilir, indirebilir ve yönetebilirsiniz.
 3. **Ayrıntılar** — her iki listede de seçili olan kitabın kaynağını, başlığını, yazarını, seslendireni, yayıncısını, biçimini, bölüm sayısını, açıklamasını ve katalog URL'sini gösteren salt okunur bir kutu.
 
 ### Oturum Açma
 
 GETEM, kataloğun kendisi özgürce taranabilse de, bir kitabın gerçek sesini akışla iletmek veya indirmek için kayıtlı bir üye olmayı gerektirir. GETEM kullanıcı adınızı ve şifrenizi **NVDA Menüsü → Tercihler → Ayarlar → FreeRadio** bölümüne bir kez girin; bunlar diskte (Windows Veri Koruma API'si aracılığıyla, Windows kullanıcı hesabınıza bağlı olarak) şifrelenmiş olarak saklanır ve daha sonra otomatik olarak yeniden kullanılır. Kimlik bilgilerini girmeden bir GETEM kitabını oynatmaya veya indirmeye çalışırsanız, FreeRadio önce bunları Ayarlar'a eklemenizi söyler.
 
-LibriVox'ta herhangi bir oturum açma adımı yoktur — sonuçları ve sesi hiçbir kimlik bilgisi girmeden hemen arayabilir, önizleyebilir, çalabilir ve indirebilirsiniz.
+LibriVox ve Project Gutenberg'de herhangi bir oturum açma adımı yoktur — sonuçları ve sesi hiçbir kimlik bilgisi girmeden hemen arayabilir, önizleyebilir, çalabilir ve indirebilirsiniz.
 
 ### Sesli Kitapları Arama
 
@@ -542,6 +554,9 @@ Arama alanına bir arama terimi yazın ve `Enter`'a basın. FreeRadio, Ayarlar'd
 
 - **GETEM**, başlık, yazar, seslendiren, konu ve yayıncı alanlarının tümünde aynı anda aranır; çünkü GETEM'in kendi arama formu bunların hepsini birlikte daraltmayı destekler, tek bir aramayla herhangi birinde arama yapmayı değil. Yalnızca gerçekten sesli olarak mevcut olan eserler (insan veya bilgisayar sesi, sesli betimleme, radyo tiyatrosu, DAISY konuşan kitaplar vb.) gösterilir; braille, büyük puntolu ve diğer ses dışı biçimler otomatik olarak filtrelenir.
 - **LibriVox**, kamu malı kataloğunda başlık veya yazar/seslendiren alanına göre aranır.
+- **Project Gutenberg**, archive.org üzerindeki Açık Sesli Kitap Koleksiyonu'nda başlık veya yazara göre aranır.
+
+Bir kitabın katalog/ayrıntı sayfası URL'sini doğrudan arama alanına yapıştırmak (bir GETEM katalog sayfası veya bir LibriVox ya da Project Gutenberg başlığı için bir archive.org "details" sayfası), anahtar kelime araması yapmak yerine o tek kitabı doğrudan çözer.
 
 NVDA, toplamda kaç sesli kitap bulunduğunu bildirir.
 
@@ -562,9 +577,11 @@ Eklediğiniz kitaplar, başlık, yazar ve biçimi gösteren **Kitaplık** listes
 **Kitaplık girişleri için bağlam menüsü:** Bir kitaba sağ tıklayın veya seçip Uygulamalar tuşuna / `Shift+F10`'a basarak şu seçenekleri içeren bir menü açın:
 - **Medyayı Oynat** — oynatmaya başlar, `Enter` ile aynı.
 - **Kitabı İndir** — kitabın her bölümünü indirir; aşağıdaki [Sesli Kitapları İndirme](#sesli-kitapları-i̇ndirme) bölümüne bakın.
-- **URL'yi Kopyala** — kitabın katalog sayfası URL'sini panoya kopyalar (GETEM kitapları için GETEM katalog sayfası, LibriVox kitapları için archive.org ayrıntı sayfası).
+- **URL'yi Kopyala** — kitabın katalog sayfası URL'sini panoya kopyalar (GETEM kitapları için GETEM katalog sayfası, LibriVox veya Project Gutenberg kitapları için archive.org ayrıntı sayfası).
 - **Bu Kitap İçin Ses Profili Kaydet** / **Ses Profilini Temizle** — bkz. aşağıdaki [Sesli Kitap Ses Profili](#sesli-kitap-ses-profili).
 - **Kitaplıktan Kaldır** — kitabı kitaplığınızdan siler.
+
+Birden fazla kitabı aynı anda işaretleyip hepsini birlikte kaldırabilirsiniz — bkz. Favoriler altındaki [Birden Fazla Öğeyi İşaretleme ve Kaldırma](#birden-fazla-öğeyi-i̇şaretleme-ve-kaldırma).
 
 ### Oynatma ve Devam Etme
 
@@ -588,7 +605,7 @@ Kitaplıktan bir kitap seçin ve bağlam menüsünden **Kitabı İndir**'i seçe
 
 ### Sesli Kitap Veri Depolama
 
-Sesli Kitaplar sekmesinde birleşik gösterilseler de, her kaynak kendi kitaplık dosyasını ayrı tutar. GETEM kitaplığınız (eklenen kitaplar ve dinleme ilerlemeleri) `freeradio_getem_library.json` dosyasında, LibriVox kitaplığınız ise ayrı olarak `freeradio_librivox_library.json` dosyasında saklanır; ikisi de NVDA kullanıcı yapılandırma klasöründedir. Şifrelenmiş GETEM kimlik bilgileriniz aynı konumdaki `freeradio_getem_credentials.bin` dosyasında ayrı olarak saklanır ve yalnızca bunları kaydeden Windows kullanıcı hesabı tarafından şifresi çözülebilir. LibriVox hesap gerektirmediğinden buna karşılık gelen bir kimlik bilgisi dosyası yoktur.
+Sesli Kitaplar sekmesinde birleşik gösterilseler de, her kaynak kendi kitaplık dosyasını ayrı tutar. GETEM kitaplığınız (eklenen kitaplar ve dinleme ilerlemeleri) `freeradio_getem_library.json` dosyasında, LibriVox kitaplığınız ayrı olarak `freeradio_librivox_library.json` dosyasında ve Project Gutenberg kitaplığınız ayrı olarak `freeradio_gutenberg_library.json` dosyasında saklanır — üçü de NVDA kullanıcı yapılandırma klasöründedir. Şifrelenmiş GETEM kimlik bilgileriniz aynı konumdaki `freeradio_getem_credentials.bin` dosyasında ayrı olarak saklanır ve yalnızca bunları kaydeden Windows kullanıcı hesabı tarafından şifresi çözülebilir. LibriVox ve Project Gutenberg hesap gerektirmediğinden bunlara karşılık gelen bir kimlik bilgisi dosyası yoktur.
 
 ## Yerel Müzik Kutusu
 
@@ -610,7 +627,7 @@ FreeRadio'nun **Müzik Kutusu** sekmesi, bilgisayarınızda zaten bulunan ses do
 
 - Bir arama sonucunda **Boşluk**, önizlemeyi başlatır — normal oynatıcı üzerinden çalmaya başlar. Aynı dosya üzerinde tekrar **Boşluk**'a basmak önizlemeyi durdurur.
 - Bir arama sonucunda **Enter**, dosyayı müzik kutusu'na ekler.
-- Bağlam menüsü (Uygulamalar tuşu / `Shift+F10` veya sağ tık) aynı iki eylemi sunar: **Önizle** / **Önizlemeyi Durdur** ve **müzik kutusu'na Ekle**.
+- Bağlam menüsü (Uygulamalar tuşu / `Shift+F10` veya sağ tık) aynı iki eylemi sunar: **Önizle** / **Önizlemeyi Durdur** ve **Müzik Kutusu'na Ekle**.
 - Yeni bir arama başlatmak, hâlâ çalışan aramayı iptal eder; böylece büyük bir sürücüdeki yavaş bir arama, yeni bir aramayı geciktirmez.
 
 ### Müzik Kutusu Oluşturma
@@ -618,8 +635,8 @@ FreeRadio'nun **Müzik Kutusu** sekmesi, bilgisayarınızda zaten bulunan ses do
 Müzik Kutusu listesi kalıcı, kişisel kütüphanenizdir. İki tür öğe eklenebilir:
 
 - **Dosya Ekle…** — bir veya daha fazla ses dosyasını tek seferde ekleyebileceğiniz bir dosya seçici açar.
-- **Klasör Ekle…** — bir klasör seçici açar. Seçilen klasörün içinde (alt klasörleri dahil) bulunan her ses dosyası, o klasörün **parçalarından** biri olarak işlenir. Klasörün kendisi Müzik Kutusu listenizde tek bir öğedir; içindeki dosyalar o klasör seçiliyken Parçalar listesinde görünür.
-- **Kaldır** — seçili öğeyi Müzik Kutusu'ndan siler. Bir klasör öğesini kaldırmak, diskteki dosyaları silmez; yalnızca klasörü unutur.
+- **Klasör Ekle…** — tek seferde birden fazla klasör seçebileceğiniz bir klasör seçici açar. Seçilen her klasörün içinde (alt klasörleri dahil) bulunan her ses dosyası, o klasörün **parçalarından** biri olarak işlenir. Her klasör, Müzik Kutusu listenizde kendi tek girişi olarak eklenir; içindeki dosyalar o klasör seçiliyken Parçalar listesinde görünür. Seçici kapandığında NVDA kaç klasör eklendiğini bildirir.
+- **Kaldır** — seçili öğeyi Müzik Kutusu'ndan siler. Bir klasör öğesini kaldırmak, diskteki dosyaları silmez; yalnızca klasörü unutur. Birden fazla öğeyi aynı anda işaretleyip hepsini birlikte kaldırabilirsiniz — bkz. Favoriler altındaki [Birden Fazla Öğeyi İşaretleme ve Kaldırma](#birden-fazla-öğeyi-i̇şaretleme-ve-kaldırma).
 
 Müzik Kutusu listeniz otomatik olarak kaydedilir, böylece NVDA'yı yeniden başlatsanız da korunur. Klasör içerikleri isteğe bağlı olarak taranır ve önbelleğe alınır; böylece çok büyük koleksiyonlarda bile klasör eklemek anlıktır — tam tarama, o klasörü ilk seçtiğinizde yapılır. FreeRadio dışında bir klasöre dosya eklerseniz, klasörün bağlam menüsündeki **Klasörü Yeniden Tara** öğesini kullanarak bunları alabilirsiniz.
 
@@ -676,7 +693,7 @@ Listeden bir parça seçildiğinde şu işlemler yapılabilir:
 - **Spotify'da Çal:** Önce Spotify masaüstü uygulamasını doğrudan açmayı dener. Uygulama kurulu değilse Spotify web sitesine geri döner ve ilk sonucu otomatik oynatır.
 - **YouTube'da Çal (`Alt+O`):** Seçili parçayla YouTube'da arama yapar ve sonuçları varsayılan tarayıcıda açar.
 - **Şarkı Sözlerini Göster:** Seçili parçanın şarkı sözlerini getirir ve görüntüler. Şarkı sözleri [lrclib.net](https://lrclib.net) adresinden alınır (ücretsiz, hesap gerekmez). Arama arka planda çalışırken kısa bir "Şarkı sözleri getiriliyor…" mesajı seslendirilir. Şarkı sözleri bulunursa, NVDA ile okuyabileceğiniz ve panoya kopyalayabileceğiniz salt okunur bir iletişim kutusunda açılır. Şarkı sözleri bulunamazsa NVDA bunu bildirir. Yinelenen istekleri önlemek için bir getirme işlemi devam ederken düğme geçici olarak devre dışı bırakılır.
-- **Sil (`Alt+M`):** Seçili parçayı `likedSongs.txt` dosyasından kaldırır ve listeyi günceller. Liste odaklanmışken `Delete` tuşu da bu düğmeyi tetikler.
+- **Sil (`Alt+M`):** Seçili parçayı `likedSongs.txt` dosyasından kaldırır ve listeyi günceller. Liste odaklanmışken `Delete` tuşu da bu düğmeyi tetikler. Birden fazla şarkıyı aynı anda işaretleyip hepsini birlikte kaldırabilirsiniz — bkz. Favoriler altındaki [Birden Fazla Öğeyi İşaretleme ve Kaldırma](#birden-fazla-öğeyi-i̇şaretleme-ve-kaldırma).
 - **Yenile (`Alt+E`):** Listeyi dosyadan yeniden yükler.
 
 Spotify, YouTube, Şarkı Sözlerini Göster ve Sil düğmeleri yalnızca listeden gerçek bir parça seçiliyken etkin olur.
@@ -720,8 +737,8 @@ NVDA Menüsü → Tercihler → Ayarlar → FreeRadio bölümünden aşağıdaki
 | Güncellemeleri otomatik denetle | Açıksa NVDA her başlatıldığında arka planda güncelleme kontrolü yapılır; yeni sürüm bulunursa bildirim verilir. Kapatıldığında otomatik kontrol devre dışı kalır, elle kontrol hâlâ kullanılabilir. |
 | ffmpeg.exe yolu | Müzik tanıma için kullanılan ffmpeg.exe'nin konumu. Boş bırakılırsa eklenti klasöründeki ffmpeg.exe otomatik olarak kullanılır. |
 | Kayıt klasörü | Kayıt dosyalarının yazılacağı klasörü belirler. Boş bırakılırsa varsayılan konum olan `Belgeler\FreeRadio Recordings\` kullanılır. Gözat düğmesiyle klasör seçilebilir. Değişiklikler kaydedildikten hemen sonra geçerli olur. |
-| Sesli kitap kaynakları | Sesli Kitaplar sekmesinde hangi kaynakların (**GETEM**, **LibriVox**) aranıp gösterileceğini belirleyen bir onay kutuları listesi. Varsayılan olarak ikisi de açıktır. Bir kaynağın işaretini kaldırmak, o kaynaktan daha önce eklediğiniz kitapları silmeden yalnızca birleşik arama sonuçlarından ve kitaplık listesinden gizler — bkz. [Sesli Kitaplar (GETEM ve LibriVox)](#sesli-kitaplar-getem-ve-librivox). |
-| GETEM kullanıcı adı / GETEM şifresi | Bir kitabın sesini akışla dinlemek veya indirmek için gereken [GETEM](https://getem.boun.edu.tr/) sesli kitap üyelik kimlik bilgileriniz — bkz. [Oturum Açma](#oturum-açma). Windows kullanıcı hesabınıza bağlı olarak diskte Windows Veri Koruma API'si aracılığıyla şifrelenmiş saklanır; asla düz metin olarak tutulmaz. Her iki alanı da boş bırakıp kaydetmek kayıtlı kimlik bilgilerini siler. LibriVox hesap gerektirmez ve buna karşılık gelen bir alanı yoktur. |
+| Sesli kitap kaynakları | Sesli Kitaplar sekmesinde hangi kaynakların (**GETEM**, **LibriVox**, **Project Gutenberg**) aranıp gösterileceğini belirleyen bir onay kutuları listesi. Varsayılan olarak üçü de açıktır. Bir kaynağın işaretini kaldırmak, o kaynaktan daha önce eklediğiniz kitapları silmeden yalnızca birleşik arama sonuçlarından ve kitaplık listesinden gizler — bkz. [Sesli Kitaplar (GETEM, LibriVox ve Project Gutenberg)](#sesli-kitaplar-getem-librivox-ve-project-gutenberg). |
+| GETEM kullanıcı adı / GETEM şifresi | Bir kitabın sesini akışla dinlemek veya indirmek için gereken [GETEM](https://getem.boun.edu.tr/) sesli kitap üyelik kimlik bilgileriniz — bkz. [Oturum Açma](#oturum-açma). Windows kullanıcı hesabınıza bağlı olarak diskte Windows Veri Koruma API'si aracılığıyla şifrelenmiş saklanır; asla düz metin olarak tutulmaz. Her iki alanı da boş bırakıp kaydetmek kayıtlı kimlik bilgilerini siler. LibriVox ve Project Gutenberg hesap gerektirmez ve bunlara karşılık gelen bir alanı yoktur. |
 | Kayıt çıkış formatı | Orijinal akışı korur, sesi codec'ini değiştirmeden ayıklar veya tamamlanan kayıtları MP3'e dönüştürür. Varsayılan, orijinal akış formatıdır. |
 | MP3 kayıt bit hızı | Kayıt çıkış formatı MP3 olarak seçildiğinde kullanılacak bit hızını belirler. Varsayılan 128 kb/sn'dir. |
 | İstasyon çalmadan önce internet bağlantısı kontrolünü devre dışı bırak | İstasyon çalmaya başlamadan önce gecikme yaşayan kullanıcılar için önerilir. DNS'in engellendiği durumlarda da faydalıdır. |
@@ -770,6 +787,21 @@ FreeRadio, yeni sürüm olup olmadığını GitHub üzerinden otomatik olarak ko
 - Doğrudan indirme bağlantısı mevcut değilse **Sayfayı Aç** düğmesi gösterilir ve GitHub release sayfası varsayılan tarayıcıda açılır.
 
 **Otomatik kontrolü devre dışı bırakmak için:** NVDA Menüsü → Tercihler → Ayarlar → FreeRadio bölümünden **Güncellemeleri otomatik denetle** seçeneği kapatılabilir.
+
+## Sürüm Notları
+
+**Müzik Kutusu'nda toplu klasör ekleme**
+- Müzik Kutusu sekmesindeki **Klasör Ekle…** düğmesi artık klasörleri tek tek eklemek yerine tek seferde birden fazla klasör seçmenize olanak tanır. Seçilen tüm klasörler tek bir işlemde eklenir ve kaç tanesinin eklendiğini bildiren tek bir özet anonsu yapılır.
+
+**Birden fazla öğeyi işaretleme ve kaldırma (Favoriler, Beğenilen Şarkılar, Sesli Kitaplar, Müzik Kutusu)**
+- Favoriler, Beğenilen Şarkılar, Sesli Kitaplar kitaplığı ve Müzik Kutusu listelerinde artık kaldırmadan önce birden fazla öğeyi işaretleyebilirsiniz: vurgulanan öğeyi işaretlemek/işaretini kaldırmak için `.` tuşuna basın (işaretli satırlar "(işaretli)" olarak etiketlenir), ardından `Delete` tuşuna basın veya **Seçilenleri Kaldır** bağlam menüsü komutunu kullanarak tüm işaretli öğeleri tek bir onay iletişim kutusundan sonra tek seferde kaldırın. Ayrıntılar için Favoriler altındaki [Birden Fazla Öğeyi İşaretleme ve Kaldırma](#birden-fazla-öğeyi-i̇şaretleme-ve-kaldırma) bölümüne bakın.
+
+## Teşekkürler ve Katkıda Bulunanlar
+
+* **Özgün Temel ve Kavramlar:** Bu projeye temel oluşturan özgün radyo eklentisi kavramları ve çekirdek favori yönetimi yapıları için **Gary Mp**'ye ([GaryMp/freeradio](https://github.com/GaryMp/freeradio)) içten teşekkürler.
+* **Yapay Zeka ve LLM Araçları:** Geliştirme, kod yeniden düzenleme ve özellik uygulama aşamalarındaki yardımları için modern Büyük Dil Modeli (LLM) araçlarına (Claude, ChatGPT ve Gemini dahil) şükranlarımızı sunarız.
+* **Dizin Hizmeti:** İstasyon dizini [Radio Browser API](https://www.radio-browser.info/) tarafından sağlanmaktadır.
+* **Topluluk:** Sürekli destekleri, geri bildirimleri ve yerelleştirme katkıları için tüm NVDA topluluğu üyelerine ve çevirmenlere içten teşekkürler.
 
 ## Lisans
 

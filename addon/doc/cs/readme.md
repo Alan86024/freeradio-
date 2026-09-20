@@ -6,7 +6,7 @@ FreeRadio je plnohodnotný doplněk internetového rádia, podcastů, audioknih 
 
 - **Internetové rádio** - Procházejte a vyhledávejte mezi více než 50 000 stanicemi z adresáře [Radio Browser](https://www.radio-browser.info/), doplněného o výsledky z TuneIn a iHeartRadio. Ukládejte oblíbené stanice, měňte jejich pořadí a přejděte přímo na kteroukoli z nich globální klávesovou zkratkou odkudkoli ve Windows - viz [Adresář Radio Browser](#adresář-radio-browser) a [Oblíbené](#oblíbené).
 - **Podcasty** - Přihlaste se k odběru libovolného kanálu RSS/Atom, nebo vyhledávejte v adresáři podcastů Apple a před přihlášením k odběru si poslechněte náhled epizod. Pozice přehrávání se ukládá automaticky a pokračuje tam, kde jste skončili - viz [Podcasty](#podcasty).
-- **Audioknihy** - Vyhledávejte a přehrávejte nebo stahujte knihy ze dvou zdrojů: [GETEM](https://getem.boun.edu.tr/), digitální knihovny Univerzity Boğaziçi pro zrakově postižené, a [LibriVox](https://librivox.org/), projektu audioknih z veřejné domény čtených dobrovolníky (bez nutnosti účtu), s automatickým pokračováním napříč vícedílnými díly - viz [Audioknihy (GETEM a LibriVox)](#audioknihy-getem-a-librivox).
+- **Audioknihy** - Vyhledávejte a přehrávejte nebo stahujte knihy ze tří zdrojů: [GETEM](https://getem.boun.edu.tr/), digitální knihovny Univerzity Boğaziçi pro zrakově postižené, [LibriVox](https://librivox.org/), projektu audioknih z veřejné domény čtených dobrovolníky, a kolekce otevřených audioknih Project Gutenberg - poslední dva nevyžadují účet - s automatickým pokračováním napříč vícedílnými díly - viz [Audioknihy (GETEM, LibriVox a Project Gutenberg)](#audioknihy-getem-librivox-a-project-gutenberg).
 - **Místní jukebox** - Prohledávejte zvukové soubory uložené na jakémkoli připojeném disku podle názvu, nebo si vytvořte osobní knihovnu souborů a složek, a přehrávejte je se stejnými nástroji pro pokračování, posouvání, rychlost a transpozici, jaké používají podcasty a audioknihy - viz [Místní jukebox](#místní-jukebox).
 - **Nahrávání** - Nahrávejte právě hrající obsah okamžitě, automaticky zachyťte jednu skladbu při jejím začátku a konci, nebo naplánujte jednorázová či opakovaná nahrávání - to vše bez přerušení přehrávání - viz [Nahrávání](#nahrávání).
 - **Časový posun (přetočení živého rádia)** - Pozastavte a přetočte živou stanici jako DVR, a poté se kdykoli vraťte zpět k živému vysílání - viz [Časový posun (přetočení živého rádia)](#časový-posun-přetočení-živého-rádia).
@@ -200,6 +200,17 @@ Seznam oblíbených stanic je trvale uložená osobní sbírka stanic. Chcete-li
 Oblíbené lze přehrávat pomocí kláves `Ctrl+Win+→` a `Ctrl+Win+←`; tyto klávesové zkratky fungují, i když není otevřeno okno prohlížeče.
 
 Chcete-li stanici ze seznamu oblíbených odstranit, vyberte ji a stiskněte tlačítko **Odstranit stanici** nebo klávesu `Odstranit`. Po odstranění se zaměření a výběr automaticky přesunou na další stanici v seznamu. Pokud byla odstraněná stanice poslední, přesune se fokus na předchozí stanici. Pokud se seznam vyprázdní, fokus se přesune na tlačítko Play.
+
+### Označení a odstranění více položek
+
+Oblíbené, oblíbené skladby, knihovna audioknih a seznam jukeboxu podporují označení několika položek a jejich společné odstranění v jednom kroku:
+
+- Stiskněte **`.`** (tečku) na zvýrazněné položce pro její označení nebo zrušení označení. NVDA oznámí změnu a řádek označené položky je označen jako „(označeno)“, aby byl její stav jasný při procházení seznamu.
+- Stiskněte **`Delete`** pro odstranění všech označených položek najednou. Pokud není nic označeno, `Delete` stále odstraní pouze aktuálně vybranou položku, jako dříve.
+- Kontextová nabídka pravého tlačítka (klávesa Nabídka / `Shift+F10`) každého seznamu obsahuje příkaz **Odstranit vybrané**, aktivní pouze tehdy, je-li označena alespoň jedna položka, který dělá totéž.
+- Před jakýmkoli odstraněním se zobrazí jedno potvrzovací dialogové okno shrnující, kolik položek bude odstraněno.
+
+Označení jsou specifická pro každý seznam a po odstranění položek (nebo jejich jednotlivém odznačení) se vymažou; mezi relacemi se neukládají.
 
 ### Export a import oblíbených stanic
 
@@ -509,24 +520,25 @@ Do profilu se zapíší pouze vybrané položky; cokoli, co vynecháte, si ponec
 
 Vaše odběry se ukládají do souboru `freeradio_podcasts.json` ve složce uživatelské konfigurace NVDA. Pozice epizod se ukládají samostatně do souboru `podcast_positions.json` na stejném místě. Oba soubory jsou ve formátu prostého JSON a lze je zálohovat nebo přenést do jiného počítače.
 
-## Audioknihy (GETEM a LibriVox)
+## Audioknihy (GETEM, LibriVox a Project Gutenberg)
 
-FreeRadio obsahuje přehrávač audioknih, který vyhledává, přehrává a stahuje knihy ze dvou zdrojů:
+FreeRadio obsahuje přehrávač audioknih, který vyhledává, přehrává a stahuje knihy ze tří zdrojů:
 
 - **[GETEM](https://getem.boun.edu.tr/)** - digitální knihovna provozovaná Centrem pro zrakově postižené Univerzity Boğaziçi. Ke streamování nebo stažení zvuku knihy vyžaduje bezplatné členství (procházení nikoli) - viz [Přihlášení](#přihlášení) níže.
 - **[LibriVox](https://librivox.org/)** - projekt audioknih z veřejné domény čtených dobrovolníky. Není potřeba žádný účet ani přihlášení; celý jeho katalog, včetně samotných zvukových souborů, je veřejnou doménou a volně dostupný.
+- **Kolekce otevřených audioknih Project Gutenberg** - audioknihy z veřejné domény namluvené lidmi i počítačem, hostované na [archive.org](https://archive.org/), doplněk textové knihovny Project Gutenberg. Stejně jako LibriVox nevyžaduje žádný účet ani přihlášení.
 
-Výsledky z obou zdrojů se zobrazují společně v jednom sloučeném seznamu **Výsledky hledání** a jednom sloučeném seznamu **Knihovna** - není zde žádná samostatná karta ani rozevírací nabídka pro přepínání mezi nimi. Zdroj každé knihy (GETEM nebo LibriVox) je zobrazen jako popisek vedle jejího názvu a v jejích podrobnostech, takže vždy poznáte, na kterou se díváte. Knihy z kteréhokoli zdroje můžete vyhledávat, prohlížet náhled, přidávat, přehrávat a stahovat úplně stejným způsobem; přehrávat vícedílná díla s automatickým pokračováním napříč díly; a stahovat knihy pro poslech offline - to vše plně přístupně.
+Výsledky ze všech tří zdrojů se zobrazují společně v jednom sloučeném seznamu **Výsledky hledání** a jednom sloučeném seznamu **Knihovna** - není zde žádná samostatná karta ani rozevírací nabídka pro přepínání mezi nimi. Zdroj každé knihy (GETEM, LibriVox nebo Project Gutenberg) je zobrazen jako popisek vedle jejího názvu a v jejích podrobnostech, takže vždy poznáte, na kterou se díváte. Knihy z kteréhokoli zdroje můžete vyhledávat, prohlížet náhled, přidávat, přehrávat a stahovat úplně stejným způsobem; přehrávat vícedílná díla s automatickým pokračováním napříč díly; a stahovat knihy pro poslech offline - to vše plně přístupně.
 
-Kterýkoli ze zdrojů lze vypnout v **NVDA Menu → Předvolby → Nastavení → FreeRadio** pomocí seznamu zaškrtávacích políček **Zdroje audioknih**, pokud chcete prohledávat pouze jeden z nich. Ve výchozím nastavení jsou zapnuté oba.
+Kterýkoli ze zdrojů lze vypnout jednotlivě v **NVDA Menu → Předvolby → Nastavení → FreeRadio** pomocí seznamu zaškrtávacích políček **Zdroje audioknih**, pokud chcete prohledávat pouze některé z nich. Všechny tři jsou ve výchozím nastavení zapnuté.
 
-> **Poznámka:** Poslech knihy z GETEM vyžaduje bezplatné členství v GETEM. Procházení katalogu GETEM účet nevyžaduje, ale přeložení a přehrání zvuku knihy z GETEM ano - viz [Přihlášení](#přihlášení) níže. Knihy z LibriVox nikdy nevyžadují účet.
+> **Poznámka:** Poslech knihy z GETEM vyžaduje bezplatné členství v GETEM. Procházení katalogu GETEM účet nevyžaduje, ale přeložení a přehrání zvuku knihy z GETEM ano - viz [Přihlášení](#přihlášení) níže. Knihy z LibriVox a Project Gutenberg nikdy nevyžadují účet.
 
 ### Přístup na kartu Audioknihy
 
 Otevřete Průzkumníka stanic pomocí `Ctrl+Win+R` a přepněte na kartu **Audioknihy** pomocí `Ctrl+Tab` nebo `Alt+7`. Karta má tři hlavní oblasti:
 
-1. **Hledat** - textové pole pro prohledání obou zapnutých katalogů najednou, se seznamem výsledků, který se zobrazí po spuštění hledání.
+1. **Hledat** - textové pole pro prohledání všech zapnutých katalogů najednou, se seznamem výsledků, který se zobrazí po spuštění hledání.
 2. **Knihovna** - seznam knih, které jste přidali z kteréhokoli zdroje, kde je přehráváte, stahujete a spravujete.
 3. **Podrobnosti** - pole pouze pro čtení zobrazující zdroj, název, autora, vypravěče, vydavatele, formát, počet dílů, popis a adresu URL katalogu vybrané knihy, v kterémkoli ze seznamů.
 
@@ -534,7 +546,7 @@ Otevřete Průzkumníka stanic pomocí `Ctrl+Win+R` a přepněte na kartu **Audi
 
 GETEM vyžaduje registrované členství pro streamování nebo stahování skutečného zvuku knihy, ačkoli samotný katalog lze volně prohledávat. Zadejte své uživatelské jméno a heslo GETEM jednou v **NVDA Menu → Předvolby → Nastavení → FreeRadio**; uloží se zašifrovaně na disk (prostřednictvím Windows Data Protection API, svázané s vaším uživatelským účtem Windows) a poté se automaticky znovu použijí. Pokud se pokusíte přehrát nebo stáhnout knihu z GETEM před zadáním přihlašovacích údajů, FreeRadio vás vyzve, abyste je nejprve přidali v Nastavení.
 
-LibriVox nevyžaduje žádný krok přihlášení - jeho výsledky a zvuk lze okamžitě vyhledávat, poslechnout jako náhled, přehrávat a stahovat, bez zadávání jakýchkoli přihlašovacích údajů.
+LibriVox a Project Gutenberg nevyžadují žádný krok přihlášení - jejich výsledky a zvuk lze okamžitě vyhledávat, poslechnout jako náhled, přehrávat a stahovat, bez zadávání jakýchkoli přihlašovacích údajů.
 
 ### Vyhledávání audioknih
 
@@ -542,6 +554,9 @@ Zadejte hledaný výraz do pole hledání a stiskněte `Enter`. FreeRadio prohle
 
 - **GETEM** se prohledává podle názvu, autora, vypravěče, tématu a vydavatele najednou, protože vlastní vyhledávací formulář GETEM podporuje zúžení podle všech těchto polí dohromady, nikoli jediné hledání napříč jedním z nich. Zobrazují se pouze díla skutečně dostupná ve zvukové podobě (lidské nebo počítačové čtení, audiopopis, rozhlasová hra, mluvené knihy DAISY atd.); braillské, velkotiskové a jiné nezvukové formáty se automaticky vyfiltrují.
 - **LibriVox** se prohledává podle názvu nebo autora/čtenáře ve svém katalogu veřejné domény.
+- **Project Gutenberg** se prohledává podle názvu nebo autora v kolekci otevřených audioknih na archive.org.
+
+Vložení adresy URL stránky katalogu/podrobností knihy přímo do pole hledání (stránka katalogu GETEM nebo stránka „details“ archive.org pro knihu z LibriVox nebo Project Gutenberg) vyřeší tuto jednu knihu přímo namísto spuštění vyhledávání podle klíčových slov.
 
 NVDA oznámí, kolik audioknih bylo celkem nalezeno.
 
@@ -562,9 +577,11 @@ Knihy, které jste přidali, se zobrazují v seznamu **Knihovna**, s názvem, au
 **Kontextová nabídka pro položky knihovny:** Klepnutím pravým tlačítkem na knihu, případně jejím vybráním a stiskem klávesy Nabídka / `Shift+F10`, otevřete nabídku s těmito položkami:
 - **Přehrát médium** - zahájí přehrávání, totéž co `Enter`.
 - **Stáhnout knihu** - stáhne všechny díly knihy; viz [Stahování audioknih](#stahování-audioknih) níže.
-- **Kopírovat adresu URL** - zkopíruje adresu URL stránky katalogu knihy do schránky (stránku katalogu GETEM u knihy z GETEM, nebo stránku podrobností archive.org u knihy z LibriVox).
+- **Kopírovat adresu URL** - zkopíruje adresu URL stránky katalogu knihy do schránky (stránku katalogu GETEM u knihy z GETEM, nebo stránku podrobností archive.org u knihy z LibriVox nebo Project Gutenberg).
 - **Uložit zvukový profil pro tuto knihu** / **Vymazat zvukový profil** - viz [Zvukový profil audioknihy](#zvukový-profil-audioknihy) níže.
 - **Odebrat z knihovny** - smaže knihu z vaší knihovny.
+
+Můžete také označit několik knih najednou a odstranit je všechny společně — viz [Označení a odstranění více položek](#označení-a-odstranění-více-položek) v části Oblíbené.
 
 ### Přehrávání a pokračování
 
@@ -588,7 +605,7 @@ Vyberte knihu ve své knihovně a zvolte **Stáhnout knihu** z její kontextové
 
 ### Ukládání dat audioknih
 
-Každý zdroj si vede vlastní soubor knihovny, i když se na kartě Audioknihy zobrazují sloučené. Vaše knihovna GETEM (přidané knihy a postup poslechu) se ukládá do `freeradio_getem_library.json` a vaše knihovna LibriVox se ukládá samostatně do `freeradio_librivox_library.json`, obě ve složce uživatelské konfigurace NVDA. Vaše zašifrované přihlašovací údaje GETEM se ukládají samostatně do `freeradio_getem_credentials.bin` na stejném místě a lze je dešifrovat pouze stejným uživatelským účtem Windows, který je uložil. LibriVox nemá žádný soubor s přihlašovacími údaji, protože nevyžaduje žádný účet.
+Každý zdroj si vede vlastní soubor knihovny, i když se na kartě Audioknihy zobrazují sloučené. Vaše knihovna GETEM (přidané knihy a postup poslechu) se ukládá do `freeradio_getem_library.json`, vaše knihovna LibriVox se ukládá samostatně do `freeradio_librivox_library.json` a vaše knihovna Project Gutenberg se ukládá samostatně do `freeradio_gutenberg_library.json` — všechny tři ve složce uživatelské konfigurace NVDA. Vaše zašifrované přihlašovací údaje GETEM se ukládají samostatně do `freeradio_getem_credentials.bin` na stejném místě a lze je dešifrovat pouze stejným uživatelským účtem Windows, který je uložil. LibriVox a Project Gutenberg nemají žádný soubor s přihlašovacími údaji, protože ani jeden nevyžaduje účet.
 
 ## Místní jukebox
 
@@ -618,8 +635,8 @@ Zadejte libovolnou část názvu souboru do pole **Hledat na disku** a stisknět
 Seznam Jukebox je vaše trvalá osobní knihovna. Lze přidat dva druhy položek:
 
 - **Přidat soubor…** — otevře výběr souborů, který vám umožní přidat jeden nebo více jednotlivých zvukových souborů. Všechny vybrané soubory se přidají najednou.
-- **Přidat složku…** — otevře výběr složek. Každý zvukový soubor nalezený ve zvolené složce, včetně jejích podsložek, je považován za jednu ze **skladeb** této složky. Složka samotná je jednou položkou v seznamu Jukebox; soubory v ní jsou uvedeny v seznamu Skladby, když je složka vybrána.
-- **Odebrat** — smaže aktuálně vybranou položku z vašeho jukeboxu. Odebrání položky složky neodstraní žádné soubory z disku; pouze zapomene složku.
+- **Přidat složku…** — otevře výběr složek, který vám umožní vybrat více složek najednou. Každý zvukový soubor nalezený v každé zvolené složce, včetně jejích podsložek, je považován za jednu ze **skladeb** této složky. Každá složka se přidá jako vlastní samostatná položka v seznamu Jukebox; soubory v ní jsou uvedeny v seznamu Skladby, když je složka vybrána. NVDA po zavření výběru oznámí, kolik složek bylo přidáno.
+- **Odebrat** — smaže aktuálně vybranou položku z vašeho jukeboxu. Odebrání položky složky neodstraní žádné soubory z disku; pouze zapomene složku. Můžete také označit několik položek najednou a odstranit je všechny společně — viz [Označení a odstranění více položek](#označení-a-odstranění-více-položek) v části Oblíbené.
 
 Seznam Jukebox se ukládá automaticky, takže přežije restartování NVDA. Obsah složky se skenuje na vyžádání a ukládá do mezipaměti, takže přidání složky je okamžité i u velmi velkých sbírek — úplné skenování proběhne při prvním výběru této složky. Pokud přidáte soubory do složky mimo FreeRadio, použijte položku **Znovu prohledat složku** v kontextové nabídce složky, abyste je zachytili.
 
@@ -676,7 +693,7 @@ Po výběru stopy ze seznamu jsou k dispozici následující akce:
 - **Přehrát na Spotify:** Pokusí se přímo otevřít desktopovou aplikaci Spotify. Pokud aplikace není nainstalována, přejde na web Spotify a automaticky přehraje první výsledek.
 - **Přehrát na YouTube (`Alt+O`):** Vyhledá vybranou stopu na YouTube a otevře výsledky ve výchozím prohlížeči.
 - **Zobrazit text písně:** Načte a zobrazí text vybrané skladby. Text písně je načítán z [lrclib.net](https://lrclib.net) (zdarma, bez nutnosti účtu). Během probíhajícího vyhledávání na pozadí je oznámena krátká zpráva „Načítání textu písně…". Pokud je text nalezen, otevře se v dialogu pouze pro čtení, kde jej můžete číst pomocí NVDA a zkopírovat do schránky. Pokud text není nalezen, NVDA to oznámí. Tlačítko je po dobu probíhající akce dočasně deaktivováno, aby se zabránilo duplicitním požadavkům.
-- **Odebrat (`Alt+M`):** Odstraní vybranou stopu z `likedSongs.txt` a aktualizuje seznam. Klávesa `Delete` toto tlačítko také spustí, je-li fokus na seznamu.
+- **Odebrat (`Alt+M`):** Odstraní vybranou stopu z `likedSongs.txt` a aktualizuje seznam. Klávesa `Delete` toto tlačítko také spustí, je-li fokus na seznamu. Můžete také označit několik skladeb najednou a odstranit je všechny společně — viz [Označení a odstranění více položek](#označení-a-odstranění-více-položek) v části Oblíbené.
 - **Obnovit (`Alt+E`):** Znovu načte seznam ze souboru.
 
 Tlačítka Spotify, YouTube, Zobrazit text písně a Odebrat jsou aktivní pouze tehdy, když je v seznamu vybrána skutečná skladba.
@@ -720,8 +737,8 @@ Následující možnosti lze konfigurovat v nabídce NVDA → Předvolby → Nas
 | Automatická kontrola aktualizací | Je-li tato volba povolena, spustí se při každém spuštění aplikace NVDA kontrola aktualizací na pozadí; pokud je nalezena nová verze, jste o tom informováni. Pokud je zakázána, automatická kontrola se zastaví, ale ruční kontrola zůstane k dispozici. |
 | Cesta k souboru ffmpeg.exe | Cesta k souboru ffmpeg.exe, který se používá pro rozpoznávání hudby. Pokud zůstane prázdná, použije se automaticky soubor ffmpeg.exe ve složce doplňku. |
 | Složka nahrávek | Nastaví složku, do které se ukládají nahrané soubory. Pokud zůstane prázdná, použije se výchozí umístění `Documents\FreeRadio Recordings\`. Tlačítko Procházet umožňuje interaktivní výběr složky. Změny se projeví okamžitě po uložení. |
-| Zdroje audioknih | Seznam zaškrtávacích políček vybírající, které zdroje audioknih (**GETEM**, **LibriVox**) se prohledávají a zobrazují na kartě Audioknihy. Obě jsou ve výchozím nastavení zapnuté. Odškrtnutím zdroje skryjete jeho knihy ze sloučených výsledků hledání a seznamu knihovny, aniž byste smazali cokoli, co jste z něj již přidali — viz [Audioknihy (GETEM a LibriVox)](#audioknihy-getem-a-librivox). |
-| Uživatelské jméno GETEM / Heslo GETEM | Vaše přihlašovací údaje pro členství v audioknihách [GETEM](https://getem.boun.edu.tr/), potřebné ke streamování nebo stažení zvuku knihy — viz [Přihlášení](#přihlášení). Ukládají se zašifrovaně na disk prostřednictvím Windows Data Protection API, svázané s vaším uživatelským účtem Windows; nikdy se neukládají jako prostý text. Ponecháním obou polí prázdných a uložením odstraníte všechny uložené přihlašovací údaje. LibriVox nevyžaduje žádný účet a nemá žádné ekvivalentní pole. |
+| Zdroje audioknih | Seznam zaškrtávacích políček vybírající, které zdroje audioknih (**GETEM**, **LibriVox**, **Project Gutenberg**) se prohledávají a zobrazují na kartě Audioknihy. Všechny tři jsou ve výchozím nastavení zapnuté. Odškrtnutím zdroje skryjete jeho knihy ze sloučených výsledků hledání a seznamu knihovny, aniž byste smazali cokoli, co jste z něj již přidali — viz [Audioknihy (GETEM, LibriVox a Project Gutenberg)](#audioknihy-getem-librivox-a-project-gutenberg). |
+| Uživatelské jméno GETEM / Heslo GETEM | Vaše přihlašovací údaje pro členství v audioknihách [GETEM](https://getem.boun.edu.tr/), potřebné ke streamování nebo stažení zvuku knihy — viz [Přihlášení](#přihlášení). Ukládají se zašifrovaně na disk prostřednictvím Windows Data Protection API, svázané s vaším uživatelským účtem Windows; nikdy se neukládají jako prostý text. Ponecháním obou polí prázdných a uložením odstraníte všechny uložené přihlašovací údaje. LibriVox a Project Gutenberg nevyžadují žádný účet a nemají žádné ekvivalentní pole. |
 | Výstupní formát nahrávky | Zachová původní stream, extrahuje zvuk beze změny kodeku nebo převede dokončené nahrávky na MP3. Výchozí hodnotou je původní formát streamu. |
 | Datový tok nahrávání MP3 | Nastaví datový tok použitý, když je výstupní formát nahrávky MP3. Výchozí hodnota je 128 kb/s. |
 | Zakázat kontrolu připojení k internetu před přehráváním | Doporučeno pro uživatele, u kterých dochází ke zpoždění před zahájením přehrávání stanice. Užitečné také v případě blokování DNS. |
@@ -770,6 +787,14 @@ FreeRadio automaticky kontroluje nové verze prostřednictvím služby GitHub.
 - Pokud není k dispozici přímý odkaz ke stažení, zobrazí se tlačítko **Otevřít stránku** a v výchozím prohlížeči se otevře stránka release na GitHubu.
 
 **Vypnutí automatických kontrol:** Vypněte možnost **Automaticky kontrolovat aktualizace** v NVDA Menu → Předvolby → Nastavení → FreeRadio.
+
+## Změny
+
+**Hromadné přidávání složek do jukeboxu**
+- Tlačítko **Přidat složku…** na kartě Jukebox nyní umožňuje vybrat více složek najednou místo přidávání po jedné. Všechny vybrané složky se přidají v jedné operaci s jedním souhrnným oznámením o tom, kolik jich bylo přidáno.
+
+**Označení a odstranění více položek (Oblíbené, Oblíbené skladby, Audioknihy, Jukebox)**
+- V seznamech Oblíbené, Oblíbené skladby, knihovna audioknih a Jukebox nyní můžete před odstraněním označit více položek: stiskněte `.` pro označení/odznačení zvýrazněné položky (označené řádky jsou označeny „(označeno)“), poté stiskněte `Delete` nebo použijte příkaz kontextové nabídky **Odstranit vybrané** pro odstranění všech označených položek najednou po jednom potvrzovacím dialogu. Podrobnosti viz [Označení a odstranění více položek](#označení-a-odstranění-více-položek) v části Oblíbené.
 
 ## Poděkování a zásluhy
 
