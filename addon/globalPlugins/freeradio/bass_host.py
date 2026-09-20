@@ -1184,12 +1184,24 @@ class BassHost:
 		# this is why podcast episodes served over https (and therefore
 		# routed through this local proxy) previously played fine but
 		# could never seek or resume from a saved position.
+		# CR and LF are stripped from every forwarded value before it is
+		# written into the HTTP response this proxy builds for BASS.
+		# Without this, a remote server's header value containing "\r\n"
+		# would inject arbitrary additional headers (or a body boundary)
+		# into the response BASS sees - a classic header-splitting sink.
+		# Real ICY/HTTP headers never legitimately carry CR or LF, so
+		# stripping them is safe.
+		def _safe_header_value(value):
+			return value.replace("\r", " ").replace("\n", " ")
+
 		passthrough_headers = []
 		for hdr in ("content-type", "content-length", "icy-name", "icy-genre",
 					"icy-br", "icy-sr", "icy-metaint", "icy-pub", "icy-url"):
 			val = remote_resp.headers.get(hdr)
 			if val:
-				passthrough_headers.append(f"{hdr}: {val}".encode())
+				passthrough_headers.append(
+					("%s: %s" % (hdr, _safe_header_value(val))).encode()
+				)
 
 		# --- Step 2: bind a local loopback server socket ---
 		# The remote is already connected, so BASS will get an immediate

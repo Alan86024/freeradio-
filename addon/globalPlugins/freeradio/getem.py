@@ -1297,7 +1297,16 @@ _proxy_server = None
 _proxy_lock = threading.Lock()
 _proxy_chapters = {}  # token -> (chapter_url, referer)
 _PROXY_PREFERRED_PORT = 47823  # arbitrary, in the dynamic/private range
-
+# Session-scoped random secret, regenerated on every NVDA start. Mixed
+# into the local proxy's per-chapter path token so that the token cannot
+# be predicted by anything that merely knows (or can guess) a chapter's
+# real upstream URL - closing off the "any local process, or any web page
+# the user visits, can construct the proxy URL and drive the add-on's
+# authenticated GETEM session" concern. Resume position tracking is keyed
+# on the chapter's own URL via a separate "podcast_resume_key" field
+# instead (see RadioDialog._start_getem_chapter()), so this randomness
+# doesn't break "resume where you left off".
+_PROXY_SESSION_SECRET = os.urandom(32)
 
 class _GetemProxyHandler(http.server.BaseHTTPRequestHandler):
 	protocol_version = "HTTP/1.1"
@@ -1368,14 +1377,29 @@ class _GetemProxyHandler(http.server.BaseHTTPRequestHandler):
 						return
 		except Exception as e:
 			try:
-				self.send_error(502, ("GETEM fetch failed: %s" % str(e))[:150])
+				# Strip CR and LF from the exception text before handing
+				# it to send_error(): the string ends up in the HTTP
+				# status line this proxy returns, and an embedded newline
+				# there is a classic header-splitting sink.
+				safe = str(e).replace("\r", " ").replace("\n", " ")[:150]
+				self.send_error(502, "GETEM fetch failed: %s" % safe)
 			except Exception:
 				pass
 
 
 class _ThreadingProxyServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
 	daemon_threads = True
-	allow_reuse_address = True
+	# allow_reuse_address is deliberately left at its default (False).
+	# On Windows, SO_REUSEADDR has different semantics than on Unix: it
+	# allows ANOTHER process to bind the same address while this server
+	# is still listening, silently hijacking the port. The Unix meaning
+	# of "allow quick restart over TIME_WAIT sockets" is provided on
+	# Windows by SO_EXCLUSIVEADDRUSE instead, which is what Python's
+	# socketserver sets when allow_reuse_address is False. Since this
+	# server only ever listens on 127.0.0.1 and is recreated lazily on
+	# first use per NVDA session, the "quick restart" benefit of
+	# SO_REUSEADDR isn't needed here anyway.
+	allow_reuse_address = False
 
 
 def _ensure_proxy_server():
@@ -1383,16 +1407,11 @@ def _ensure_proxy_server():
 	first use) and returns the port it's listening on.
 
 	Binds a fixed, preferred port rather than letting the OS assign a
-	random one: get_stream_url() builds a deterministic URL per chapter
-	(same chapter -> same URL every time), and that URL doubles as the
-	resume-position lookup key in radioPlayer.py's podcast position
-	store (podcast_positions.json) exactly like a real podcast episode's
-	URL does - a random per-launch port would silently break "kaldığı
-	yerden devam etme" across NVDA restarts, since the saved position
-	would be keyed to a URL that no longer matches anything. Falls back
-	to an OS-assigned port only if the preferred one is unavailable
-	(e.g. something else is using it) - resume still works within that
-	single NVDA session, just not across a restart."""
+	random one - not for URL stability (the per-chapter path token is
+	now session-random anyway, see _PROXY_SESSION_SECRET), but simply
+	because a predictable loopback port is easier to reason about in
+	logs and firewall prompts. Falls back to an OS-assigned port if the
+	preferred one is unavailable."""
 	global _proxy_server
 	with _proxy_lock:
 		if _proxy_server is None:
@@ -1415,13 +1434,18 @@ def get_stream_url(chapter_url, referer=None):
 	docstring above. Playback can start as soon as the proxy relays the
 	first bytes back; there's no upfront download to wait for.
 
-	The token is a deterministic hash of *chapter_url*, not a fresh
-	random one per call: the same chapter always maps to the same proxy
-	URL, which is what lets resume-position tracking (keyed on this URL,
-	same as for a real podcast episode) work across replays - see
-	_ensure_proxy_server()."""
+	The token is sha1(session_secret + chapter_url), not a plain hash
+	of the URL: an attacker who knows or can guess the chapter URL
+	still can't predict the token without the per-session secret
+	(_PROXY_SESSION_SECRET), so a hostile local process or web page
+	can't construct a working proxy URL. The resume position store is
+	keyed on the chapter URL itself (via "podcast_resume_key"), so
+	this randomness doesn't break "resume where you left off"
+	across sessions."""
 	port = _ensure_proxy_server()
-	token = hashlib.sha1(chapter_url.encode("utf-8")).hexdigest()
+	token = hashlib.sha1(
+		_PROXY_SESSION_SECRET + chapter_url.encode("utf-8")
+	).hexdigest()
 	_proxy_chapters[token] = (chapter_url, referer)
 	return "http://127.0.0.1:%d/%s" % (port, token)
 

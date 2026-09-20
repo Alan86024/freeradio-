@@ -90,6 +90,15 @@ ARCHIVE_DETAILS_BASE = "https://archive.org/details/"
 ARCHIVE_DETAILS_URL_RE = re.compile(
 	r"^https?://(?:www\.)?archive\.org/details/([A-Za-z0-9._-]+)", re.IGNORECASE)
 USER_AGENT = "FreeRadio-NVDA/1.0"
+# Same rationale as the equivalent constants in podcast.py: a hard cap on
+# how much of any single API/RSS response is read, plus an extension
+# allowlist for downloaded chapter files.
+_MAX_RESPONSE_BYTES = 10 * 1024 * 1024  # 10 MB
+
+_AUDIO_DOWNLOAD_EXTENSIONS = frozenset({
+	".mp3", ".m4a", ".m4b", ".aac", ".ogg", ".oga", ".opus",
+	".wav", ".flac", ".mp4", ".wma", ".aiff", ".aif",
+})
 REQUEST_TIMEOUT = 15
 SEARCH_TIMEOUT = 20
 RESULTS_PER_QUERY = 100
@@ -107,7 +116,9 @@ def _fetch(url, timeout=REQUEST_TIMEOUT):
 	req = urllib.request.Request(url, headers=headers)
 	try:
 		with urllib.request.urlopen(req, timeout=timeout) as resp:
-			raw = resp.read()
+			raw = resp.read(_MAX_RESPONSE_BYTES + 1)
+			if len(raw) > _MAX_RESPONSE_BYTES:
+				raise RuntimeError("Response too large (>10 MB) for %s" % url)
 			charset = resp.headers.get_content_charset() or "utf-8"
 			return raw.decode(charset, errors="replace")
 	except urllib.error.HTTPError as e:
@@ -532,6 +543,10 @@ def _resolve_via_librivox_rss(book):
 	except Exception as e:
 		return book, str(e)
 
+	if re.search(r'<!DOCTYPE|<!ENTITY', feed_text, re.IGNORECASE):
+		# Translators: Error returned when a LibriVox RSS feed contains XML entity declarations, which are rejected as a security measure against entity-expansion attacks.
+		return book, _("The feed contains XML entity declarations and was rejected.")
+
 	try:
 		root = ET.fromstring(feed_text)
 	except ET.ParseError as e:
@@ -620,8 +635,10 @@ def download_chapter_to(chapter_url, out_path, referer=None, session=None, progr
 
 def _chapter_file_extension(chapter_url):
 	url_path = urllib.parse.urlparse(chapter_url).path
-	ext = os.path.splitext(url_path)[1]
-	return ext if ext else ".mp3"
+	ext = os.path.splitext(url_path)[1].lower()
+	if ext not in _AUDIO_DOWNLOAD_EXTENSIONS:
+		ext = ".mp3"
+	return ext
 
 
 def safe_book_title(book):

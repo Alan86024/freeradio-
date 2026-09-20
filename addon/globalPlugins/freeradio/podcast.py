@@ -10,6 +10,7 @@ import urllib.parse
 import urllib.request
 import uuid
 import xml.etree.ElementTree as ET
+import re
 from email.utils import parsedate_to_datetime
 from datetime import datetime
 
@@ -20,6 +21,23 @@ import globalVars
 log = logging.getLogger(__name__)
 
 USER_AGENT = "FreeRadio-NVDA/1.0"
+# Cap on how much of a feed response is read into memory. A real podcast
+# feed is well under this; the cap exists to prevent a hostile feed (or
+# an attacker on the path to an http:// feed) from exhausting memory by
+# streaming an unbounded response.
+_MAX_FEED_BYTES = 10 * 1024 * 1024  # 10 MB
+
+# Extensions allowed for downloaded episode files. A feed's enclosure URL
+# can point at anything, and its extension used to be copied verbatim into
+# the recordings folder - so a hostile feed could have a .exe/.ps1/.lnk
+# written there under a name it also influences, in a folder the user is
+# one Ctrl+Win+W away from opening in Explorer. Anything not in this set
+# falls back to .mp3. Mirrors the allowlist getem.py already uses for its
+# own downloads.
+_AUDIO_DOWNLOAD_EXTENSIONS = frozenset({
+	".mp3", ".m4a", ".m4b", ".aac", ".ogg", ".oga", ".opus",
+	".wav", ".flac", ".mp4", ".wma", ".aiff", ".aif",
+})
 REQUEST_TIMEOUT = 15
 
 
@@ -61,9 +79,9 @@ def episode_download_target(title, url):
 	out_dir = recorder._recordings_dir()
 	safe_title = "".join(c for c in title if c.isalnum() or c in " .-_")[:80]
 	url_path = urllib.parse.urlparse(url).path
-	ext = os.path.splitext(url_path)[1] or ".mp3"
-	if not ext.startswith("."):
-		ext = "." + ext
+	ext = os.path.splitext(url_path)[1].lower()
+	if ext not in _AUDIO_DOWNLOAD_EXTENSIONS:
+		ext = ".mp3"
 	filename = f"{safe_title}{ext}"
 	out_path = os.path.join(out_dir, filename)
 	return out_path, filename
@@ -400,12 +418,24 @@ class PodcastManager:
 					# Translators: Not shown to the user: internal 'no change' result from an HTTP 304 (feed unchanged since last fetch) response, so refresh can skip re-parsing. Kept as a translatable string for consistency with the other returned messages, though callers treat it as a no-op rather than an error to display.
 					return None, _("No new episodes (304).")
 
-				raw = resp.read()
+				raw = resp.read(_MAX_FEED_BYTES + 1)
+				if len(raw) > _MAX_FEED_BYTES:
+					# Translators: Error returned when a subscribed feed's response is larger than the 10 MB safety cap (a real feed never is).
+					return None, _("Feed is too large (>10 MB).")
 				encoding = resp.headers.get_content_charset() or "utf-8"
 				try:
 					text = raw.decode(encoding)
 				except UnicodeDecodeError:
 					text = raw.decode("utf-8", errors="replace")
+
+				# Reject DOCTYPE/ENTITY declarations before parsing.
+				# xml.etree.ElementTree is documented as vulnerable to
+				# entity-expansion attacks (billion laughs, quadratic
+				# blowup); real podcast feeds never need a DOCTYPE, so
+				# this is safe to reject.
+				if re.search(r'<!DOCTYPE|<!ENTITY', text, re.IGNORECASE):
+					# Translators: Error returned when a subscribed feed contains XML entity declarations, which are rejected as a security measure against entity-expansion attacks.
+					return None, _("Feed contains XML entity declarations and was rejected.")
 
 				root = ET.fromstring(text)
 				if root.tag.endswith("rss"):

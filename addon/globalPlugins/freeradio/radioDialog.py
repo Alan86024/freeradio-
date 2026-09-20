@@ -6863,9 +6863,10 @@ class RadioDialog(wx.Dialog):
 			if library.remove_book(book):
 				removed += 1
 				if book.chapters and self._player:
+					# See the matching note in
+					# _on_getem_remove_from_library above.
 					urls = [
-						module.get_stream_url(ch["url"], referer=book.detail_url)
-						for ch in book.chapters if ch.get("url")
+						ch["url"] for ch in book.chapters if ch.get("url")
 					]
 					self._player.clear_podcast_positions(urls)
 		self._getem_marked.clear()
@@ -6989,6 +6990,11 @@ class RadioDialog(wx.Dialog):
 		# a LibriVox book needs playbackCoreMixin.py updated too, though a
 		# LibriVox chapter URL being a plain public link means it may not
 		# even need a "rebuild" step once that's done.
+		# Key the resume-position store on the chapter's own stable
+		# upstream URL, not the session-random local proxy URL that
+		# station_dict["url"] carries - see RadioPlayer._podcast_position_key()
+		# for why.
+		station_dict["podcast_resume_key"] = chapter["url"]
 		station_dict["getem_chapter_index"] = chapter_index
 		# The chapter/part title itself, separate from station_dict["name"]
 		# (which is prefixed with the book title for "what's playing"
@@ -7292,9 +7298,13 @@ class RadioDialog(wx.Dialog):
 			# cleaned up here so they don't linger for a book the user can
 			# no longer see or resume.
 			if book.chapters and self._player:
+				# The resume store is keyed on each chapter's real URL
+				# (see _start_getem_chapter's "podcast_resume_key"
+				# handling and RadioPlayer._podcast_position_key()), so
+				# that - not the session-random proxy URL - is what has
+				# to be cleared here.
 				urls = [
-					module.get_stream_url(ch["url"], referer=book.detail_url)
-					for ch in book.chapters if ch.get("url")
+					ch["url"] for ch in book.chapters if ch.get("url")
 				]
 				self._player.clear_podcast_positions(urls)
 			# Translators: Spoken after removing a book from the audio-book library; %s is the book title.

@@ -115,7 +115,6 @@ def _sapi5_speak(msg):
 	def _speak():
 		import config as _config
 		voice_name = _config.conf["freeradio"].get("sapi5_voice_name", "")
-		text = msg.replace('"', "'")  # PowerShell fallback: avoid quote issues
 
 		# --- Method 1: comtypes (bundled with NVDA, preferred) ---
 		try:
@@ -152,19 +151,59 @@ def _sapi5_speak(msg):
 		except Exception as e:
 			log.warning("FreeRadio: win32com SAPI5 speak failed: %s", e)
 
-		# --- Method 2: PowerShell fallback (default voice only) ---
+		# --- Method 3: PowerShell fallback (default voice only) ---
+		#
+		# SECURITY: this block used to interpolate both the spoken text and
+		# the voice name straight into a double-quoted PowerShell string,
+		# with only double quotes stripped from the text as "sanitisation".
+		# That is not sufficient: PowerShell evaluates $variable references
+		# and $(subexpression) commands inside double-quoted strings, and
+		# neither of those needs a quote character to appear. The spoken
+		# text comes from the stream's own ICY StreamTitle (see
+		# trackInfoMixin.py's _icy_poll_loop), which the station - or
+		# anyone able to MITM an https:// stream that fell back to the
+		# relaxed-TLS path in recorder.py - controls entirely, so this was
+		# an arbitrary command execution sink reachable with nothing more
+		# than the station playing.
+		#
+		# Fixed two ways, both required:
+		#   1. The whole script is built with single-quoted PowerShell
+		#      string literals. A single-quoted PowerShell string is the
+		#      only form that is truly literal: no $variable expansion, no
+		#      $(subexpression) evaluation, no backtick escapes. An
+		#      embedded single quote is written as two single quotes.
+		#   2. The script is passed via -EncodedCommand (base64 UTF-16LE)
+		#      instead of -Command, so nothing is interpreted by a shell
+		#      at the process boundary either - there is no command line
+		#      to inject into at all.
 		try:
+			import base64
 			import subprocess
+
+			def _ps_literal(value):
+				# Single-quoted PowerShell string literal: everything
+				# between the quotes is literal, except that an embedded
+				# single quote must be doubled.
+				return "'" + value.replace("'", "''") + "'"
+
 			voice_line = (
-				f'$s.SelectVoice("{voice_name}");' if voice_name else ""
+				"$s.SelectVoice(%s);" % _ps_literal(voice_name)
+				if voice_name else ""
 			)
 			script = (
 				"Add-Type -AssemblyName System.Speech;"
 				"$s=New-Object System.Speech.Synthesis.SpeechSynthesizer;"
-				f'{voice_line}$s.Speak("{text}");'
+				+ voice_line
+				+ "$s.Speak(%s);" % _ps_literal(msg)
 			)
+			encoded = base64.b64encode(
+				script.encode("utf-16-le")
+			).decode("ascii")
 			subprocess.Popen(
-				["powershell", "-WindowStyle", "Hidden", "-Command", script],
+				[
+					"powershell", "-NoProfile", "-WindowStyle", "Hidden",
+					"-EncodedCommand", encoded,
+				],
 				creationflags=0x08000000,  # CREATE_NO_WINDOW
 			)
 		except Exception:
@@ -1309,13 +1348,19 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		except Exception:
 			pass
 
-		# Try an HTTP site (for broader compatibility)
+		# Try a real HTTPS site as a last resort. The previous target
+		# (http://neverssl.com/online) was plain HTTP to a third party,
+		# which can be transparently redirected or MITM'd on a hostile
+		# network - so a "no connectivity" state could be masked, or a
+		# "connectivity" state faked. Google's generate_204 endpoint
+		# answers 204 No Content over HTTPS with no body and no redirect,
+		# which is the standard connectivity-probe shape.
 		try:
 			req = urllib.request.Request(
-				"http://neverssl.com/online",
+				"https://www.google.com/generate_204",
 				headers={"User-Agent": "FreeRadio/1.0"}
 			)
 			with urllib.request.urlopen(req, timeout=timeout) as resp:
-				return resp.status == 200
+				return resp.status in (200, 204)
 		except Exception:
 			return False

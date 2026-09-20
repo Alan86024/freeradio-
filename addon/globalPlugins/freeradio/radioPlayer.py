@@ -162,22 +162,13 @@ def _read_icy_title(url):
 
 
 def _resolve_playlist_url(url, timeout=8, _hops=3):
-	"""
-	If url points to a playlist (M3U, PLS, XSPF, ASX) or returns a redirect,
-	return the first actual stream URL found inside it.
-	Returns the original url if nothing better is found.
-
-	Playlist type is detected primarily by sniffing the response body
-	itself, with content-type/extension only used as a secondary hint.
-	Some tuning endpoints - e.g. TuneIn's Tune.ashx (see
-	externalSources.search_tunein()) - return a PLS-formatted body from a
-	URL with no playlist-like extension, and not always with an
-	audio/x-scpls content-type either, so a check that only trusted
-	content-type/extension would silently fall through and hand back the
-	tuning URL unchanged, which isn't a real audio stream. Follows up to
-	*_hops* levels in case a playlist points at another playlist
-	(e.g. a tuning endpoint that redirects to a second, real .pls).
-	"""
+	# Only http(s) URLs are fetched here. urllib transparently supports
+	# file://, which would let a station entry (which anyone can submit
+	# to Radio Browser without an account) read an arbitrary local file,
+	# so non-http(s) schemes are passed through unresolved rather than
+	# fetched.
+	if not url or not url.lower().startswith(("http://", "https://")):
+		return url
 	try:
 		import urllib.request as _req
 		req = _req.Request(
@@ -1105,6 +1096,22 @@ class RadioPlayer:
 
 
 
+	def _podcast_position_key(self, station):
+		"""Return the key used to store a podcast/audiobook chapter's
+		resume position.
+
+		Prefers an explicit "podcast_resume_key" field over the station's
+		own "url". Some sources (GETEM) route playback through a local
+		proxy whose URL path token is deliberately randomized per NVDA
+		session (see getem.get_stream_url()), so keying resume positions
+		on that URL would silently lose them on every restart. In that
+		case the caller sets "podcast_resume_key" to the chapter's real
+		(stable) upstream URL, and resume keeps working across restarts
+		regardless of the session-random token."""
+		if station and station.get("podcast_resume_key"):
+			return station["podcast_resume_key"]
+		return (station.get("url") if station else None) or self._current_url
+
 	def _on_bass_meta(self, title):
 		self._icy_title = title
 
@@ -1323,7 +1330,7 @@ class RadioPlayer:
 		is_podcast = _is_seekable_media(station)
 		saved_pos = 0.0
 		if is_podcast:
-			saved_pos = self.get_podcast_position(station.get("url") or url)
+			saved_pos = self.get_podcast_position(self._podcast_position_key(station))
 
 		# If we're about to try resuming a podcast, open the real stream
 		# muted and play casette.mp3 (looped) on a small separate engine
@@ -1816,7 +1823,7 @@ class RadioPlayer:
 				is_podcast = _is_seekable_media(station)
 				saved_pos = 0.0
 				if is_podcast:
-					saved_pos = self.get_podcast_position(station.get("url") or stream_url)
+					saved_pos = self.get_podcast_position(self._podcast_position_key(station))
 				rate = self._playback_rate
 
 				def _sync_mirror(m=mirror, u=stream_url, v=vol, g=gen,
@@ -2068,7 +2075,7 @@ class RadioPlayer:
 			cb = self.on_podcast_progress_saved
 			if cb:
 				try:
-					cb(station.get("url") or self._current_url)
+					cb(self._podcast_position_key(station))
 				except Exception:
 					pass
 
@@ -2162,7 +2169,7 @@ class RadioPlayer:
 			if mirror and mirror.ready():
 				station = self._current_station
 				podcast = _is_seekable_media(station)
-				pos = self.get_podcast_position(station.get("url") or stream_url) if podcast else 0.0
+				pos = self.get_podcast_position(self._podcast_position_key(station)) if podcast else 0.0
 				rate = self._playback_rate
 
 				def _sync_mirror(m=mirror, u=stream_url, v=vol, g=gen,
@@ -2669,7 +2676,7 @@ class RadioPlayer:
 	def _save_podcast_position_now(self, station, position, length=0.0):
 		"""Persist *position* for the given podcast station.
 		If position is within 3 seconds of the end, mark as listened (position = -1)."""
-		url = station.get("url") or self._current_url
+		url = self._podcast_position_key(station)
 		if not url:
 			return
 

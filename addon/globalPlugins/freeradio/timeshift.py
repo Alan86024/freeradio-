@@ -17,19 +17,13 @@ from . import recorder as _recorder_mod
 
 
 def _resolve_playlist_url(url, timeout=8):
-	"""Follow a PLS/M3U/ASX playlist-redirector response to the real
-	audio URL it points to, or return *url* unchanged if it's already
-	audio (or resolution fails for any reason).
-	Mirrors bass_host.py's identically-named function - main playback
-	(via bass_host.py) already does this before opening a stream, which
-	is why a URL like TuneIn's Tune.ashx?id=... (a small PLS file, not
-	audio) plays fine normally. This capture loop opens *url* directly
-	on its own raw socket with no such resolution, so without this it
-	was writing that tiny playlist response straight into the time-shift
-	buffer as if it were audio - the connection then ends almost
-	immediately (the whole playlist body is a few dozen bytes), which
-	looked like a dropped connection and triggered an endless ~2s
-	reconnect loop, never actually buffering any audio."""
+	# Only http(s) URLs are fetched here. urllib transparently supports
+	# file://, which would let a station entry (which anyone can submit
+	# to Radio Browser without an account) read an arbitrary local file,
+	# so non-http(s) schemes are passed through unresolved rather than
+	# fetched.
+	if not url or not url.lower().startswith(("http://", "https://")):
+		return url
 	try:
 		req = urllib.request.Request(
 			url, headers={"User-Agent": "FreeRadio-NVDA/1.0", "Icy-MetaData": "1"})

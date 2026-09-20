@@ -394,6 +394,9 @@ class PlaybackCoreMixin:
 			station_dict["name"] = book.title
 		station_dict["url"] = stream_url
 		station_dict["url_resolved"] = stream_url
+		# Key resume positions on the chapter's own stable upstream URL,
+		# not the session-random proxy URL - see RadioPlayer._podcast_position_key().
+		station_dict["podcast_resume_key"] = chapter_url
 		station_dict["getem_chapter_index"] = chapter_index
 		station_dict["audiobook_chapter_title"] = chapter_title
 		return station_dict
@@ -485,6 +488,9 @@ class PlaybackCoreMixin:
 			station_dict["name"] = book.title
 		station_dict["url"] = stream_url
 		station_dict["url_resolved"] = stream_url
+		# See _rebuild_getem_resume_url() above for why this key is
+		# needed here too.
+		station_dict["podcast_resume_key"] = chapter_url
 		station_dict["getem_chapter_index"] = next_index
 		# Kept in sync with RadioDialog._start_getem_chapter() /
 		# _rebuild_getem_resume_url() above, which both set this too - see
