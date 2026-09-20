@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import base64
 import braille
 import config
 import os
@@ -99,6 +100,40 @@ def _format_duration(seconds):
 	return "%d:%02d" % (minutes, secs)
 
 
+def _ps_b64_utf8(value):
+	"""Encode *value* as base64 of its UTF-8 bytes."""
+	return base64.b64encode((value or "").encode("utf-8")).decode("ascii")
+
+
+def _build_sapi5_ps_script(msg, voice_name):
+	"""Build the PowerShell script that speaks *msg* via System.Speech.
+
+	Both *msg* and *voice_name* are embedded as base64-encoded UTF-8
+	and decoded on the PowerShell side. Base64's alphabet (A-Z a-z 0-9
+	+ / =) contains no character that PowerShell treats as a string
+	delimiter, an escape introducer, a variable reference, or a
+	subexpression opener - so neither value can break out of the
+	single-quoted literal it is embedded in, regardless of which
+	Unicode characters PowerShell's parser happens to accept as
+	quotes. The previous approach (single-quoted literals with
+	embedded U+0027 doubled) was bypassable via the typographic
+	apostrophes U+2018 / U+2019 / U+201B, which Windows PowerShell
+	5.1 also accepts as string delimiters.
+	"""
+	voice_line = ""
+	if voice_name:
+		voice_line = (
+			"$b=[Convert]::FromBase64String('%s');"
+			"$s.SelectVoice([System.Text.Encoding]::UTF8.GetString($b));"
+		) % _ps_b64_utf8(voice_name)
+	return (
+		"Add-Type -AssemblyName System.Speech;"
+		"$s=New-Object System.Speech.Synthesis.SpeechSynthesizer;"
+		+ voice_line
+		+ "$b=[Convert]::FromBase64String('%s');" % _ps_b64_utf8(msg)
+		+ "$s.Speak([System.Text.Encoding]::UTF8.GetString($b));"
+	)
+
 def _sapi5_speak(msg):
 	"""Speak *msg* using the selected SAPI5 voice on a background thread.
 
@@ -177,25 +212,9 @@ def _sapi5_speak(msg):
 		#      at the process boundary either - there is no command line
 		#      to inject into at all.
 		try:
-			import base64
 			import subprocess
 
-			def _ps_literal(value):
-				# Single-quoted PowerShell string literal: everything
-				# between the quotes is literal, except that an embedded
-				# single quote must be doubled.
-				return "'" + value.replace("'", "''") + "'"
-
-			voice_line = (
-				"$s.SelectVoice(%s);" % _ps_literal(voice_name)
-				if voice_name else ""
-			)
-			script = (
-				"Add-Type -AssemblyName System.Speech;"
-				"$s=New-Object System.Speech.Synthesis.SpeechSynthesizer;"
-				+ voice_line
-				+ "$s.Speak(%s);" % _ps_literal(msg)
-			)
+			script = _build_sapi5_ps_script(msg, voice_name)
 			encoded = base64.b64encode(
 				script.encode("utf-16-le")
 			).decode("ascii")
