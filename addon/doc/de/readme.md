@@ -6,7 +6,7 @@ FreeRadio ist ein vollwertiges Add-on für Internetradio, Podcasts, Hörbücher 
 
 - **Internetradio** — Über 50.000 Sender aus dem Verzeichnis von [Radio Browser](https://www.radio-browser.info/) durchstöbern und durchsuchen, ergänzt um Treffer von TuneIn und iHeartRadio. Favoriten speichern, neu anordnen und von überall in Windows per globalem Tastenbefehl direkt aufrufen — siehe [Das Verzeichnis von Radio Browser](#radio-browser-directory) und [Favoriten](#favourites).
 - **Podcasts** — Beliebige RSS- oder Atom-Feeds abonnieren oder das Podcast-Verzeichnis von Apple durchsuchen und Folgen schon vor dem Abonnieren anhören. Die Wiedergabeposition wird automatisch gespeichert, das Hören geht an der zuletzt gehörten Stelle weiter — siehe [Podcasts](#podcasts).
-- **Hörbücher** — Bücher aus zwei Quellen suchen, streamen oder herunterladen: [GETEM](https://getem.boun.edu.tr/), die digitale Bibliothek der Boğaziçi-Universität für blinde und sehbehinderte Menschen, und [LibriVox](https://librivox.org/), das von Freiwilligen eingelesene Hörbuchprojekt mit gemeinfreien Werken (ganz ohne Konto), mit automatischem Fortsetzen über mehrteilige Werke hinweg — siehe [Hörbücher (GETEM und LibriVox)](#audio-books-getem-and-librivox).
+- **Hörbücher** — Bücher aus drei Quellen suchen, streamen oder herunterladen: [GETEM](https://getem.boun.edu.tr/), die digitale Bibliothek der Boğaziçi-Universität für blinde und sehbehinderte Menschen, [LibriVox](https://librivox.org/), das von Freiwilligen eingelesene Hörbuchprojekt mit gemeinfreien Werken, und die Project Gutenberg Open Audiobook Collection — die beiden letzteren ganz ohne Konto —, mit automatischem Fortsetzen über mehrteilige Werke hinweg — siehe [Hörbücher (GETEM, LibriVox und Project Gutenberg)](#audio-books-getem-librivox-and-project-gutenberg).
 - **Lokale Jukebox** — Audiodateien auf allen angeschlossenen Laufwerken nach Dateinamen durchsuchen oder eine persönliche Sammlung aus Dateien und Ordnern aufbauen und mit denselben Werkzeugen abspielen, die auch Podcasts und Hörbücher bekommen: Fortsetzen, Springen, Tempo und Tonhöhe — siehe [Lokale Jukebox](#local-jukebox).
 - **Aufnehmen** — Das Laufende sofort mitschneiden, einen einzelnen Titel automatisch von Anfang bis Ende aufnehmen oder einmalige und wiederkehrende Aufnahmen planen — alles, ohne die Wiedergabe zu unterbrechen — siehe [Aufnehmen](#recording).
 - **Timeshift (Live-Radio zurückspulen)** — Einen laufenden Sender wie mit einem Festplattenrekorder anhalten und zurückspulen und jederzeit wieder zum Live-Signal aufschließen — siehe [Timeshift (Live-Radio zurückspulen)](#time-shift-rewind-live-radio).
@@ -200,6 +200,17 @@ Die Favoritenliste ist eine persönliche, dauerhaft gespeicherte Sendersammlung.
 Favoriten lassen sich mit `Strg+Windows+→` und `Strg+Windows+←` abspielen; diese Tastenbefehle wirken auch bei geschlossenem Browserfenster.
 
 Zum Löschen eines Senders aus der Favoritenliste diesen auswählen und die Schaltfläche **Sender löschen** oder die `Entf`-Taste verwenden. Danach rücken Fokus und Auswahl automatisch auf den nächsten Sender der Liste. War es der letzte Eintrag, geht der Fokus auf den vorherigen Sender. Ist die Liste anschließend leer, wandert der Fokus auf die Wiedergabe-Schaltfläche.
+
+### Mehrere Einträge markieren und entfernen
+
+Die Favoriten, die Lieblingstitel, die Hörbuchbibliothek und die Jukebox-Liste unterstützen alle das Markieren mehrerer Einträge und deren gemeinsames Entfernen in einem Schritt:
+
+- Der **Punkt** auf einem hervorgehobenen Eintrag setzt die Markierung oder hebt sie auf. NVDA sagt die Änderung an, und die Zeile eines markierten Eintrags trägt den Zusatz „(markiert)“, sodass der Zustand beim Weiterblättern durch die Liste klar bleibt.
+- **Entf** entfernt alle markierten Einträge auf einmal. Ist nichts markiert, entfernt `Entf` wie bisher nur den gerade ausgewählten Eintrag.
+- Das Kontextmenü jeder Liste (Kontextmenütaste oder `Umschalt+F10`) enthält den Befehl **Markierte entfernen**, der dasselbe tut; er ist nur aktiv, wenn mindestens ein Eintrag markiert ist.
+- Bevor irgendetwas gelöscht wird, nennt ein einziger Bestätigungsdialog die Zahl der zu entfernenden Einträge.
+
+Markierungen gelten je Liste und verfallen, sobald die Einträge entfernt oder einzeln wieder abgewählt werden; über Sitzungen hinweg bleiben sie nicht erhalten.
 
 ### Favoriten exportieren und importieren
 
@@ -510,32 +521,33 @@ Nur das Gewählte wandert ins Profil; alles Übrige behält, was dort bereits hi
 
 Die Abos stehen in `freeradio_podcasts.json` im NVDA-Benutzerkonfigurationsordner. Die Positionen in den Folgen liegen getrennt davon in `podcast_positions.json` am selben Ort. Beide Dateien sind reines JSON und lassen sich sichern oder auf einen anderen Rechner übertragen.
 
-## Hörbücher (GETEM und LibriVox)
+## Hörbücher (GETEM, LibriVox und Project Gutenberg)
 
-FreeRadio bringt einen Hörbuch-Player mit, der Bücher aus zwei Quellen sucht, abspielt und herunterlädt:
+FreeRadio bringt einen Hörbuch-Player mit, der Bücher aus drei Quellen sucht, abspielt und herunterlädt:
 
 - **[GETEM](https://getem.boun.edu.tr/)** — die digitale Bibliothek des Zentrums für Blinde und Sehbehinderte der Boğaziçi-Universität. Zum Streamen oder Herunterladen des Audios ist eine kostenlose Mitgliedschaft nötig (zum bloßen Stöbern nicht) — siehe [Anmelden](#signing-in) weiter unten.
 - **[LibriVox](https://librivox.org/)** — das von Freiwilligen eingelesene Hörbuchprojekt mit gemeinfreien Werken. Ein Konto oder eine Anmeldung braucht es in keiner Form; der gesamte Katalog samt Audiodateien ist gemeinfrei und frei zugänglich.
+- **Project Gutenberg Open Audiobook Collection** — von Menschen und von Rechnern gelesene gemeinfreie Hörbücher, die auf [archive.org](https://archive.org/) liegen, als Gegenstück zur Textbibliothek von Project Gutenberg. Wie bei LibriVox ist kein Konto und keine Anmeldung nötig.
 
-Die Treffer beider Quellen erscheinen zusammen in einer einzigen Liste **Suchergebnisse** und einer einzigen **Bibliothek** — es gibt keine getrennte Registerkarte und keine Auswahlliste zum Umschalten. Die Quelle jedes Buchs (GETEM oder LibriVox) steht als Kennzeichnung neben dem Titel und in den Details, sodass sie stets erkennbar bleibt. Suchen, Anhören, Aufnehmen in die Bibliothek, Abspielen und Herunterladen funktionieren bei beiden Quellen genau gleich; mehrteilige Werke laufen mit automatischem Fortsetzen über die Teile hinweg, und Bücher lassen sich zum Offline-Hören herunterladen — alles durchgängig barrierefrei.
+Die Treffer aller drei Quellen erscheinen zusammen in einer einzigen Liste **Suchergebnisse** und einer einzigen **Bibliothek** — es gibt keine getrennte Registerkarte und keine Auswahlliste zum Umschalten. Die Quelle jedes Buchs (GETEM, LibriVox oder Project Gutenberg) steht als Kennzeichnung neben dem Titel und in den Details, sodass sie stets erkennbar bleibt. Suchen, Anhören, Aufnehmen in die Bibliothek, Abspielen und Herunterladen funktionieren bei allen Quellen genau gleich; mehrteilige Werke laufen mit automatischem Fortsetzen über die Teile hinweg, und Bücher lassen sich zum Offline-Hören herunterladen — alles durchgängig barrierefrei.
 
-Jede der beiden Quellen lässt sich unter **NVDA-Menü → Einstellungen → Einstellungen → FreeRadio** über die Liste **Hörbuch-Quellen** abschalten, wenn nur eine davon durchsucht werden soll. Standardmäßig sind beide aktiv.
+Jede Quelle lässt sich einzeln unter **NVDA-Menü → Einstellungen → Einstellungen → FreeRadio** über die Liste **Hörbuch-Quellen** abschalten, wenn nur ein Teil davon durchsucht werden soll. Standardmäßig sind alle drei aktiv.
 
-> **Hinweis:** Zum Hören eines GETEM-Buchs ist eine kostenlose GETEM-Mitgliedschaft nötig. Der Katalog lässt sich ohne Konto durchstöbern, das Auflösen und Abspielen des Audios eines GETEM-Buchs jedoch nicht — siehe [Anmelden](#signing-in) weiter unten. Bei LibriVox-Büchern ist nie ein Konto erforderlich.
+> **Hinweis:** Zum Hören eines GETEM-Buchs ist eine kostenlose GETEM-Mitgliedschaft nötig. Der Katalog lässt sich ohne Konto durchstöbern, das Auflösen und Abspielen des Audios eines GETEM-Buchs jedoch nicht — siehe [Anmelden](#signing-in) weiter unten. Bei Büchern von LibriVox und Project Gutenberg ist nie ein Konto erforderlich.
 
 ### Die Registerkarte „Hörbücher“ erreichen
 
 Den Senderbrowser mit `Strg+Windows+R` öffnen und mit `Strg+Tabulator` oder `Alt+7` zur Registerkarte **Hörbücher** wechseln. Sie hat drei Bereiche:
 
-1. **Suche** — ein Textfeld, das beide aktivierten Kataloge auf einmal durchsucht, mit einer Trefferliste, die nach dem Start einer Suche erscheint.
-2. **Bibliothek** — die Liste der aufgenommenen Bücher beider Quellen, wo sie abgespielt, heruntergeladen und verwaltet werden.
+1. **Suche** — ein Textfeld, das alle aktivierten Kataloge auf einmal durchsucht, mit einer Trefferliste, die nach dem Start einer Suche erscheint.
+2. **Bibliothek** — die Liste der aufgenommenen Bücher aller Quellen, wo sie abgespielt, heruntergeladen und verwaltet werden.
 3. **Details** — ein schreibgeschütztes Feld mit Quelle, Titel, Autor, Sprecher, Verlag, Format, Teilezahl, Beschreibung und Katalogadresse des jeweils ausgewählten Buchs, aus beiden Listen.
 
 ### Anmelden
 
 GETEM verlangt eine registrierte Mitgliedschaft, um das eigentliche Audio eines Buchs zu streamen oder herunterzuladen, auch wenn sich der Katalog frei durchsuchen lässt. GETEM-Benutzername und -Passwort werden einmalig unter **NVDA-Menü → Einstellungen → Einstellungen → FreeRadio** eingetragen; sie liegen verschlüsselt auf der Festplatte (über die Windows-Datenschutz-API, gebunden an das Windows-Benutzerkonto) und werden danach automatisch wiederverwendet. Ohne hinterlegte Zugangsdaten weist FreeRadio beim Abspielen oder Herunterladen eines GETEM-Buchs darauf hin, sie zuerst in den Einstellungen einzutragen.
 
-Bei LibriVox entfällt die Anmeldung vollständig — Treffer und Audio lassen sich sofort suchen, anhören, abspielen und herunterladen, ganz ohne Zugangsdaten.
+Bei LibriVox und Project Gutenberg entfällt die Anmeldung vollständig — Treffer und Audio lassen sich sofort suchen, anhören, abspielen und herunterladen, ganz ohne Zugangsdaten.
 
 ### Nach Hörbüchern suchen
 
@@ -543,6 +555,9 @@ Einen Suchbegriff ins Suchfeld eintragen und die `Eingabetaste` drücken. FreeRa
 
 - **GETEM** wird gleichzeitig nach Titel, Autor, Sprecher, Thema und Verlag durchsucht, da das GETEM-eigene Suchformular nur die Einschränkung über all diese Felder zusammen kennt und keine übergreifende Suche über eines davon. Angezeigt werden nur Werke, die tatsächlich als Audio vorliegen (menschlich oder synthetisch gelesen, Audiodeskription, Hörspiel, DAISY-Hörbuch usw.); Braille, Großdruck und andere Nicht-Audio-Formate werden automatisch herausgefiltert.
 - **LibriVox** wird nach Titel oder Autor bzw. lesender Person in seinem gemeinfreien Katalog durchsucht.
+- **Project Gutenberg** wird nach Titel oder Autor in der Open Audiobook Collection auf archive.org durchsucht.
+
+Wird stattdessen die Adresse der Katalog- oder Detailseite eines Buchs direkt ins Suchfeld eingefügt — eine GETEM-Katalogseite oder eine „details“-Seite auf archive.org für einen LibriVox- oder Project-Gutenberg-Titel —, löst FreeRadio genau dieses eine Buch auf, statt eine Stichwortsuche zu starten.
 
 NVDA sagt an, wie viele Hörbücher insgesamt gefunden wurden.
 
@@ -563,9 +578,11 @@ Aufgenommene Bücher erscheinen in der Liste **Bibliothek**, mit Titel, Autor un
 **Kontextmenü für Bibliothekseinträge:** Ein Rechtsklick auf ein Buch — oder die Kontextmenütaste bzw. `Umschalt+F10` bei ausgewähltem Buch — öffnet ein Menü mit:
 - **Medium wiedergeben** — die Wiedergabe starten, wie mit der `Eingabetaste`.
 - **Buch herunterladen** — sämtliche Teile des Buchs laden; siehe [Hörbücher herunterladen](#downloading-audio-books) weiter unten.
-- **Adresse kopieren** — die Adresse der Katalogseite in die Zwischenablage übernehmen (die GETEM-Katalogseite bei einem GETEM-Buch, die archive.org-Detailseite bei einem LibriVox-Buch).
+- **Adresse kopieren** — die Adresse der Katalogseite in die Zwischenablage übernehmen (die GETEM-Katalogseite bei einem GETEM-Buch, die archive.org-Detailseite bei einem Buch von LibriVox oder Project Gutenberg).
 - **Audioprofil für dieses Buch speichern** / **Audioprofil löschen** — siehe [Audioprofil für ein Hörbuch](#audio-book-audio-profile) weiter unten.
 - **Aus der Bibliothek entfernen** — das Buch aus der Bibliothek löschen.
+
+Es lassen sich auch mehrere Bücher auf einmal markieren und gemeinsam entfernen — siehe [Mehrere Einträge markieren und entfernen](#marking-and-removing-multiple-items) unter „Favoriten“.
 
 ### Wiedergabe und Fortsetzen
 
@@ -589,7 +606,7 @@ Ein Buch in der Bibliothek auswählen und im Kontextmenü **Buch herunterladen**
 
 ### Wo die Hörbuchdaten liegen
 
-Jede Quelle führt ihre eigene Bibliotheksdatei, auch wenn beide auf der Registerkarte „Hörbücher“ zusammengeführt erscheinen. Die GETEM-Bibliothek (aufgenommene Bücher und ihr Hörfortschritt) liegt in `freeradio_getem_library.json`, die LibriVox-Bibliothek getrennt davon in `freeradio_librivox_library.json`, beide im NVDA-Benutzerkonfigurationsordner. Die verschlüsselten GETEM-Zugangsdaten liegen separat in `freeradio_getem_credentials.bin` am selben Ort und lassen sich nur von demselben Windows-Benutzerkonto entschlüsseln, das sie gespeichert hat. Für LibriVox gibt es keine Zugangsdatendatei, da dort kein Konto nötig ist.
+Jede Quelle führt ihre eigene Bibliotheksdatei, auch wenn alle auf der Registerkarte „Hörbücher“ zusammengeführt erscheinen. Die GETEM-Bibliothek (aufgenommene Bücher und ihr Hörfortschritt) liegt in `freeradio_getem_library.json`, die LibriVox-Bibliothek getrennt davon in `freeradio_librivox_library.json` und die Project-Gutenberg-Bibliothek in `freeradio_gutenberg_library.json` — alle drei im NVDA-Benutzerkonfigurationsordner. Die verschlüsselten GETEM-Zugangsdaten liegen separat in `freeradio_getem_credentials.bin` am selben Ort und lassen sich nur von demselben Windows-Benutzerkonto entschlüsseln, das sie gespeichert hat. Für LibriVox und Project Gutenberg gibt es keine Zugangsdatendatei, da dort kein Konto nötig ist.
 
 ## Lokale Jukebox
 
@@ -621,8 +638,8 @@ Einen beliebigen Teil eines Dateinamens in das Feld **Auf Datenträgern suchen**
 Die Jukebox-Liste ist die dauerhaft gespeicherte, persönliche Sammlung. Aufnehmen lassen sich zwei Arten von Einträgen:
 
 - **Datei hinzufügen…** — öffnet eine Dateiauswahl für eine oder mehrere einzelne Audiodateien. Alle gewählten Dateien werden auf einmal aufgenommen.
-- **Ordner hinzufügen…** — öffnet eine Ordnerauswahl. Jede Audiodatei im gewählten Ordner, auch in dessen Unterordnern, gilt als **Titel** dieses Ordners. Der Ordner selbst ist ein einziger Eintrag in der Jukebox-Liste; die Dateien darin erscheinen in der Titelliste, sobald der Ordner ausgewählt ist.
-- **Entfernen** — nimmt den gewählten Eintrag aus der Jukebox. Beim Entfernen eines Ordners wird nichts von Festplatte oder Datenträger gelöscht, der Ordner wird lediglich vergessen.
+- **Ordner hinzufügen…** — öffnet eine Ordnerauswahl, in der sich mehrere Ordner auf einmal auswählen lassen. Jede Audiodatei in einem gewählten Ordner, auch in dessen Unterordnern, gilt als **Titel** dieses Ordners. Jeder Ordner wird als eigener Eintrag in die Jukebox-Liste aufgenommen; die Dateien darin erscheinen in der Titelliste, sobald der Ordner ausgewählt ist. Nach dem Schließen der Auswahl sagt NVDA an, wie viele Ordner hinzugekommen sind.
+- **Entfernen** — nimmt den gewählten Eintrag aus der Jukebox. Beim Entfernen eines Ordners wird nichts von Festplatte oder Datenträger gelöscht, der Ordner wird lediglich vergessen. Es lassen sich auch mehrere Einträge auf einmal markieren und gemeinsam entfernen — siehe [Mehrere Einträge markieren und entfernen](#marking-and-removing-multiple-items) unter „Favoriten“.
 
 Die Jukebox-Liste wird automatisch gespeichert und übersteht damit einen NVDA-Neustart. Ordnerinhalte werden bei Bedarf eingelesen und zwischengespeichert; das Hinzufügen eines Ordners geht deshalb auch bei sehr großen Sammlungen sofort — der vollständige Durchlauf erfolgt beim ersten Auswählen dieses Ordners. Kommen später außerhalb von FreeRadio Dateien hinzu, liest der Eintrag **Ordner neu einlesen** im Kontextmenü des Ordners sie nach.
 
@@ -685,7 +702,7 @@ Ist ein Titel in der Liste ausgewählt, stehen folgende Aktionen bereit:
 - **Auf Spotify abspielen:** Versucht, die Spotify-Anwendung direkt zu öffnen. Ist sie nicht installiert, wird auf die Spotify-Website ausgewichen und der erste Treffer automatisch abgespielt.
 - **Auf YouTube abspielen (`Alt+O`):** Sucht den ausgewählten Titel bei YouTube und öffnet die Ergebnisse im Standardbrowser.
 - **Songtext anzeigen:** Holt und zeigt den Songtext zum ausgewählten Titel. Die Texte stammen von [lrclib.net](https://lrclib.net) (kostenlos, ohne Konto). Während die Suche im Hintergrund läuft, erklingt kurz die Meldung „Songtext wird abgerufen…“. Wird ein Text gefunden, öffnet er sich in einem schreibgeschützten Dialog, wo er sich mit NVDA lesen und in die Zwischenablage kopieren lässt. Findet sich keiner, sagt NVDA das an. Während ein Abruf läuft, ist die Schaltfläche vorübergehend deaktiviert, um Doppelanfragen zu vermeiden.
-- **Entfernen (`Alt+M`):** Löscht den ausgewählten Titel aus `likedSongs.txt` und aktualisiert die Liste. Die `Entf`-Taste löst bei Fokus auf der Liste dieselbe Aktion aus.
+- **Entfernen (`Alt+M`):** Löscht den ausgewählten Titel aus `likedSongs.txt` und aktualisiert die Liste. Die `Entf`-Taste löst bei Fokus auf der Liste dieselbe Aktion aus. Es lassen sich auch mehrere Titel auf einmal markieren und gemeinsam entfernen — siehe [Mehrere Einträge markieren und entfernen](#marking-and-removing-multiple-items) unter „Favoriten“.
 - **Aktualisieren (`Alt+E`):** Lädt die Liste neu aus der Datei.
 
 Die Schaltflächen für Spotify, YouTube, Songtext und Entfernen sind nur aktiv, wenn in der Liste ein echter Titel ausgewählt ist.
@@ -730,8 +747,8 @@ Die folgenden Optionen lassen sich unter NVDA-Menü → Einstellungen → Einste
 | Pfad zu ffmpeg.exe | Pfad zu der ffmpeg.exe, die für die Musikerkennung verwendet wird. Bleibt das Feld leer, wird automatisch eine ffmpeg.exe aus dem Add-on-Ordner genutzt. |
 | Bei der Jukebox-Suche auch Netzlaufwerke einbeziehen | Aktiviert, durchsucht die Dateisuche auf der Registerkarte „Jukebox“ auch verbundene Netzlaufwerke und UNC-Freigaben. Standardmäßig deaktiviert, da eine Suche über SMB deutlich langsamer ausfällt oder bei einer nicht erreichbaren Freigabe hängen bleiben kann — siehe [Lokale Jukebox](#local-jukebox). |
 | Aufnahmeordner | Legt fest, wohin aufgenommene Dateien gespeichert werden. Bleibt das Feld leer, gilt der Standardort `Dokumente\FreeRadio Recordings\`. Eine Schaltfläche zum Durchsuchen öffnet die Ordnerauswahl. Änderungen greifen sofort nach dem Speichern. |
-| Hörbuch-Quellen | Eine Liste zum Anhaken, welche Hörbuchquellen (**GETEM**, **LibriVox**) durchsucht und auf der Registerkarte „Hörbücher“ angezeigt werden. Standardmäßig sind beide aktiv. Wird eine Quelle abgewählt, verschwinden ihre Bücher aus den zusammengeführten Suchergebnissen und aus der Bibliotheksliste, ohne dass bereits Aufgenommenes gelöscht wird — siehe [Hörbücher (GETEM und LibriVox)](#audio-books-getem-and-librivox). |
-| GETEM-Benutzername / GETEM-Passwort | Die Zugangsdaten der [GETEM](https://getem.boun.edu.tr/)-Hörbuchmitgliedschaft, nötig zum Streamen oder Herunterladen des Audios eines Buchs — siehe [Anmelden](#signing-in). Sie liegen verschlüsselt auf der Festplatte, über die Windows-Datenschutz-API und gebunden an das Windows-Benutzerkonto; im Klartext werden sie nie gespeichert. Beide Felder leeren und speichern entfernt hinterlegte Zugangsdaten. LibriVox braucht kein Konto und hat kein entsprechendes Feld. |
+| Hörbuch-Quellen | Eine Liste zum Anhaken, welche Hörbuchquellen (**GETEM**, **LibriVox**, **Project Gutenberg**) durchsucht und auf der Registerkarte „Hörbücher“ angezeigt werden. Standardmäßig sind alle drei aktiv. Wird eine Quelle abgewählt, verschwinden ihre Bücher aus den zusammengeführten Suchergebnissen und aus der Bibliotheksliste, ohne dass bereits Aufgenommenes gelöscht wird — siehe [Hörbücher (GETEM, LibriVox und Project Gutenberg)](#audio-books-getem-librivox-and-project-gutenberg). |
+| GETEM-Benutzername / GETEM-Passwort | Die Zugangsdaten der [GETEM](https://getem.boun.edu.tr/)-Hörbuchmitgliedschaft, nötig zum Streamen oder Herunterladen des Audios eines Buchs — siehe [Anmelden](#signing-in). Sie liegen verschlüsselt auf der Festplatte, über die Windows-Datenschutz-API und gebunden an das Windows-Benutzerkonto; im Klartext werden sie nie gespeichert. Beide Felder leeren und speichern entfernt hinterlegte Zugangsdaten. LibriVox und Project Gutenberg brauchen kein Konto und haben kein entsprechendes Feld. |
 | Ausgabeformat der Aufnahme | Behält den Originalstream, extrahiert das Audio ohne Codec-Wechsel oder wandelt fertige Aufnahmen in MP3 um. Voreingestellt ist das Originalformat des Streams. |
 | MP3-Bitrate der Aufnahme | Legt die Bitrate fest, wenn als Ausgabeformat MP3 gewählt ist. Voreingestellt sind 128 kb/s. |
 | Prüfung der Internetverbindung vor der Wiedergabe deaktivieren | Empfohlen, wenn der Start eines Senders spürbar verzögert einsetzt. Auch bei blockiertem DNS hilfreich. |
@@ -780,6 +797,14 @@ FreeRadio sucht über GitHub automatisch nach neuen Versionen.
 - Fehlt ein direkter Downloadlink, erscheint eine Schaltfläche **Seite öffnen**, und die GitHub-Veröffentlichungsseite öffnet sich im Standardbrowser.
 
 **Automatische Prüfungen abschalten:** Die Option **Automatisch nach Updates suchen** unter NVDA-Menü → Einstellungen → Einstellungen → FreeRadio deaktivieren.
+
+## Änderungsprotokoll
+
+**Mehrere Ordner auf einmal in die Jukebox aufnehmen**
+- Die Schaltfläche **Ordner hinzufügen…** auf der Registerkarte „Jukebox“ erlaubt jetzt die Auswahl mehrerer Ordner auf einmal, statt sie einzeln aufnehmen zu müssen. Alle gewählten Ordner kommen in einem Durchgang hinzu, und eine einzige Ansage nennt anschließend ihre Zahl.
+
+**Mehrere Einträge markieren und entfernen (Favoriten, Lieblingstitel, Hörbücher, Jukebox)**
+- In den Listen der Favoriten, der Lieblingstitel, der Hörbuchbibliothek und der Jukebox lassen sich jetzt mehrere Einträge markieren, bevor sie entfernt werden: Der **Punkt** setzt oder entfernt die Markierung des hervorgehobenen Eintrags (markierte Zeilen tragen den Zusatz „(markiert)“), anschließend entfernt **Entf** oder der Kontextmenübefehl **Markierte entfernen** alle markierten Einträge auf einmal, nach einem einzigen Bestätigungsdialog. Einzelheiten stehen unter [Mehrere Einträge markieren und entfernen](#marking-and-removing-multiple-items) im Abschnitt „Favoriten“.
 
 ## Dank und Danksagungen
 

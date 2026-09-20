@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: FreeRadio 2026.24.1\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
 "POT-Creation-Date: 2026-09-20 11:24+0300\n"
-"PO-Revision-Date: \n"
+"PO-Revision-Date: 2026-09-20 12:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -596,7 +596,7 @@ msgstr ""
 #. Translators: Error returned when a LibriVox RSS feed contains XML entity declarations, which are rejected as a security measure against entity-expansion attacks.
 #: addon\globalPlugins\freeradio\librivox.py:548
 msgid "The feed contains XML entity declarations and was rejected."
-msgstr ""
+msgstr "Der Feed enthält XML-Entity-Deklarationen und wurde abgelehnt."
 
 #. Translators: Error returned when the book's LibriVox RSS feed could not be fetched or parsed.
 #: addon\globalPlugins\freeradio\librivox.py:558
@@ -982,12 +982,12 @@ msgstr "Keine neuen Folgen (304)."
 #. Translators: Error returned when a subscribed feed's response is larger than the 10 MB safety cap (a real feed never is).
 #: addon\globalPlugins\freeradio\podcast.py:424
 msgid "Feed is too large (>10 MB)."
-msgstr ""
+msgstr "Der Feed ist zu groß (über 10 MB)."
 
 #. Translators: Error returned when a subscribed feed contains XML entity declarations, which are rejected as a security measure against entity-expansion attacks.
 #: addon\globalPlugins\freeradio\podcast.py:438
 msgid "Feed contains XML entity declarations and was rejected."
-msgstr ""
+msgstr "Der Feed enthält XML-Entity-Deklarationen und wurde abgelehnt."
 
 #. Translators: Error returned when a subscribed feed's content can't be parsed as either RSS or Atom XML.
 #: addon\globalPlugins\freeradio\podcast.py:447
@@ -1076,7 +1076,7 @@ msgstr "Autor: %s"
 
 #. Translators: Field:value line for the book's director (GETEM audio-description works only, e.g. an audio-described film).
 #: addon\globalPlugins\freeradio\radioDialog.py:466
-#, fuzzy, python-format
+#, python-format
 msgid "Director: %s"
 msgstr "Regie: %s"
 
@@ -1088,7 +1088,7 @@ msgstr "Sprecher: %s"
 
 #. Translators: Field label for the 'actors' value specifically (GETEM audio-description works only); kept short as 'Cast' rather than 'Actors' to match common media-details wording.
 #: addon\globalPlugins\freeradio\radioDialog.py:472
-#, fuzzy, python-format
+#, python-format
 msgid "Cast: %s"
 msgstr "Besetzung: %s"
 
@@ -1106,13 +1106,13 @@ msgstr "Typ: %s"
 
 #. Translators: Field:value line for the work's release year (GETEM audio-description works only).
 #: addon\globalPlugins\freeradio\radioDialog.py:481
-#, fuzzy, python-format
+#, python-format
 msgid "Release year: %s"
 msgstr "Erscheinungsjahr: %s"
 
 #. Translators: Field:value line for the work's IMDB rating (GETEM audio-description works only).
 #: addon\globalPlugins\freeradio\radioDialog.py:484
-#, fuzzy, python-format
+#, python-format
 msgid "IMDB rating: %s"
 msgstr "IMDb-Bewertung: %s"
 
@@ -1907,43 +1907,36 @@ msgstr "Nur Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save volume level and the current pitch transpose
 #: addon\globalPlugins\freeradio\radioDialog.py:2965
-#, fuzzy
 msgid "Volume and pitch transpose"
 msgstr "Lautstärke und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save effects (FX/EQ) and the current pitch transpose
 #: addon\globalPlugins\freeradio\radioDialog.py:2967
-#, fuzzy
 msgid "Effects and pitch transpose"
 msgstr "Effekte und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save the current playback speed and pitch transpose
 #: addon\globalPlugins\freeradio\radioDialog.py:2969
-#, fuzzy
 msgid "Playback speed and pitch transpose"
 msgstr "Wiedergabetempo und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save volume, effects, and the current pitch transpose
 #: addon\globalPlugins\freeradio\radioDialog.py:2971
-#, fuzzy
 msgid "Volume, effects, and pitch transpose"
 msgstr "Lautstärke, Effekte und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save volume, playback speed, and pitch transpose
 #: addon\globalPlugins\freeradio\radioDialog.py:2973
-#, fuzzy
 msgid "Volume, playback speed, and pitch transpose"
 msgstr "Lautstärke, Wiedergabetempo und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save effects, playback speed, and pitch transpose
 #: addon\globalPlugins\freeradio\radioDialog.py:2975
-#, fuzzy
 msgid "Effects, playback speed, and pitch transpose"
 msgstr "Effekte, Wiedergabetempo und Tonhöhe"
 
 #. Translators: Option in audio profile save dialog: save volume, effects, playback speed, and pitch transpose
 #: addon\globalPlugins\freeradio\radioDialog.py:2977
-#, fuzzy
 msgid "Volume, effects, playback speed, and pitch transpose"
 msgstr "Lautstärke, Effekte, Wiedergabetempo und Tonhöhe"
 
@@ -2213,7 +2206,7 @@ msgstr "Senderdetails in die Zwischenablage kopiert"
 #. the moment '.' is pressed.
 #: addon\globalPlugins\freeradio\radioDialog.py:3457
 msgid " (marked)"
-msgstr ""
+msgstr " (markiert)"
 
 #. Translators: Body of the delete-confirmation dialog; %s is the station name.
 #: addon\globalPlugins\freeradio\radioDialog.py:3495
@@ -2273,9 +2266,8 @@ msgstr "%(name)s: Stream-Prüfung fehlgeschlagen — %(detail)s"
 #: addon\globalPlugins\freeradio\radioDialog.py:4972
 #: addon\globalPlugins\freeradio\radioDialog.py:7241
 #: addon\globalPlugins\freeradio\radioDialog.py:8225
-#, fuzzy
 msgid "Remove &Selected"
-msgstr "Ausgewählten Eintrag &entfernen"
+msgstr "M&arkierte entfernen"
 
 #. --- Stream test ---
 #. Translators: Context-menu item; re-checks whether the station's stream URL is currently reachable.
@@ -2321,9 +2313,9 @@ msgstr "Verschoben: %s"
 #: addon\globalPlugins\freeradio\radioDialog.py:4890
 #: addon\globalPlugins\freeradio\radioDialog.py:6830
 #: addon\globalPlugins\freeradio\radioDialog.py:7903
-#, fuzzy, python-format
+#, python-format
 msgid "Unmarked: %s"
-msgstr "Pausiert: %s"
+msgstr "Markierung aufgehoben: %s"
 
 #. Translators: Spoken after marking a favourite station in the multi-select removal flow; %s is the station name.
 #. Translators: Spoken after marking a liked song in the multi-select removal flow; %s is the song string.
@@ -2333,30 +2325,29 @@ msgstr "Pausiert: %s"
 #: addon\globalPlugins\freeradio\radioDialog.py:4894
 #: addon\globalPlugins\freeradio\radioDialog.py:6834
 #: addon\globalPlugins\freeradio\radioDialog.py:7907
-#, fuzzy, python-format
+#, python-format
 msgid "Marked: %s"
-msgstr "Verschoben: %s"
+msgstr "Markiert: %s"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:4424
-#, fuzzy, python-format
+#, python-format
 msgid "Do you want to delete the %d marked station?"
 msgid_plural "Do you want to delete the %d marked stations?"
-msgstr[0] "Soll der Sender „%s“ gelöscht werden?"
-msgstr[1] "Soll der Sender „%s“ gelöscht werden?"
+msgstr[0] "%d markierten Sender löschen?"
+msgstr[1] "%d markierte Sender löschen?"
 
 #. Translators: Title of the bulk-delete confirmation dialog for favourite stations.
 #: addon\globalPlugins\freeradio\radioDialog.py:4429
-#, fuzzy
 msgid "Delete Stations"
 msgstr "Sender löschen"
 
 #. Translators: Spoken after bulk-deleting marked favourite stations; %d is how many were removed.
 #: addon\globalPlugins\freeradio\radioDialog.py:4440
-#, fuzzy, python-format
+#, python-format
 msgid "%d station deleted"
 msgid_plural "%d stations deleted"
-msgstr[0] "Sender gelöscht"
-msgstr[1] "Sender gelöscht"
+msgstr[0] "%d Sender gelöscht"
+msgstr[1] "%d Sender gelöscht"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:4459
 msgid "Stop time (HH:MM):"
@@ -2507,15 +2498,14 @@ msgstr[0] "%d Titel"
 msgstr[1] "%d Titel"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:4907
-#, fuzzy, python-format
+#, python-format
 msgid "Do you want to remove the %d marked song from liked songs?"
 msgid_plural "Do you want to remove the %d marked songs from liked songs?"
-msgstr[0] "Soll „%s“ aus den Lieblingstiteln entfernt werden?"
-msgstr[1] "Soll „%s“ aus den Lieblingstiteln entfernt werden?"
+msgstr[0] "%d markierten Titel aus den Lieblingstiteln entfernen?"
+msgstr[1] "%d markierte Titel aus den Lieblingstiteln entfernen?"
 
 #. Translators: Title of the bulk-remove confirmation dialog for liked songs.
 #: addon\globalPlugins\freeradio\radioDialog.py:4912
-#, fuzzy
 msgid "Remove Songs"
 msgstr "Titel entfernen"
 
@@ -2528,11 +2518,11 @@ msgstr "Der Titel ließ sich nicht entfernen: %s"
 
 #. Translators: Spoken after bulk-removing marked liked songs; %d is how many were removed.
 #: addon\globalPlugins\freeradio\radioDialog.py:4929
-#, fuzzy, python-format
+#, python-format
 msgid "%d song removed"
 msgid_plural "%d songs removed"
-msgstr[0] "%d Titel"
-msgstr[1] "%d Titel"
+msgstr[0] "%d Titel entfernt"
+msgstr[1] "%d Titel entfernt"
 
 #. Translators: Body of the remove-confirmation dialog; %s is the song string as stored in the liked-songs file (e.g. "Artist - Title").
 #: addon\globalPlugins\freeradio\radioDialog.py:4997
@@ -2900,25 +2890,21 @@ msgstr "Feed-Adresse ko&pieren"
 
 #. Translators: Spoken when trying to play the previous jukebox track while already on the first one.
 #: addon\globalPlugins\freeradio\radioDialog.py:6079
-#, fuzzy
 msgid "Already at first track"
 msgstr "Bereits beim ersten Titel"
 
 #. Translators: Spoken when trying to play the next jukebox track while already on the last one.
 #: addon\globalPlugins\freeradio\radioDialog.py:6097
-#, fuzzy
 msgid "Already at last track"
 msgstr "Bereits beim letzten Titel"
 
 #. Translators: Spoken when cycling to the previous jukebox library entry while already on the first one.
 #: addon\globalPlugins\freeradio\radioDialog.py:6108
-#, fuzzy
 msgid "Already at first item"
 msgstr "Bereits beim ersten Eintrag"
 
 #. Translators: Spoken when cycling to the next jukebox library entry while already on the last one.
 #: addon\globalPlugins\freeradio\radioDialog.py:6133
-#, fuzzy
 msgid "Already at last item"
 msgstr "Bereits beim letzten Eintrag"
 
@@ -3022,25 +3008,24 @@ msgid "&Add to Library"
 msgstr "Zur &Bibliothek hinzufügen"
 
 #: addon\globalPlugins\freeradio\radioDialog.py:6852
-#, fuzzy, python-format
+#, python-format
 msgid "Do you want to remove the %d marked book from the library?"
 msgid_plural "Do you want to remove the %d marked books from the library?"
-msgstr[0] "Soll „%s“ aus den Lieblingstiteln entfernt werden?"
-msgstr[1] "Soll „%s“ aus den Lieblingstiteln entfernt werden?"
+msgstr[0] "%d markiertes Hörbuch aus der Bibliothek entfernen?"
+msgstr[1] "%d markierte Hörbücher aus der Bibliothek entfernen?"
 
 #. Translators: Title of the bulk-remove confirmation dialog for audio books.
 #: addon\globalPlugins\freeradio\radioDialog.py:6857
-#, fuzzy
 msgid "Remove From Library"
-msgstr "Aus der Bibliothek &entfernen"
+msgstr "Aus der Bibliothek entfernen"
 
 #. Translators: Spoken after bulk-removing marked audio books from the library; %d is how many were removed.
 #: addon\globalPlugins\freeradio\radioDialog.py:6874
 #, python-format
 msgid "%d book removed"
 msgid_plural "%d books removed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d Hörbuch entfernt"
+msgstr[1] "%d Hörbücher entfernt"
 
 #. Translators: Spoken while resolving a book's chapter list before playing it for the first time; %s is the book title.
 #. Translators: Spoken when starting a specific GETEM chapter/part; %s is the chapter title.
@@ -3164,13 +3149,8 @@ msgstr ""
 
 #. Translators: Label for the jukebox device-search field.
 #: addon\globalPlugins\freeradio\radioDialog.py:7453
-#, fuzzy
 msgid "Search on devices:"
-msgstr ""
-"#-#-#-#-#  catalog.po (FreeRadio 2026.24.1)  #-#-#-#-#\n"
-"Auf Datenträgern suchen:\n"
-"#-#-#-#-#  catalog.po (FreeRadio 2026.24.1)  #-#-#-#-#\n"
-"Suche:"
+msgstr "Auf Datenträgern suchen:"
 
 #. Translators: Accessible name/hint for the jukebox device-search field: searches local audio files by filename.
 #: addon\globalPlugins\freeradio\radioDialog.py:7456
@@ -3211,7 +3191,6 @@ msgstr "Titel im ausgewählten Jukebox-Eintrag"
 
 #. Translators: Button label; adds a single audio file (via a file picker) to the jukebox library.
 #: addon\globalPlugins\freeradio\radioDialog.py:7501
-#, fuzzy
 msgid "Add &File..."
 msgstr "&Datei hinzufügen..."
 
@@ -3222,13 +3201,12 @@ msgstr "&Ordner hinzufügen..."
 
 #. Translators: Button label; removes the selected file/folder from the jukebox library.
 #: addon\globalPlugins\freeradio\radioDialog.py:7505
-#, fuzzy
 msgid "&Remove"
 msgstr "Ent&fernen"
 
 #. Translators: Spoken when a jukebox device search starts; %s is the search text.
 #: addon\globalPlugins\freeradio\radioDialog.py:7602
-#, fuzzy, python-format
+#, python-format
 msgid "Searching devices for \"%s\"..."
 msgstr "Datenträger werden nach „%s“ durchsucht..."
 
@@ -3241,7 +3219,7 @@ msgstr "Keine passenden Audiodateien gefunden."
 
 #. Translators: Plural forms spoken after a successful device search; %d is how many audio files were found.
 #: addon\globalPlugins\freeradio\radioDialog.py:7630
-#, fuzzy, python-format
+#, python-format
 msgid "%d file found."
 msgid_plural "%d files found."
 msgstr[0] "%d Datei gefunden."
@@ -3251,54 +3229,46 @@ msgstr[1] "%d Dateien gefunden."
 #. Translators: Same confirmation as adding a single file; spoken here after adding a single folder to the jukebox.
 #: addon\globalPlugins\freeradio\radioDialog.py:7680
 #: addon\globalPlugins\freeradio\radioDialog.py:8085
-#, fuzzy, python-format
+#, python-format
 msgid "Added to jukebox: %s"
 msgstr "Zur Jukebox hinzugefügt: %s"
 
 #. Translators: Context-menu item; adds the selected device-search result to the jukebox library.
 #: addon\globalPlugins\freeradio\radioDialog.py:7696
-#, fuzzy
 msgid "&Add to Jukebox"
 msgstr "Zur &Jukebox hinzufügen"
 
 #. Translators: Spoken when trying to play a jukebox library entry that has no usable audio files.
 #: addon\globalPlugins\freeradio\radioDialog.py:7844
-#, fuzzy
 msgid "No playable audio in this item."
 msgstr "Dieser Eintrag enthält kein abspielbares Audio."
 
 #: addon\globalPlugins\freeradio\radioDialog.py:7925
-#, fuzzy, python-format
+#, python-format
 msgid "Do you want to remove the %d marked entry from the jukebox?"
 msgid_plural "Do you want to remove the %d marked entries from the jukebox?"
-msgstr[0] "Soll „%s“ aus den Lieblingstiteln entfernt werden?"
-msgstr[1] "Soll „%s“ aus den Lieblingstiteln entfernt werden?"
+msgstr[0] "%d markierten Eintrag aus der Jukebox entfernen?"
+msgstr[1] "%d markierte Einträge aus der Jukebox entfernen?"
 
 #. Translators: Title of the bulk-remove confirmation dialog for jukebox entries.
 #. Translators: Title of the jukebox remove-confirmation dialog.
 #: addon\globalPlugins\freeradio\radioDialog.py:7930
 #: addon\globalPlugins\freeradio\radioDialog.py:8102
-#, fuzzy
 msgid "Remove From Jukebox"
-msgstr ""
-"#-#-#-#-#  catalog.po (FreeRadio 2026.24.1)  #-#-#-#-#\n"
-"Aus der Bibliothek &entfernen\n"
-"#-#-#-#-#  catalog.po (FreeRadio 2026.24.1)  #-#-#-#-#\n"
-"Aus der Jukebox entfernen"
+msgstr "Aus der Jukebox entfernen"
 
 #. Translators: Spoken after bulk-removing marked jukebox entries; %d is how many were removed.
 #: addon\globalPlugins\freeradio\radioDialog.py:7937
-#, fuzzy, python-format
+#, python-format
 msgid "%d entry removed"
 msgid_plural "%d entries removed"
-msgstr[0] "Timer entfernt"
-msgstr[1] "Timer entfernt"
+msgstr[0] "%d Eintrag entfernt"
+msgstr[1] "%d Einträge entfernt"
 
 #. Translators: Context-menu item; plays the selected track from within a jukebox folder entry.
 #. Translators: Context-menu item; plays the selected jukebox file/folder.
 #: addon\globalPlugins\freeradio\radioDialog.py:7982
 #: addon\globalPlugins\freeradio\radioDialog.py:8212
-#, fuzzy
 msgid "&Play"
 msgstr "&Wiedergeben"
 
@@ -3306,7 +3276,6 @@ msgstr "&Wiedergeben"
 #. Translators: Jukebox context menu item - saves an audio profile (volume/effects/speed/transpose) that applies to this file
 #: addon\globalPlugins\freeradio\radioDialog.py:7988
 #: addon\globalPlugins\freeradio\radioDialog.py:8235
-#, fuzzy
 msgid "Save Audio Pr&ofile for This File"
 msgstr "Audiopr&ofil für diese Datei speichern"
 
@@ -3314,7 +3283,6 @@ msgstr "Audiopr&ofil für diese Datei speichern"
 #. Translators: Context-menu item; copies the selected entry's file/folder path to the clipboard.
 #: addon\globalPlugins\freeradio\radioDialog.py:7998
 #: addon\globalPlugins\freeradio\radioDialog.py:8246
-#, fuzzy
 msgid "&Copy Path"
 msgstr "Pfad &kopieren"
 
@@ -3339,17 +3307,16 @@ msgstr[1] "%d Dateien hinzugefügt."
 
 #. Translators: Title of the dialog used to add one or more folders to the jukebox at once.
 #: addon\globalPlugins\freeradio\radioDialog.py:8065
-#, fuzzy
 msgid "Add folders to the jukebox"
-msgstr "Bereits beim letzten Buch"
+msgstr "Ordner zur Jukebox hinzufügen"
 
 #. Translators: Plural forms spoken after adding several folders to the jukebox in one go (one folder picker used repeatedly); %d is how many folders were added.
 #: addon\globalPlugins\freeradio\radioDialog.py:8088
-#, fuzzy, python-format
+#, python-format
 msgid "%d folder added."
 msgid_plural "%d folders added."
-msgstr[0] "Die Hilfedatei wurde nicht gefunden."
-msgstr[1] "Die Hilfedatei wurde nicht gefunden."
+msgstr[0] "%d Ordner hinzugefügt."
+msgstr[1] "%d Ordner hinzugefügt."
 
 #. Translators: Body of the remove-confirmation dialog; %s is the jukebox entry title.
 #: addon\globalPlugins\freeradio\radioDialog.py:8100
@@ -3365,25 +3332,24 @@ msgstr "Aus der Jukebox entfernt: %s"
 
 #. Translators: Spoken after re-scanning a jukebox folder entry for changes on device; %s is the folder's title.
 #: addon\globalPlugins\freeradio\radioDialog.py:8137
-#, fuzzy, python-format
+#, python-format
 msgid "Rescanned: %s"
 msgstr "Neu eingelesen: %s"
 
 #. Translators: Spoken after saving an audio profile for a single jukebox file; %(file)s is its display name.
 #: addon\globalPlugins\freeradio\radioDialog.py:8151
-#, fuzzy, python-format
+#, python-format
 msgid "Audio profile saved for %(file)s"
 msgstr "Audioprofil für %(file)s gespeichert"
 
 #. Translators: Spoken after clearing a jukebox file's saved audio profile; %(file)s is its display name.
 #: addon\globalPlugins\freeradio\radioDialog.py:8160
-#, fuzzy, python-format
+#, python-format
 msgid "Audio profile cleared for %(file)s"
 msgstr "Audioprofil für %(file)s gelöscht"
 
 #. Translators: Context-menu item; re-scans a jukebox folder entry for added/removed files on device.
 #: addon\globalPlugins\freeradio\radioDialog.py:8217
-#, fuzzy
 msgid "&Rescan Folder"
 msgstr "Ordner &neu einlesen"
 
@@ -3585,7 +3551,6 @@ msgstr "Der Aufnahmeordner ließ sich nicht öffnen: %s"
 
 #. Translators: Checkbox label for the time-shift/rewind feature setting.
 #: addon\globalPlugins\freeradio\settingsPanel.py:89
-#, fuzzy
 msgid ""
 "&Enable time-shift buffer (rewind live radio, no effect on podcasts and "
 "audio books)"
@@ -4411,9 +4376,9 @@ msgstr "Sender nicht mehr in den Favoriten: %s"
 #. __name__ as the script identifier.
 #. Translators: Auto-generated description of a per-favourite-station shortcut, shown in NVDA's Input Gestures dialog; %s is the station name.
 #: addon\globalPlugins\freeradio\__init__.py:671
-#, fuzzy, python-format
+#, python-format
 msgid "%s playback shortcut"
-msgstr "Wiedergabe-Tastenbefehl für %s ()"
+msgstr "Wiedergabe-Tastenbefehl für %s"
 
 #. Translators: Menu item that opens the FreeRadio station browser dialog
 #: addon\globalPlugins\freeradio\__init__.py:701
@@ -4751,6 +4716,124 @@ msgid ""
 "- Removed a duplicate \"S\" in the Turkish sort-order table (`_TR_ORDER`) "
 "that shifted the sort key for every character after it.\n"
 msgstr ""
+"\n"
+"## Neu\n"
+"\n"
+"### Jukebox\n"
+"- **Mehrere Ordner auf einmal hinzufügen.** Die Schaltfläche zum Hinzufügen "
+"eines Ordners auf der Registerkarte „Jukebox“ erlaubt jetzt die Auswahl "
+"mehrerer Ordner und nimmt sie in einem Durchgang auf; eine einzige Meldung "
+"nennt anschließend die Zahl der hinzugefügten Ordner.\n"
+"\n"
+"### Mehrere Einträge markieren und gemeinsam entfernen\n"
+"- In den Listen **Favoriten**, **Lieblingstitel**, **Hörbücher** und "
+"**Jukebox** lassen sich jetzt mehrere Einträge markieren und zusammen "
+"entfernen:\n"
+"  - Der **Punkt** auf einem hervorgehobenen Eintrag setzt die Markierung "
+"oder hebt sie auf. Markierte Einträge tragen den Zusatz „(markiert)“, "
+"sodass ihr Zustand beim Durchsehen der Liste hörbar bleibt.\n"
+"  - **Entf** entfernt alle markierten Einträge auf einmal. Ist nichts "
+"markiert, entfernt Entf wie bisher nur den fokussierten Eintrag.\n"
+"  - Im Kontextmenü jeder Liste gibt es neu den Eintrag **Markierte "
+"entfernen**, aktiv nur dann, wenn mindestens ein Eintrag markiert ist.\n"
+"  - Ein einziger Bestätigungsdialog nennt die Zahl der zu entfernenden "
+"Einträge, bevor irgendetwas gelöscht wird.\n"
+"\n"
+"## Behoben\n"
+"\n"
+"### Wiedergabe und Fortsetzen\n"
+"- **Live-Sender werden beim Start nicht mehr fälschlich als Podcast "
+"behandelt.** Ein Live-Stream, dessen Adresse keine Dateiendung für eine "
+"Audiodatei trägt und für den keine echte gespeicherte Podcast-Position "
+"vorliegt, wird nicht mehr wie eine Podcast-Folge fortgesetzt. Betroffen "
+"waren bisher Sender wie „AudioBook Radio“, bei denen im Detaildialog ein "
+"Feld „Folge“ auftauchte und die hinter dem Kassetten-Ladeklang hängen "
+"blieben.\n"
+"\n"
+"### Aufnehmen\n"
+"- **Live-Sender, deren Radio-Browser-Tags „podcast“ enthalten, lassen sich "
+"wieder mit Strg+Windows+E aufnehmen.** Die Aufnahme und die Hilfsfunktionen "
+"zum Fortsetzen und Weiterschalten in der Wiedergabekette richten sich jetzt "
+"nach dem eigenen Feld `media_kind` statt nach einer Textsuche im freien "
+"Feld `tags` — das ist von der Community vergebener Genretext, den ein "
+"echter Live-Stream durchaus tragen darf.\n"
+"- **TuneIn-Sender werden jetzt korrekt aufgenommen und ihre Titel richtig "
+"erfasst.** Aufnahme mit Strg+Windows+E und Titelaufnahme schrieben zuvor "
+"die Antwort des Tuning-Dienstes auf die Festplatte statt des eigentlichen "
+"Tons; die Tuning-Adresse wird nun zuerst aufgelöst, sodass brauchbare und "
+"abspielbare Aufnahmen entstehen.\n"
+"\n"
+"### Audio-Spiegelung\n"
+"- **Die Audio-Spiegelung funktioniert jetzt auch bei Sendern, deren Server "
+"die Zahl gleichzeitiger Verbindungen begrenzt.** Die Hauptwiedergabe und "
+"der stets mitlaufende Timeshift-Puffer belegen bereits zwei Verbindungen; "
+"manche Server weisen eine dritte für die Spiegelung ab. Scheitert ein "
+"Spiegelungsversuch und läuft gerade keine Aufnahme, wird die Verbindung des "
+"Timeshift-Puffers freigegeben, die Spiegelung einmal wiederholt und der "
+"Puffer beim Beenden der Spiegelung automatisch wiederhergestellt.\n"
+"- Ein Fehler wurde behoben, bei dem das interne Aufräumen in "
+"`start_mirror()` — das Verwerfen einer veralteten Spiegelungs-Engine vor "
+"dem Öffnen einer neuen — den Timeshift-Puffer zu früh fortsetzte und damit "
+"die obige Korrektur bei jedem weiteren Versuch wieder zunichtemachte.\n"
+"\n"
+"### Jukebox\n"
+"- **Die Wiedergabe eines Jukebox-Ordners macht NVDA nicht mehr träge.** Das "
+"Einrichten von Lautstärke, EQ, Tempo und Tonhöhe sowie der Start der "
+"Wiedergabe laufen jetzt auf einem Hintergrund-Thread statt auf dem "
+"Hauptthread von NVDA, sodass die blockierenden BASS-Aufrufe Sprachausgabe "
+"und Eingaben beim automatischen Titelwechsel nicht mehr aufhalten.\n"
+"- **Audioprofile einzelner Titel überstehen jetzt unterschiedliche "
+"Schreibweisen und Formen des Pfads.** Profile werden nach derselben "
+"normalisierten Pfadform abgelegt, die die Eintragsliste ohnehin verwendet, "
+"mit einer einmaligen Umstellung beim Laden. Ein unter einer bestimmten "
+"Schreibweise gespeichertes Profil wird damit auch dann gefunden, wenn "
+"dieselbe Datei später anders geschrieben angesprochen wird (Dateisysteme "
+"ohne Beachtung der Groß- und Kleinschreibung, verbundene Netzlaufwerke).\n"
+"\n"
+"### Musikerkennung\n"
+"- **NVDA wirkt während einer laufenden Shazam-Erkennung nicht mehr träge.** "
+"Die Berechnung der Signatur in reinem Python ist rechenintensiv und "
+"konkurrierte, obwohl sie ohnehin auf einem Hintergrund-Thread lief, mit dem "
+"Thread von NVDA um die GIL. Der Erkennungs-Thread bekommt jetzt eine "
+"niedrigere Betriebssystem-Priorität, und Pythons GIL-Umschaltintervall wird "
+"während der Signaturberechnung vorübergehend verkürzt, sodass der Thread "
+"von NVDA zügig Rechenzeit erhält. An der Erkennungsgenauigkeit ändert das "
+"nichts, die Erkennungsdauer wächst nur unwesentlich.\n"
+"\n"
+"### Timer und geplante Aufnahmen\n"
+"- **Anstehende Sleeptimer und Wecker überstehen jetzt Add-on-Updates.** Sie "
+"liegen im Konfigurationsordner von NVDA statt im Installationsverzeichnis "
+"des Add-ons, das NVDA bei jedem Update löscht und neu anlegt.\n"
+"- **Geplante Aufnahmen verwenden jetzt das richtige NVDA-Profil.** Der "
+"Speicher für geplante Aufnahmen wird über `globalVars.appArgs.configPath` "
+"aufgelöst statt über `%APPDATA%\\nvda`. Eine portable NVDA-Kopie oder eine "
+"Sitzung mit `nvda.exe -c <Pfad>` schreibt und liest damit im eigenen Profil "
+"statt im installierten.\n"
+"- Ein Wettlauf wurde behoben, bei dem ein Timer, der zwischen dem "
+"Zurücksetzen des Wecksignals und dem Warten der Timerschleife angelegt "
+"wurde, sich um bis zu eine volle Minute verspäten konnte.\n"
+"\n"
+"### Dauerhafte Speicherung\n"
+"- **Benutzerdaten werden jetzt atomar geschrieben** (temporäre Datei und "
+"anschließend `os.replace()`), und zwar Favoriten, Timer, Podcast-"
+"Positionen, Titelnummern von Jukebox-Ordnern und die Jukebox-Bibliothek. "
+"Ein Absturz oder Stromausfall mitten im Schreiben kann damit keine "
+"beschädigte Datei mehr hinterlassen.\n"
+"\n"
+"### Oberfläche, Übersetzungen und Kleinigkeiten\n"
+"- `recorder.py` ruft jetzt `addonHandler.initTranslation()` auf, sodass "
+"`_()` den eigenen Übersetzungskatalog von FreeRadio verwendet.\n"
+"- Eine wirkungslose Absicherung über `globalVars.appArgs.secure` wurde "
+"entfernt, ebenso ein unausgeglichener Aufruf von `prePopup()` beim ersten "
+"Öffnen des Dialogs.\n"
+"- Der Tippfehler „potcasts“ in der Beschriftung des Timeshift-Kontrollfelds "
+"wurde korrigiert.\n"
+"- Ein verirrtes „()“ in den automatisch erzeugten Beschreibungen der "
+"Tastenbefehle je Lieblingssender im Eingabegesten-Dialog von NVDA wurde "
+"entfernt.\n"
+"- Ein doppeltes „S“ in der türkischen Sortiertabelle (`_TR_ORDER`) wurde "
+"entfernt, das den Sortierschlüssel für jedes nachfolgende Zeichen "
+"verschoben hat.\n"
 
 #~ msgid ""
 #~ "\n"
