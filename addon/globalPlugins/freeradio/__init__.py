@@ -117,8 +117,17 @@ def _build_sapi5_ps_script(msg, voice_name):
 	Unicode characters PowerShell's parser happens to accept as
 	quotes. The previous approach (single-quoted literals with
 	embedded U+0027 doubled) was bypassable via the typographic
-	apostrophes U+2018 / U+2019 / U+201B, which Windows PowerShell
-	5.1 also accepts as string delimiters.
+	apostrophes U+2018 / U+2019 / U+201A / U+201B, all four of which
+	Windows PowerShell 5.1 also accepts as string delimiters.
+
+	Note that a doubling-based fix would have to cover all five of
+	those characters, not just the ASCII apostrophe: verified on
+	Windows PowerShell 5.1, each of U+2018, U+2019, U+201A and
+	U+201B closes a single-quoted string exactly as U+0027 does.
+	U+201A is easy to miss because it is the one that does not look
+	like an apostrophe. That is the reason this function encodes
+	rather than escapes - the delimiter set is a property of the
+	parser, not something this code should try to enumerate.
 	"""
 	voice_line = ""
 	if voice_name:
