@@ -25,7 +25,7 @@ Na het indienen wordt het station beoordeeld en toegevoegd aan de openbare direc
 
 ## Vereisten
 
-- NVDA 2024.1 of later
+- NVDA 2025.1	 of later
 - Windows 10 of later
 - Internetverbinding
 

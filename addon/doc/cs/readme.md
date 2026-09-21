@@ -41,7 +41,7 @@ Po odeslání je stanice zkontrolována a přidána do veřejného adresáře. P
 
 ## Požadavky
 
-- NVDA 2024.1 nebo novější
+- NVDA 2025.1	 nebo novější
 - Windows 10 nebo novější
 - Připojení k internetu
 

@@ -41,7 +41,7 @@ Nach dem Absenden wird der Sender geprüft und ins öffentliche Verzeichnis aufg
 
 ## Voraussetzungen
 
-- NVDA 2024.1 oder neuer
+- NVDA 2025.1	 oder neuer
 - Windows 10 oder neuer
 - Internetverbindung
 

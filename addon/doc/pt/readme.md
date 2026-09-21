@@ -43,7 +43,7 @@ Após a submissão, a estação é revista e adicionada ao diretório público. 
 
 ## Requisitos
 
-- NVDA 2024.1 ou posterior
+- NVDA 2025.1	 ou posterior
 - Windows 10 ou posterior
 - Ligação à Internet
 

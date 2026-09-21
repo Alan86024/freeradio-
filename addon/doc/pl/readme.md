@@ -25,7 +25,7 @@ Po wysłaniu stacja zostanie sprawdzona i dodana do publicznego katalogu. Po zaa
 
 ## Wymagania
 
-- NVDA 2024.1 lub nowszy
+- NVDA 2025.1	 lub nowszy
 - Windows 10 lub nowszy
 - Połączenie z internetem
 

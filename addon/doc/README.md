@@ -41,7 +41,7 @@ After submitting, the station is reviewed and added to the public directory. Onc
 
 ## Requirements
 
-- NVDA 2024.1 or later
+- NVDA 2025.1	 or later
 - Windows 10 or later
 - Internet connection
 

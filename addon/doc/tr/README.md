@@ -41,7 +41,7 @@ Gönderildikten sonra istasyon incelenerek dizine eklenir. Kabul edildikten sonr
 
 ## Gereksinimler
 
-- NVDA 2024.1 veya üzeri
+- NVDA 2025.1	 veya üzeri
 - Windows 10 veya üzeri
 - İnternet bağlantısı
 
