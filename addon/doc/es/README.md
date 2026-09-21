@@ -6,7 +6,7 @@ FreeRadio es un complemento completo para el lector de pantalla NVDA que incluye
 
 - **Radio por Internet** — Explore y busque entre más de 50.000 emisoras desde el directorio de [Radio Browser](https://www.radio-browser.info/), con resultados complementados por TuneIn e iHeartRadio. Guarda favoritos, reordénalos y salta directamente a cualquiera de ellos con un atajo de teclado global desde cualquier lugar en Windows — consulta las secciones [El Directorio de Radio Browser](#radio-browser-directory) y [Favoritos](#favourites).
 - **Podcasts** — Suscríbete a cualquier fuente RSS/Atom o busca en el directorio de podcasts de Apple y escucha un adelanto de los episodios antes de suscribirte. La posición de reproducción se guarda automáticamente y se reanuda donde la dejaste — consulta la sección [Podcasts](#podcasts).
-- **Audiolibros** — Busca y reproduce en streaming o descarga libros desde las dos fuentes: [GETEM](https://getem.boun.edu.tr/), la biblioteca digital de la Universidad de Boğaziçi para personas con discapacidad visual, y [LibriVox](https://librivox.org/), el proyecto de audiolibros de dominio público leídos por voluntarios (no se necesita cuenta), con reanudación automática para obras en varias partes — consulta la sección [Audiolibros (GETEM y LibriVox)](#audio-books-getem-and-librivox).
+- **Audiolibros** — Busca y reproduce en streaming o descarga libros desde las tres fuentes: [GETEM](https://getem.boun.edu.tr/), la biblioteca digital de la Universidad de Boğaziçi para personas con discapacidad visual, [LibriVox](https://librivox.org/), el proyecto de audiolibros de dominio público leídos por voluntarios y la Colección Abierta de Audiolibros del Proyecto Gutenberg — las dos últimas no necesitan cuenta — con reanudación automática para obras en varias partes — consulta la sección [Audiolibros (GETEM, LibriVox y el Proyecto Gutenberg)](#audio-books-getem-librivox-and-project-gutenberg).
 - **Jukebox Local** — Busca archivos de audio almacenados en cualquier unidad conectada por nombre de archivo, o cree una biblioteca personal de archivos y carpetas, y reprodúzcalos con las mismas herramientas de reanudación, búsqueda, velocidad y tono que utilizan los podcasts y audiolibros — consulta la sección [Jukebox Local](#local-jukebox).
 - **Grabación** — Graba al instante lo que se está reproduciendo, captura automáticamente una sola canción cuando empieza y termina, o programa grabaciones únicas y recurrentes, todo ello sin interrumpir la reproducción — consulta la sección [Grabación](#recording).
 - **Desplazamiento temporal (rebobinar radio en directo)** — Pausa y rebobina una emisora ​​en directo como si fuera un grabador de vídeo digital, y luego vuelve a verla en directo cuando quieras — consulta la sección [Desplazamiento temporal (rebobinar radio en directo)](#time-shift-rewind-live-radio).
@@ -41,7 +41,7 @@ Después del envío, la estación se revisa y se añade al directorio público. 
 
 ## Requisitos
 
-- NVDA 2024.1 o posterior
+- NVDA 2025.1 o posterior
 - Windows 10 o posterior
 - Conexión a Internet
 
@@ -200,6 +200,17 @@ La lista de favoritos es una colección de emisoras personales almacenada perman
 Los favoritos se pueden jugar con `Ctrl+Win+→` y `Ctrl+Win+←`; estos atajos funcionan incluso cuando la ventana del navegador no está abierta.
 
 Para eliminar una emisora ​​de la lista de favoritos, selecciónela y pulse el botón **Eliminar estación** o la tecla `Suprimir`. Después de la eliminación, el foco y la selección pasan automáticamente a la siguiente estación de la lista. Si la estación eliminada fue la última, el foco se mueve a la estación anterior. Si la lista queda vacía, el foco se mueve al botón Reproducir.
+
+### Marcado y Eliminación de Varios Elementos
+
+En las lista de Favoritos, de Canciones favoritas, de la biblioteca de Audiolibros y de la del Jukebox permiten seleccionar varios elementos y eliminarlos juntos en un solo paso:
+
+- Pulsa **`.`** (punto) sobre un elemento resaltado para marcarlo o desmarcarlo. NVDA anuncia el cambio y la fila del elemento marcado se etiqueta como "(marcado)" para que su estado permanezca visible mientras sigues desplazándote por la lista.
+- Pulsa **`Suprimir`** para eliminar todos los elementos marcados a la vez. Si no hay nada marcado, `Suprimir` seguirá eliminando solo el elemento seleccionado, como antes.
+- El menú contextual accesible haciendo clic derecho (Tecla Aplicaciones / `Shift+F10`) de cada lista incluye un comando **Eliminar seleccionado**, habilitado solo cuando al menos un elemento está marcado, que hace lo mismo.
+- Antes de eliminar cualquier elemento, un único cuadro de diálogo de confirmación resume cuántos elementos se van a eliminar.
+
+Las marcas se aplican a cada lista y se borran una vez que se eliminan los elementos (o se desmarcan individualmente); no se guardan entre sesiones.
 
 ### Exportar e Importar Favoritos
 
@@ -510,32 +521,33 @@ Solo los elementos que elijas se escribirán en el perfil; lo que se omita conse
 
 Tus suscripciones se almacenan en `freeradio_podcasts.json` en la carpeta de configuración de usuario de NVDA. Las posiciones de los episodios se almacenan por separado en `podcast_positions.json` en la misma ubicación. Ambos archivos son JSON simples y se puede realizar una copia de seguridad o transferirlos a otra computadora.
 
-## Audiolibros (GETEM y LibriVox)
+## Audiolibros (GETEM, LibriVox y el Proyecto Gutenberg)
 
-FreeRadio incluye un reproductor de audiolibros que busca, reproduce y descarga libros de dos fuentes:
+FreeRadio incluye un reproductor de audiolibros que busca, reproduce y descarga libros de tres fuentes:
 
 - **[GETEM](https://getem.boun.edu.tr/)** — la biblioteca digital dirigida por el Centro Universitario Boğaziçi para personas con discapacidad visual. Se requiere una membresía gratuita para transmitir o descargar el audio de un libro (la navegación no requiere membresía gratuita) — consulta la sección [Iniciar Sesión](#signing-in) más abajo.
 - **[LibriVox](https://librivox.org/)** — el proyecto de audiolibros de dominio público leídos por voluntarios. No se necesita ninguna cuenta ni inicio de sesión; todo su catálogo, incluidos los propios archivos de audio, es de dominio público y de libre acceso.
+- **Proyecto Gutenberg Colección Abierta de Audiolibros** — audiolibros de dominio público narrados por humanos y por computadora alojados en [archive.org](https://archive.org/), complemento de la biblioteca de textos del Proyecto Gutenberg. Al igual que LibriVox, no se necesita ninguna cuenta ni inicio de sesión.
 
-Los resultados de ambas fuentes aparecen juntos en una única lista combinada de **Resultados de la búsqueda** y en una única lista combinada de **Biblioteca** — no hay ninguna pestaña o menú desplegable separado para cambiar entre ellos. La fuente de cada libro (GETEM o LibriVox) se muestra como una etiqueta junto a su título y en sus detalles, para que siempre sepas cuál estás viendo. Puedes buscar, previsualizar, añadir, reproducir y descargar libros de cualquiera de las dos fuentes exactamente igual; reproducir obras divididas en partes con reanudación automática entre ellas; y descargar libros para escucharlos sin conexión, todo ello con total accesibilidad.
+Los resultados de las tres fuentes aparecen juntos en una única lista combinada de **Resultados de la búsqueda** y en una única lista combinada de **Biblioteca** — no hay ninguna pestaña o menú desplegable separado para cambiar entre ellos. La fuente de cada libro (GETEM, LibriVox o el Proyecto Gutenberg) se muestra como una etiqueta junto a su título y en sus detalles, para que siempre sepas cuál estás viendo. Puedes buscar, previsualizar, añadir, reproducir y descargar libros de cualquier fuente exactamente igual; reproducir obras divididas en partes con reanudación automática entre ellas; y descargar libros para escucharlos sin conexión — todo ello con total accesibilidad.
 
-Cualquiera de las dos fuentes se puede desactivar desde el **Menú NVDA → Preferencias → Opciones → FreeRadio** con la lista de verificación **Fuentes de audiolibros**, si solo desea buscar en una de ellas. Ambas opciones están habilitadas por defecto.
+Cualquier fuente se puede desactivar desde el **Menú NVDA → Preferencias → Opciones → FreeRadio** con la lista de verificación **Fuentes de audiolibros**, si solo quieres buscar en algunas de ellas. Las tres están habilitadas por defecto.
 
-> **Nota:** Para escuchar un audiolibro de GETEM se requiere una membresía gratuita de GETEM. Navegar por el catálogo de GETEM no requiere una cuenta, pero resolver y reproducir el audio de un libro de GETEM sí — consulta la sección [Iniciar Sesión](#signing-in) abajo. Los libros de LibriVox nunca requieren una cuenta.
+> **Nota:** Para escuchar un audiolibro de GETEM se requiere una membresía gratuita de GETEM. Navegar por el catálogo de GETEM no requiere una cuenta, pero resolver y reproducir el audio de un libro de GETEM sí — consulta la sección [Iniciar Sesión](#signing-in) abajo. Los libros de LibriVox y el Proyecto Gutenberg nunca requieren una cuenta.
 
 ### Acceso a la Pestaña Audiolibros
 
 Abra el navegador de estaciones con `Ctrl+Win+R` y cambie a la pestaña  **Audiolibros** usando `Ctrl+Tab` o `Alt+7`. La pestaña tiene tres áreas principales:
 
-1. **Buscar** — un campo de texto para buscar en ambos catálogos habilitados a la vez, con una lista de resultados que aparece una vez que se ejecuta la búsqueda.
-2. **Biblioteca** — la lista de libros que ha añadido de cualquiera de las dos fuentes, donde puede reproducirlos, descargarlos y administrarlos.
-3. **Detalles** — un cuadro de solo lectura que muestra la fuente, el título, autor, narrador, editorial, formato, número de partes, descripción y URL del catálogo del libro seleccionado, en cualquiera de las listas.
+1. **Buscar** — un campo de texto para buscar en todos los catálogos habilitados a la vez, con una lista de resultados que aparece una vez que se ejecuta la búsqueda.
+2. **Biblioteca** — la lista de libros que ha añadido de cualquier fuente, donde puede reproducirlos, descargarlos y administrarlos.
+3. **Detalles** — un cuadro de solo lectura que muestra la fuente, el título, autor, narrador, editorial, formato, número de partes, descripción y URL del catálogo del libro seleccionado, en cualquier lista.
 
 ### Iniciar Sesión
 
 GETEM requiere ser miembro registrado para reproducir en streaming o descargar el audio real de un libro, aunque el catálogo en sí se puede buscar libremente. Ingresa tu nombre de usuario y contraseña de GETEM una vez en  **Menú NVDA → Preferencias → Opciones → FreeRadio**; se almacenan cifrados en el disco (a través de la API de protección de datos de Windows, vinculados a su cuenta de usuario de Windows) y luego se reutilizan automáticamente. Si intenta reproducir o descargar un libro GETEM antes de ingresar las credenciales, FreeRadio le indica que las agregue primero  en las Opciones.
 
-LibriVox no requiere ningún paso de inicio de sesión: sus resultados y audios se pueden buscar, previsualizar, reproducir y descargar inmediatamente, sin necesidad de introducir credenciales.
+LibriVox y el Proyecto Gutenberg no requiere ningún paso de inicio de sesión: sus resultados y audios se pueden buscar, previsualizar, reproducir y descargar inmediatamente, sin necesidad de introducir credenciales.
 
 ### Búsqueda de Audiolibros
 
@@ -543,6 +555,9 @@ Escriba un término de búsqueda en el campo de búsqueda y pulse `Intro`. FreeR
 
 - **GETEM** permite realizar búsquedas simultáneas por título, autor, narrador, tema y editorial, ya que su formulario de búsqueda interno solo permite combinar todos estos criterios. Únicamente se muestran las obras disponibles en formato de audio (narración humana o computarizada, audiodescripción, radionovelas, audiolibros DAISY, etc.); los documentos en braille, letra grande y otros formatos que no sean de audio se excluyen automáticamente.
 - **LibriVox** permite realizar búsquedas por título o autor/lector en su catálogo de dominio público.
+- **Proyecto Gutenberg** permite realizar búsquedas por título o autor en la Colección Abierta de Audiolibros en archive.org.
+
+Al pegar la URL de la página de catálogo/detalles de un libro directamente en el campo de búsqueda (una página de catálogo de GETEM o una página de "detalles" de archive.org para un título de LibriVox o Proyecto Gutenberg), permite encontrar este libro directamente en lugar de realizar una búsqueda por palabras clave.
 
 NVDA anuncia cuántos audiolibros se encontraron en total.
 
@@ -563,9 +578,11 @@ Los libros que ha añadido aparecen en la lista **Biblioteca**, mostrando el tí
 **Menú contextual para entradas de la biblioteca:** Haga clic con el botón derecho en un libro o selecciónelo y pulse la tecla Aplicaciones / `Shift+F10`, para abrir un menú con:
 - **Reproducir medios** — comienza a reproducir, igual que `Intro`.
 - **Descargar libro** — descarga cada parte del libro; consulta la sección [Descarga de Audiolibros](#downloading-audio-books) más abajo.
-- **Copiar la URL** — copia la URL de la página del catálogo del libro al portapapeles (la página del catálogo GETEM para un libro GETEM, o la página de detalles de archive.org para un libro LibriVox).
+- **Copiar la URL** — copia la URL de la página del catálogo del libro al portapapeles (la página del catálogo GETEM para un libro GETEM, o la página de detalles de archive.org para un libro LibriVox o  un libro del Proyecto Gutenberg).
 - **Guardar perfil de audio para este libro** / **Borrar perfil de audio** — consulta la sección [Perfil de audio del Audiolibro](#audio-book-audio-profile) más abajo.
 - **Eliminar de la biblioteca** — elimina el libro de tu biblioteca.
+
+También puedes marcar varios libros a la vez y eliminarlos todos juntos — consulta la sección [Marcado y Eliminación de Varios Elementos](#marking-and-removing-multiple-items) bajo la sección Favoritos.
 
 ### Reproducción y Reanudación
 
@@ -589,7 +606,7 @@ Seleccione un libro en su biblioteca y elija **Descargar libro** en su menú con
 
 ### Almacenamiento de Datos de Audiolibros
 
-Cada fuente conserva su propio archivo de biblioteca, aunque se muestren combinados en la pestaña Audiolibros. Tu biblioteca GETEM (libros añadidos y su progreso de escucha) se almacena en `freeradio_getem_library.json` y su biblioteca LibriVox se almacena por separado en `freeradio_librivox_library.json`, ambos en la carpeta de configuración de usuario de NVDA. Sus credenciales GETEM cifradas se almacenan por separado en `freeradio_getem_credentials.bin` en la misma ubicación, y solo pueden ser descifradas por la misma cuenta de usuario de Windows que las guardó. LibriVox no tiene archivo de credenciales, ya que no requiere cuenta.
+Cada fuente conserva su propio archivo de biblioteca, aunque se muestren combinados en la pestaña Audiolibros. Tu biblioteca GETEM (libros añadidos y su progreso de escucha) se almacena en `freeradio_getem_library.json`, su biblioteca LibriVox se almacena por separado en `freeradio_librivox_library.json` y su biblioteca del Proyecto Gutenberg se almacena por separado en `freeradio_gutenberg_library.json` — los tres en la carpeta de configuración de usuario de NVDA. Sus credenciales GETEM cifradas se almacenan por separado en `freeradio_getem_credentials.bin` en la misma ubicación, y solo pueden ser descifradas por la misma cuenta de usuario de Windows que las guardó. LibriVox y el Proyecto Gutenberg no tienen archivo de credenciales, ya que ninguno requiere una cuenta.
 
 ## Jukebox Local
 
@@ -619,8 +636,8 @@ Escribe cualquier parte del nombre de un archivo en el campo **Buscar en disposi
 La lista del Jukebox es tu biblioteca personal permanente. Se pueden añadir dos tipos de elementos:
 
 - **Añadir un archivo…** — abre un selector de archivos que te permite añadir uno o más archivos de audio individuales. Todos los archivos seleccionados se añaden a la vez.
-- **Añadir una carpeta…** — abre un selector de carpetas. Cada archivo de audio que se encuentre dentro de la carpeta seleccionada, incluyendo sus subcarpetas, se trata como una de las **pistas** de esa carpeta. La carpeta en sí es una sola entrada en tu lista del Jukebox; los archivos que contiene se muestran en la lista de pistas cuando se selecciona la carpeta.
-- **Eliminar** — elimina la entrada seleccionada actualmente de tu Jukebox. Eliminar una entrada de carpeta no elimina ningún archivo del disco o dispositivo; simplemente olvida la carpeta.
+- **Añadir una carpeta…** — abre un selector de carpetas que te permite seleccionar varias carpetas a la vez. Cada archivo de audio que se encuentre dentro de la carpeta seleccionada, incluyendo sus subcarpetas, Se trata como una de las **pistas** de esa carpeta. Cada carpeta se añade como una entrada individual en tu lista del Jukebox; los archivos que contiene se muestran en la lista de pistas cuando se selecciona la carpeta. Una vez que se cierra el selector, NVDA anuncia cuántas carpetas se han añadido.
+- **Eliminar** — elimina la entrada seleccionada actualmente de tu Jukebox. Eliminar una entrada de carpeta no elimina ningún archivo del disco o dispositivo; simplemente olvida la carpeta. También puedes marcar varias entradas a la vez y eliminarlas todas juntas — consulta la sección [Marcado y Eliminación de Varios Elementos](#marking-and-removing-multiple-items) bajo la sección Favoritos.
 
 Tu lista del Jukebox se guarda automáticamente, por lo que se conserva incluso después de reiniciar NVDA. El contenido de las carpetas se escanea bajo demanda y se almacena en caché, por lo que añadir una carpeta es instantáneo, incluso para colecciones muy grandes — el escaneo completo se realiza la primera vez que seleccionas esa carpeta. Si añades archivos a una carpeta fuera de FreeRadio, usa el elemento **Volver a escanear la carpeta** en el menú contextual de la carpeta para que se incluyan.
 
@@ -677,7 +694,7 @@ Seleccionar una pista de la lista permite las siguientes acciones:
 - **Reproducir en Spotify:** Intenta abrir la aplicación de escritorio de Spotify directamente. Si la aplicación no está instalada, vuelve al sitio web de Spotify y automáticamente comienza a reproducir el primer resultado.
 - **Reproducir en YouTube (`Alt+O`):** Busca en YouTube la pista seleccionada y abre los resultados en el navegador predeterminado.
 - **Mostrar letra:** Obtiene y muestra la letra de la pista seleccionada. Las letras se obtienen de [lrclib.net](https://lrclib.net) (gratuito, sin cuenta requerida). Se anuncia un breve mensaje "Obteniendo letra…" mientras la búsqueda se ejecuta en segundo plano. Si se encuentran letras, se abren en un cuadro de diálogo de solo lectura donde puedes leerlas con NVDA y copiarlas al portapapeles. Si no se encuentran letras, NVDA lo anuncia. El botón se desactiva temporalmente mientras se realiza una búsqueda para evitar solicitudes duplicadas.
-- **Eliminar (`Alt+M`):** Elimina la pista seleccionada de `likedSongs.txt` y  actualiza la lista. La tecla `Suprimir` también activa este botón cuando la lista está enfocada.
+- **Eliminar (`Alt+M`):** Elimina la pista seleccionada de `likedSongs.txt` y  actualiza la lista. La tecla `Suprimir` también activa este botón cuando la lista está enfocada. También puedes marcar varias canciones a la vez y eliminarlas todas juntas — consulta la sección [Marcado y Eliminación de Varios Elementos](#marking-and-removing-multiple-items) bajo la sección Favoritos.
 - **Refrescar (`Alt+E`):** Vuelve a cargar la lista desde el archivo.
 
 Los botones Spotify, YouTube, Mostrar letra y Eliminar sólo se activan cuando se selecciona una pista real en la lista.
@@ -721,8 +738,8 @@ Las siguientes opciones se pueden configurar desde el Menú NVDA → Preferencia
 | Buscar actualizaciones automáticamente al iniciar | Cuando está habilitado, una verificación de actualización en segundo plano se ejecuta cada vez que se inicia NVDA; se le notificará si se encuentra una nueva versión. Cuando está deshabilitado, los controles automáticos se detienen pero los controles manuales permanecen disponibles. |
 | Ruta ffmpeg.exe | Ruta de acceso al ffmpeg.exe usado para el reconocimiento de música. Si se deja vacío, un ffmpeg.exe en la carpeta del complementos se usa automáticamente. |
 | Carpeta de grabaciones | Establece la carpeta donde se guardan los archivos grabados. Si se deja en blanco, la ubicación predeterminada `Documentos\FreeRadio Recordings\` se utiliza. Un botón Explorar carpeta le permite seleccionar la carpeta de forma interactiva. Los cambios entran en vigor inmediatamente después de guardarlos. |
-| Fuentes audiolibro | Una lista de verificación para seleccionar qué fuentes de audiolibros (**GETEM**, **LibriVox**) se buscan y se muestran en la pestaña Audiolibros. Ambas opciones están habilitadas por defecto. Al desmarcar una fuente, sus libros se ocultan de los resultados de búsqueda combinados y de la lista de la biblioteca sin eliminar nada de lo que ya hayas añadido desde ella — consulta la sección [Audiolibros (GETEM y LibriVox)](#audio-books-getem-and-librivox). |
-| Nombre de usuario de GETEM / Contraseña de GETEM | Sus credenciales de membresía de audiolibros [GETEM](https://getem.boun.edu.tr/), necesarias para escuchar o descargar el audio de un libro — consulta la sección [Iniciar sesión](#signing-in). Almacenadas cifradas en disco a través de la API de protección de datos de Windows, vinculadas a su cuenta de usuario de Windows; nunca se almacenan como texto sin formato. Si deja ambos campos vacíos y guarda, se eliminarán las credenciales almacenadas. LibriVox no requiere cuenta y no tiene un campo equivalente. |
+| Fuentes audiolibro | Una lista de verificación para seleccionar qué fuentes de audiolibros (**GETEM**, **LibriVox**, **Proyecto Gutenberg**) se buscan y se muestran en la pestaña Audiolibros. Las tres están habilitadas por defecto. Al desmarcar una fuente, sus libros se ocultan de los resultados de búsqueda combinados y de la lista de la biblioteca sin eliminar nada de lo que ya hayas añadido desde ella — consulta la sección [Audiolibros (GETEM, LibriVox y el Proyecto Gutenberg)](#audio-books-getem-librivox-and-project-gutenberg). |
+| Nombre de usuario de GETEM / Contraseña de GETEM | Sus credenciales de membresía de audiolibros [GETEM](https://getem.boun.edu.tr/), necesarias para escuchar o descargar el audio de un libro — consulta la sección [Iniciar sesión](#signing-in). Almacenadas cifradas en disco a través de la API de protección de datos de Windows, vinculadas a su cuenta de usuario de Windows; nunca se almacenan como texto sin formato. Si deja ambos campos vacíos y guarda, se eliminarán las credenciales almacenadas. LibriVox y el Proyecto Gutenberg no requieren cuenta y no tienen un campo equivalente. |
 | Formato de salida de grabación | Conserva el flujo original, extrae el audio sin cambiar su codec o convierte grabaciones completas a MP3. El valor predeterminado es el formato de flujo original. |
 | Velocidad de bits de grabación de MP3 | Establece la velocidad de bits utilizada cuando el formato de salida de grabación es MP3. El valor predeterminado es 128 kbps. |
 | Desactivar la verificación de conectividad a Internet antes de reproducir | Recomendado para usuarios que experimentan un retraso antes de que una estación comience a reproducirse. También es útil cuando el DNS está bloqueado. |
@@ -771,6 +788,14 @@ FreeRadio busca automáticamente nuevas versiones a través de GitHub.
 - Si no hay ningún enlace de descarga directa disponible,, un botón **Abrir la página** se muestra y la página de la release en GitHub se abre en el navegador predeterminado.
 
 **Para desactivar las comprobaciones automáticas:** Deshabilitar la opción **Buscar actualizaciones automáticamente al iniciar** desde el Menú NVDA → Preferencias → Opciones → FreeRadio.
+
+## Registro de cambios
+
+**Añadir carpetas en lote para el Jukebox**
+- El botón **Añadir carpeta…** en la pestaña Jukebox ahora permite seleccionar varias carpetas a la vez en lugar de añadirlas una por una. Todas las carpetas seleccionadas se añaden en una sola operación, con un mensaje resumen que indica cuántas se añadieron.
+
+**Marcar y eliminar varios elementos (Favoritos, Canciones favoritas, Audiolibros, Jukebox)**
+- En las listas de Favoritos, Canciones  favoritas, biblioteca de Audiolibros y Jukebox, ahora puedes marcar varios elementos antes de eliminarlos: pulsa `.` para marcar/desmarcar el elemento resaltado (las filas marcadas se etiquetan como  "(marcado)"), luego pulsa `Suprimir` o utilice el comando **Eliminar seleccionado** del menú contextual para eliminar todos los elementos marcados a la vez, tras un único cuadro de diálogo de confirmación. Consulta la sección [Marcado y Eliminación de Varios Elementos](#marking-and-removing-multiple-items) bajo la sección Favoritos para más detalles.
 
 ## Agradecimientos & Créditos
 
