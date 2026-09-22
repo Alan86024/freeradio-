@@ -7753,16 +7753,99 @@ class RadioDialog(wx.Dialog):
 		if tidx != wx.NOT_FOUND and tidx < len(prev_tracks):
 			current_track_path = prev_tracks[tidx].path
 
+		# Bumping this generation counter invalidates any duration-probing
+		# background thread still running for the previously selected
+		# entry (see _probe_jukebox_track_durations()) - it compares its
+		# own captured generation against the current one before ever
+		# touching the list control, so a slow probe from an entry the
+		# user has since navigated away from can't land its results on
+		# (or crash against) today's list.
+		self._jukebox_tracks_generation = getattr(self, "_jukebox_tracks_generation", 0) + 1
+		generation = self._jukebox_tracks_generation
+
 		self._jukebox_tracks_list.Clear()
 		self._jukebox_selected_tracks = entry.tracks() if entry else []
+		# Populate immediately with bare titles - probe_duration=False
+		# skips each track's header read (see JukeboxTrack.display_label()).
+		# Landing on a folder with many tracks (e.g. right after adding it,
+		# or when arrowing onto it in a freshly reopened dialog, where
+		# nothing is cached yet) used to read every file's header here,
+		# synchronously, before the UI/NVDA's speech could continue - for a
+		# crowded folder that's a long silence. Real durations are filled
+		# in afterwards, off the UI thread, by _probe_jukebox_track_durations().
 		for track in self._jukebox_selected_tracks:
-			self._jukebox_tracks_list.Append(track.display_label(self._player))
+			self._jukebox_tracks_list.Append(track.display_label(self._player, probe_duration=False))
 
 		if current_track_path:
 			for i, track in enumerate(self._jukebox_selected_tracks):
 				if track.path == current_track_path:
 					self._jukebox_tracks_list.SetSelection(i)
 					break
+
+		if self._jukebox_selected_tracks:
+			threading.Thread(
+				target=self._probe_jukebox_track_durations,
+				args=(self._jukebox_selected_tracks, generation),
+				daemon=True,
+			).start()
+
+	def _probe_jukebox_track_durations(self, tracks, generation):
+		"""Background counterpart to _on_jukebox_entry_selected(): reads
+		each track's real duration (a per-file header probe - disk I/O)
+		and updates its list label once known, so a folder with many
+		tracks doesn't block the UI thread while every file in it gets
+		opened and parsed.
+
+		Label updates are batched (_FLUSH_SIZE at a time) rather than
+		posted one wx.CallAfter per track: each wx.CallAfter is a Windows
+		PostMessage under the hood, and posting one per file for a
+		crowded folder (thousands of tracks probed within a couple of
+		seconds) can exceed the OS message-queue quota, which surfaces as
+		"OSError: [WinError 1816] Not enough quota is available to
+		process this command." and drops the update. Batching cuts the
+		message count by _FLUSH_SIZE, and the wx.CallAfter itself is
+		still guarded (see _apply_jukebox_track_labels()) in case the
+		quota is hit anyway - a dropped batch just means those labels
+		stay untimed until the entry is reselected (a cache hit by then,
+		so effectively instant).
+
+		*generation* is the token captured by the caller at selection
+		time; it's checked before every single-file probe and again
+		before every UI update, so a probe left over from an entry the
+		user has already navigated away from stops - rather than racing
+		to write into - the list that's on screen now."""
+		_FLUSH_SIZE = 25
+		batch = []
+		for i, track in enumerate(tracks):
+			if getattr(self, "_jukebox_tracks_generation", None) != generation:
+				return
+			label = track.display_label(self._player)
+			batch.append((i, label))
+			if len(batch) >= _FLUSH_SIZE:
+				wx.CallAfter(self._apply_jukebox_track_labels, batch, generation)
+				batch = []
+		if batch:
+			wx.CallAfter(self._apply_jukebox_track_labels, batch, generation)
+
+	def _apply_jukebox_track_labels(self, batch, generation):
+		"""UI-thread callback for _probe_jukebox_track_durations(): writes
+		a batch of probed labels into the tracks list, unless the
+		selection has since moved on (generation mismatch). Individual
+		indices past the current list length (list cleared/shrunk since)
+		are skipped rather than raising. The whole call is wrapped since,
+		rarely, even a batched wx.CallAfter can itself be refused by the
+		OS message queue (see the docstring above) - if so this batch's
+		labels are simply left untimed rather than crashing the probing
+		thread."""
+		try:
+			if getattr(self, "_jukebox_tracks_generation", None) != generation:
+				return
+			count = self._jukebox_tracks_list.GetCount()
+			for index, label in batch:
+				if index < count:
+					self._jukebox_tracks_list.SetString(index, label)
+		except OSError:
+			pass  # message-queue quota hit (see docstring above); this batch's labels stay untimed until the entry is reselected
 
 	def _play_jukebox_track(self, track, announce=True, folder_path=None, folder_index=None):
 		"""Play *track*. Its per-file audio profile (if the user saved

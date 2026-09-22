@@ -27,6 +27,9 @@ from io import BytesIO
 import addonHandler
 addonHandler.initTranslation()
 
+_tr = globals()["_"]
+_ = _tr
+del _tr
 log = logging.getLogger(__name__)
 
 USER_AGENT		= "FreeRadio-NVDA/1.0 ( https://github.com/freeradio-nvda )"

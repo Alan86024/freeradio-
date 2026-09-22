@@ -21,6 +21,9 @@ import uuid
 import addonHandler
 addonHandler.initTranslation()
 
+_tr = globals()["_"]
+_ = _tr
+del _tr
 log = logging.getLogger(__name__)
 
 _ES_CONTINUOUS = 0x80000000

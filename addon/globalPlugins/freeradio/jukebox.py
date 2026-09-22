@@ -27,6 +27,9 @@ import addonHandler
 addonHandler.initTranslation()
 import globalVars
 
+_tr = globals()["_"]
+_ = _tr
+del _tr
 log = logging.getLogger(__name__)
 
 # Extensions BASS (plus the bundled plugins - see bass_host.py's
@@ -924,7 +927,7 @@ class JukeboxTrack:
 			d["station_audio"] = self.audio_profile
 		return d
 
-	def display_label(self, player=None):
+	def display_label(self, player=None, probe_duration=True):
 		"""Mirrors podcast.PodcastEpisode.display_label() for the elapsed/
 		total duration display, but deliberately skips the "[Listened]"
 		prefix: that marker fits podcast episodes, which are normally
@@ -938,10 +941,20 @@ class JukeboxTrack:
 		feed metadata to supply it the way podcast episodes do. Two
 		cases: never played (or fully played through - pos == -1.0 is
 		folded into this case too) shows just the total; partially
-		played shows elapsed / total."""
+		played shows elapsed / total.
+
+		*probe_duration* lets a caller skip the header read for this call
+		(the label then just shows the title, plus elapsed position if
+		any). RadioDialog._on_jukebox_entry_selected() passes False for
+		the initial, synchronous population of a folder's track list -
+		one probe_duration=True call per file is a disk read, which for a
+		folder with many tracks would otherwise block the UI (and NVDA's
+		speech) until every file in it has been opened and parsed; the
+		real durations are filled in afterwards by a background thread -
+		see RadioDialog._probe_jukebox_track_durations()."""
 		from .__init__ import _format_duration
 		label = self.title
-		duration = _get_track_duration(self.path)
+		duration = _get_track_duration(self.path) if probe_duration else None
 		total_str = _format_duration(duration) if duration else None
 		if not player:
 			return label + (" (%s)" % total_str if total_str else "")

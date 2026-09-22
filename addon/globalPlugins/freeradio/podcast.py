@@ -18,6 +18,9 @@ import addonHandler
 addonHandler.initTranslation()
 import globalVars
 
+_tr = globals()["_"]
+_ = _tr
+del _tr
 log = logging.getLogger(__name__)
 
 USER_AGENT = "FreeRadio-NVDA/1.0"
