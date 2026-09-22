@@ -4,6 +4,7 @@
 # Extracted from __init__.py: schedules and persists sleep (stop) and
 # alarm (start playback) timers, running them on a background thread.
 
+import os
 import logging
 import threading
 import wx
