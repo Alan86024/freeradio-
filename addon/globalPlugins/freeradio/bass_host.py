@@ -40,8 +40,6 @@ import threading
 import time
 import re
 import urllib.request
-import socket
-import atexit
 
 # Standalone process, no access to NVDA's `log` — appends to the same shared
 # debug file timeshift.py and radioPlayer.py use, so one time-shift failure

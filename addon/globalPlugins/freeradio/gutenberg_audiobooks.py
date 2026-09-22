@@ -81,7 +81,6 @@
 # one rejects the item (or the gutenberg source is disabled) - see the
 # comment above its is_gutenberg_url/is_librivox_url handling.
 
-import html
 import json
 import logging
 import os

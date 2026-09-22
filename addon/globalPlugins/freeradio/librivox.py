@@ -56,18 +56,15 @@
 # still the full picture.
 
 
-import html
 import json
 import logging
 import os
 import re
-import threading
 import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
 import xml.etree.ElementTree as ET
-from email.utils import parsedate_to_datetime
 
 import addonHandler
 addonHandler.initTranslation()
