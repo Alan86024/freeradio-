@@ -2100,6 +2100,12 @@ class BassHost:
 	# stream's transient dropout is debounced only adds pure latency, felt
 	# as a gap between jukebox tracks. React on the very first hit instead.
 	_STOPPED_THRESHOLD_SEEKABLE = 1
+	# How close (in seconds) the playback cursor has to be to the end of a
+	# seekable track before the monitor loop below switches from its normal
+	# 3s cadence down to the fast 0.5s one. Must be >= the normal cadence
+	# (3s) - see _monitor_loop()'s "near_end" comment for why a smaller
+	# value can't guarantee catching the switch-over in time.
+	_NEAR_END_WINDOW_SECONDS = 4.0
 
 	def _restart_meta_thread(self):
 		self._stop_meta_thread()
@@ -2151,19 +2157,35 @@ class BassHost:
 		# retroactively change what this already-running loop is checking.
 		seekable = self._seekable
 		first_cycle = True
+		# True once this seekable track's playback cursor is within
+		# _NEAR_END_WINDOW_SECONDS of the file's own length - see the
+		# wait_steps comment below for what this actually does. Updated
+		# from the PLAYING branch further down, each time position/length
+		# can be read; used the *next* time through the loop to pick the
+		# cadence for the wait that follows.
+		near_end = False
 
 		while not self._meta_stop.is_set():
-			# Local/seekable media gets its very first check sped way up
-			# (0.5s instead of the normal 3s cycle) - together with
-			# _STOPPED_THRESHOLD_SEEKABLE above, this is what actually
-			# shortens the gap between jukebox tracks/podcast episodes/audio
-			# book chapters. Only the first check of a freshly-started track
-			# is sped up this way; every check after that (relevant if it
-			# turns out the track is still genuinely playing) falls back to
-			# the normal 3s cadence, so this doesn't add any extra CPU churn
-			# for the remainder of a track's playback. Live-radio timing
-			# (non-seekable) is completely untouched.
-			wait_steps = 1 if (seekable and first_cycle) else 6   # 0.5s per step
+			# Local/seekable media gets checked at the fast 0.5s cadence
+			# instead of the normal 3s one in two situations: the very
+			# first check right after a track starts (first_cycle), and -
+			# this is the one that actually matters for shortening the
+			# jukebox/podcast/audio-book track-change gap - once the
+			# cursor has entered the last _NEAR_END_WINDOW_SECONDS of the
+			# track (near_end, computed below from BASS_ChannelGetLength()/
+			# BASS_ChannelBytes2Seconds()). A track spends the overwhelming
+			# majority of its playback far from its own end, so this still
+			# keeps the loop on the cheap 3s cadence almost the whole time -
+			# it only pays the finer-grained 0.5s polling cost for the last
+			# few seconds of each track, right when it's actually needed to
+			# catch BASS_ACTIVE_STOPPED (together with
+			# _STOPPED_THRESHOLD_SEEKABLE's single-hit reaction) as close to
+			# the real end-of-file moment as possible. _NEAR_END_WINDOW_SECONDS
+			# is kept >= the normal 3s cadence so a slow-cadence check can
+			# never step clean over the window without landing inside it at
+			# least once first. Live-radio timing (non-seekable) never sets
+			# near_end and is completely untouched.
+			wait_steps = 1 if (seekable and (first_cycle or near_end)) else 6   # 0.5s per step
 			for _ in range(wait_steps):
 				if self._meta_stop.is_set():
 					return
@@ -2179,6 +2201,7 @@ class BassHost:
 					buf_empty_count = 0
 					pos_stuck_count = 0
 					last_pos		= None
+					near_end		= False
 					continue
 
 				# 1. ICY metadata
@@ -2204,6 +2227,7 @@ class BassHost:
 					buf_empty_count = 0
 					pos_stuck_count = 0
 					last_pos		= None
+					near_end		= False
 					effective_threshold = (
 						self._STOPPED_THRESHOLD_SEEKABLE
 						if (seekable and state == _BASS_ACTIVE_STOPPED)
@@ -2240,6 +2264,7 @@ class BassHost:
 					# frozen, so no audio is reaching the output. This is
 					# invisible to checks 1-3, which is why it kept being
 					# reported as "title updates but no sound".
+					pos = None
 					try:
 						pos = dll.BASS_ChannelGetPosition(h, _BASS_POS_BYTE)
 						if pos is not None and pos >= 0:
@@ -2254,6 +2279,30 @@ class BassHost:
 							last_pos = pos
 					except Exception:
 						pos_stuck_count = 0
+
+					# 5. Near-end detection — seekable media only. Reads how
+					# close the cursor is to the file's own length (BASS
+					# already knows this exactly for a local file, unlike a
+					# live stream) so the *next* iteration's wait_steps
+					# (top of the loop) can switch down to the fast 0.5s
+					# cadence for the last stretch of the track instead of
+					# staying on the normal 3s one all the way to the end -
+					# see the wait_steps comment above for why that's what
+					# actually shortens the jukebox/podcast/audio-book
+					# track-change gap. Deliberately left at whatever it
+					# was on any failure here, or if pos couldn't be read
+					# above (BASS_ChannelGetLength/GetPosition briefly
+					# failing shouldn't cost the fast cadence once it's
+					# already been earned by a prior successful read).
+					if seekable and pos is not None:
+						try:
+							length_bytes = dll.BASS_ChannelGetLength(h, _BASS_POS_BYTE)
+							if length_bytes and length_bytes > 0:
+								pos_secs	= dll.BASS_ChannelBytes2Seconds(h, pos)
+								length_secs = dll.BASS_ChannelBytes2Seconds(h, length_bytes)
+								near_end = (length_secs - pos_secs) <= self._NEAR_END_WINDOW_SECONDS
+						except Exception:
+							pass
 				# PAUSED: leave counters unchanged
 
 			except Exception:
