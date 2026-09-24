@@ -7,6 +7,7 @@ import gzip
 import json
 import logging
 import os
+import re
 import socket
 import time
 import urllib.parse
@@ -755,10 +756,19 @@ class StationManager:
 		"""
 		lines = ["#EXTM3U"]
 		for s in self._favorites:
-			name = s.get("name", "").strip() or "Unknown"
-			url  = s.get("url", "").strip()
+			name  = s.get("name", "").strip() or "Unknown"
+			url   = s.get("url", "").strip()
+			group = s.get("group", "").strip()
 			if url:
-				lines.append(f"#EXTINF:-1,{name}")
+				if group:
+					# group-title is the de-facto IPTV/M3U convention for folder
+					# membership (used by DVBViewer and most IPTV players/editors).
+					# Quotes inside the group name are escaped so the attribute
+					# stays well-formed for any M3U reader, including our own.
+					safe_group = group.replace('"', "'")
+					lines.append(f'#EXTINF:-1 group-title="{safe_group}",{name}')
+				else:
+					lines.append(f"#EXTINF:-1,{name}")
 				lines.append(url)
 		with open(path, "w", encoding="utf-8") as fh:
 			fh.write("\n".join(lines))
@@ -849,22 +859,37 @@ class StationManager:
 			station["countrycode"]  = item.get("countrycode", "")
 			station["tags"]         = item.get("tags", "")
 			station["votes"]        = item.get("votes", 0)
+			station["group"]        = item.get("group", "")
 			stations.append(station)
 		return stations
+
+	_GROUP_TITLE_RE = re.compile(r'group-title="([^"]*)"')
 
 	def _parse_import_m3u(self, path):
 		"""Parse an extended M3U playlist and return a list of station dicts.
 
 		Supports both #EXTINF name lines and bare URL-only playlists.
+
+		Also reads the IPTV/M3U "group-title" attribute (the convention used
+		by DVBViewer and most other M3U editors/players to record folder
+		membership) into each station's "group" field. Many exporters only
+		stamp group-title on the first station of a folder and leave it off
+		the rest, so the most recently seen group-title is carried forward
+		until a new one appears. Playlists that never set group-title behave
+		exactly as before: every station simply gets "group": "".
 		"""
 		with open(path, "r", encoding="utf-8-sig") as fh:
 			lines = [l.rstrip("\n\r") for l in fh]
 
 		stations = []
-		pending_name = None
+		pending_name  = None
+		current_group = ""
 		for line in lines:
 			if line.startswith("#EXTINF"):
-				# #EXTINF:-1,Station Name
+				# #EXTINF:-1 group-title="Folder Name",Station Name
+				m = self._GROUP_TITLE_RE.search(line)
+				if m:
+					current_group = m.group(1).strip()
 				if "," in line:
 					pending_name = line.split(",", 1)[1].strip()
 			elif line.startswith("#") or not line.strip():
@@ -881,6 +906,7 @@ class StationManager:
 					"countrycode":  "",
 					"tags":         "",
 					"votes":        0,
+					"group":        current_group,
 				})
 		return stations
 	def add_custom_station(self, name, url):

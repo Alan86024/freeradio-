@@ -333,6 +333,37 @@ from .utils import (
 
 
 
+
+def _matches_favorites_term(s, term):
+	"""Does a single search *term* match *s*, either the way the shared
+	matches_query() does (name/tags/etc.) or against s's "group" field
+	(the M3U group-title/folder a favourite was imported under, or one
+	assigned by hand via Assign to Group)? Display only - never touches
+	station["name"] itself.
+	"""
+	if _matches_query(s, term):
+		return True
+	group = (s.get("group") or "").strip()
+	return bool(group) and term.lower() in group.lower()
+
+
+def _matches_favorites_query(s, query):
+	"""Match the favourites filter box's *query* against *s*.
+
+	The query is split on whitespace into separate terms so a group name
+	and part of a station name can be typed together and each match a
+	different field - e.g. "NPR News" finds "NPR Newscast" (group "NPR",
+	name contains "News") even though "NPR News" never appears as one
+	contiguous phrase anywhere. Every term must match somewhere (AND
+	across terms); a single-word query behaves exactly as before.
+	Only used for the Favourites tab; every other list is unaffected.
+	"""
+	terms = query.split()
+	if not terms:
+		return True
+	return all(_matches_favorites_term(s, term) for term in terms)
+
+
 def check_stream_url(url, timeout=8):
 	"""Probe *url* and return (ok: bool, detail: str).
 
@@ -2349,8 +2380,9 @@ class RadioDialog(wx.Dialog):
 		query = query.GetValue().strip() if query else ""
 
 		favs = self._manager.get_favorites()
+
 		if query:
-			filtered = [s for s in favs if _matches_query(s, query)]
+			filtered = [s for s in favs if _matches_favorites_query(s, query)]
 		else:
 			filtered = list(favs)
 
@@ -2359,8 +2391,7 @@ class RadioDialog(wx.Dialog):
 
 		self._fav_list.Clear()
 		for s in filtered:
-			label = _station_label(s)
-			label = self._with_marked_suffix(label, s.get("stationuuid") in self._fav_marked)
+			label = self._fav_display_label(s, s.get("stationuuid") in self._fav_marked)
 			self._fav_list.Append(label)
 
 		# Restore selection: prefer the previously selected station; fall back to 0.
@@ -2387,8 +2418,9 @@ class RadioDialog(wx.Dialog):
 		query = query.GetValue().strip() if query else ""
 
 		favs = self._manager.get_favorites()
+
 		if query:
-			filtered = [s for s in favs if _matches_query(s, query)]
+			filtered = [s for s in favs if _matches_favorites_query(s, query)]
 		else:
 			filtered = list(favs)
 
@@ -2403,8 +2435,7 @@ class RadioDialog(wx.Dialog):
 
 		self._fav_list.Clear()
 		for s in filtered:
-			label = _station_label(s)
-			label = self._with_marked_suffix(label, s.get("stationuuid") in self._fav_marked)
+			label = self._fav_display_label(s, s.get("stationuuid") in self._fav_marked)
 			self._fav_list.Append(label)
 		self._update_fav_button()
 
@@ -3460,6 +3491,25 @@ class RadioDialog(wx.Dialog):
 		"""Append the "(marked)" suffix to *label* when *marked* is True."""
 		return (label + self._marked_suffix()) if marked else label
 
+	def _fav_display_label(self, station, marked=False):
+		"""Build a favourites-list row's full text for *station*.
+
+		Base station label, then " \u2014 Group" when the favourite has a
+		folder/group (from an M3U group-title tag, say) so browsing the
+		list tells you where each station came from - this is display-only
+		and never touches station["name"] itself, which is still used
+		as-is for playback announcements, notifications, and export.
+		The "(marked)" suffix, if any, always comes last. Used by every
+		place a favourite row's text is built (initial render, the
+		no-select refresh, and the '.' mark toggle) so they stay identical.
+		"""
+		label = _station_label(station)
+		group = (station.get("group") or "").strip()
+		if group:
+			# Translators: Suffix shown after a favourite's name to indicate its folder/group (e.g. "AZPM Jazz — AZPM"); %(group)s is the folder/group name.
+			label += _(" \u2014 %(group)s") % {"group": group}
+		return self._with_marked_suffix(label, marked)
+
 	def _strip_marked_suffix(self, text):
 		"""Undo _with_marked_suffix() - used wherever a list row's raw
 		display text is also used as data (the Liked Songs list stores
@@ -3619,6 +3669,11 @@ class RadioDialog(wx.Dialog):
 		item_rename = menu.Append(wx.ID_ANY, _("Re&name Station"))
 		item_rename.Enable(is_fav_tab and is_fav)
 		self.Bind(wx.EVT_MENU, self._on_rename_station, item_rename)
+
+		# Translators: Context-menu item; assigns a user-typed folder/group name to every '.'-marked favourite (or just the focused one if none are marked), so favourites can be organised into groups manually - not only ones imported with a group-title tag.
+		item_assign_group = menu.Append(wx.ID_ANY, _("Assign to &Group..."))
+		item_assign_group.Enable(is_fav_tab and is_fav)
+		self.Bind(wx.EVT_MENU, lambda e: self._on_fav_assign_group(station), item_assign_group)
 
 		menu.AppendSeparator()
 
@@ -4386,7 +4441,7 @@ class RadioDialog(wx.Dialog):
 		"""Mark/unmark the focused favourite station with '.' for the
 		Remove Selected bulk-delete flow (Delete key or context menu).
 		Updates the row's display text immediately (see
-		_with_marked_suffix()) so the marked state is visible/announced
+		_fav_display_label()) so the marked state is visible/announced
 		while simply arrowing through the list afterwards, not only at
 		the moment of marking."""
 		station, idx = self._get_selected_station()
@@ -4404,8 +4459,61 @@ class RadioDialog(wx.Dialog):
 			self._fav_marked.add(uuid)
 			# Translators: Spoken after marking a favourite station in the multi-select removal flow; %s is the station name.
 			ui.message(_("Marked: %s") % name)
-		self._fav_list.SetString(idx, self._with_marked_suffix(name, uuid in self._fav_marked))
+		self._fav_list.SetString(idx, self._fav_display_label(station, uuid in self._fav_marked))
 		self._fav_list.SetSelection(idx)
+
+	def _on_fav_assign_group(self, station):
+		"""Assign a user-typed folder/group name to every favourite marked
+		with '.' (or just *station* if nothing is marked), so favourites
+		can be organised into groups by hand - not only ones that arrived
+		with a group-title tag from an M3U import. An empty name clears
+		the group, removing the "— Group" suffix from those rows.
+		"""
+		favs = self._manager.get_favorites()
+		marked = self._fav_marked
+		if marked:
+			targets = [s for s in favs if s.get("stationuuid") in marked]
+		else:
+			targets = [station] if station else []
+		if not targets:
+			return
+
+		current = (station.get("group") or "").strip() if station else ""
+		dlg = wx.TextEntryDialog(
+			self,
+			# Translators: Prompt of the dialog that assigns a folder/group name to the marked favourite(s); leaving the field empty removes them from any group instead.
+			_("Enter a group name (leave empty to remove from a group):"),
+			# Translators: Title of the assign-to-group dialog.
+			_("Assign to Group"),
+			current,
+		)
+		if dlg.ShowModal() != wx.ID_OK:
+			dlg.Destroy()
+			return
+		new_group = dlg.GetValue().strip()
+		dlg.Destroy()
+
+		for s in targets:
+			s["group"] = new_group
+		self._manager._save_favorites()
+		self._fav_marked.clear()
+		self._refresh_fav_list()
+
+		count = len(targets)
+		if new_group:
+			# Translators: Spoken after assigning marked favourite(s) to a group; %(count)d is how many stations, %(group)s the group name.
+			ui.message(ngettext(
+				"Assigned %(count)d favourite to group \"%(group)s\"",
+				"Assigned %(count)d favourites to group \"%(group)s\"",
+				count,
+			) % {"count": count, "group": new_group})
+		else:
+			# Translators: Spoken after clearing the group from marked favourite(s); %(count)d is how many stations.
+			ui.message(ngettext(
+				"Removed %(count)d favourite from its group",
+				"Removed %(count)d favourites from their groups",
+				count,
+			) % count)
 
 	def _on_fav_remove_selected(self, event=None):
 		"""Bulk-remove every favourite station currently marked with '.',
