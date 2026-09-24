@@ -179,7 +179,7 @@ class PodcastEpisode:
 		- Never played: " (total)" if the total duration is known,
 		  otherwise nothing.
 		"""
-		from .__init__ import _format_duration
+		from . import _format_duration
 		total = self.duration_seconds
 
 		if listened or position == -1.0:

@@ -952,7 +952,7 @@ class JukeboxTrack:
 		speech) until every file in it has been opened and parsed; the
 		real durations are filled in afterwards by a background thread -
 		see RadioDialog._probe_jukebox_track_durations()."""
-		from .__init__ import _format_duration
+		from . import _format_duration
 		label = self.title
 		duration = _get_track_duration(self.path) if probe_duration else None
 		total_str = _format_duration(duration) if duration else None
