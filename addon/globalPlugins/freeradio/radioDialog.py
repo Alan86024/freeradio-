@@ -426,7 +426,7 @@ def check_stream_url(url, timeout=8):
 
 	except _err.HTTPError as e:
 		# Translators: Error returned when the server responds with an HTTP error status; %d is the status code, %s its reason phrase.
-		return False, _("HTTP error %(e.code)d: %(e.reason)s") % (e.code, e.reason)
+		return False, _("HTTP error %d: %s") % (e.code, e.reason)
 	except _err.URLError as e:
 		# Translators: Error returned when the connection to the URL fails outright (DNS, refused, timeout); %s is the underlying reason.
 		return False, _("Connection failed: %s") % str(e.reason)
@@ -7535,8 +7535,8 @@ class RadioDialog(wx.Dialog):
 			# Translators: Spoken when every part of a book downloaded successfully; %s is the book title.
 			ui.message(_("Download complete: %s") % book.title)
 		elif saved > 0:
-			# Translators: Spoken when a book download partially fails; %(saved)d/%(total)d are the part counts, %(book.title)s the book title, %(error)s the error from the last failed part. Note: despite the %(name)s-style placeholders, this is formatted with a tuple below, not a dict - the literal text '%(book.title)s' is what gets spoken as-is, a pre-existing bug outside the scope of this translator-notes pass.
-			ui.message(_("Downloaded %(saved)d of %(total)d parts of %(book.title)s. Last error: %(error)s") % (saved, total, book.title, error))
+			# Translators: Spoken when a book download partially fails; %d/%d are the saved/total part counts, first %s the book title, second %s the error from the last failed part.
+			ui.message(_("Downloaded %d of %d parts of %s. Last error: %s") % (saved, total, book.title, error))
 		else:
 			# Translators: Spoken when a book download fails entirely (zero parts saved); %s is the error message, or the book title if no specific error was captured.
 			ui.message(_("Download failed: %s") % (error or book.title))
