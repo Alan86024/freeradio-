@@ -3781,6 +3781,25 @@ class RadioDialog(wx.Dialog):
 				self._toggle_jukebox_mark()
 				return
 
+		# Shift+End marks/unmarks (same predictable-direction logic as '.',
+		# see _mark_range()) from the focused row to the last row; Shift+Home
+		# does the same from the focused row to the first row. Same four
+		# lists as '.' above, handled globally for the same reason.
+		if key in (wx.WXK_END, wx.WXK_HOME) and event.ShiftDown():
+			toward_end = (key == wx.WXK_END)
+			if focused == self._fav_list:
+				self._mark_range_fav(toward_end)
+				return
+			if focused == self._liked_list:
+				self._mark_range_liked(toward_end)
+				return
+			if focused == self._getem_library_ctrl:
+				self._mark_range_getem(toward_end)
+				return
+			if focused == self._jukebox_list:
+				self._mark_range_jukebox(toward_end)
+				return
+
 		if key in (wx.WXK_F3, wx.WXK_F4):
 			tab = self._notebook.GetSelection()
 			# Only All Stations / Favourites are handled here — other tabs
@@ -4436,6 +4455,156 @@ class RadioDialog(wx.Dialog):
 				self._on_delete_station(event)
 		else:
 			event.Skip()
+
+	def _mark_range(self, listbox, marked_set, identity_of, redraw, toward_end):
+		"""Shared Shift+End/Shift+Home range-mark logic for the four
+		multi-select lists (Favourites, Liked Songs, Audio Books, Jukebox).
+
+		Looks at the currently focused row's mark state to decide whether
+		the whole range is being marked or unmarked - so the action is
+		predictable rather than toggling each row independently - then
+		applies that from the current row to the last row (toward_end=True,
+		like Shift+End) or to the first row (toward_end=False, like
+		Shift+Home), inclusive of the current row. Moves focus to the far
+		end of the range afterwards, mirroring how Shift+End/Home behave
+		in text fields. Returns (should_mark, changed_count), or None if
+		there was nothing to do (empty list, nothing focused, or the
+		focused row has no identity - e.g. a placeholder row).
+
+		*identity_of(idx)* must return a hashable identity for row *idx*,
+		or None to skip it. *redraw(idx)* must re-render row *idx*'s
+		display text from the current contents of *marked_set*.
+		"""
+		count = listbox.GetCount()
+		current = listbox.GetSelection()
+		if count == 0 or current == wx.NOT_FOUND:
+			return None
+		cur_id = identity_of(current)
+		if cur_id is None:
+			return None
+		should_mark = cur_id not in marked_set
+
+		if toward_end:
+			indices = range(current, count)
+			focus_idx = count - 1
+		else:
+			indices = range(0, current + 1)
+			focus_idx = 0
+
+		changed = 0
+		for i in indices:
+			ident = identity_of(i)
+			if ident is None:
+				continue
+			marked = ident in marked_set
+			if should_mark and not marked:
+				marked_set.add(ident)
+				changed += 1
+			elif not should_mark and marked:
+				marked_set.discard(ident)
+				changed += 1
+		for i in indices:
+			redraw(i)
+		listbox.SetSelection(focus_idx)
+		return should_mark, changed
+
+	def _mark_range_fav(self, toward_end):
+		"""Shift+End/Shift+Home for the Favourites list - see _mark_range()."""
+		filtered = getattr(self, "_fav_filtered", None) or []
+
+		def identity_of(i):
+			return filtered[i].get("stationuuid") if i < len(filtered) else None
+
+		def redraw(i):
+			station = filtered[i]
+			self._fav_list.SetString(
+				i, self._fav_display_label(station, station.get("stationuuid") in self._fav_marked)
+			)
+
+		result = self._mark_range(self._fav_list, self._fav_marked, identity_of, redraw, toward_end)
+		if not result:
+			return
+		should_mark, changed = result
+		if should_mark:
+			# Translators: Spoken after Shift+End/Shift+Home marks a range of favourites for the multi-select removal flow; %d is how many were newly marked.
+			ui.message(ngettext("Marked %d favourite", "Marked %d favourites", changed) % changed)
+		else:
+			# Translators: Spoken after Shift+End/Shift+Home unmarks a range of favourites; %d is how many were unmarked.
+			ui.message(ngettext("Unmarked %d favourite", "Unmarked %d favourites", changed) % changed)
+
+	def _mark_range_liked(self, toward_end):
+		"""Shift+End/Shift+Home for the Liked Songs list - see _mark_range()."""
+		placeholders = (_("No liked songs yet."), _("No results found."))
+
+		def identity_of(i):
+			text = self._strip_marked_suffix(self._liked_list.GetString(i))
+			return None if text in placeholders else text
+
+		def redraw(i):
+			song = self._strip_marked_suffix(self._liked_list.GetString(i))
+			if song in placeholders:
+				return
+			self._liked_list.SetString(i, self._with_marked_suffix(song, song in self._liked_marked))
+
+		result = self._mark_range(self._liked_list, self._liked_marked, identity_of, redraw, toward_end)
+		if not result:
+			return
+		should_mark, changed = result
+		if should_mark:
+			# Translators: Spoken after Shift+End/Shift+Home marks a range of liked songs for the multi-select removal flow; %d is how many were newly marked.
+			ui.message(ngettext("Marked %d song", "Marked %d songs", changed) % changed)
+		else:
+			# Translators: Spoken after Shift+End/Shift+Home unmarks a range of liked songs; %d is how many were unmarked.
+			ui.message(ngettext("Unmarked %d song", "Unmarked %d songs", changed) % changed)
+
+	def _mark_range_getem(self, toward_end):
+		"""Shift+End/Shift+Home for the Audio Books library list - see _mark_range()."""
+		books = self._merged_library_books()
+
+		def identity_of(i):
+			return books[i].identity_key() if i < len(books) else None
+
+		def redraw(i):
+			book = books[i]
+			label = self._format_getem_result_label(book)
+			self._getem_library_ctrl.SetString(
+				i, self._with_marked_suffix(label, book.identity_key() in self._getem_marked)
+			)
+
+		result = self._mark_range(self._getem_library_ctrl, self._getem_marked, identity_of, redraw, toward_end)
+		if not result:
+			return
+		should_mark, changed = result
+		if should_mark:
+			# Translators: Spoken after Shift+End/Shift+Home marks a range of audio books for the multi-select removal flow; %d is how many were newly marked.
+			ui.message(ngettext("Marked %d book", "Marked %d books", changed) % changed)
+		else:
+			# Translators: Spoken after Shift+End/Shift+Home unmarks a range of audio books; %d is how many were unmarked.
+			ui.message(ngettext("Unmarked %d book", "Unmarked %d books", changed) % changed)
+
+	def _mark_range_jukebox(self, toward_end):
+		"""Shift+End/Shift+Home for the Jukebox list - see _mark_range()."""
+		entries = self._jukebox_manager.get_entries()
+
+		def identity_of(i):
+			return entries[i].path if i < len(entries) else None
+
+		def redraw(i):
+			entry = entries[i]
+			self._jukebox_list.SetString(
+				i, self._with_marked_suffix(entry.display_label(), entry.path in self._jukebox_marked)
+			)
+
+		result = self._mark_range(self._jukebox_list, self._jukebox_marked, identity_of, redraw, toward_end)
+		if not result:
+			return
+		should_mark, changed = result
+		if should_mark:
+			# Translators: Spoken after Shift+End/Shift+Home marks a range of jukebox entries for the multi-select removal flow; %d is how many were newly marked.
+			ui.message(ngettext("Marked %d jukebox entry", "Marked %d jukebox entries", changed) % changed)
+		else:
+			# Translators: Spoken after Shift+End/Shift+Home unmarks a range of jukebox entries; %d is how many were unmarked.
+			ui.message(ngettext("Unmarked %d jukebox entry", "Unmarked %d jukebox entries", changed) % changed)
 
 	def _toggle_fav_mark(self):
 		"""Mark/unmark the focused favourite station with '.' for the
