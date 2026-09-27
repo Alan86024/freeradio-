@@ -1079,6 +1079,17 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 			# as much as every later re-show does.
 			gui.mainFrame.prePopup()
 			self._dialog.Show()
+		elif self._dialog.IsIconized():
+			# The dialog is only ever Hide()'n on close (see
+			# RadioDialog._on_window_close()/_on_close_btn()), never
+			# Destroy()'d - so IsShown() stays True if the user minimized it
+			# instead of closing it (taskbar, Win+Down, switching away),
+			# which skips the Show() branch above. Raise() alone does not
+			# restore a minimized window on Windows, so without this the
+			# dialog would silently stay in the taskbar - the window
+			# "won't open" until NVDA is restarted and self._dialog resets
+			# to None, forcing a fresh Show().
+			self._dialog.Iconize(False)
 		self._dialog.Raise()
 		try:
 			self._dialog.refresh_audio_devices(force=True)

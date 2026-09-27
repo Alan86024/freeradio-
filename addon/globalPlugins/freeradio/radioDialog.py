@@ -3575,8 +3575,7 @@ class RadioDialog(wx.Dialog):
 		label = _station_label(station)
 		group = (station.get("group") or "").strip()
 		if group:
-			# Translators: Suffix shown after a favourite's name to indicate its folder/group (e.g. "AZPM Jazz — AZPM"); %(group)s is the folder/group name.
-			label += _(" \u2014 %(group)s") % {"group": group}
+			label += " \u2014 " + group
 		return self._with_marked_suffix(label, marked)
 
 	def _strip_marked_suffix(self, text):
