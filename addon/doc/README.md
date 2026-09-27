@@ -654,6 +654,15 @@ The Jukebox list is your persistent personal library. Two kinds of item can be a
 
 Your Jukebox list is saved automatically, so it survives NVDA restarts. Folder contents are scanned on demand and cached, so adding a folder is instantaneous even for very large collections — the full scan happens the first time you select that folder. If you add files to a folder outside FreeRadio, use the **Rescan Folder** item in the folder's context menu to pick them up.
 
+### Adding Items from Windows Explorer
+
+Two more commands, available only while a file or folder is focused in Windows Explorer's file list (the Details/Icons list — not the address bar, folder tree, ribbon, or search box), let you skip the Add File…/Add Folder… dialogs above entirely:
+
+- **Play the focused file with FreeRadio** — plays the highlighted audio file directly, without needing it to already be in your Jukebox list. Works only on files; using it on a folder tells you to add the folder to the jukebox instead.
+- **Add the focused item to the FreeRadio jukebox** — adds the highlighted file or folder to your Jukebox list, exactly as if you'd used **Add File…** or **Add Folder…** above.
+
+Neither command has a default key assigned. Assign one from NVDA Menu → Preferences → Input Gestures **while focused inside a File Explorer window** — they appear there under Explorer's own section rather than "All applications", so the key combination you choose only triggers these commands while you're browsing files in Explorer; everywhere else, it keeps its normal meaning.
+
 ### Playing from the Jukebox
 
 - **Enter** on a Jukebox entry plays it directly: for a file entry, the file itself; for a folder entry, its first track.

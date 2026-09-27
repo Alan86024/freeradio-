@@ -53,6 +53,32 @@ del _tr
 
 from globalPlugins.freeradio import jukebox
 
+# This file's name (explorer.py) exactly matches NVDA's own built-in app
+# module for explorer.exe, so this module now wins whenever anything
+# resolves "explorer" as a bare top-level name - which is how NVDA's own
+# app modules import from each other (not via appModules.explorer or
+# nvdaBuiltin.appModules.explorer). appModules/dllhost.py, for one, does
+# "from explorer import ReadOnlyEditBox" - completely unrelated to
+# Explorer or FreeRadio, but it broke the moment this add-on was
+# installed, since our explorer.py never defined ReadOnlyEditBox
+# (confirmed via a real crash report: ImportError: cannot import name
+# 'ReadOnlyEditBox' from 'appModules.explorer', pointing at this file).
+#
+# Fixed generally rather than by hardcoding just ReadOnlyEditBox, in case
+# some other core app module (now, or in a future NVDA version) does the
+# same bare-name import for a different symbol: copy every public name
+# NVDA's real explorer.py defines into this module's namespace, skipping
+# anything we've already defined ourselves above (none of NVDA's own
+# names should collide with ours, but the guard makes that explicit and
+# safe either way). Our own "class AppModule" below still wins for that
+# one name regardless, since it's a later, unconditional rebinding of the
+# same module-level name - required, since NVDA needs *our* AppModule
+# (with the two extra scripts) for explorer.exe, not the stock one.
+for _name in dir(nvdaBuiltin.appModules.explorer):
+	if not _name.startswith("_") and _name not in globals():
+		globals()[_name] = getattr(nvdaBuiltin.appModules.explorer, _name)
+del _name
+
 
 def _get_freeradio_plugin():
 	"""Find the running FreeRadio GlobalPlugin instance, so this app
