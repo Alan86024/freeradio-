@@ -100,7 +100,10 @@ addon_info = AddonInfo(
 
 # Define the python files that are the sources of your add-on.
 # We point to the specific directory where your code lives.
-pythonSources: list[str] = ["addon/globalPlugins/freeradio/*.py"]
+pythonSources: list[str] = [
+	"addon/globalPlugins/freeradio/*.py",
+	"addon/appModules/*.py",
+]
 
 # Files that contain strings for translation. Usually your python sources
 i18nSources: list[str] = pythonSources + ["buildVars.py"]
