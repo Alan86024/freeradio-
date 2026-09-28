@@ -299,6 +299,9 @@ def _audio_device_refresh_mode():
 def _init_config():
 	config.conf.spec["freeAudio"] = {
 		"volume":           "integer(default=100, min=0, max=100)",
+		# Set once the one-time import of a previous FreeRadio install has
+		# run - see legacyMigration.py.
+		"legacy_migrated":  "boolean(default=False)",
 		"last_station_url": "string(default='')",
 		"last_station_name":"string(default='')",
 		"last_station_uuid":"string(default='')",
@@ -397,6 +400,7 @@ def _cleanup_orphaned_timeshift_buffers():
 		pass
 
 
+from . import legacyMigration
 from .settingsPanel import freeAudioSettingsPanel
 from .timerManager import TimerManager
 from .audioDeviceMixin import AudioDeviceMixin
@@ -463,6 +467,9 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		# but it stops that race from breaking the dialog for the user.
 		wx.DisableAsserts()
 		_cleanup_orphaned_timeshift_buffers()
+		# Import a previous FreeRadio install's settings/data (once). Must run
+		# before anything below reads config or opens a data file.
+		legacyMigration.run()
 		self._player  = radioPlayer.RadioPlayer()
 		self._player.set_audio_device_refresh_mode(_audio_device_refresh_mode())
 		self._player.set_volume(config.conf["freeAudio"]["volume"])

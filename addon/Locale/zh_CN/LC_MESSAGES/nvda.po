@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-28 11:32+0300\n"
+"POT-Creation-Date: 2026-09-28 13:29+0300\n"
 "PO-Revision-Date: 2026-09-26 01:12+0800\n"
 "Last-Translator: Alan <alanzhangmw@outlook.com>\n"
 "Language-Team: \n"
@@ -25,6 +25,7 @@ msgstr ""
 msgid "Select the main freeAudio output device"
 msgstr "选择自由广播的主要输出设备"
 
+#. Translators: Title of the warning about the old FreeRadio add-on still being installed.
 #. Translators: Title of this settings category as it appears in NVDA's own Settings dialog category tree.
 #: addon\globalPlugins\freeAudio\audioDeviceMixin.py:31
 #: addon\globalPlugins\freeAudio\audioDeviceMixin.py:166
@@ -36,6 +37,7 @@ msgstr "选择自由广播的主要输出设备"
 #: addon\globalPlugins\freeAudio\audioFxMixin.py:143
 #: addon\globalPlugins\freeAudio\audioFxMixin.py:153
 #: addon\globalPlugins\freeAudio\audioFxMixin.py:230
+#: addon\globalPlugins\freeAudio\legacyMigration.py:185
 #: addon\globalPlugins\freeAudio\miscTogglesMixin.py:35
 #: addon\globalPlugins\freeAudio\miscTogglesMixin.py:54
 #: addon\globalPlugins\freeAudio\miscTogglesMixin.py:86
@@ -57,11 +59,11 @@ msgstr "选择自由广播的主要输出设备"
 #: addon\globalPlugins\freeAudio\trackInfoMixin.py:325
 #: addon\globalPlugins\freeAudio\trackInfoMixin.py:344
 #: addon\globalPlugins\freeAudio\trackInfoMixin.py:393
-#: addon\globalPlugins\freeAudio\__init__.py:822
-#: addon\globalPlugins\freeAudio\__init__.py:832
-#: addon\globalPlugins\freeAudio\__init__.py:842
-#: addon\globalPlugins\freeAudio\__init__.py:852
-#: addon\globalPlugins\freeAudio\__init__.py:862
+#: addon\globalPlugins\freeAudio\__init__.py:829
+#: addon\globalPlugins\freeAudio\__init__.py:839
+#: addon\globalPlugins\freeAudio\__init__.py:849
+#: addon\globalPlugins\freeAudio\__init__.py:859
+#: addon\globalPlugins\freeAudio\__init__.py:869
 #: addon\appModules\explorer.py:228 addon\appModules\explorer.py:261
 #, fuzzy
 msgid "freeAudio"
@@ -134,7 +136,7 @@ msgstr "音频镜像已停止"
 #: addon\globalPlugins\freeAudio\audioDeviceMixin.py:179
 #: addon\globalPlugins\freeAudio\recordingMixin.py:116
 #: addon\globalPlugins\freeAudio\recordingMixin.py:238
-#: addon\globalPlugins\freeAudio\__init__.py:869
+#: addon\globalPlugins\freeAudio\__init__.py:876
 msgid "No station is playing"
 msgstr "当前没有电台在播放"
 
@@ -575,6 +577,15 @@ msgstr "找不到文件夹: %s"
 #: addon\globalPlugins\freeAudio\jukebox.py:1212
 msgid "No audio files found in that folder."
 msgstr "在该文件夹中找不到音频文件。"
+
+#: addon\globalPlugins\freeAudio\legacyMigration.py:179
+msgid ""
+"The previous version of this add-on, FreeRadio, is still installed alongside "
+"freeAudio. Running both at the same time makes them compete for the same "
+"shortcuts and audio device. Your settings and data have been copied to "
+"freeAudio. Please uninstall FreeRadio (NVDA menu, Tools, Add-on Store or "
+"Manage add-ons) and restart NVDA."
+msgstr ""
 
 #. Translators: Fixed source label for LibriVox audiobooks, shown in the station-details dialog and the Audio Books tab (same role as getem.py's/gutenberg_audiobooks.py's 'audiobook_source').
 #. Translators: Source-name label for a book from the LibriVox catalog, shown alongside the audio-book details.
@@ -2875,7 +2886,7 @@ msgstr "下载完成：%s"
 #: addon\globalPlugins\freeAudio\radioDialog.py:6120
 #: addon\globalPlugins\freeAudio\radioDialog.py:7837
 #: addon\globalPlugins\freeAudio\recordingMixin.py:68
-#: addon\globalPlugins\freeAudio\__init__.py:1317
+#: addon\globalPlugins\freeAudio\__init__.py:1324
 #, python-format
 msgid "Download failed: %s"
 msgstr "下载失败：%s"
@@ -3627,7 +3638,7 @@ msgstr "录音已停止"
 #. Translators: Spoken when a plain instant recording starts (single-press Ctrl+Win+E); %s is the station name.
 #. Translators: Spoken when a scheduled or manual recording begins; %s is the station name.
 #: addon\globalPlugins\freeAudio\recordingMixin.py:245
-#: addon\globalPlugins\freeAudio\__init__.py:567
+#: addon\globalPlugins\freeAudio\__init__.py:574
 #, python-format
 msgid "Recording started: %s"
 msgstr "开始录音: %s"
@@ -4410,32 +4421,32 @@ msgid "Song recording saved: %s"
 msgstr "歌曲录音已保存: %s"
 
 #. Translators: Spoken automatically while a live recording is in progress if the time-shift disk-space limit is reached and old buffered audio is being discarded faster than usual.
-#: addon\globalPlugins\freeAudio\__init__.py:481
+#: addon\globalPlugins\freeAudio\__init__.py:488
 msgid ""
 "Time-shift buffer: running low on disk space, the oldest audio is being "
 "dropped more aggressively."
 msgstr "时移缓冲区：磁盘空间不足，最旧的音频被更积极地丢弃。"
 
 #. Translators: Spoken when a recording finishes normally; %s is the saved output filename.
-#: addon\globalPlugins\freeAudio\__init__.py:571
+#: addon\globalPlugins\freeAudio\__init__.py:578
 #, python-format
 msgid "Recording finished: %s"
 msgstr "录音结束: %s"
 
 #. Translators: Spoken when a recording never actually started because the stream connection failed for its whole scheduled window; %s is the station name.
-#: addon\globalPlugins\freeAudio\__init__.py:576
+#: addon\globalPlugins\freeAudio\__init__.py:583
 #, python-format
 msgid "Recording failed: could not connect to %s"
 msgstr "录制失败：无法连接到%s"
 
 #. Translators: Spoken when converting a finished recording to the configured format (e.g. MP3) fails; the original, unconverted file is kept. %s is its filename.
-#: addon\globalPlugins\freeAudio\__init__.py:581
+#: addon\globalPlugins\freeAudio\__init__.py:588
 #, python-format
 msgid "Recording conversion failed. The original file was kept: %s"
 msgstr "录制转换失败。原始文件已保留：%s"
 
 #. Translators: Spoken when the folder configured for recordings can't be used (e.g. missing/no permission) and freeAudio saved to its default folder instead; %(station)s is the station name, %(reason)s is why the folder failed.
-#: addon\globalPlugins\freeAudio\__init__.py:587
+#: addon\globalPlugins\freeAudio\__init__.py:594
 #, python-format
 msgid ""
 "Could not use the selected folder for '%(station)s' (%(reason)s). Saved to "
@@ -4446,13 +4457,13 @@ msgstr ""
 
 #. ── 2. Create / refresh a script for every favourite ─────────────────
 #. Translators: Script category shown in NVDA's Input Gestures dialog, grouping the auto-generated 'play this favourite station' shortcuts separately from freeAudio's main commands.
-#: addon\globalPlugins\freeAudio\__init__.py:668
+#: addon\globalPlugins\freeAudio\__init__.py:675
 #, fuzzy
 msgid "freeAudio Stations"
 msgstr "自由广播电台"
 
 #. Translators: Spoken if a per-favourite-station shortcut is triggered after that station was removed from favourites since the shortcut was created; %s is the station name.
-#: addon\globalPlugins\freeAudio\__init__.py:689
+#: addon\globalPlugins\freeAudio\__init__.py:696
 #, python-format
 msgid "Station no longer in favourites: %s"
 msgstr "电台已移出收藏: %s"
@@ -4460,60 +4471,60 @@ msgstr "电台已移出收藏: %s"
 #. NVDA reads __doc__ as the script description and
 #. __name__ as the script identifier.
 #. Translators: Auto-generated description of a per-favourite-station shortcut, shown in NVDA's Input Gestures dialog; %s is the station name.
-#: addon\globalPlugins\freeAudio\__init__.py:699
+#: addon\globalPlugins\freeAudio\__init__.py:706
 #, python-format
 msgid "%s playback shortcut"
 msgstr "%s播放快捷方式"
 
 #. Translators: Menu item that opens the freeAudio station browser dialog
-#: addon\globalPlugins\freeAudio\__init__.py:729
+#: addon\globalPlugins\freeAudio\__init__.py:736
 msgid "Station &Browser...\tCtrl+Win+R"
 msgstr "电台浏览器(&B)...\tCtrl+Win+R"
 
 #. Translators: Menu item that opens freeAudio settings in NVDA preferences
-#: addon\globalPlugins\freeAudio\__init__.py:738
+#: addon\globalPlugins\freeAudio\__init__.py:745
 #, fuzzy
 msgid "freeAudio &Settings..."
 msgstr "自由广播设置(&S)..."
 
 #. Translators: Menu item that manually triggers the update check
-#: addon\globalPlugins\freeAudio\__init__.py:747
+#: addon\globalPlugins\freeAudio\__init__.py:754
 msgid "Check for &Updates..."
 msgstr "检查更新(&U)..."
 
 #. Translators: Label of the freeAudio submenu in NVDA Tools menu
-#: addon\globalPlugins\freeAudio\__init__.py:760
+#: addon\globalPlugins\freeAudio\__init__.py:767
 #, fuzzy
 msgid "&freeAudio"
 msgstr "自由广播"
 
 #. Translators: Name of an NVDA command; opens the freeAudio station browser dialog on its main Stations tab.
-#: addon\globalPlugins\freeAudio\__init__.py:821
+#: addon\globalPlugins\freeAudio\__init__.py:828
 #, fuzzy
 msgid "Open freeAudio station browser"
 msgstr "打开自由广播电台浏览器"
 
 #. Translators: Name of an NVDA command; opens the station browser dialog on the Audio Books tab.
-#: addon\globalPlugins\freeAudio\__init__.py:831
+#: addon\globalPlugins\freeAudio\__init__.py:838
 #, fuzzy
 msgid "Open freeAudio audio book library"
 msgstr "打开自由广播有声书库"
 
 #. Translators: Name of an NVDA command; opens the station browser dialog on the Podcasts tab.
-#: addon\globalPlugins\freeAudio\__init__.py:841
+#: addon\globalPlugins\freeAudio\__init__.py:848
 #, fuzzy
 msgid "Open freeAudio podcast subscriptions"
 msgstr "打开自由广播播客订阅"
 
 # | msgid "Open FreeRadio station browser"
 #. Translators: Name of an NVDA command; opens the station browser dialog on the local Jukebox tab.
-#: addon\globalPlugins\freeAudio\__init__.py:851
+#: addon\globalPlugins\freeAudio\__init__.py:858
 #, fuzzy
 msgid "Open freeAudio local jukebox"
 msgstr "打开自由广播本地点唱机"
 
 #. Translators: Name of an NVDA command whose behaviour depends on what is currently playing: adds a live station to favourites, or downloads the current audio book/podcast episode.
-#: addon\globalPlugins\freeAudio\__init__.py:861
+#: addon\globalPlugins\freeAudio\__init__.py:868
 msgid ""
 "Add currently playing station to favourites, download the whole audio book "
 "if one is playing, or download the episode if a podcast is playing"
@@ -4522,62 +4533,62 @@ msgstr ""
 "正在播放播客，则下载该单集"
 
 #. Translators: Spoken when this shortcut is pressed while something is playing that is neither a station, podcast episode, nor audio book (e.g. a local jukebox track).
-#: addon\globalPlugins\freeAudio\__init__.py:881
+#: addon\globalPlugins\freeAudio\__init__.py:888
 msgid "The shortcut is only for stations, podcasts or audio books"
 msgstr "该快捷方式仅适用于电台、播客或有声书"
 
 #. Translators: Spoken when the currently playing station is already saved in favourites; %s is the station name.
-#: addon\globalPlugins\freeAudio\__init__.py:903
+#: addon\globalPlugins\freeAudio\__init__.py:910
 #, python-format
 msgid "Already in favourites: %s"
 msgstr "已在收藏中: %s"
 
 #. Translators: Spoken after successfully adding the currently playing station to favourites; %s is the station name.
-#: addon\globalPlugins\freeAudio\__init__.py:907
+#: addon\globalPlugins\freeAudio\__init__.py:914
 #, python-format
 msgid "Added to favourites: %s"
 msgstr "已添加到收藏: %s"
 
 #. Translators: Spoken when this shortcut is pressed to download an audio book but no audio book (GETEM/Gutenberg/LibriVox) is currently playing.
-#: addon\globalPlugins\freeAudio\__init__.py:922
+#: addon\globalPlugins\freeAudio\__init__.py:929
 msgid "No audio book is playing"
 msgstr "没有播放有声书"
 
 #. Translators: Spoken when downloading the currently playing audio book fails.
-#: addon\globalPlugins\freeAudio\__init__.py:929
+#: addon\globalPlugins\freeAudio\__init__.py:936
 msgid "Could not download this audio book."
 msgstr "无法下载此有声书。"
 
 # | msgid "Could not play station: %s"
 #. Translators: Spoken when a station's connection attempt fails outright, so the user isn't left thinking it's silently playing; %(name)s is the station name, %(reason)s is a short failure description.
-#: addon\globalPlugins\freeAudio\__init__.py:1012
+#: addon\globalPlugins\freeAudio\__init__.py:1019
 #, python-format
 msgid "Could not play %(name)s: %(reason)s"
 msgstr "无法播放 %(name)s：%(reason)s"
 
 #. Translators: Spoken during a manual update check when the GitHub repository has no published releases yet.
-#: addon\globalPlugins\freeAudio\__init__.py:1212
+#: addon\globalPlugins\freeAudio\__init__.py:1219
 msgid "No releases found on GitHub yet."
 msgstr "GitHub 上尚未找到版本发布。"
 
 #. Translators: Spoken during a manual update check when the GitHub API request itself returns an HTTP error; %d is the HTTP status code.
-#: addon\globalPlugins\freeAudio\__init__.py:1217
+#: addon\globalPlugins\freeAudio\__init__.py:1224
 #, python-format
 msgid "Update check failed (HTTP %d)."
 msgstr "检查更新失败 (HTTP %d)。"
 
 #. Translators: Spoken during a manual update check when the request to GitHub fails outright (e.g. no internet connection).
-#: addon\globalPlugins\freeAudio\__init__.py:1223
+#: addon\globalPlugins\freeAudio\__init__.py:1230
 msgid "Update check failed. Please check your internet connection."
 msgstr "检查更新失败。请检查您的网络连接。"
 
 #. Translators: Spoken during a manual update check when GitHub's release data doesn't include a usable version tag.
-#: addon\globalPlugins\freeAudio\__init__.py:1239
+#: addon\globalPlugins\freeAudio\__init__.py:1246
 msgid "Could not determine latest version."
 msgstr "无法确定最新版本。"
 
 #. Translators: Update dialog message when direct install is available. %(new)s=new version, %(current)s=current version
-#: addon\globalPlugins\freeAudio\__init__.py:1258
+#: addon\globalPlugins\freeAudio\__init__.py:1265
 #, fuzzy, python-format
 msgid ""
 "A new version of freeAudio is available: %(new)s.\n"
@@ -4590,19 +4601,19 @@ msgstr ""
 "\n"
 "现在下载并安装吗？"
 
-#: addon\globalPlugins\freeAudio\__init__.py:1261
-#: addon\globalPlugins\freeAudio\__init__.py:1270
-#: addon\globalPlugins\freeAudio\__init__.py:1338
+#: addon\globalPlugins\freeAudio\__init__.py:1268
+#: addon\globalPlugins\freeAudio\__init__.py:1277
+#: addon\globalPlugins\freeAudio\__init__.py:1345
 msgid "unknown"
 msgstr "未知"
 
 #. Translators: Button label on the update-available dialog when a direct .nvda-addon download is available, offering to install it right away.
-#: addon\globalPlugins\freeAudio\__init__.py:1263
+#: addon\globalPlugins\freeAudio\__init__.py:1270
 msgid "&Install"
 msgstr "安装(&I)"
 
 #. Translators: Update dialog message when only a download page is available. %(new)s=new version, %(current)s=current version
-#: addon\globalPlugins\freeAudio\__init__.py:1267
+#: addon\globalPlugins\freeAudio\__init__.py:1274
 #, fuzzy, python-format
 msgid ""
 "A new version of freeAudio is available: %(new)s.\n"
@@ -4616,40 +4627,40 @@ msgstr ""
 "打开下载页面吗？"
 
 #. Translators: Button label on the update-available dialog when only a release web page (no direct download) is available, offering to open it in a browser.
-#: addon\globalPlugins\freeAudio\__init__.py:1272
+#: addon\globalPlugins\freeAudio\__init__.py:1279
 msgid "&Open Page"
 msgstr "打开页面(&O)"
 
 #. Translators: Title of the dialog shown when a newer freeAudio version is available.
-#: addon\globalPlugins\freeAudio\__init__.py:1278
+#: addon\globalPlugins\freeAudio\__init__.py:1285
 #, fuzzy
 msgid "freeAudio Update Available"
 msgstr "自由广播有可用更新"
 
 #. Translators: 'Cancel' button label on the update-available dialog, paired with whichever install/open-page label is used as the other button.
-#: addon\globalPlugins\freeAudio\__init__.py:1282
+#: addon\globalPlugins\freeAudio\__init__.py:1289
 msgid "&Cancel"
 msgstr "取消(&C)"
 
 #. Translators: Spoken while the new version is being downloaded for direct install; %s is the version number being downloaded.
-#: addon\globalPlugins\freeAudio\__init__.py:1298
+#: addon\globalPlugins\freeAudio\__init__.py:1305
 #, fuzzy, python-format
 msgid "Downloading freeAudio %s…"
 msgstr "正在下载自由广播%s…"
 
 #. Translators: Spoken when the downloaded .nvda-addon file can't be handed to NVDA's installer automatically; %s is the path where the file was saved so the user can open it manually.
-#: addon\globalPlugins\freeAudio\__init__.py:1328
+#: addon\globalPlugins\freeAudio\__init__.py:1335
 #, python-format
 msgid "Could not launch installer. File saved to: %s"
 msgstr "无法启动安装程序。文件已保存至: %s"
 
 #. Translators: Message and title of the dialog shown after a manual update check finds no newer version; %s is the currently installed version, or the fallback 'unknown' label just below if it could not be determined.
-#: addon\globalPlugins\freeAudio\__init__.py:1338
+#: addon\globalPlugins\freeAudio\__init__.py:1345
 #, fuzzy, python-format
 msgid "freeAudio is up to date. Installed: %s"
 msgstr "自由广播已是最新版本。已安装: %s"
 
-#: addon\globalPlugins\freeAudio\__init__.py:1339
+#: addon\globalPlugins\freeAudio\__init__.py:1346
 #, fuzzy
 msgid "freeAudio Update Check"
 msgstr "自由广播更新检查"
@@ -4735,7 +4746,7 @@ msgstr ""
 #: buildVars.py:26
 msgid ""
 "\n"
-"Initial release with the new brand.\n"
+"- Initial release with the new brand.\n"
 msgstr ""
 
 #~ msgid "FreeRadio"
