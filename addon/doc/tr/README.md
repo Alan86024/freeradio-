@@ -798,7 +798,7 @@ freeAudio, yeni sürüm olup olmadığını GitHub üzerinden otomatik olarak ko
 
 ## Teşekkürler ve Katkıda Bulunanlar
 
-* **Özgün Temel ve Kavramlar:** Bu projeye temel oluşturan özgün radyo eklentisi kavramları ve çekirdek favori yönetimi yapıları için **Gary Mp**'ye ([GaryMp/freeAudio](https://github.com/GaryMp/freeAudio)) içten teşekkürler.
+* **Özgün Temel ve Kavramlar:** Bu projeye temel oluşturan özgün radyo eklentisi kavramları ve çekirdek favori yönetimi yapıları için **Gary Mp**'ye ([GaryMp/freeradio](https://github.com/GaryMp/freeradio)) içten teşekkürler.
 * **Yapay Zeka ve LLM Araçları:** Geliştirme, kod yeniden düzenleme ve özellik uygulama aşamalarındaki yardımları için modern Büyük Dil Modeli (LLM) araçlarına (Claude, ChatGPT ve Gemini dahil) şükranlarımızı sunarız.
 * **Dizin Hizmeti:** İstasyon dizini [Radio Browser API](https://www.radio-browser.info/) tarafından sağlanmaktadır.
 * **Topluluk:** Sürekli destekleri, geri bildirimleri ve yerelleştirme katkıları için tüm NVDA topluluğu üyelerine ve çevirmenlere içten teşekkürler.

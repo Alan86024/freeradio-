@@ -800,7 +800,7 @@ O freeAudio verifica automaticamente a existência de novas versões através do
 
 ## Agradecimentos e Créditos
 
-* **Base e Conceitos Originais:** Um sincero agradecimento a **Gary Mp** ([GaryMp/freeAudio](https://github.com/GaryMp/freeAudio)) pelos conceitos originais do complemento de rádio e pelas estruturas centrais de gestão de favoritos que serviram de base fundacional para este projeto.
+* **Base e Conceitos Originais:** Um sincero agradecimento a **Gary Mp** ([GaryMp/freeradio](https://github.com/GaryMp/freeradio)) pelos conceitos originais do complemento de rádio e pelas estruturas centrais de gestão de favoritos que serviram de base fundacional para este projeto.
 * **Ferramentas de IA e LLM:** Reconhecimento grato às ferramentas modernas de Modelos de Linguagem de Grande Escala (LLM) (incluindo Claude, ChatGPT e Gemini) pela assistência durante as fases de desenvolvimento, refatoração de código e implementação de funcionalidades.
 * **Serviço de Diretório:** O diretório de estações é fornecido pela [Radio Browser API](https://www.radio-browser.info/).
 * **Comunidade:** Um sincero agradecimento a todos os membros da comunidade NVDA e tradutores pelo seu apoio contínuo, feedback e contribuições de localização.

@@ -799,7 +799,7 @@ freeAudio busca automáticamente nuevas versiones a través de GitHub.
 
 ## Agradecimientos & Créditos
 
-* **Fundamentos y conceptos originales:** Un sincero agradecimiento a **Gary Mp** ([GaryMp/freeAudio](https://github.com/GaryMp/freeAudio)) por los conceptos originales del complemento de radio y las estructuras principales de gestión de favoritos que sirvieron como base fundamental para este proyecto.
+* **Fundamentos y conceptos originales:** Un sincero agradecimiento a **Gary Mp** ([GaryMp/freeradio](https://github.com/GaryMp/freeradio)) por los conceptos originales del complemento de radio y las estructuras principales de gestión de favoritos que sirvieron como base fundamental para este proyecto.
 * **Herramientas de IA y LLM:** Agradecemos sinceramente a las herramientas modernas de modelos de lenguaje a gran escala (LLM, por sus siglas en inglés) (incluidas Claude, ChatGPT y Gemini) por su ayuda durante las fases de desarrollo, refactorización de código e implementación de funciones.
 * **Servicio de directorio:** Directorio de estaciones impulsado por la [API de Radio Browser](https://www.radio-browser.info/).
 * **Comunidad:** Nuestro más sincero agradecimiento a todos los miembros de la comunidad NVDA y a los traductores por su continuo apoyo, comentarios y contribuciones a la localización.

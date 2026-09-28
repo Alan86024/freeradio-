@@ -821,7 +821,7 @@ freeAudio automatically checks for new versions via GitHub.
 
 ## Acknowledgments & Credits
 
-* **Original Foundation & Concepts:** Sincere thanks to **Gary Mp** ([GaryMp/freeAudio](https://github.com/GaryMp/freeAudio)) for the original radio add-on concepts and core favorite management structures that served as a foundational base for this project.
+* **Original Foundation & Concepts:** Sincere thanks to **Gary Mp** ([GaryMp/freeradio](https://github.com/GaryMp/freeradio)) for the original radio add-on concepts and core favorite management structures that served as a foundational base for this project.
 * **AI & LLM Tools:** Grateful acknowledgment to modern Large Language Model (LLM) tools (including Claude, ChatGPT, and Gemini) for assistance during the development, code refactoring, and feature implementation phases.
 * **Directory Service:** Station directory powered by the [Radio Browser API](https://www.radio-browser.info/).
 * **Community:** Sincere thanks to all NVDA community members and translators for their continuous support, feedback, and localization contributions.

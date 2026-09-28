@@ -799,7 +799,7 @@ freeAudio vérifie automatiquement les nouvelles versions via GitHub.
 
 ## Remerciements & Crédits
 
-* **Fondations et concepts originaux:** Un grand merci à **Gary Mp** ([GaryMp/freeAudio](https://github.com/GaryMp/freeAudio)) pour les concepts originaux d'extension radio et les structures de gestion des favoris qui ont servi de base à ce projet.
+* **Fondations et concepts originaux:** Un grand merci à **Gary Mp** ([GaryMp/freeradio](https://github.com/GaryMp/freeradio)) pour les concepts originaux d'extension radio et les structures de gestion des favoris qui ont servi de base à ce projet.
 * **Outils IA et LLM:** Nous tenons à remercier les outils modernes de modélisation du langage à grande échelle (LLM) (notamment Claude, ChatGPT et Gemini) pour leur aide lors des phases de développement, de refactorisation du code et de mise en œuvre des fonctionnalités.
 * **Service d'annuaire :** Annuaire des stations alimenté par l'[API Radio Browser](https://www.radio-browser.info/).
 * **Communauté:** Un grand merci à tous les membres de la communauté NVDA et aux traducteurs pour leur soutien continu, leurs commentaires et leurs contributions à la localisation.
