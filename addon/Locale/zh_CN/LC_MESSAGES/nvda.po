@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-27 23:53+0300\n"
+"POT-Creation-Date: 2026-09-28 08:09+0300\n"
 "PO-Revision-Date: 2026-09-26 01:12+0800\n"
 "Last-Translator: Alan <alanzhangmw@outlook.com>\n"
 "Language-Team: \n"
@@ -61,7 +61,7 @@ msgstr "选择自由广播的主要输出设备"
 #: addon\globalPlugins\freeradio\__init__.py:842
 #: addon\globalPlugins\freeradio\__init__.py:852
 #: addon\globalPlugins\freeradio\__init__.py:862
-#: addon\appModules\explorer.py:182 addon\appModules\explorer.py:215
+#: addon\appModules\explorer.py:228 addon\appModules\explorer.py:261
 msgid "FreeRadio"
 msgstr "自由广播"
 
@@ -3309,7 +3309,7 @@ msgstr[0] "已找到 %d 个文件。"
 #. Translators: Spoken after successfully adding an Explorer file or folder to the jukebox; %s is its display title.
 #: addon\globalPlugins\freeradio\radioDialog.py:8083
 #: addon\globalPlugins\freeradio\radioDialog.py:8571
-#: addon\appModules\explorer.py:233
+#: addon\appModules\explorer.py:213
 #, python-format
 msgid "Added to jukebox: %s"
 msgstr "已添加到点唱机：%s"
@@ -4626,7 +4626,7 @@ msgid "FreeRadio Update Check"
 msgstr "自由广播更新检查"
 
 #. Translators: Name of an NVDA command; plays the audio file focused in Windows Explorer with FreeRadio, without needing it to already be in the jukebox library.
-#: addon\appModules\explorer.py:181
+#: addon\appModules\explorer.py:227
 msgid "Play the focused file with FreeRadio"
 msgstr ""
 
@@ -4634,7 +4634,7 @@ msgstr ""
 #. matching comment (same reasoning: folder auto-advance needs
 #. the folder to already be a persisted JukeboxManager entry).
 #. Translators: Spoken when the "play focused item" Explorer shortcut is used on a folder rather than a file.
-#: addon\appModules\explorer.py:196
+#: addon\appModules\explorer.py:242
 msgid ""
 "This is a folder. Playing only works for files - add it to the jukebox to "
 "play the whole folder."
@@ -4642,14 +4642,14 @@ msgstr ""
 
 # | msgid "Recognition failed: %s"
 #. Translators: Spoken when the "play focused item" Explorer shortcut is used on a file that isn't a recognized audio format.
-#: addon\appModules\explorer.py:200
+#: addon\appModules\explorer.py:246
 #, fuzzy
 msgid "Not a recognized audio file."
 msgstr "无法识别的音频文件: %s"
 
 # | msgid "Added to favourites: %s"
 #. Translators: Name of an NVDA command; adds the file or folder focused in Windows Explorer to the FreeRadio jukebox.
-#: addon\appModules\explorer.py:214
+#: addon\appModules\explorer.py:260
 #, fuzzy
 msgid "Add the focused item to the FreeRadio jukebox"
 msgstr "将文件夹添加到点唱机"

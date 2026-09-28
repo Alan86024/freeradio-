@@ -38,11 +38,13 @@
 # application's name) rather than under "All applications".
 
 import os
+import threading
 
 import nvdaBuiltin.appModules.explorer
 import controlTypes
 import ui
 import winUser
+import wx
 from scriptHandler import script
 
 import addonHandler
@@ -174,6 +176,50 @@ def _get_explorer_list_item_path():
 	return None
 
 
+# Held while an add runs so two quick presses can't both pass
+# JukeboxManager's has_path() duplicate check before either has appended -
+# the second one waits, then correctly reports "Already in the jukebox."
+_add_lock = threading.Lock()
+
+
+def _add_path_to_jukebox(path, dialog):
+	"""Add one file/folder to the jukebox and report the outcome. Runs on
+	a background thread: JukeboxManager.add_folder() walks the whole folder
+	tree (see JukeboxEntry.tracks()), which on a big folder can freeze NVDA
+	if done on its main thread. Only ui.message and the dialog refresh are
+	marshalled back with wx.CallAfter.
+
+	If FreeRadio's window has been opened (it's only ever hidden, never
+	destroyed), its own JukeboxManager - loaded once, never reloaded from
+	disk - is used instead of a fresh one: otherwise the dialog's stale
+	in-memory list would silently overwrite this addition the next time it
+	saved, and its list wouldn't show it."""
+	with _add_lock:
+		manager = dialog._jukebox_manager if dialog else jukebox.JukeboxManager()
+		try:
+			if os.path.isdir(path):
+				entry, error = manager.add_folder(path)
+			else:
+				entry, error = manager.add_file(path)
+		except Exception as e:
+			entry, error = None, str(e)
+
+	if error:
+		wx.CallAfter(ui.message, error)
+		return
+	if dialog:
+		wx.CallAfter(_refresh_dialog_jukebox, dialog)
+	# Translators: Spoken after successfully adding an Explorer file or folder to the jukebox; %s is its display title.
+	wx.CallAfter(ui.message, _("Added to jukebox: %s") % entry.title)
+
+
+def _refresh_dialog_jukebox(dialog):
+	try:
+		dialog._refresh_jukebox_list()
+	except Exception:
+		pass
+
+
 class AppModule(nvdaBuiltin.appModules.explorer.AppModule):
 
 	@script(
@@ -220,14 +266,11 @@ class AppModule(nvdaBuiltin.appModules.explorer.AppModule):
 			gesture.send()
 			return
 
-		manager = jukebox.JukeboxManager()
-		if os.path.isdir(path):
-			entry, error = manager.add_folder(path)
-		else:
-			entry, error = manager.add_file(path)
-
-		if error:
-			ui.message(error)
-			return
-		# Translators: Spoken after successfully adding an Explorer file or folder to the jukebox; %s is its display title.
-		ui.message(_("Added to jukebox: %s") % entry.title)
+		plugin = _get_freeradio_plugin()
+		dialog = getattr(plugin, "_dialog", None) if plugin else None
+		threading.Thread(
+			target=_add_path_to_jukebox,
+			args=(path, dialog),
+			daemon=True,
+			name="FreeRadio-ExplorerJukeboxAdd",
+		).start()
