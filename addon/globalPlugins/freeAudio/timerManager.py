@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Sleep/alarm timer manager
+# freeAudio - Sleep/alarm timer manager
 #
 # Extracted from __init__.py: schedules and persists sleep (stop) and
 # alarm (start playback) timers, running them on a background thread.
@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 
 
 class TimerManager:
-	"""Manages sleep (stop) and alarm (start) timers for FreeRadio.
+	"""Manages sleep (stop) and alarm (start) timers for freeAudio.
 
 	Timers are persisted to disk (timers.json); future entries survive NVDA
 	or system restarts and are re-attached on load.
@@ -112,7 +112,7 @@ class TimerManager:
 				_json.dump(records, fh, ensure_ascii=False, indent=2)
 			os.replace(tmp_path, self._save_path)
 		except Exception as exc:
-			log.error("FreeRadio: failed to save timers: %s", exc)
+			log.error("freeAudio: failed to save timers: %s", exc)
 			try:
 				os.remove(tmp_path)
 			except OSError:
@@ -129,7 +129,7 @@ class TimerManager:
 		except FileNotFoundError:
 			return
 		except Exception as exc:
-			log.error("FreeRadio: failed to load timers: %s", exc)
+			log.error("freeAudio: failed to load timers: %s", exc)
 			return
 
 		now = _dt.datetime.now()
@@ -278,7 +278,7 @@ class TimerManager:
 				try:
 					wx.CallAfter(action)
 				except Exception as e:
-					log.error("FreeRadio timer action failed: %s", e)
+					log.error("freeAudio timer action failed: %s", e)
 				if notify_cb:
 					try:
 						wx.CallAfter(notify_cb, label)

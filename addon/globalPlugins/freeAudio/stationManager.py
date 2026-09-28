@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Station Manager
+# freeAudio - Station Manager
 # Fetches stations from Radio Browser API and manages favorites.
-# Core favorite and station management structures based on work by Gary Mp (GaryMp/freeradio).
+# Core favorite and station management structures based on work by Gary Mp (GaryMp/freeAudio).
 
 import gzip
 import json
@@ -40,7 +40,7 @@ RADIO_BROWSER_MIRRORS = [
 	"https://nl1.api.radio-browser.info/json",
 	"https://at1.api.radio-browser.info/json",
 ]  # fallback list — used only when DNS discovery fails
-USER_AGENT = "FreeRadio-NVDA/1.0"
+USER_AGENT = "freeAudio-NVDA/1.0"
 REQUEST_TIMEOUT = 10
 COUNTRY_STATION_LIMIT = 1000
 SEARCH_LIMIT = 1000
@@ -52,7 +52,7 @@ SEARCH_LIMIT = 1000
 # instead of a DB). Once loaded, searches/filters run entirely in memory
 # (no network round-trip), which keeps the UI responsive even on slow
 # connections.
-CACHE_FILENAME             = "freeradio_stations_cache.json.gz"
+CACHE_FILENAME             = "freeAudio_stations_cache.json.gz"
 CACHE_SYNC_INTERVAL        = 12 * 60 * 60  # re-sync the catalog every 12h
 CACHE_PAGE_SIZE            = 5000          # stations fetched per API page
 CACHE_MAX_PAGES            = 30            # safety cap (~150k stations)
@@ -86,14 +86,14 @@ def _discover_mirrors():
 				if url not in hosts:
 					hosts.append(url)
 			except Exception as exc:
-				log.warning("FreeRadio: reverse lookup failed for %s: %s", ip, exc)
+				log.warning("freeAudio: reverse lookup failed for %s: %s", ip, exc)
 		if hosts:
 			random.shuffle(hosts)
-			log.info("FreeRadio: discovered mirrors via DNS: %s", hosts)
+			log.info("freeAudio: discovered mirrors via DNS: %s", hosts)
 			return hosts
-		log.warning("FreeRadio: DNS discovery returned no usable hosts")
+		log.warning("freeAudio: DNS discovery returned no usable hosts")
 	except Exception as exc:
-		log.warning("FreeRadio: DNS discovery failed: %s — using fallback list", exc)
+		log.warning("freeAudio: DNS discovery failed: %s — using fallback list", exc)
 	return list(RADIO_BROWSER_MIRRORS)
 
 # If a mirror gives this many consecutive errors, the cache is reset and
@@ -102,7 +102,7 @@ _MIRROR_FAIL_THRESHOLD = 3
 
 
 def _get_favorites_path():
-	return os.path.join(globalVars.appArgs.configPath, "freeradio_favorites.json")
+	return os.path.join(globalVars.appArgs.configPath, "freeAudio_favorites.json")
 
 
 class StationManager:
@@ -144,7 +144,7 @@ class StationManager:
 				payload = json.load(fh)
 			return payload.get("stations", []), payload.get("last_sync")
 		except Exception as exc:
-			log.warning("FreeRadio: failed to read station cache: %s", exc)
+			log.warning("freeAudio: failed to read station cache: %s", exc)
 			return [], None
 
 	def _write_cache_file(self, stations):
@@ -166,7 +166,7 @@ class StationManager:
 		catalog, last_sync = self._load_cache_file()
 		if catalog:
 			self._catalog = catalog
-			log.info("FreeRadio: loaded %d stations from local cache", len(catalog))
+			log.info("freeAudio: loaded %d stations from local cache", len(catalog))
 		stale = (not last_sync) or (time.time() - float(last_sync) > CACHE_SYNC_INTERVAL)
 		if stale:
 			self._sync_catalog()
@@ -178,7 +178,7 @@ class StationManager:
 		cache (if any) is left untouched so search keeps working.
 		"""
 		if not self._sync_lock.acquire(blocking=False):
-			log.info("FreeRadio: catalog sync already in progress, skipping")
+			log.info("freeAudio: catalog sync already in progress, skipping")
 			return
 		try:
 			all_stations = []
@@ -191,7 +191,7 @@ class StationManager:
 				try:
 					page = self._request("/stations/search", params)
 				except RadioBrowserError as exc:
-					log.warning("FreeRadio: catalog sync failed at offset %d: %s", offset, exc)
+					log.warning("freeAudio: catalog sync failed at offset %d: %s", offset, exc)
 					if not all_stations:
 						return  # first page failed — keep the existing cache untouched
 					break  # a partial refresh is still better than nothing
@@ -208,11 +208,11 @@ class StationManager:
 			try:
 				self._write_cache_file(all_stations)
 			except Exception:
-				log.error("FreeRadio: failed to write station cache to disk", exc_info=True)
+				log.error("freeAudio: failed to write station cache to disk", exc_info=True)
 
 			# Already sorted by votes desc (the API query requested that order).
 			self._catalog = all_stations
-			log.info("FreeRadio: catalog sync complete — %d stations cached", len(all_stations))
+			log.info("freeAudio: catalog sync complete — %d stations cached", len(all_stations))
 		finally:
 			self._sync_lock.release()
 
@@ -252,10 +252,10 @@ class StationManager:
 				)
 				with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT):
 					self._api_base = mirror
-					log.info("FreeRadio: using mirror %s", mirror)
+					log.info("freeAudio: using mirror %s", mirror)
 					return mirror
 			except Exception:
-				log.warning("FreeRadio: mirror unreachable: %s", mirror)
+				log.warning("freeAudio: mirror unreachable: %s", mirror)
 		self._api_base = RADIO_BROWSER_MIRRORS[0]
 		return self._api_base
 
@@ -270,7 +270,7 @@ class StationManager:
 		self._api_base_failures += 1
 		if self._api_base_failures >= _MIRROR_FAIL_THRESHOLD:
 			log.warning(
-				"FreeRadio: mirror %s failed %d times, resetting cache",
+				"freeAudio: mirror %s failed %d times, resetting cache",
 				mirror, self._api_base_failures,
 			)
 			self._api_base          = None
@@ -324,7 +324,7 @@ class StationManager:
 					had_json_error = True
 					last_error = exc
 					log.warning(
-						"FreeRadio: JSON decode error from %s (%s): %.120s…",
+						"freeAudio: JSON decode error from %s (%s): %.120s…",
 						mirror, exc, raw,
 					)
 					# Bad data from this mirror; increment failure counter / reset cache.
@@ -332,7 +332,7 @@ class StationManager:
 					continue  # try next mirror
 				# Success — update cache and reset failure counter.
 				if mirror != self._api_base:
-					log.info("FreeRadio: switching to mirror %s", mirror)
+					log.info("freeAudio: switching to mirror %s", mirror)
 				self._api_base          = mirror
 				self._api_base_failures = 0
 				return data
@@ -340,7 +340,7 @@ class StationManager:
 			except urllib.error.HTTPError as exc:
 				if exc.code in _HTTP_RETRY_STATUSES:
 					log.warning(
-						"FreeRadio: HTTP %d from %s — retrying in %ds",
+						"freeAudio: HTTP %d from %s — retrying in %ds",
 						exc.code, mirror, _HTTP_RETRY_DELAY,
 					)
 					import time as _time
@@ -350,14 +350,14 @@ class StationManager:
 							raw = resp.read().decode("utf-8")
 						data = json.loads(raw)
 						if mirror != self._api_base:
-							log.info("FreeRadio: switching to mirror %s (after retry)", mirror)
+							log.info("freeAudio: switching to mirror %s (after retry)", mirror)
 						self._api_base          = mirror
 						self._api_base_failures = 0
 						return data
 					except urllib.error.HTTPError as retry_exc:
 						last_error = retry_exc
 						log.warning(
-							"FreeRadio: HTTP %d from %s after retry — moving on",
+							"freeAudio: HTTP %d from %s after retry — moving on",
 							retry_exc.code, mirror,
 						)
 						self._maybe_invalidate_mirror(mirror)
@@ -374,23 +374,23 @@ class StationManager:
 						continue
 				last_error = exc
 				log.warning(
-					"FreeRadio: HTTP %d from %s — %s",
+					"freeAudio: HTTP %d from %s — %s",
 					exc.code, mirror, exc.reason,
 				)
 				self._maybe_invalidate_mirror(mirror)
 			except (TimeoutError, socket.timeout) as exc:
 				had_timeout = True
 				last_error = exc
-				log.warning("FreeRadio: timeout reaching %s", mirror)
+				log.warning("freeAudio: timeout reaching %s", mirror)
 				self._maybe_invalidate_mirror(mirror)
 			except (ConnectionError, OSError, urllib.error.URLError) as exc:
 				had_connection = True
 				last_error = exc
-				log.warning("FreeRadio: connection error (%s): %s", mirror, exc)
+				log.warning("freeAudio: connection error (%s): %s", mirror, exc)
 				self._maybe_invalidate_mirror(mirror)
 			except Exception as exc:
 				last_error = exc
-				log.warning("FreeRadio: unexpected error (%s): %s", mirror, exc)
+				log.warning("freeAudio: unexpected error (%s): %s", mirror, exc)
 
 		if had_json_error and not had_connection and not had_timeout:
 			raise RadioBrowserAPIError(
@@ -496,7 +496,7 @@ class StationManager:
 				except RadioBrowserError as exc:
 					if last_exc is None:
 						last_exc = exc
-					log.warning("FreeRadio: search sub-query failed (%s): %s", label, exc)
+					log.warning("freeAudio: search sub-query failed (%s): %s", label, exc)
 
 		if not any_success:
 			raise last_exc or RadioBrowserConnectionError(
@@ -551,7 +551,7 @@ class StationManager:
 				try:
 					results.extend(future.result())
 				except Exception as exc:
-					log.warning("FreeRadio: external search source %s failed: %s", label, exc)
+					log.warning("freeAudio: external search source %s failed: %s", label, exc)
 		return results
 
 	def get_top_stations(self, limit=1000):
@@ -624,7 +624,7 @@ class StationManager:
 			if data:
 				return data
 		except RadioBrowserError:
-			log.warning("FreeRadio: /countries failed, trying /countrycodes")
+			log.warning("freeAudio: /countries failed, trying /countrycodes")
 		return self._request("/countrycodes", "order=stationcount&reverse=true")
 
 	@staticmethod
@@ -642,7 +642,7 @@ class StationManager:
 				if kernel32.GetGeoInfoW(geo_id, 4, buf, 10, 0):
 					code = buf.value.strip()
 					if len(code) == 2:
-						log.info("FreeRadio: country from GeoID: %s", code)
+						log.info("freeAudio: country from GeoID: %s", code)
 						return code.upper()
 		except Exception:
 			pass
@@ -657,7 +657,7 @@ class StationManager:
 			if kernel32.GetLocaleInfoW(lcid, 0x5A, buf, 10):
 				code = buf.value.strip()
 				if len(code) == 2:
-					log.info("FreeRadio: country from LCID: %s", code)
+					log.info("freeAudio: country from LCID: %s", code)
 					return code.upper()
 		except Exception:
 			pass
@@ -691,7 +691,7 @@ class StationManager:
 				json.dump(self._favorites, f, ensure_ascii=False, indent=2)
 			os.replace(tmp_path, path)
 		except Exception:
-			log.error("FreeRadio: failed to save favorites", exc_info=True)
+			log.error("freeAudio: failed to save favorites", exc_info=True)
 			try:
 				os.remove(tmp_path)
 			except OSError:
@@ -737,7 +737,7 @@ class StationManager:
 		"""Write all favourites to *path* as a UTF-8 JSON file.
 
 		The file is a plain JSON array of station dicts — the same format
-		used internally by freeradio_favorites.json — so it can be re-imported
+		used internally by freeAudio_favorites.json — so it can be re-imported
 		without any conversion.
 
 		Raises OSError / IOError on write failure.

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Lyrics fetcher for FreeRadio using lrclib.net (free, no API key required).
+"""Lyrics fetcher for freeAudio using lrclib.net (free, no API key required).
 
 Endpoints:
   GET https://lrclib.net/api/get?artist_name=…&track_name=…  (exact match)
@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 
 _BASE	= "https://lrclib.net/api"
 _TIMEOUT = 12
-_UA	  = "FreeRadio-NVDA-addon/1.0"
+_UA	  = "freeAudio-NVDA-addon/1.0"
 
 # Station suffix appended by some ICY streams: " - Show Name on domain.tld"
 # Matched and removed from the raw string before any other parsing.
@@ -239,7 +239,7 @@ def _fetch_json(url):
 	except urllib.error.HTTPError as e:
 		return None, "HTTP %d" % e.code
 	except Exception as e:
-		log.warning("FreeRadio lyricsService: %s", e)
+		log.warning("freeAudio lyricsService: %s", e)
 		return None, str(e)
 
 

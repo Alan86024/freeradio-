@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Small independent config toggles: mute notifications,
+# freeAudio - Small independent config toggles: mute notifications,
 # track-change announcements/voice, save-liked-songs
 #
 # Extracted from GlobalPlugin in __init__.py. Mixed into GlobalPlugin, so
@@ -21,7 +21,7 @@ _tr = globals()["_"]
 _ = _tr
 del _tr
 
-from .settingsPanel import FreeRadioSettingsPanel
+from .settingsPanel import freeAudioSettingsPanel
 
 
 class MiscTogglesMixin:
@@ -30,14 +30,14 @@ class MiscTogglesMixin:
 	voice), and saving liked songs to a text file."""
 
 	@script(
-		# Translators: Name of an NVDA command; mutes/unmutes all of FreeRadio's spoken notifications (station changes, playback state, recording, volume level) at once.
+		# Translators: Name of an NVDA command; mutes/unmutes all of freeAudio's spoken notifications (station changes, playback state, recording, volume level) at once.
 		description=_("Toggle mute notifications (station changes, playback, recording, volume level)"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleMuteNotifications(self, gesture):
-		current = config.conf["freeradio"].get("mute_notifications", False)
-		config.conf["freeradio"]["mute_notifications"] = not current
+		current = config.conf["freeAudio"].get("mute_notifications", False)
+		config.conf["freeAudio"]["mute_notifications"] = not current
 		if not current:
 			# Notifications are now muted — speak this final confirmation before silencing.
 			# Translators: Spoken once, right before notifications go silent, to confirm the toggle happened (further notifications are suppressed after this).
@@ -49,21 +49,21 @@ class MiscTogglesMixin:
 
 
 	@script(
-		# Translators: Name of an NVDA command; toggles whether FreeRadio announces a station's track/song changes from ICY stream metadata.
+		# Translators: Name of an NVDA command; toggles whether freeAudio announces a station's track/song changes from ICY stream metadata.
 		description=_("Enable or disable auto-announce track changes (ICY metadata)"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleAnnounceTrackChanges(self, gesture):
-		current = config.conf["freeradio"].get("announce_track_changes", False)
-		config.conf["freeradio"]["announce_track_changes"] = not current
+		current = config.conf["freeAudio"].get("announce_track_changes", False)
+		config.conf["freeAudio"]["announce_track_changes"] = not current
 
 		# Keep the settings panel's checkbox and voice choice in sync if it's open.
-		# FreeRadioSettingsPanel._instance is the live panel itself (see
+		# freeAudioSettingsPanel._instance is the live panel itself (see
 		# settingsPanel.py) - not self._dialog, which is the unrelated
 		# RadioDialog browse window and never has these controls, so the
 		# hasattr() below used to always be False and this sync never ran.
-		panel = FreeRadioSettingsPanel._instance
+		panel = freeAudioSettingsPanel._instance
 		if panel is not None and hasattr(panel, "_announce_track_changes"):
 			try:
 				panel._announce_track_changes.SetValue(not current)
@@ -83,17 +83,17 @@ class MiscTogglesMixin:
 	@script(
 		# Translators: Name of an NVDA command; switches which voice (NVDA's current synth, or a separate SAPI5 voice) speaks track-change announcements.
 		description=_("Switch track change announcement voice"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_switchTrackChangeVoice(self, gesture):
-		current = config.conf["freeradio"].get("track_change_voice", "nvda")
+		current = config.conf["freeAudio"].get("track_change_voice", "nvda")
 		new_value = "sapi5" if current != "sapi5" else "nvda"
-		config.conf["freeradio"]["track_change_voice"] = new_value
+		config.conf["freeAudio"]["track_change_voice"] = new_value
 
 		# Keep the settings panel's voice choice in sync if it's open.
 		# See the matching comment in script_toggleAnnounceTrackChanges above.
-		panel = FreeRadioSettingsPanel._instance
+		panel = freeAudioSettingsPanel._instance
 		if panel is not None and hasattr(panel, "_track_change_voice"):
 			try:
 				panel._track_change_voice.SetSelection(0 if new_value != "sapi5" else 1)
@@ -105,16 +105,16 @@ class MiscTogglesMixin:
 	@script(
 		# Translators: Name of an NVDA command; toggles whether liked/favourited songs are also appended to a plain text file on disk.
 		description=_("Turn on or off saving liked songs to a text file"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleSaveLikedSongs(self, gesture):
-		current = config.conf["freeradio"].get("save_liked_songs", False)
-		config.conf["freeradio"]["save_liked_songs"] = not current
+		current = config.conf["freeAudio"].get("save_liked_songs", False)
+		config.conf["freeAudio"]["save_liked_songs"] = not current
 
 		# Keep the settings panel's checkbox in sync if it's open.
 		# See the matching comment in script_toggleAnnounceTrackChanges above.
-		panel = FreeRadioSettingsPanel._instance
+		panel = freeAudioSettingsPanel._instance
 		if panel is not None and hasattr(panel, "_save_liked_songs"):
 			try:
 				panel._save_liked_songs.SetValue(not current)

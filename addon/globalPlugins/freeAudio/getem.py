@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Audio Books (GETEM e-library) integration
+# freeAudio - Audio Books (GETEM e-library) integration
 #
 # Searches, authenticates against, and resolves playable media from the
 # GETEM e-library (https://getem.boun.edu.tr/), the digital library run by
@@ -51,7 +51,7 @@ log = logging.getLogger(__name__)
 GETEM_BASE_URL = "https://getem.boun.edu.tr"
 GETEM_CATALOG_URL = GETEM_BASE_URL + "/?q=katalog"
 GETEM_LOGIN_URL = GETEM_BASE_URL + "/user/login"
-USER_AGENT = "FreeRadio-NVDA/1.0"
+USER_AGENT = "freeAudio-NVDA/1.0"
 REQUEST_TIMEOUT = 15
 SEARCH_TIMEOUT = 20
 RESULTS_PER_QUERY = 100
@@ -107,7 +107,7 @@ def _fold(text):
 # --------------------------------------------------------------------- #
 # Credential storage - encrypted with the Windows Data Protection API
 # (DPAPI), which ties the encrypted bytes to the current Windows user
-# without FreeRadio having to manage a key of its own. Stored as its own
+# without freeAudio having to manage a key of its own. Stored as its own
 # file under the NVDA user config folder, never in config.conf/the addon's
 # settings ini (which is plain text).
 # --------------------------------------------------------------------- #
@@ -128,7 +128,7 @@ def _dpapi_protect(data):
 	in_blob, _keep_alive = _make_blob(data)
 	out_blob = _DataBlob()
 	ok = ctypes.windll.crypt32.CryptProtectData(
-		ctypes.byref(in_blob), "FreeRadio GETEM credentials", None, None, None, 0, ctypes.byref(out_blob)
+		ctypes.byref(in_blob), "freeAudio GETEM credentials", None, None, None, 0, ctypes.byref(out_blob)
 	)
 	if not ok:
 		raise OSError("CryptProtectData failed")
@@ -153,7 +153,7 @@ def _dpapi_unprotect(data):
 
 
 def _credentials_path():
-	return os.path.join(globalVars.appArgs.configPath, "freeradio_getem_credentials.bin")
+	return os.path.join(globalVars.appArgs.configPath, "freeAudio_getem_credentials.bin")
 
 
 def has_credentials():
@@ -169,7 +169,7 @@ def save_credentials(username, password):
 	try:
 		encrypted = _dpapi_protect(payload)
 	except Exception as e:
-		log.error("FreeRadio GETEM: could not encrypt credentials: %s", e)
+		log.error("freeAudio GETEM: could not encrypt credentials: %s", e)
 		return False
 	path = _credentials_path()
 	tmp_path = path + ".tmp"
@@ -179,7 +179,7 @@ def save_credentials(username, password):
 		os.replace(tmp_path, path)
 		return True
 	except Exception as e:
-		log.error("FreeRadio GETEM: could not save credentials: %s", e)
+		log.error("freeAudio GETEM: could not save credentials: %s", e)
 		return False
 
 
@@ -197,7 +197,7 @@ def load_credentials():
 		data = json.loads(payload.decode("utf-8"))
 		return data.get("username", ""), data.get("password", "")
 	except Exception as e:
-		log.warning("FreeRadio GETEM: could not decrypt stored credentials: %s", e)
+		log.warning("freeAudio GETEM: could not decrypt stored credentials: %s", e)
 		return "", ""
 
 
@@ -208,7 +208,7 @@ def clear_credentials():
 			os.remove(path)
 		return True
 	except Exception as e:
-		log.warning("FreeRadio GETEM: could not remove stored credentials: %s", e)
+		log.warning("freeAudio GETEM: could not remove stored credentials: %s", e)
 		return False
 
 
@@ -340,7 +340,7 @@ def _parse_html(html_text):
 	try:
 		builder.feed(html_text or "")
 	except Exception as e:
-		log.warning("FreeRadio GETEM: HTML parsing failed: %s", e)
+		log.warning("freeAudio GETEM: HTML parsing failed: %s", e)
 	return builder.root
 
 
@@ -648,8 +648,8 @@ class GetemSession:
 	def login(self, username, password):
 		"""Logs in with a Drupal-style login form. Returns (success, error_message)."""
 		if not username or not password:
-			# Translators: Error returned by GetemSession.login() when FreeRadio has no saved GETEM credentials at all.
-			return False, _("Please enter your GETEM username and password in FreeRadio's settings.")
+			# Translators: Error returned by GetemSession.login() when freeAudio has no saved GETEM credentials at all.
+			return False, _("Please enter your GETEM username and password in freeAudio's settings.")
 
 		try:
 			login_page = self.fetch(GETEM_LOGIN_URL)
@@ -717,7 +717,7 @@ def ensure_logged_in(session=None):
 	username, password = load_credentials()
 	if not username or not password:
 		# Translators: Error returned before attempting login when the settings dialog's GETEM username/password fields are empty.
-		return False, _("Please enter your GETEM username and password in FreeRadio's settings first.")
+		return False, _("Please enter your GETEM username and password in freeAudio's settings first.")
 	return session.login(username, password)
 
 
@@ -734,7 +734,7 @@ def get_audio_format_options(session=None):
 	try:
 		catalog_html = session.fetch(GETEM_CATALOG_URL, timeout=REQUEST_TIMEOUT)
 	except Exception as e:
-		log.warning("FreeRadio GETEM: could not fetch catalog page for format options: %s", e)
+		log.warning("freeAudio GETEM: could not fetch catalog page for format options: %s", e)
 		return []
 
 	options = _extract_select_options(catalog_html, "edit-field-formati-value")
@@ -777,7 +777,7 @@ def search_getem(query, session=None, limit=RESULTS_PER_QUERY):
 		try:
 			results_html = session.fetch(url, timeout=SEARCH_TIMEOUT)
 		except Exception as e:
-			log.warning("FreeRadio GETEM: search request failed for field %s: %s", field, e)
+			log.warning("freeAudio GETEM: search request failed for field %s: %s", field, e)
 			last_error = str(e)
 			continue
 
@@ -1158,7 +1158,7 @@ def get_book_by_url(url, session=None):
 
 
 def _chapter_cache_dir():
-	path = os.path.join(globalVars.appArgs.configPath, "freeradio_getem_cache")
+	path = os.path.join(globalVars.appArgs.configPath, "freeAudio_getem_cache")
 	os.makedirs(path, exist_ok=True)
 	return path
 
@@ -1421,7 +1421,7 @@ def _ensure_proxy_server():
 				_proxy_server = _ThreadingProxyServer(("127.0.0.1", 0), _GetemProxyHandler)
 			t = threading.Thread(
 				target=_proxy_server.serve_forever,
-				daemon=True, name="FreeRadio-getem-proxy",
+				daemon=True, name="freeAudio-getem-proxy",
 			)
 			t.start()
 		return _proxy_server.server_address[1]
@@ -1576,7 +1576,7 @@ class GetemLibrary:
 		self._load()
 
 	def _get_path(self):
-		return os.path.join(globalVars.appArgs.configPath, "freeradio_getem_library.json")
+		return os.path.join(globalVars.appArgs.configPath, "freeAudio_getem_library.json")
 
 	def _load(self):
 		path = self._get_path()
@@ -1587,7 +1587,7 @@ class GetemLibrary:
 				data = json.load(f)
 			self._books = [GetemBook.from_dict(item) for item in data if isinstance(item, dict)]
 		except Exception as e:
-			log.warning("FreeRadio GETEM: failed to load library: %s", e)
+			log.warning("freeAudio GETEM: failed to load library: %s", e)
 
 	def save(self):
 		"""Persists the current library to disk. Also used after
@@ -1600,7 +1600,7 @@ class GetemLibrary:
 				json.dump([b.to_library_dict() for b in self._books], f, ensure_ascii=False, indent=4)
 			os.replace(tmp_path, path)
 		except Exception as e:
-			log.warning("FreeRadio GETEM: failed to save library: %s", e)
+			log.warning("freeAudio GETEM: failed to save library: %s", e)
 
 	def get_books(self):
 		return list(self._books)

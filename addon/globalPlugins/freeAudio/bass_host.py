@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-bass_host.py — FreeRadio BASS subprocess host.
+bass_host.py — freeAudio BASS subprocess host.
 
 Runs as a standalone process so that BASS audio appears as a separate
 entry in the Windows volume mixer (independent from nvda.exe).
@@ -44,7 +44,7 @@ import urllib.request
 # Standalone process, no access to NVDA's `log` — appends to the same shared
 # debug file timeshift.py and radioPlayer.py use, so one time-shift failure
 # can be traced across all three in chronological order.
-_DEBUG_LOG_PATH = os.path.join(tempfile.gettempdir(), "freeradio_timeshift_debug.log")
+_DEBUG_LOG_PATH = os.path.join(tempfile.gettempdir(), "freeAudio_timeshift_debug.log")
 
 # Off by default, matching timeshift.py's own _DEBUG_ENABLED — this file
 # previously had no gate at all and wrote unconditionally, so disabling
@@ -118,7 +118,7 @@ def _is_cert_verify_error(exc):
 # Hosts that have shown they need certificate verification disabled - both
 # for BASS's own native SSL layer (_BASS_CONFIG_NET_SSL_VERIFY) and for the
 # Python-side HTTPS Icecast proxy (_try_https_local_proxy). This subprocess
-# stays alive for as long as FreeRadio is playing/switching stations (see
+# stays alive for as long as freeAudio is playing/switching stations (see
 # the comment on BASSHost in radioPlayer.py), so a host only needs to prove
 # it has a broken certificate once per NVDA session/process lifetime -
 # after that, both the BASS-native path and the local-proxy path skip
@@ -214,7 +214,7 @@ def _event(**kwargs):
 def _resolve_playlist_url(url, timeout=8):
 	try:
 		req = urllib.request.Request(
-			url, headers={"User-Agent": "FreeRadio-NVDA/1.0", "Icy-MetaData": "1"})
+			url, headers={"User-Agent": "freeAudio-NVDA/1.0", "Icy-MetaData": "1"})
 		with urllib.request.urlopen(req, timeout=timeout) as resp:
 			final_url = resp.url if hasattr(resp, "url") else url
 			ct = (resp.headers.get("content-type") or "").lower().split(";")[0].strip()
@@ -600,14 +600,14 @@ class BassHost:
 		import urllib.request
 
 		try:
-			fd, path = tempfile.mkstemp(prefix="freeradio_podcast_", suffix=".mp3")
+			fd, path = tempfile.mkstemp(prefix="freeAudio_podcast_", suffix=".mp3")
 			os.close(fd)
 		except Exception as e:
 			_debug_log("download temp file creation failed: %s" % e)
 			return 0
 
 		try:
-			req = urllib.request.Request(url, headers={"User-Agent": "FreeRadio-NVDA/1.0"})
+			req = urllib.request.Request(url, headers={"User-Agent": "freeAudio-NVDA/1.0"})
 			with urllib.request.urlopen(req, timeout=30) as resp:
 				with open(path, "wb") as f:
 					while True:
@@ -1362,7 +1362,7 @@ class BassHost:
 			# across tracks by design (see their own docstrings) so that a
 			# chosen podcast speed carries over episode to episode - but
 			# that means a caller who explicitly wants THIS track to start
-			# at a specific rate/transpose (e.g. FreeRadio resetting to
+			# at a specific rate/transpose (e.g. freeAudio resetting to
 			# normal for a jukebox track with no saved profile - see
 			# playbackCoreMixin._play_station()) needs a way to set it
 			# that can't be raced or silently dropped by a separate,

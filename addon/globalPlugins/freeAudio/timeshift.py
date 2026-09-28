@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Time-shift buffer
+# freeAudio - Time-shift buffer
 
 import collections
 import logging
@@ -26,7 +26,7 @@ def _resolve_playlist_url(url, timeout=8):
 		return url
 	try:
 		req = urllib.request.Request(
-			url, headers={"User-Agent": "FreeRadio-NVDA/1.0", "Icy-MetaData": "1"})
+			url, headers={"User-Agent": "freeAudio-NVDA/1.0", "Icy-MetaData": "1"})
 		with urllib.request.urlopen(req, timeout=timeout) as resp:
 			final_url = resp.url if hasattr(resp, "url") else url
 			ct = (resp.headers.get("content-type") or "").lower().split(";")[0].strip()
@@ -74,7 +74,7 @@ _CHUNK = 65536
 _DEBUG_ENABLED = False
 
 # Shared debug log
-_DEBUG_LOG_PATH = os.path.join(tempfile.gettempdir(), "freeradio_timeshift_debug.log")
+_DEBUG_LOG_PATH = os.path.join(tempfile.gettempdir(), "freeAudio_timeshift_debug.log")
 
 
 def _debug_log(msg):
@@ -189,16 +189,16 @@ class TimeShiftBuffer:
 		self._ffmpeg_proc = None
 
 		try:
-			fd, path = tempfile.mkstemp(prefix="freeradio_timeshift_", suffix=".buf", dir=self._tmp_dir)
+			fd, path = tempfile.mkstemp(prefix="freeAudio_timeshift_", suffix=".buf", dir=self._tmp_dir)
 			os.close(fd)
 		except OSError as e:
-			log.info("FreeRadio TimeShift: could not create buffer file: %s", e)
+			log.info("freeAudio TimeShift: could not create buffer file: %s", e)
 			return
 
 		self._file_path = path
 		self._active = True
 		target = self._run_hls if self._is_hls else self._run
-		thread_name = "FreeRadio-TimeShiftCaptureHLS" if self._is_hls else "FreeRadio-TimeShiftCapture"
+		thread_name = "freeAudio-TimeShiftCaptureHLS" if self._is_hls else "freeAudio-TimeShiftCapture"
 		self._thread = threading.Thread(
 			target=target, args=(my_gen,), name=thread_name, daemon=True,
 		)
@@ -270,7 +270,7 @@ class TimeShiftBuffer:
 					f.seek(tail_start)
 					tail = f.read()
 			except OSError as e:
-				log.info("FreeRadio TimeShift: snippet read failed: %s", e)
+				log.info("freeAudio TimeShift: snippet read failed: %s", e)
 				return False
 
 			if not prefix and not tail:
@@ -282,7 +282,7 @@ class TimeShiftBuffer:
 						out_f.write(prefix)
 					out_f.write(tail)
 			except OSError as e:
-				log.info("FreeRadio TimeShift: snippet write failed: %s", e)
+				log.info("freeAudio TimeShift: snippet write failed: %s", e)
 				return False
 
 			return True
@@ -396,7 +396,7 @@ class TimeShiftBuffer:
 		while True:
 			if len(buf) < pos + 4:
 				if len(buf) > self._FLAC_PROBE_CAP:
-					log.info("FreeRadio TimeShift: FLAC metadata chain exceeded "
+					log.info("freeAudio TimeShift: FLAC metadata chain exceeded "
 							 "%d-byte probe cap, giving up on header preservation",
 							 self._FLAC_PROBE_CAP)
 					self._flac_probe_done = True
@@ -410,7 +410,7 @@ class TimeShiftBuffer:
 				self._reserved_prefix_len = pos
 				self._flac_probe_done = True
 				self._flac_probe_buf = b""
-				log.info("FreeRadio TimeShift: detected native FLAC stream, "
+				log.info("freeAudio TimeShift: detected native FLAC stream, "
 						 "preserving %d-byte header as reserved prefix", pos)
 				return
 
@@ -721,12 +721,12 @@ class TimeShiftBuffer:
 				try:
 					chunk = reader.recv(_CHUNK) if is_socket else reader.read(_CHUNK)
 				except Exception as e:
-					log.info("FreeRadio TimeShift: capture read failed after %d chunk(s): %s",
+					log.info("freeAudio TimeShift: capture read failed after %d chunk(s): %s",
 							 chunk_count, e)
 					# This will trigger a reconnect in _run()
 					raise
 				if not chunk:
-					log.info("FreeRadio TimeShift: capture stream ended (server closed connection) "
+					log.info("freeAudio TimeShift: capture stream ended (server closed connection) "
 							 "after %d chunk(s)", chunk_count)
 					# End of stream - reconnect
 					return
@@ -747,7 +747,7 @@ class TimeShiftBuffer:
 					if not self._suspend_trim:
 						self._maybe_trim(my_gen)
 
-			log.info("FreeRadio TimeShift: capture loop exiting, wrote %d chunk(s), "
+			log.info("freeAudio TimeShift: capture loop exiting, wrote %d chunk(s), "
 					 "%d byte(s) total", chunk_count, self._bytes_written)
 		finally:
 			if self._capture_leg_start:
@@ -793,7 +793,7 @@ class TimeShiftBuffer:
 			# this station; caller falls back to marking it unsupported.
 			raise
 		except Exception as e:
-			log.info("FreeRadio TimeShift: ffmpeg launch failed: %s", e)
+			log.info("freeAudio TimeShift: ffmpeg launch failed: %s", e)
 			raise
 
 		self._ffmpeg_proc = proc
@@ -807,13 +807,13 @@ class TimeShiftBuffer:
 				try:
 					chunk = proc.stdout.read(_CHUNK)
 				except Exception as e:
-					log.info("FreeRadio TimeShift: ffmpeg read failed after %d chunk(s): %s",
+					log.info("freeAudio TimeShift: ffmpeg read failed after %d chunk(s): %s",
 							 chunk_count, e)
 					raise
 				if not chunk:
 					# ffmpeg exited (stream ended, or a transient error) —
 					# let the reconnect wrapper relaunch it.
-					log.info("FreeRadio TimeShift: ffmpeg audio capture ended "
+					log.info("freeAudio TimeShift: ffmpeg audio capture ended "
 							 "after %d chunk(s)", chunk_count)
 					return
 
@@ -859,7 +859,7 @@ class TimeShiftBuffer:
 					fail_streak = 0
 					backoff = 2
 				except FileNotFoundError:
-					log.info("FreeRadio TimeShift: ffmpeg not found/configured — "
+					log.info("freeAudio TimeShift: ffmpeg not found/configured — "
 							 "time-shift not available for this station")
 					self._hls_skipped = True
 					return
@@ -895,7 +895,7 @@ class TimeShiftBuffer:
 		last_trim_check = time.time()
 		chunk_count = 0
 
-		log.info("FreeRadio TimeShift: HLS capture started for %s", manifest_url)
+		log.info("freeAudio TimeShift: HLS capture started for %s", manifest_url)
 
 		try:
 			while not self._stop_event.is_set() and not self._is_stale(my_gen):
@@ -910,7 +910,7 @@ class TimeShiftBuffer:
 					manifest_attempts = 0
 				except Exception as e:
 					manifest_attempts += 1
-					log.info("FreeRadio TimeShift: HLS manifest fetch failed (attempt=%d): %s",
+					log.info("freeAudio TimeShift: HLS manifest fetch failed (attempt=%d): %s",
 							 manifest_attempts, e)
 					if not first_segment_written:
 						self._hls_skipped = True
@@ -968,7 +968,7 @@ class TimeShiftBuffer:
 						# capturing the video too — if that isn't available,
 						# fall back to skipping time-shift for this station.
 						log.info(
-							"FreeRadio TimeShift: HLS %s has no audio-only rendition "
+							"freeAudio TimeShift: HLS %s has no audio-only rendition "
 							"(video-inclusive only, bw=%d) — extracting audio via "
 							"ffmpeg", manifest_url, best_bw,
 						)
@@ -982,7 +982,7 @@ class TimeShiftBuffer:
 						self._run_hls_via_ffmpeg(my_gen, chosen_manifest)
 						return
 					log.info(
-						"FreeRadio TimeShift: HLS -> audio-only sub-manifest (bw=%d): %s",
+						"freeAudio TimeShift: HLS -> audio-only sub-manifest (bw=%d): %s",
 						chosen_bw, chosen_manifest,
 					)
 					manifest_url = chosen_manifest
@@ -1003,7 +1003,7 @@ class TimeShiftBuffer:
 				)
 				if seen_segments.prepare_playlist(parsed_segments):
 					log.info(
-						"FreeRadio TimeShift: HLS media sequence reset detected; "
+						"freeAudio TimeShift: HLS media sequence reset detected; "
 						"starting a new segment epoch"
 					)
 				new_segments = [
@@ -1011,7 +1011,7 @@ class TimeShiftBuffer:
 					if not seen_segments.contains(entry[0])
 				]
 				log.debug(
-					"FreeRadio TimeShift: HLS %d new segments (media_sequence=%s)",
+					"freeAudio TimeShift: HLS %d new segments (media_sequence=%s)",
 					len(new_segments), media_sequence,
 				)
 
@@ -1033,17 +1033,17 @@ class TimeShiftBuffer:
 									self._reserved_prefix_len += len(init_data)
 								last_map_signature = map_signature
 								log.info(
-									"FreeRadio TimeShift: wrote fMP4 init segment (%d bytes)",
+									"freeAudio TimeShift: wrote fMP4 init segment (%d bytes)",
 									len(init_data),
 								)
 							else:
 								log.debug(
-									"FreeRadio TimeShift: ignored unchanged fMP4 init segment "
+									"freeAudio TimeShift: ignored unchanged fMP4 init segment "
 									"with refreshed URL"
 								)
 							last_map_url = current_map_url
 						except Exception as e:
-							log.info("FreeRadio TimeShift: failed to fetch init segment: %s", e)
+							log.info("freeAudio TimeShift: failed to fetch init segment: %s", e)
 
 					try:
 						seg_req = urllib.request.Request(
@@ -1052,7 +1052,7 @@ class TimeShiftBuffer:
 						with _recorder_mod._urlopen(seg_req, 15) as seg_resp:
 							data = seg_resp.read()
 					except Exception as e:
-						log.info("FreeRadio TimeShift: segment download failed: %s", e)
+						log.info("freeAudio TimeShift: segment download failed: %s", e)
 						continue
 
 					if self._is_stale(my_gen):
@@ -1075,7 +1075,7 @@ class TimeShiftBuffer:
 						implied_bps = len(data) / seg_duration
 						if implied_bps > _VIDEO_BITRATE_THRESHOLD_BPS:
 							log.info(
-								"FreeRadio TimeShift: HLS %s segments imply ~%.0f kbps — "
+								"freeAudio TimeShift: HLS %s segments imply ~%.0f kbps — "
 								"too high to be audio-only, must include video — "
 								"extracting audio via ffmpeg instead", manifest_url,
 								implied_bps * 8 / 1000,
@@ -1101,10 +1101,10 @@ class TimeShiftBuffer:
 				if self._stop_event.wait(4):
 					return
 
-			log.info("FreeRadio TimeShift: HLS capture loop exiting, wrote %d segment(s), "
+			log.info("freeAudio TimeShift: HLS capture loop exiting, wrote %d segment(s), "
 					 "%d byte(s) total", chunk_count, self._bytes_written)
 		except Exception as e:
-			log.info("FreeRadio TimeShift: HLS capture loop failed: %s", e, exc_info=True)
+			log.info("freeAudio TimeShift: HLS capture loop failed: %s", e, exc_info=True)
 		finally:
 			if not self._is_stale(my_gen):
 				self._close_file_handle()
@@ -1124,7 +1124,7 @@ class TimeShiftBuffer:
 				self._file_handle.write(data)
 				self._bytes_written += len(data)
 			except OSError as e:
-				log.info("FreeRadio TimeShift: write failed: %s", e)
+				log.info("freeAudio TimeShift: write failed: %s", e)
 				# Out of disk space specifically (as opposed to some other
 				# transient write error): don't crash the capture loop -
 				# recording/recognition/live playback don't depend on new
@@ -1159,7 +1159,7 @@ class TimeShiftBuffer:
 		try:
 			size = os.path.getsize(path)
 		except OSError as e:
-			log.info("FreeRadio TimeShift: trim stat failed: %s", e)
+			log.info("freeAudio TimeShift: trim stat failed: %s", e)
 			return None
 
 		read_pos = prefix_len + drop_bytes
@@ -1177,7 +1177,7 @@ class TimeShiftBuffer:
 					write_pos += len(chunk)
 				f.truncate(write_pos)
 		except OSError as e:
-			log.info("FreeRadio TimeShift: trim shift failed: %s", e)
+			log.info("freeAudio TimeShift: trim shift failed: %s", e)
 			return None
 		return write_pos
 
@@ -1229,7 +1229,7 @@ class TimeShiftBuffer:
 				self._bytes_written = new_size
 				self._file_handle = open(path, "ab", buffering=0)
 			except OSError as e:
-				log.info("FreeRadio TimeShift: trim failed: %s", e)
+				log.info("freeAudio TimeShift: trim failed: %s", e)
 				try:
 					self._file_handle = open(path, "ab", buffering=0)
 				except OSError:
@@ -1294,7 +1294,7 @@ class TimeShiftBuffer:
 				self._bytes_written = new_size
 				self._file_handle = open(path, "ab", buffering=0)
 			except OSError as e:
-				log.info("FreeRadio TimeShift: HLS trim failed: %s", e)
+				log.info("freeAudio TimeShift: HLS trim failed: %s", e)
 				try:
 					self._file_handle = open(path, "ab", buffering=0)
 				except OSError:

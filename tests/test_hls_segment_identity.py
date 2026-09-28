@@ -8,8 +8,8 @@ from unittest import mock
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-PACKAGE_DIR = ROOT / "addon" / "globalPlugins" / "freeradio"
-PACKAGE_NAME = "freeradio_under_test"
+PACKAGE_DIR = ROOT / "addon" / "globalPlugins" / "freeAudio"
+PACKAGE_NAME = "freeAudio_under_test"
 package = types.ModuleType(PACKAGE_NAME)
 package.__path__ = [str(PACKAGE_DIR)]
 sys.modules[PACKAGE_NAME] = package

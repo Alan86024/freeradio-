@@ -1,8 +1,8 @@
-# FreeRadio — NVDA Add-on
+# freeAudio — NVDA Add-on
 
-FreeRadio is a full-featured internet radio, podcast, audio-book, and local-jukebox add-on for the NVDA screen reader. What began as a simple way to stream internet radio stations has grown into a complete, fully accessible listening hub — every screen, dialog, and control is designed from the ground up for keyboard and screen-reader use, with no mouse required at any point.
+freeAudio is a full-featured internet radio, podcast, audio-book, and local-jukebox add-on for the NVDA screen reader. What began as a simple way to stream internet radio stations has grown into a complete, fully accessible listening hub — every screen, dialog, and control is designed from the ground up for keyboard and screen-reader use, with no mouse required at any point.
 
-## What FreeRadio Can Do
+## What freeAudio Can Do
 
 - **Internet radio** — Browse and search over 50,000 stations from the [Radio Browser](https://www.radio-browser.info/) directory, with results supplemented by TuneIn and iHeartRadio. Save favourites, reorder them, and jump straight to any of them with a global keyboard shortcut from anywhere in Windows — see [Radio Browser Directory](#radio-browser-directory) and [Favourites](#favourites).
 - **Podcasts** — Subscribe to any RSS/Atom feed, or search Apple's podcast directory and preview episodes before subscribing. Playback position is saved automatically and resumes where you left off — see [Podcasts](#podcasts).
@@ -16,13 +16,13 @@ FreeRadio is a full-featured internet radio, podcast, audio-book, and local-juke
 - **Audio mirroring** — Send the same stream to two audio output devices at once, such as speakers and headphones simultaneously — see [Audio Mirror](#audio-mirror).
 - **Obligato mode (background music)** — Loop a chosen favourite station quietly in the background, on its own output device and volume, no matter what plays (or doesn't play) as your main media — see [Obligato Mode](#obligato-mode).
 - **Timers** — Schedule a favourite station to start playing, or schedule playback to stop, at a specific time — see [Timer](#timer).
-- **Deep keyboard and braille access** — Every feature is reachable entirely from the keyboard, with global shortcuts that work from anywhere in Windows, direct hotkeys for individual favourite stations, and optional braille output for all of FreeRadio's spoken notifications.
+- **Deep keyboard and braille access** — Every feature is reachable entirely from the keyboard, with global shortcuts that work from anywhere in Windows, direct hotkeys for individual favourite stations, and optional braille output for all of freeAudio's spoken notifications.
 
 ## Radio Browser Directory
 
-FreeRadio uses the [Radio Browser](https://www.radio-browser.info/) open database for its station catalogue. Radio Browser is a community-managed, free directory hosting more than 50,000 internet radio stations from around the world. No registration or account is required and its API is open to everyone. Each station includes address, country, genre, language and bitrate information; stations are ranked by user votes. FreeRadio connects to this API through mirror servers located in Germany, the Netherlands and Austria; if one server is unreachable, it automatically switches to the next.
+freeAudio uses the [Radio Browser](https://www.radio-browser.info/) open database for its station catalogue. Radio Browser is a community-managed, free directory hosting more than 50,000 internet radio stations from around the world. No registration or account is required and its API is open to everyone. Each station includes address, country, genre, language and bitrate information; stations are ranked by user votes. freeAudio connects to this API through mirror servers located in Germany, the Netherlands and Austria; if one server is unreachable, it automatically switches to the next.
 
-To keep the browser responsive and avoid hitting the API on every search or country change, FreeRadio keeps a local cache of the station catalogue on disk. This cache is refreshed automatically in the background on a periodic schedule, so the list you see is normally already up to date without any action on your part. You can also force an immediate re-sync at any time with the **Update Station List** button — see [Station Browser](#station-browser) below.
+To keep the browser responsive and avoid hitting the API on every search or country change, freeAudio keeps a local cache of the station catalogue on disk. This cache is refreshed automatically in the background on a periodic schedule, so the list you see is normally already up to date without any action on your part. You can also force an immediate re-sync at any time with the **Update Station List** button — see [Station Browser](#station-browser) below.
 
 ## Adding a Station to Radio Browser
 
@@ -37,7 +37,7 @@ Fill in the form on that page:
 - **Tags** — genre or topic keywords separated by commas, for example `news`, `jazz`, `classical`. These are used for searching and filtering.
 - **Logo URL** — a direct link to the station's logo image, if available.
 
-After submitting, the station is reviewed and added to the public directory. Once accepted it will appear in FreeRadio's search and country listings automatically, since the directory is refreshed from the live API.
+After submitting, the station is reviewed and added to the public directory. Once accepted it will appear in freeAudio's search and country listings automatically, since the directory is refreshed from the live API.
 
 ## Requirements
 
@@ -51,9 +51,9 @@ Download the `.nvda-addon` file, press Enter on it and restart NVDA when prompte
 
 ## Keyboard Shortcuts
 
-All shortcuts can be reassigned from NVDA Menu → Preferences → Input Gestures → FreeRadio. These shortcuts work from anywhere, regardless of which window has focus.
+All shortcuts can be reassigned from NVDA Menu → Preferences → Input Gestures → freeAudio. These shortcuts work from anywhere, regardless of which window has focus.
 
-Some of these shortcuts overlap with ones Windows itself uses. If you'd rather keep Windows' own shortcut without reassigning FreeRadio's, press `NVDA+F2` (Pass next key through) right before the key combination — NVDA will send that one key combination straight to Windows instead of intercepting it for FreeRadio.
+Some of these shortcuts overlap with ones Windows itself uses. If you'd rather keep Windows' own shortcut without reassigning freeAudio's, press `NVDA+F2` (Pass next key through) right before the key combination — NVDA will send that one key combination straight to Windows instead of intercepting it for freeAudio.
 
 | Shortcut | Function | Description |
 |---|---|---|
@@ -67,7 +67,7 @@ Some of these shortcuts overlap with ones Windows itself uses. If you'd rather k
 | `Ctrl+Win+←` | Previous favourite | Moves to the previous station in the favourites list. Jumps to the end when at the beginning. |
 | `Ctrl+Win+↑` | Volume up | Increases volume by 5; maximum 200. |
 | `Ctrl+Win+↓` | Volume down | Decreases volume by 5; minimum 0. |
-| `Ctrl+Win+V` | Add to favourites / Download the Media | Adds the currently playing station to the favourites list or downloads the currently playing podcast episode or audio book. Announces if the station is already in the list or if the media was already downloaded. Not applicable when a jukebox track is playing: FreeRadio tells you the shortcut is only for stations, podcasts or audio books. |
+| `Ctrl+Win+V` | Add to favourites / Download the Media | Adds the currently playing station to the favourites list or downloads the currently playing podcast episode or audio book. Announces if the station is already in the list or if the media was already downloaded. Not applicable when a jukebox track is playing: freeAudio tells you the shortcut is only for stations, podcasts or audio books. |
 | `Ctrl+Win+Shift+K` | Increase playback speed | Increases the playback speed of a podcast episode, audio book, or jukebox track by 0.1x (pitch-preserving). Range: 0.5x to 2.0x. Requires `bass_fx.dll` to be placed in the add‑on folder. |
 | `Ctrl+Win+Shift+J` | Decrease playback speed | Decreases the playback speed of a podcast episode, audio book, or jukebox track by 0.1x. Requires `bass_fx.dll`. |
 | `Shift+Win+K` | Transpose up | Raises the pitch of a podcast episode, audio book, or jukebox track in 1/8 whole-tone (0.25 semitone) steps, without changing its speed. Range: −12.00 to +12.00 semitones. Requires `bass_fx.dll`. See [Transpose (Pitch Shift)](#transpose-pitch-shift). |
@@ -77,18 +77,18 @@ Some of these shortcuts overlap with ones Windows itself uses. If you'd rather k
 | `Ctrl+Win+Shift+M` | Obligato mode (background music) | Loops a chosen favourite station quietly in the background, on its own output device and volume, no matter what plays as the main media. First press opens a dialog to pick the station, output device, and relative volume. Press again to stop it. |
 | `Ctrl+Win+E` | Instant recording | Press once to start recording the current station; press again to stop. Press **twice** to start a **song recording** — the file is named after the current track and the recording stops automatically when the track changes. Press twice again while a song recording is active to stop it early. Playback continues uninterrupted in all recording modes. Only available for stations that broadcast ICY metadata. |
 | `Ctrl+Win+W` | Open recordings folder | Opens the folder containing recorded files in File Explorer. |
-| `Ctrl+Win+J` | Time-shift rewind / podcast, audio book & jukebox seek back | For live radio: rewinds 15 seconds. The first press enters time-shift mode; each further press moves 15 seconds further back, up to the buffer limit set in the FreeRadio settings. Requires the time-shift buffer to be enabled in Settings. For a podcast, audio book, or jukebox track, this key seeks within the file instead, and scales with how you press it: **holding it down** keeps stepping back 5 seconds per repeat, exactly as before; a **single deliberate tap** seeks back 12 seconds; **two taps** in quick succession seek back 1 minute; **three or more taps** seek back 5 minutes. Only one seek happens per tap sequence, sized for however many taps were made — taps don't add up. Works regardless of the time-shift setting. |
+| `Ctrl+Win+J` | Time-shift rewind / podcast, audio book & jukebox seek back | For live radio: rewinds 15 seconds. The first press enters time-shift mode; each further press moves 15 seconds further back, up to the buffer limit set in the freeAudio settings. Requires the time-shift buffer to be enabled in Settings. For a podcast, audio book, or jukebox track, this key seeks within the file instead, and scales with how you press it: **holding it down** keeps stepping back 5 seconds per repeat, exactly as before; a **single deliberate tap** seeks back 12 seconds; **two taps** in quick succession seek back 1 minute; **three or more taps** seek back 5 minutes. Only one seek happens per tap sequence, sized for however many taps were made — taps don't add up. Works regardless of the time-shift setting. |
 | `Ctrl+Win+K` | Time-shift fast-forward / podcast, audio book & jukebox seek forward | For live radio: moves forward 15 seconds while time-shifted. Once the live edge is reached, playback automatically returns to live and this becomes a no-op until you rewind again. For a podcast, audio book, or jukebox track, this key seeks forward within the file using the same tap/hold scaling as `Ctrl+Win+J` above (hold = 5 seconds per repeat; 1 tap = 12 seconds; 2 taps = 1 minute; 3+ taps = 5 minutes). Works regardless of the time-shift setting. |
 | `Ctrl+Win+T` | Toggle time-shift buffer | Enables or disables the time-shift buffer on the fly, mirroring the Settings checkbox. Disabling immediately returns to live playback if time-shifted and stops the background capture. No effect on podcast, audio book or jukebox playbacks. |
-| *(unassigned)* | Select output device | Opens an on-demand list of the available main output devices. The list is shown only when BASS detects more than one physical output device. Assign a key combination via NVDA Menu → Preferences → Input Gestures → FreeRadio. |
-| *(unassigned)* | Toggle mute notifications | Toggles the Mute Notifications setting on the fly. Assign a key combination via NVDA Menu → Preferences → Input Gestures → FreeRadio. |
-| *(unassigned)* | Play favourite station directly | Each station in your favourites list appears as a separate entry in NVDA Menu → Preferences → Input Gestures → **FreeRadio Stations**. Assign any keyboard shortcut to a station to start playing it instantly from anywhere, without opening the browser. |
+| *(unassigned)* | Select output device | Opens an on-demand list of the available main output devices. The list is shown only when BASS detects more than one physical output device. Assign a key combination via NVDA Menu → Preferences → Input Gestures → freeAudio. |
+| *(unassigned)* | Toggle mute notifications | Toggles the Mute Notifications setting on the fly. Assign a key combination via NVDA Menu → Preferences → Input Gestures → freeAudio. |
+| *(unassigned)* | Play favourite station directly | Each station in your favourites list appears as a separate entry in NVDA Menu → Preferences → Input Gestures → **freeAudio Stations**. Assign any keyboard shortcut to a station to start playing it instantly from anywhere, without opening the browser. |
 
 Next / previous shortcuts only navigate the favourites list; they do not work with the all stations list. When a list is focused in the browser window, the left and right arrow keys serve the same purpose — see In-Dialog Shortcuts.
 
 ## Station Browser
 
-FreeRadio also adds a **FreeRadio** submenu to the NVDA Tools menu. From there you can directly open the Station Browser and FreeRadio Settings.
+freeAudio also adds a **freeAudio** submenu to the NVDA Tools menu. From there you can directly open the Station Browser and freeAudio Settings.
 
 The window opened with `Ctrl+Win+R` contains eight tabs: All Stations, Favourites, Recording, Timer, Liked Songs, Podcasts, Audio Books and Jukebox. You can navigate between tabs with `Ctrl+Tab` or using `Alt+1` through `Alt+8`.
 
@@ -96,7 +96,7 @@ When the All Stations tab opens, the top 1,000 most-voted stations are automatic
 
 When searching, results from Radio Browser are supplemented with stations from TuneIn and iHeartRadio (when available). These external sources are searched in the background and their results are merged into the list automatically, giving you access to even more stations without any extra action.
 
-The **Output Device** dropdown at the bottom of the browser window — outside the tabs — lists all BASS-recognised audio output devices. Selecting a device immediately redirects audio output to it and saves the choice permanently; the same device is used automatically in the next session. If the selected device is not connected, the add-on falls back to the system default automatically. Press `F11` to open a simpler on-demand device picker from anywhere in the Station Browser. The picker is not shown automatically and opens only when BASS detects more than one physical output device. When just one is available, no selection is needed and FreeRadio uses the system default output. This feature is only functional when the BASS backend is active.
+The **Output Device** dropdown at the bottom of the browser window — outside the tabs — lists all BASS-recognised audio output devices. Selecting a device immediately redirects audio output to it and saves the choice permanently; the same device is used automatically in the next session. If the selected device is not connected, the add-on falls back to the system default automatically. Press `F11` to open a simpler on-demand device picker from anywhere in the Station Browser. The picker is not shown automatically and opens only when BASS detects more than one physical output device. When just one is available, no selection is needed and freeAudio uses the system default output. This feature is only functional when the BASS backend is active.
 
 The **Volume** (0–200) and **Effects** controls in the same area can be adjusted at any time while the window is open. From the Effects list, Chorus, Compressor, Distortion, Echo, Flanger, Gargle, Reverb, EQ: Bass Boost, EQ: Treble Boost and EQ: Vocal Boost can be enabled simultaneously; changes are applied to the active stream instantly. Each effect can also be toggled instantly with `Ctrl+1` through `Ctrl+0` without leaving the keyboard — see [Effect Shortcuts](#effect-shortcuts). These controls are fully functional only when the BASS backend is active.
 
@@ -234,7 +234,7 @@ After a successful import, the favourites list, scheduled-recording station list
 
 Favourites can belong to a folder/group, shown as a "— Group" suffix after the station name in the list (for example, "NPR Newscast — NPR").
 
-- **Importing from M3U** — if the file uses the `group-title` tag (the convention used by DVBViewer and most other M3U editors and players) to organise stations into folders, FreeRadio reads it and keeps each station's group on import. Exporting your favourites back to M3U writes the same tag, so the folder structure survives a round trip through FreeRadio.
+- **Importing from M3U** — if the file uses the `group-title` tag (the convention used by DVBViewer and most other M3U editors and players) to organise stations into folders, freeAudio reads it and keeps each station's group on import. Exporting your favourites back to M3U writes the same tag, so the folder structure survives a round trip through freeAudio.
 - **Assigning or removing a group by hand** — mark one or more favourites with `.` (see [Marking and Removing Multiple Items](#marking-and-removing-multiple-items) above), then choose **Assign to Group…** from the context menu (Applications key / `Shift+F10`) and type a group name. Leave the field empty to remove the marked favourites from their group instead. If nothing is marked, the command applies to the currently selected favourite.
 - **Filtering by group** — the Filter field above the favourites list also matches against group names, and accepts multiple words that can each match a different field. For example, typing `Houston Classical` finds "Houston Public Media Classical" even though that exact phrase never appears anywhere — "Houston" matches the group and "Classical" matches the station name.
 
@@ -244,12 +244,12 @@ With a station selected in the Favourites tab, press `comma` to enter move mode 
 
 ### Direct Keyboard Shortcuts for Favourite Stations
 
-Every station in your favourites list is registered as a separate script in NVDA's Input Gestures dialog, under the **FreeRadio Stations** category. You can assign any keyboard shortcut to any station and press it from anywhere — no need to open the browser window first.
+Every station in your favourites list is registered as a separate script in NVDA's Input Gestures dialog, under the **freeAudio Stations** category. You can assign any keyboard shortcut to any station and press it from anywhere — no need to open the browser window first.
 
 To assign a shortcut:
 
 1. Open NVDA Menu → Preferences → Input Gestures.
-2. Expand the **FreeRadio Stations** category.
+2. Expand the **freeAudio Stations** category.
 3. Find the station by name, select it, and press **Add**.
 4. Press the desired key combination and confirm.
 
@@ -284,7 +284,7 @@ Recognition works as follows: a short audio sample is captured from the stream u
 
 **Requirement:** ffmpeg.exe is required. An ffmpeg.exe placed in the add-on folder is used automatically; if it is in a different location, the path can be set in Settings. Download ffmpeg from [ffmpeg.org](https://ffmpeg.org/download.html).
 
-**A note on stations that insert ads:** some stations serve a short ad to every brand-new connection made to their stream, separate from the broadcast you're already listening to. Recognition avoids sampling that ad by reusing FreeRadio's existing background stream connection (the same one used for [Time-Shift (Rewind Live Radio)](#time-shift-rewind-live-radio)) instead of opening a new one, so it identifies whatever is actually playing rather than an ad. This works automatically and needs no configuration.
+**A note on stations that insert ads:** some stations serve a short ad to every brand-new connection made to their stream, separate from the broadcast you're already listening to. Recognition avoids sampling that ad by reusing freeAudio's existing background stream connection (the same one used for [Time-Shift (Rewind Live Radio)](#time-shift-rewind-live-radio)) instead of opening a new one, so it identifies whatever is actually playing rather than an ad. This works automatically and needs no configuration.
 
 ## Audio Mirror
 
@@ -306,8 +306,8 @@ The `Ctrl+Win+Shift+M` shortcut plays a favourite station quietly in the backgro
 
 On first press, a dialog opens with three controls:
 
-- **Background station** — a list of your favourite stations to choose which one loops in the background. Requires at least one favourite; if your favourites list is empty, FreeRadio tells you to add a station first (`Ctrl+Win+V` while a station is playing).
-- **Audio output** — which device the background station plays through: **Same as main output** (the default), **System default**, or any specific device FreeRadio can see.
+- **Background station** — a list of your favourite stations to choose which one loops in the background. Requires at least one favourite; if your favourites list is empty, freeAudio tells you to add a station first (`Ctrl+Win+V` while a station is playing).
+- **Audio output** — which device the background station plays through: **Same as main output** (the default), **System default**, or any specific device freeAudio can see.
 - **Background volume** — how loud the background station plays, as a percentage of the main player's current volume (25%, 50%, 75%, 100%, 125%, or 150%). Your choices are remembered for next time.
 
 Once started, the background station keeps playing independently of the main player — switching stations, podcasts, or audio books on the main player, or stopping it altogether, does not interrupt Obligato mode. Two things stay linked to the main player automatically:
@@ -319,12 +319,12 @@ Press `Ctrl+Win+Shift+M` again at any time to stop Obligato mode.
 
 ## Recording
 
-Recordings are saved to `Documents\FreeRadio Recordings\` by default. The filename includes the station name (or song title, in song recording mode) and the recording start time. The recordings folder can be changed at any time from NVDA Menu → Preferences → Settings → FreeRadio → **Recordings folder**.
+Recordings are saved to `Documents\freeAudio Recordings\` by default. The filename includes the station name (or song title, in song recording mode) and the recording start time. The recordings folder can be changed at any time from NVDA Menu → Preferences → Settings → freeAudio → **Recordings folder**.
 
 The **Recording output format** setting controls how completed recordings are saved:
 - **Original stream format** writes the stream exactly as received. An HLS broadcast may therefore produce a `.ts` file.
 - **Audio only, original codec** removes the video/container layer without re-encoding the audio. For example, AAC audio from an HLS `.ts` recording is normally saved as `.m4a`, preserving broadcast quality.
-- **MP3** converts the audio after recording using the selected bitrate. Conversion uses the `ffmpeg.exe` bundled with FreeRadio and runs in the background so NVDA stays responsive. If conversion fails, the original recording is retained.
+- **MP3** converts the audio after recording using the selected bitrate. Conversion uses the `ffmpeg.exe` bundled with freeAudio and runs in the background so NVDA stays responsive. If conversion fails, the original recording is retained.
 
 **Instant recording:** While a station is playing, press `Ctrl+Win+E` once. Press again to stop. Playback continues uninterrupted throughout.
 
@@ -350,19 +350,19 @@ Once a schedule is added, it appears in the list below. Use the **Remove Selecte
 
 NVDA announces when a recording starts and when it finishes. If NVDA is restarted while a scheduled recording is active, the recording resumes automatically on startup.
 
-Like music recognition, instant and song recording reuse FreeRadio's existing background stream connection when it's available, rather than opening a new one, so a recording captures what's actually airing even on stations that would otherwise serve a fresh ad to a brand-new connection. This does not apply to scheduled **Record only** recordings, since no station is already playing at the time they start.
+Like music recognition, instant and song recording reuse freeAudio's existing background stream connection when it's available, rather than opening a new one, so a recording captures what's actually airing even on stations that would otherwise serve a fresh ad to a brand-new connection. This does not apply to scheduled **Record only** recordings, since no station is already playing at the time they start.
 
 ## Time-Shift (Rewind Live Radio)
 
 Time-shift lets you rewind the station you're currently listening to, like a DVR or a cassette tape — pause the moment, go back a few minutes, and catch up to live again whenever you want. Playback never has to stop for this: rewinding and fast-forwarding both happen instantly on the same audio stream.
 
-This feature is **disabled by default**. Enable it from NVDA Menu → Preferences → Settings → FreeRadio → **Enable time-shift buffer (rewind live radio**, or toggle it instantly at any time with `Ctrl+Win+T`.
+This feature is **disabled by default**. Enable it from NVDA Menu → Preferences → Settings → freeAudio → **Enable time-shift buffer (rewind live radio**, or toggle it instantly at any time with `Ctrl+Win+T`.
 
-> **Note:** FreeRadio now keeps a small background capture of the currently playing station running at all times — not just when this setting is enabled — because [Music Recognition](#music-recognition) and [Recording](#recording) both rely on it for the ad-avoidance behaviour described in those sections. When this setting is **off**, that background capture is kept to about the last 45 seconds and `Ctrl+Win+J`/`Ctrl+Win+K` remain unavailable — only the buffer size changes, not whether it runs. Enabling the setting grows the same capture to the full rewind buffer described below.
+> **Note:** freeAudio now keeps a small background capture of the currently playing station running at all times — not just when this setting is enabled — because [Music Recognition](#music-recognition) and [Recording](#recording) both rely on it for the ad-avoidance behaviour described in those sections. When this setting is **off**, that background capture is kept to about the last 45 seconds and `Ctrl+Win+J`/`Ctrl+Win+K` remain unavailable — only the buffer size changes, not whether it runs. Enabling the setting grows the same capture to the full rewind buffer described below.
 
 ### How It Works
 
-Once enabled, FreeRadio continuously captures the currently playing station into a rolling local buffer in the background, independently of normal playback. The buffer holds roughly the **last minutes** of audio; older audio is automatically discarded from the front as new audio arrives, so the buffer always represents "the recent past" relative to the live edge.
+Once enabled, freeAudio continuously captures the currently playing station into a rolling local buffer in the background, independently of normal playback. The buffer holds roughly the **last minutes** of audio; older audio is automatically discarded from the front as new audio arrives, so the buffer always represents "the recent past" relative to the live edge.
 Buffer time is determined in the settings.
 
 - **`Ctrl+Win+J`** — Rewind 15 seconds. The first press switches you from live playback into time-shifted playback, starting 15 seconds behind the live edge. Each further press moves another 15 seconds further back, up to the buffer limit.
@@ -379,16 +379,16 @@ Switching to a different station always restarts the buffer for the new station;
 
 ### Supported Streams
 
-Time-shift works with the same range of streams FreeRadio already supports:
+Time-shift works with the same range of streams freeAudio already supports:
 
 - Plain HTTP/HTTPS streams (MP3, AAC, OGG, etc.), including Shoutcast/Icecast-style servers.
-- **HLS (`.m3u8`) streams** — FreeRadio resolves the station's master playlist, follows the media playlist, and downloads segments in the background to keep the buffer filled, the same way it works for plain streams.
+- **HLS (`.m3u8`) streams** — freeAudio resolves the station's master playlist, follows the media playlist, and downloads segments in the background to keep the buffer filled, the same way it works for plain streams.
 
 In the rare case that a station's playlist cannot be read at all (for example, a broken or unreachable `.m3u8` manifest), NVDA will tell you rewinding isn't available for that particular station.
 
 ### Requirements and Limitations
 
-- **Requires the BASS backend**, which FreeRadio always uses for playback (see [Playback](#playback)).
+- **Requires the BASS backend**, which freeAudio always uses for playback (see [Playback](#playback)).
 - The Buffer time is determined in the settings.
 - The buffer is per-station: switching stations, stopping playback, or restarting NVDA clears it and starts fresh.
 - Time-shifted playback uses its own local buffer file and does not produce a saved recording — if you want to keep the audio permanently, use Instant Recording (`Ctrl+Win+E`) as well.
@@ -409,7 +409,7 @@ For both types, if the entered time has already passed the action is scheduled f
 
 ## Podcasts
 
-FreeRadio includes a full-featured podcast player. You can subscribe to any RSS or Atom podcast feed, browse episodes, play them, download them, and resume playback from where you left off — all fully accessible.
+freeAudio includes a full-featured podcast player. You can subscribe to any RSS or Atom podcast feed, browse episodes, play them, download them, and resume playback from where you left off — all fully accessible.
 
 ### Accessing the Podcasts Tab
 
@@ -426,11 +426,11 @@ You can add a podcast feed in two ways:
 **By URL:**
 - In the **"Or enter podcast URL"** field, paste the full RSS or Atom feed URL (e.g. `https://example.com/feed.xml`).
 - Press Enter or click the **Add Feed** button.
-- FreeRadio fetches the feed, validates it, and adds it to your subscriptions. If the feed is valid, you will hear a confirmation with the feed title. If it fails, an error message explains why.
+- freeAudio fetches the feed, validates it, and adds it to your subscriptions. If the feed is valid, you will hear a confirmation with the feed title. If it fails, an error message explains why.
 
 **By searching:**
 - In the **Search** field, type a keyword (podcast title, topic, or host name) and press Enter.
-- FreeRadio searches the iTunes podcast directory and displays matching podcasts in the **Search results** list.
+- freeAudio searches the iTunes podcast directory and displays matching podcasts in the **Search results** list.
 - Selecting a result fetches that feed in the background and lists its episodes in the **Episodes in selected result** list right below, so you can preview what the show actually contains before deciding to subscribe — see [Previewing Episodes Before Subscribing](#previewing-episodes-before-subscribing) below.
 - Once you're happy with what you see, select the result and either press `Enter`, or open its context menu (Applications key / `Shift+F10`, or right‑click) and choose **Subscribe**, to add it to your subscriptions. The feed is added immediately and appears in your subscriptions list. There is no separate "Add Selected from Search" button — `Enter` or the context menu is the only way to subscribe from search results, keeping the interface clean and accessible.
 
@@ -440,7 +440,7 @@ You can add a podcast feed in two ways:
 
 ### Previewing Episodes Before Subscribing
 
-Before committing to a subscription, you can listen to a podcast's episodes straight from the search results. Whenever you select a podcast in the **Search results** list, FreeRadio fetches that feed and shows its episodes — title and publish date — in the **Episodes in selected result** list underneath.
+Before committing to a subscription, you can listen to a podcast's episodes straight from the search results. Whenever you select a podcast in the **Search results** list, freeAudio fetches that feed and shows its episodes — title and publish date — in the **Episodes in selected result** list underneath.
 
 - Select an episode in that preview list and press `Enter`, or open its context menu (Applications key / `Shift+F10`, or right‑click) and choose **Preview**, to start playing it through the normal player. All the usual playback controls (pause, volume, time‑shift, etc.) work on it exactly as they would on any other station or episode.
 - While an episode is being previewed, the same context menu shows **Stop Preview** in place of **Preview** — choose it, or press `Enter` again on that episode, to stop.
@@ -476,7 +476,7 @@ Select a feed in the subscriptions list; its episodes appear in the **Episodes**
 - Use `Shift+F3` / `Shift+F4` to move between feeds without playing episodes.
 - Press `Space` while an episode is playing to pause or resume playback.
 
-**Resuming playback:** FreeRadio saves your position in each podcast episode automatically — immediately whenever you pause or the episode finishes, and every 15 seconds in the background while you keep listening, so a crash or unexpected restart won't lose much progress. If you stop or pause playback and come back later, the episode resumes from the saved position. If you play the episode to the very end (within the last 3 seconds), it is marked as "Listened" and will not resume — it starts from the beginning next time, and the "Listened" prefix appears in the list.
+**Resuming playback:** freeAudio saves your position in each podcast episode automatically — immediately whenever you pause or the episode finishes, and every 15 seconds in the background while you keep listening, so a crash or unexpected restart won't lose much progress. If you stop or pause playback and come back later, the episode resumes from the saved position. If you play the episode to the very end (within the last 3 seconds), it is marked as "Listened" and will not resume — it starts from the beginning next time, and the "Listened" prefix appears in the list.
 
 **Context menu for episodes:** Right‑click an episode, or select it and press the Applications key / `Shift+F10`, to open a menu with:
 - **Play Episode** — start playback.
@@ -486,7 +486,7 @@ Select a feed in the subscriptions list; its episodes appear in the **Episodes**
 
 ### Downloading Episodes
 
-Select an episode and click the **Download Episode** button (or use the context menu). The episode is downloaded to your recordings folder (`Documents\FreeRadio Recordings\` by default). The filename is based on the episode title and the detected file extension (`.mp3`, `.m4a`, `.ogg`, etc.). NVDA announces when the download starts and finishes. If the file already exists, you are informed and the download is skipped.
+Select an episode and click the **Download Episode** button (or use the context menu). The episode is downloaded to your recordings folder (`Documents\freeAudio Recordings\` by default). The filename is based on the episode title and the detected file extension (`.mp3`, `.m4a`, `.ogg`, etc.). NVDA announces when the download starts and finishes. If the file already exists, you are informed and the download is skipped.
 
 ### Filtering Episodes
 
@@ -494,7 +494,7 @@ Above the episode list is a **Filter** field. As you type, the episode list is f
 
 ### Podcast Playback Details
 
-Podcast episodes are played using the **BASS backend** (the same engine used for radio streams and, as of this version, the only playback backend FreeRadio uses). Because episodes are downloaded progressively and are seekable, you can use the time-shift rewind/forward shortcuts (`Ctrl+Win+J`/`Ctrl+Win+K`) while playing a podcast to seek within the episode. The position is saved automatically so you can resume later.
+Podcast episodes are played using the **BASS backend** (the same engine used for radio streams and, as of this version, the only playback backend freeAudio uses). Because episodes are downloaded progressively and are seekable, you can use the time-shift rewind/forward shortcuts (`Ctrl+Win+J`/`Ctrl+Win+K`) while playing a podcast to seek within the episode. The position is saved automatically so you can resume later.
 
 **Tiered seeking:** Unlike live radio's fixed 15-second rewind, seeking within a podcast, audio book, or jukebox track scales with how you press the key, so you can make a small correction or jump a long way without repeated presses:
 
@@ -509,9 +509,9 @@ A deliberate tap is held for a brief moment before it actually seeks, in case an
 
 **Transpose (pitch shift):** Independent of playback speed, you can shift the pitch of a podcast episode, audio book, or jukebox track up or down with `Shift+Win+K` / `Shift+Win+J` — see [Transpose (Pitch Shift)](#transpose-pitch-shift). Transpose also requires `bass_fx.dll`.
 
-> **Note:** `bass_fx.dll` is not bundled with FreeRadio by default. You can download it from the [BASS FX page](https://www.un4seen.com/bass-fx.html) and place it in the add‑on's `bass/x64` (for 64‑bit NVDA) or `bass` (for 32‑bit NVDA) folder to enable these features.
+> **Note:** `bass_fx.dll` is not bundled with freeAudio by default. You can download it from the [BASS FX page](https://www.un4seen.com/bass-fx.html) and place it in the add‑on's `bass/x64` (for 64‑bit NVDA) or `bass` (for 32‑bit NVDA) folder to enable these features.
 
-**Resume sound effect:** Whenever an episode resumes from a saved position, FreeRadio briefly plays a soft cassette-loading sound effect on a separate channel while it seeks back to your saved spot, instead of letting the episode's own audio play audibly from 0:00 in the meantime. This happens automatically whenever the BASS backend is active and is independent of the **Station switch transition** setting — that setting only affects switching between live radio stations, not resuming podcasts or audio books.
+**Resume sound effect:** Whenever an episode resumes from a saved position, freeAudio briefly plays a soft cassette-loading sound effect on a separate channel while it seeks back to your saved spot, instead of letting the episode's own audio play audibly from 0:00 in the meantime. This happens automatically whenever the BASS backend is active and is independent of the **Station switch transition** setting — that setting only affects switching between live radio stations, not resuming podcasts or audio books.
 
 ### Podcast Audio Profile
 
@@ -532,11 +532,11 @@ Only the pieces you pick are written to the profile; anything left out keeps wha
 
 ### Podcast Data Storage
 
-Your subscriptions are stored in `freeradio_podcasts.json` in the NVDA user configuration folder. Episode positions are stored separately in `podcast_positions.json` in the same location. Both files are plain JSON and can be backed up or transferred to another computer.
+Your subscriptions are stored in `freeAudio_podcasts.json` in the NVDA user configuration folder. Episode positions are stored separately in `podcast_positions.json` in the same location. Both files are plain JSON and can be backed up or transferred to another computer.
 
 ## Audio Books (GETEM, LibriVox and Project Gutenberg)
 
-FreeRadio includes an audio book player that searches, plays, and downloads books from three sources:
+freeAudio includes an audio book player that searches, plays, and downloads books from three sources:
 
 - **[GETEM](https://getem.boun.edu.tr/)** — the digital library run by Boğaziçi University's Center for the Visually Impaired. Requires a free membership to stream or download a book's audio (browsing does not) — see [Signing In](#signing-in) below.
 - **[LibriVox](https://librivox.org/)** — the volunteer-read public-domain audiobook project. No account or sign-in of any kind is needed; its whole catalogue, including the audio files themselves, is public domain and openly reachable.
@@ -544,7 +544,7 @@ FreeRadio includes an audio book player that searches, plays, and downloads book
 
 Results from all three sources appear together in a single merged **Search results** list and a single merged **Library** list — there is no separate tab or dropdown to switch between them. Each book's source (GETEM, LibriVox or Project Gutenberg) is shown as a label next to its title, and in its details, so you can always tell which one you're looking at. You can search, preview, add, play, and download books from any source exactly the same way; play multi-part works with automatic resume across parts; and download books for offline listening — all fully accessible.
 
-Any source can be turned off individually from **NVDA Menu → Preferences → Settings → FreeRadio** with the **Audio book sources** checklist, if you only want to search some of them. All three are enabled by default.
+Any source can be turned off individually from **NVDA Menu → Preferences → Settings → freeAudio** with the **Audio book sources** checklist, if you only want to search some of them. All three are enabled by default.
 
 > **Note:** Listening to a GETEM book requires a free GETEM membership. Browsing GETEM's catalogue does not need an account, but resolving and playing a GETEM book's audio does — see [Signing In](#signing-in) below. LibriVox and Project Gutenberg books never require an account.
 
@@ -558,13 +558,13 @@ Open the station browser with `Ctrl+Win+R` and switch to the **Audio Books** tab
 
 ### Signing In
 
-GETEM requires being a registered member to stream or download a book's actual audio, even though the catalogue itself can be searched freely. Enter your GETEM username and password once in **NVDA Menu → Preferences → Settings → FreeRadio**; they are stored encrypted on disk (via the Windows Data Protection API, tied to your Windows user account) and reused automatically afterward. If you try to play or download a GETEM book before entering credentials, FreeRadio tells you to add them in Settings first.
+GETEM requires being a registered member to stream or download a book's actual audio, even though the catalogue itself can be searched freely. Enter your GETEM username and password once in **NVDA Menu → Preferences → Settings → freeAudio**; they are stored encrypted on disk (via the Windows Data Protection API, tied to your Windows user account) and reused automatically afterward. If you try to play or download a GETEM book before entering credentials, freeAudio tells you to add them in Settings first.
 
 LibriVox and Project Gutenberg need no sign-in step at all — their results and audio can be searched, previewed, played and downloaded immediately, with no credentials to enter.
 
 ### Searching for Audio Books
 
-Type a search term into the search field and press `Enter`. FreeRadio searches whichever sources are enabled in Settings and merges the results into one list:
+Type a search term into the search field and press `Enter`. freeAudio searches whichever sources are enabled in Settings and merges the results into one list:
 
 - **GETEM** is searched by title, author, narrator, subject and publisher at once, since GETEM's own search form only supports narrowing by all of them together rather than a single search across any of them. Only works that are actually available as audio (human or computer narration, audio description, radio drama, DAISY talking books, etc.) are shown; braille, large-print and other non-audio formats are filtered out automatically.
 - **LibriVox** is searched by title or author/reader against its public-domain catalogue.
@@ -578,7 +578,7 @@ Selecting a result shows its details — author, narrator, publisher, format and
 
 **Previewing:** Select a result and press `Space`, or open its context menu (Applications key / `Shift+F10`, or right‑click) and choose **Preview**, to start playing it from its first part without adding it to your library. While a book is being previewed, the same context menu shows **Stop Preview** in its place — choose it, or press `Space` again, to stop. Previewing a book does not save your listening position, since that is only tracked for books already in your library.
 
-**Adding to your library:** Select a result and press `Enter`, or use its context menu and choose **Add to Library**, to add it. FreeRadio tells you if the book is already there.
+**Adding to your library:** Select a result and press `Enter`, or use its context menu and choose **Add to Library**, to add it. freeAudio tells you if the book is already there.
 
 ### Your Library
 
@@ -599,13 +599,13 @@ You can also mark several books at once and remove them all together — see [Ma
 
 ### Playback and Resuming
 
-A multi-part work is treated as a single item in the player, not one row per part — the same way a podcast episode is a single item regardless of how it's delivered. FreeRadio remembers which part you last listened to and resumes there automatically the next time you play that book, even across an NVDA restart.
+A multi-part work is treated as a single item in the player, not one row per part — the same way a podcast episode is a single item regardless of how it's delivered. freeAudio remembers which part you last listened to and resumes there automatically the next time you play that book, even across an NVDA restart.
 
-When one part finishes, FreeRadio automatically starts the next part of the same book — you don't need to select it manually. This happens even if the Station Browser window is closed at the time; the "now playing" part shown in the Library list is resynced automatically the next time the window is opened.
+When one part finishes, freeAudio automatically starts the next part of the same book — you don't need to select it manually. This happens even if the Station Browser window is closed at the time; the "now playing" part shown in the Library list is resynced automatically the next time the window is opened.
 
 Playback streams through a small local relay rather than downloading the whole part first, so listening starts as soon as the first bytes arrive — the same immediate-start behaviour podcasts use. All the usual player controls (pause, volume, time-shift, playback speed, transpose, output device, etc.) work on an audio book exactly as they would on a station or podcast episode.
 
-Like podcasts, resuming a book from its saved position plays a brief cassette-loading sound effect while FreeRadio seeks to your saved spot — see the **Resume sound effect** note in [Podcast Playback Details](#podcast-playback-details).
+Like podcasts, resuming a book from its saved position plays a brief cassette-loading sound effect while freeAudio seeks to your saved spot — see the **Resume sound effect** note in [Podcast Playback Details](#podcast-playback-details).
 
 ### Audio Book Audio Profile
 
@@ -615,15 +615,15 @@ Right‑click a book in your Library list and choose **Save Audio Profile for Th
 
 ### Downloading Audio Books
 
-Select a book in your library and choose **Download Book** from its context menu to save every part to its own folder (named after the book) inside your recordings folder (`Documents\FreeRadio Recordings\` by default). Files are numbered so the parts always sort back into listening order, regardless of what GETEM itself calls them. NVDA announces how many parts were saved once the download finishes; if a part fails, the last error is reported alongside the count.
+Select a book in your library and choose **Download Book** from its context menu to save every part to its own folder (named after the book) inside your recordings folder (`Documents\freeAudio Recordings\` by default). Files are numbered so the parts always sort back into listening order, regardless of what GETEM itself calls them. NVDA announces how many parts were saved once the download finishes; if a part fails, the last error is reported alongside the count.
 
 ### Audio Book Data Storage
 
-Each source keeps its own library file, even though they're displayed merged in the Audio Books tab. Your GETEM library (added books and their listening progress) is stored in `freeradio_getem_library.json`, your LibriVox library is stored separately in `freeradio_librivox_library.json`, and your Project Gutenberg library is stored separately in `freeradio_gutenberg_library.json` — all three in the NVDA user configuration folder. Your encrypted GETEM credentials are stored separately in `freeradio_getem_credentials.bin` in the same location, and can only be decrypted by the same Windows user account that saved them. LibriVox and Project Gutenberg have no credentials file, since neither requires an account.
+Each source keeps its own library file, even though they're displayed merged in the Audio Books tab. Your GETEM library (added books and their listening progress) is stored in `freeAudio_getem_library.json`, your LibriVox library is stored separately in `freeAudio_librivox_library.json`, and your Project Gutenberg library is stored separately in `freeAudio_gutenberg_library.json` — all three in the NVDA user configuration folder. Your encrypted GETEM credentials are stored separately in `freeAudio_getem_credentials.bin` in the same location, and can only be decrypted by the same Windows user account that saved them. LibriVox and Project Gutenberg have no credentials file, since neither requires an account.
 
 ## Local Jukebox
 
-FreeRadio's **Jukebox** tab gives you two ways to play audio files that are already on your computer: search every attached drive for files by name, or build a persistent personal library of files and folders. Whatever you play from here gets the same treatment as a podcast or audio book — automatic resume, tiered rewind/fast-forward, playback speed, pitch transpose, and per-item audio profiles all work exactly the same way.
+freeAudio's **Jukebox** tab gives you two ways to play audio files that are already on your computer: search every attached drive for files by name, or build a persistent personal library of files and folders. Whatever you play from here gets the same treatment as a podcast or audio book — automatic resume, tiered rewind/fast-forward, playback speed, pitch transpose, and per-item audio profiles all work exactly the same way.
 
 ### Accessing the Jukebox Tab
 
@@ -637,7 +637,7 @@ The **Add File…**, **Add Folder…** and **Remove** buttons sit below the Trac
 
 ### Searching for Files on Devices
 
-Type any part of a filename into the **Search on devices** field and press `Enter`. FreeRadio walks every locally attached drive — fixed disks, USB drives, memory cards, mapped network drives — looking for audio files (`.mp3`, `.wav`, `.ogg`, `.flac`, `.m4a`, `.m4b`, `.aac`, `.wma`, `.opus`, and several more) whose filename contains the search text. The search runs in the background, so NVDA stays responsive.
+Type any part of a filename into the **Search on devices** field and press `Enter`. freeAudio walks every locally attached drive — fixed disks, USB drives, memory cards, mapped network drives — looking for audio files (`.mp3`, `.wav`, `.ogg`, `.flac`, `.m4a`, `.m4b`, `.aac`, `.wma`, `.opus`, and several more) whose filename contains the search text. The search runs in the background, so NVDA stays responsive.
 
 - **Space** on a search result previews it — starts playback through the normal player. Press **Space** again on the same file to stop the preview.
 - **Enter** on a search result adds it to your jukebox.
@@ -652,14 +652,14 @@ The Jukebox list is your persistent personal library. Two kinds of item can be a
 - **Add Folder…** — opens a folder picker that lets you select multiple folders at once. Every audio file found inside each chosen folder, including in its subfolders, is treated as one of that folder's **tracks**. Each folder is added as its own single entry in your Jukebox list; the files inside it are listed in the Tracks list when the folder is selected. NVDA announces how many folders were added once the picker closes.
 - **Remove** — deletes the currently selected entry from your Jukebox. Removing a folder entry does not delete any files from disk or device; it just forgets the folder. You can also mark several entries at once and remove them all together — see [Marking and Removing Multiple Items](#marking-and-removing-multiple-items) under Favourites.
 
-Your Jukebox list is saved automatically, so it survives NVDA restarts. Folder contents are scanned on demand and cached, so adding a folder is instantaneous even for very large collections — the full scan happens the first time you select that folder. If you add files to a folder outside FreeRadio, use the **Rescan Folder** item in the folder's context menu to pick them up.
+Your Jukebox list is saved automatically, so it survives NVDA restarts. Folder contents are scanned on demand and cached, so adding a folder is instantaneous even for very large collections — the full scan happens the first time you select that folder. If you add files to a folder outside freeAudio, use the **Rescan Folder** item in the folder's context menu to pick them up.
 
 ### Adding Items from Windows Explorer
 
 Two more commands, available only while a file or folder is focused in Windows Explorer's file list (the Details/Icons list — not the address bar, folder tree, ribbon, or search box), let you skip the Add File…/Add Folder… dialogs above entirely:
 
-- **Play the focused file with FreeRadio** — plays the highlighted audio file directly, without needing it to already be in your Jukebox list. Works only on files; using it on a folder tells you to add the folder to the jukebox instead.
-- **Add the focused item to the FreeRadio jukebox** — adds the highlighted file or folder to your Jukebox list, exactly as if you'd used **Add File…** or **Add Folder…** above.
+- **Play the focused file with freeAudio** — plays the highlighted audio file directly, without needing it to already be in your Jukebox list. Works only on files; using it on a folder tells you to add the folder to the jukebox instead.
+- **Add the focused item to the freeAudio jukebox** — adds the highlighted file or folder to your Jukebox list, exactly as if you'd used **Add File…** or **Add Folder…** above.
 
 Neither command has a default key assigned. Assign one from NVDA Menu → Preferences → Input Gestures **while focused inside a File Explorer window** — they appear there under Explorer's own section rather than "All applications", so the key combination you choose only triggers these commands while you're browsing files in Explorer; everywhere else, it keeps its normal meaning.
 
@@ -676,7 +676,7 @@ Neither command has a default key assigned. Assign one from NVDA Menu → Prefer
 
 Every track played from the Jukebox gets the full local-media treatment:
 
-- **Resume:** FreeRadio remembers your position in each track, saves it on pause and periodically while playing, and resumes from that point when you play it again — even across an NVDA restart.
+- **Resume:** freeAudio remembers your position in each track, saves it on pause and periodically while playing, and resumes from that point when you play it again — even across an NVDA restart.
 - **Tiered seeking:** `Ctrl+Win+J` / `Ctrl+Win+K` seek within the track using the same tap/hold scaling as podcasts and audio books — hold for 5 seconds per repeat, one tap for 12 seconds, two taps for 1 minute, three or more taps for 5 minutes.
 - **Playback speed:** `Ctrl+Win+Shift+J` / `Ctrl+Win+Shift+K` adjust speed in 0.1x steps from 0.5x to 2.0x, with pitch preserved. Requires `bass_fx.dll`.
 - **Transpose:** `Shift+Win+J` / `Shift+Win+K` shift pitch without changing speed — see [Transpose (Pitch Shift)](#transpose-pitch-shift). Also requires `bass_fx.dll`.
@@ -701,7 +701,7 @@ Transpose is remembered across tracks, the same way playback speed is: setting i
 
 ## Liked Songs
 
-When the **Save liked songs to a text file** option is enabled, track info copied to the clipboard by pressing `Ctrl+Win+I` three times is also appended line by line to `Documents\FreeRadio Recordings\likedSongs.txt`.
+When the **Save liked songs to a text file** option is enabled, track info copied to the clipboard by pressing `Ctrl+Win+I` three times is also appended line by line to `Documents\freeAudio Recordings\likedSongs.txt`.
 
 On stations that broadcast ICY metadata, the track title and artist are saved directly. On stations without ICY metadata, the Shazam recognition result is saved to the same file — both sources share the same list. The file is created automatically if it does not exist; each entry is appended to the end of the file and previous entries are never deleted.
 
@@ -723,7 +723,7 @@ The Spotify, YouTube, Show Lyrics, and Remove buttons are only enabled when a re
 
 ### Lyrics Service
 
-FreeRadio uses [lrclib.net](https://lrclib.net) to fetch lyrics — a free, open database that requires no API key or account. The lookup process parses the track string stored in `likedSongs.txt` and tries progressively looser queries until lyrics are found:
+freeAudio uses [lrclib.net](https://lrclib.net) to fetch lyrics — a free, open database that requires no API key or account. The lookup process parses the track string stored in `likedSongs.txt` and tries progressively looser queries until lyrics are found:
 
 1. Exact match using the full artist name and cleaned title (noise suffixes such as "Remastered", "Live", or year tags are stripped before searching).
 2. Exact match using the full artist name and the original title (if cleaning changed it).
@@ -735,14 +735,14 @@ When plain lyrics are available they are shown as-is. When only time-synced LRC 
 
 ## Settings
 
-The following options can be configured from NVDA Menu → Preferences → Settings → FreeRadio:
+The following options can be configured from NVDA Menu → Preferences → Settings → freeAudio:
 
 | Option | Description |
 |---|---|
 | Track change voice | Choose whether auto‑announced track changes are spoken using the NVDA synthesizer or a selected SAPI5 voice. |
 | SAPI5 voice | When **Track change voice** is set to SAPI5, selects which installed SAPI5 voice is used to announce track changes. The list is populated in the background from the voices installed on the system. |
 | Audio output device (BASS backend) | Sets the audio output device for radio playback. The list includes all BASS-compatible devices on the system plus a "System default" option. Changes are applied immediately on save; if the selected device is disconnected, the add-on automatically falls back to the system default and announces the change. Only active when the BASS backend is in use. |
-| Audio device refresh mode (BASS backend) | Controls how FreeRadio refreshes BASS output-device numbers. **Reliable** mode (default) probes devices live and tracks Bluetooth/USB changes more accurately, but can make device changes slightly slower. **Fast** mode uses the current BASS device list and is quicker, but device numbers may stay stale until BASS or NVDA is restarted. |
+| Audio device refresh mode (BASS backend) | Controls how freeAudio refreshes BASS output-device numbers. **Reliable** mode (default) probes devices live and tracks Bluetooth/USB changes more accurately, but can make device changes slightly slower. **Fast** mode uses the current BASS device list and is quicker, but device numbers may stay stale until BASS or NVDA is restarted. |
 | Volume | Sets the add-on's starting volume (0–200). Changes made during playback with `Ctrl+Win+↑` / `Ctrl+Win+↓` are also reflected here. |
 | Audio effects | Sets which effects (Chorus, Compressor, Distortion, Echo, Flanger, Gargle, Reverb, and the three EQ boosts) are active when NVDA starts or a station begins playing. Multiple effects can be checked at once, matching the Effects list in the Station Browser. Only active when the BASS backend is in use. |
 | EQ gain (Bass / Treble / Vocal) | Sets the gain level in dB for each EQ band (−15 to +15). These values apply when the corresponding EQ effect is active and are saved globally. Per-station overrides can be stored using the **Save Audio Profile** button in the Favourites tab. Only active when the BASS backend is in use. |
@@ -750,16 +750,16 @@ The following options can be configured from NVDA Menu → Preferences → Setti
 | Resume last station on NVDA startup | When enabled, the last played station automatically restarts every time NVDA starts. |
 | Auto-announce track changes (ICY metadata) | When enabled, NVDA automatically reads the new track name each time it changes on a station that broadcasts ICY metadata. The first track is also announced immediately when switching to a new station. Disabled by default. |
 | Mute notifications | When enabled, NVDA does not announce station changes, playback state changes (play, pause, stop), or recording events (started, stopped, finished). Error messages, favourites feedback, music recognition results, and update notifications are not affected. Can also be toggled on the fly via an unassigned input gesture. Disabled by default. |
-| Braille messages | When enabled, FreeRadio also sends its notifications directly to the braille display. This is useful for track titles, station changes, playback state and volume changes. Disabled by default. |
+| Braille messages | When enabled, freeAudio also sends its notifications directly to the braille display. This is useful for track titles, station changes, playback state and volume changes. Disabled by default. |
 | Enable time-shift buffer (rewind live radio) | Turns the rewind controls (`Ctrl+Win+J`/`Ctrl+Win+K`) on or off and grows the background capture from ~45 seconds up to the time determined in the settings. A small background capture of the currently playing station always runs, even when this is off — see the note in the **Time-Shift (Rewind Live Radio)** section below. Can also be toggled instantly with `Ctrl+Win+T`. Requires the BASS backend. Disabled by default — see the **Time-Shift (Rewind Live Radio)** section below for full details. |
-| Save liked songs to a text file | When enabled, track info copied to the clipboard by pressing `Ctrl+Win+I` three times is also appended to `Documents\FreeRadio Recordings\likedSongs.txt`. If no ICY metadata is available, the Shazam recognition result is saved to the same file. Disabled by default. |
+| Save liked songs to a text file | When enabled, track info copied to the clipboard by pressing `Ctrl+Win+I` three times is also appended to `Documents\freeAudio Recordings\likedSongs.txt`. If no ICY metadata is available, the Shazam recognition result is saved to the same file. Disabled by default. |
 | When Ctrl+Win+P is pressed with no active playback | Determines what happens when this shortcut is pressed and nothing is playing: start the last station or open the favourites list. |
 | Time-shift buffer duration | Sets the maximum length of the rewind buffer. Options range from 10 minutes up to 5 hours. Longer buffers consume more temporary disk space. |
 | When Ctrl+Win+P is pressed twice | Selects what happens when the shortcut is pressed twice in quick succession: do nothing, open the favourites list, open the recording tab or open the timer tab. When "do nothing" is selected, the first press responds instantly with no delay. |
 | When Ctrl+Win+P is pressed three times | Selects what happens when the shortcut is pressed three times in quick succession: do nothing, open the favourites list, open station search, open the recording tab or open the timer tab. |
 | Check for updates automatically | When enabled, a background update check runs each time NVDA starts; you are notified if a new version is found. When disabled, automatic checks stop but manual checks remain available. |
 | ffmpeg.exe path | Path to the ffmpeg.exe used for music recognition. If left blank, an ffmpeg.exe in the add-on folder is used automatically. |
-| Recordings folder | Sets the folder where recorded files are saved. If left blank, the default location `Documents\FreeRadio Recordings\` is used. A Browse button lets you select the folder interactively. Changes take effect immediately after saving. |
+| Recordings folder | Sets the folder where recorded files are saved. If left blank, the default location `Documents\freeAudio Recordings\` is used. A Browse button lets you select the folder interactively. Changes take effect immediately after saving. |
 | Audio book sources | A checklist selecting which audio-book sources (**GETEM**, **LibriVox**, **Project Gutenberg**) are searched and shown in the Audio Books tab. All three are enabled by default. Unchecking a source hides its books from the merged search results and library list without deleting anything you've already added from it — see [Audio Books (GETEM, LibriVox and Project Gutenberg)](#audio-books-getem-librivox-and-project-gutenberg). |
 | GETEM username / GETEM password | Your [GETEM](https://getem.boun.edu.tr/) audio-book membership credentials, needed to stream or download a book's audio — see [Signing In](#signing-in). Stored encrypted on disk via the Windows Data Protection API, tied to your Windows user account; never stored as plain text. Leaving both fields empty and saving removes any stored credentials. LibriVox and Project Gutenberg require no account and have no equivalent field. |
 | Recording output format | Keeps the original stream, extracts audio without changing its codec, or converts completed recordings to MP3. The default is the original stream format. |
@@ -778,38 +778,38 @@ When **Mute notifications** is enabled in Settings, NVDA silences the following 
 
 The following announcements are intentionally **not** affected: error messages, favourites feedback (added / already in list), music recognition results, and update notifications.
 
-The setting can be toggled from NVDA Menu → Preferences → Settings → FreeRadio, or instantly at any time via an unassigned input gesture (assign one from NVDA Menu → Preferences → Input Gestures → FreeRadio). When toggled, NVDA announces "Notifications muted" or "Notifications unmuted" once to confirm the change.
+The setting can be toggled from NVDA Menu → Preferences → Settings → freeAudio, or instantly at any time via an unassigned input gesture (assign one from NVDA Menu → Preferences → Input Gestures → freeAudio). When toggled, NVDA announces "Notifications muted" or "Notifications unmuted" once to confirm the change.
 
 ## Auto-announce Track Changes
 
-When the **Auto-announce track changes** option is enabled in Settings, FreeRadio checks the active station's ICY metadata stream in the background approximately every 5 seconds. When the track changes, the new title is automatically read by NVDA — no keypress required.
+When the **Auto-announce track changes** option is enabled in Settings, freeAudio checks the active station's ICY metadata stream in the background approximately every 5 seconds. When the track changes, the new title is automatically read by NVDA — no keypress required.
 
 When switching to a new station, the first track info is announced as soon as the connection is established. If you switch to a station that does not broadcast ICY metadata, the system stays silent and the previous station's track info is not repeated.
 
-This feature is disabled by default and can be toggled from NVDA Menu → Preferences → Settings → FreeRadio.
+This feature is disabled by default and can be toggled from NVDA Menu → Preferences → Settings → freeAudio.
 
 ## Playback
 
-FreeRadio uses **BASS** as its sole playback backend for everything — internet radio, podcasts, audio books, and jukebox tracks. No separate installation is required; it is bundled with the add-on. Support for VLC, PotPlayer and Windows Media Player as fallback backends has been removed; BASS is always used.
+freeAudio uses **BASS** as its sole playback backend for everything — internet radio, podcasts, audio books, and jukebox tracks. No separate installation is required; it is bundled with the add-on. Support for VLC, PotPlayer and Windows Media Player as fallback backends has been removed; BASS is always used.
 
-BASS sends audio directly to the Windows audio stack and appears in the Windows volume mixer as an independent audio source named "pythonw.exe", separate from NVDA. This means FreeRadio audio flows on a completely separate channel from NVDA speech: the radio does not cut out, mix with, or get affected by NVDA's own audio settings while NVDA is speaking. The user can adjust the radio volume independently from NVDA in the Windows Volume Mixer. Supports HTTP, HTTPS and most embedded stream formats.
+BASS sends audio directly to the Windows audio stack and appears in the Windows volume mixer as an independent audio source named "pythonw.exe", separate from NVDA. This means freeAudio audio flows on a completely separate channel from NVDA speech: the radio does not cut out, mix with, or get affected by NVDA's own audio settings while NVDA is speaking. The user can adjust the radio volume independently from NVDA in the Windows Volume Mixer. Supports HTTP, HTTPS and most embedded stream formats.
 
 Podcast episodes, audio book chapters, and jukebox tracks are played through BASS because it can open the stream as a seekable file (even while downloading), allowing precise position tracking, tiered rewind/fast-forward, playback speed, pitch transpose, and resuming. Audio mirroring, time-shift, and podcast/audio-book/jukebox seek and resume all depend on BASS and are always available.
 
 ## Update Check
 
-FreeRadio automatically checks for new versions via GitHub.
+freeAudio automatically checks for new versions via GitHub.
 
 **Automatic check:** Runs silently in the background 15 seconds after NVDA starts. If a new version is found, you are notified; if none is found, no message is shown.
 
-**Manual check:** Can be triggered on demand from NVDA Tools → FreeRadio → **Check for Updates…**. When started this way, the result is announced even if the version is up to date.
+**Manual check:** Can be triggered on demand from NVDA Tools → freeAudio → **Check for Updates…**. When started this way, the result is announced even if the version is up to date.
 
 **When an update is found:** A dialog opens showing the version number and your installed version.
 
 - If a directly downloadable `.nvda-addon` file is available on the GitHub release, a **Download and Install** button is shown. Once confirmed, the file is downloaded in the background, NVDA announces when the download starts, and NVDA's own installation screen opens automatically.
 - If no direct download link is available, an **Open Page** button is shown and the GitHub release page opens in the default browser.
 
-**To disable automatic checks:** Turn off the **Check for updates automatically** option from NVDA Menu → Preferences → Settings → FreeRadio.
+**To disable automatic checks:** Turn off the **Check for updates automatically** option from NVDA Menu → Preferences → Settings → freeAudio.
 
 ## Changelog
 
@@ -821,7 +821,7 @@ FreeRadio automatically checks for new versions via GitHub.
 
 ## Acknowledgments & Credits
 
-* **Original Foundation & Concepts:** Sincere thanks to **Gary Mp** ([GaryMp/freeradio](https://github.com/GaryMp/freeradio)) for the original radio add-on concepts and core favorite management structures that served as a foundational base for this project.
+* **Original Foundation & Concepts:** Sincere thanks to **Gary Mp** ([GaryMp/freeAudio](https://github.com/GaryMp/freeAudio)) for the original radio add-on concepts and core favorite management structures that served as a foundational base for this project.
 * **AI & LLM Tools:** Grateful acknowledgment to modern Large Language Model (LLM) tools (including Claude, ChatGPT, and Gemini) for assistance during the development, code refactoring, and feature implementation phases.
 * **Directory Service:** Station directory powered by the [Radio Browser API](https://www.radio-browser.info/).
 * **Community:** Sincere thanks to all NVDA community members and translators for their continuous support, feedback, and localization contributions.

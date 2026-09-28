@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Radio Player
+# freeAudio - Radio Player
 # BASS (subprocess) is the sole playback backend.
-# Initial player structure and state accessors based on work by Gary Mp (GaryMp/freeradio).
+# Initial player structure and state accessors based on work by Gary Mp (GaryMp/freeAudio).
 
 import ctypes
 import json
@@ -32,7 +32,7 @@ log = logging.getLogger()
 # user's mirror use quietly grows a file in their temp folder for a
 # diagnostic almost nobody needs day to day.
 _MIRROR_DEBUG_ENABLED = False
-_MIRROR_DEBUG_LOG_PATH = os.path.join(tempfile.gettempdir(), "freeradio_mirror_debug.log")
+_MIRROR_DEBUG_LOG_PATH = os.path.join(tempfile.gettempdir(), "freeAudio_mirror_debug.log")
 
 
 def _mirror_debug_log(msg):
@@ -118,7 +118,7 @@ def _is_seekable_media(station):
 	carry "podcast" as a community-assigned genre tag on an ordinary live
 	stream (e.g. talk-radio mirrors of podcast-hosting platforms like
 	Zeno.fm or Qingting.fm) - matching against "tags" used to make
-	FreeRadio treat such a station as an actual downloadable podcast
+	freeAudio treat such a station as an actual downloadable podcast
 	episode: opened seekable, resumed to a saved position that can never
 	apply to a live/infinite stream, and left stuck (muted) behind the
 	casette.mp3 resume-wait effect while the seek retry loop spent up to
@@ -131,7 +131,7 @@ def _read_icy_title(url):
 	try:
 		req = urllib.request.Request(
 			url,
-			headers={"User-Agent": "FreeRadio-NVDA/1.0", "Icy-MetaData": "1"},
+			headers={"User-Agent": "freeAudio-NVDA/1.0", "Icy-MetaData": "1"},
 		)
 		with urllib.request.urlopen(req, timeout=_ICY_TIMEOUT) as resp:
 			metaint_str = resp.headers.get("icy-metaint", "")
@@ -173,7 +173,7 @@ def _resolve_playlist_url(url, timeout=8, _hops=3):
 		import urllib.request as _req
 		req = _req.Request(
 			url,
-			headers={"User-Agent": "FreeRadio-NVDA/1.0",
+			headers={"User-Agent": "freeAudio-NVDA/1.0",
 					 "Icy-MetaData": "1"},
 		)
 		with _req.urlopen(req, timeout=timeout) as resp:
@@ -444,7 +444,7 @@ class _BassSubprocessEngine:
 		# _drain_stderr()'s docstring for why this can't just be read on
 		# demand after a failure.
 		threading.Thread(
-			target=self._drain_stderr, args=(proc,), daemon=True, name="FreeRadio-BassStderr").start()
+			target=self._drain_stderr, args=(proc,), daemon=True, name="freeAudio-BassStderr").start()
 
 		try:
 			line = proc.stdout.readline()
@@ -459,7 +459,7 @@ class _BassSubprocessEngine:
 		self._ready = True
 		self._stop_reader.clear()
 		self._reader_thread = threading.Thread(
-			target=self._read_loop, daemon=True, name="FreeRadio-BassReader")
+			target=self._read_loop, daemon=True, name="freeAudio-BassReader")
 		self._reader_thread.start()
 
 		return True
@@ -1051,7 +1051,7 @@ class RadioPlayer:
 		self._podcast_autosave_stop = threading.Event()
 		self._podcast_autosave_thread = threading.Thread(
 			target=self._podcast_autosave_loop, daemon=True,
-			name="FreeRadio-podcast-autosave")
+			name="freeAudio-podcast-autosave")
 		self._podcast_autosave_thread.start()
 
 		# Time-shift buffer (rewind/fast-forward for live radio). Disabled by
@@ -1134,7 +1134,7 @@ class RadioPlayer:
 		# If it's a podcast, reaching stall means the episode has ended.
 		# Mark as listened and stop player instead of reconnecting/restarting.
 		if is_podcast:
-			log.info("FreeRadio: Podcast episode finished playing.")
+			log.info("freeAudio: Podcast episode finished playing.")
 			self._save_podcast_position_now(station, -1.0, -1.0)
 			cb = self.on_podcast_progress_saved
 			if cb:
@@ -1167,7 +1167,7 @@ class RadioPlayer:
 		# then immediately race back into a fresh, still-too-small buffer
 		# on the next rewind press, repeating indefinitely.
 		if self._timeshift_active:
-			log.warning("FreeRadio: BASS stall detected during time-shifted "
+			log.warning("freeAudio: BASS stall detected during time-shifted "
 						"playback, returning to live")
 			self.exit_timeshift_to_live()
 			return
@@ -1176,7 +1176,7 @@ class RadioPlayer:
 		vol = self._volume
 		if not url:
 			return
-		log.warning("FreeRadio: BASS stall detected, reconnecting: %s", url)
+		log.warning("freeAudio: BASS stall detected, reconnecting: %s", url)
 		# ... (rest of the method stays same)
 
 		# Capture generation at the moment of stall so reconnect thread
@@ -1201,7 +1201,7 @@ class RadioPlayer:
 					return  # User selected a different station
 				if self._current_url != url:
 					return
-				log.info("FreeRadio: BASS stall reconnect attempt: %s", url)
+				log.info("freeAudio: BASS stall reconnect attempt: %s", url)
 				with self._play_lock:
 					# Double-check generation under lock before bumping
 					if self._play_gen != captured_gen:
@@ -1210,7 +1210,7 @@ class RadioPlayer:
 					captured_gen = self._play_gen
 				try:
 					if self._launch_bass(url, vol):
-						log.info("FreeRadio: BASS stall reconnect OK")
+						log.info("freeAudio: BASS stall reconnect OK")
 						# The time-shift capture connection is independent of
 						# BASS playback and was never interrupted by this
 						# stall, so the buffer is still valid for the current
@@ -1225,7 +1225,7 @@ class RadioPlayer:
 						return
 				except Exception as e:
 					pass
-			log.warning("FreeRadio: BASS stall reconnect exhausted")
+			log.warning("freeAudio: BASS stall reconnect exhausted")
 
 			# BASS could not recover after repeated attempts. There is no
 			# other backend to fall back to, so stop playback cleanly
@@ -1238,7 +1238,7 @@ class RadioPlayer:
 			self.stop()
 
 		threading.Thread(target=_reconnect, daemon=True,
-						 name="FreeRadio-BassReconnect").start()
+						 name="freeAudio-BassReconnect").start()
 
 
 	def _watchdog_loop(self):
@@ -1354,7 +1354,7 @@ class RadioPlayer:
 						target=self._tuning_loop_watcher,
 						args=(resume_wait_engine, resume_wait_stop, self._play_gen),
 						kwargs={"clip_fn": self._play_casette_clip},
-						daemon=True, name="FreeRadio-podcast-resume-tuner"
+						daemon=True, name="freeAudio-podcast-resume-tuner"
 					).start()
 			except Exception:
 				resume_wait_engine = None
@@ -1492,7 +1492,7 @@ class RadioPlayer:
 				return
 			time.sleep(delay)
 			delay = min(delay * 1.5, 1.5)
-		log.info("FreeRadio: could not resume podcast at %.1fs after %d attempts over ~15s",
+		log.info("freeAudio: could not resume podcast at %.1fs after %d attempts over ~15s",
 				  saved_pos, attempt)
 
 	def set_crossfade_duration(self, seconds):
@@ -1710,7 +1710,7 @@ class RadioPlayer:
 					target=self._tuning_loop_watcher,
 					args=(tuner_engine, stop_evt, my_gen),
 					kwargs={"clip_fn": transition_clip_fn},
-					daemon=True, name="FreeRadio-tuning-loop"
+					daemon=True, name="freeAudio-tuning-loop"
 				).start()
 
 				# Create a fresh engine for the new station — it connects in
@@ -1769,7 +1769,7 @@ class RadioPlayer:
 				if not loaded or not self._bass_engine.ready():
 					# New engine failed to initialise — restore old engine and
 					# fall back to a regular (non-crossfade/non-tuning) launch.
-					log.warning("FreeRadio: crossfade/tuning engine failed to load, falling back.")
+					log.warning("freeAudio: crossfade/tuning engine failed to load, falling back.")
 					try:
 						self._bass_engine.unload()
 					except Exception:
@@ -1851,7 +1851,7 @@ class RadioPlayer:
 
 				mirror_thread = threading.Thread(
 					target=_sync_mirror, daemon=True,
-					name="FreeRadio-mirror-sync")
+					name="freeAudio-mirror-sync")
 				mirror_thread.start()
 
 			try:
@@ -1894,7 +1894,7 @@ class RadioPlayer:
 			# place. Treat this exactly like the exception branch above.
 			if self._backend != self.BACKEND_BASS:
 				reason = getattr(self._bass_engine, "last_play_error", None) or "unknown reason"
-				log.warning("FreeRadio: BASS connection failed for %s, giving up (%s)", stream_url, reason)
+				log.warning("freeAudio: BASS connection failed for %s, giving up (%s)", stream_url, reason)
 				self._is_playing = False
 				if xfade:
 					try:
@@ -1946,7 +1946,7 @@ class RadioPlayer:
 						pass
 
 				threading.Thread(
-					target=_fade_out, daemon=True, name="FreeRadio-fadeout"
+					target=_fade_out, daemon=True, name="freeAudio-fadeout"
 				).start()
 
 			if self._backend != self.BACKEND_BASS:
@@ -2022,7 +2022,7 @@ class RadioPlayer:
 							# this buffer exists to avoid for recognition/recording.
 							# Only stop()+start() when the station actually changed.
 							if self._timeshift_buffer.is_active() and self._timeshift_buffer.get_url() == capture_url:
-								log.info("FreeRadio TimeShift: reusing existing capture for %s (same station, "
+								log.info("freeAudio TimeShift: reusing existing capture for %s (same station, "
 										  "not a switch)", capture_url)
 							else:
 								try:
@@ -2031,13 +2031,13 @@ class RadioPlayer:
 									pass
 								try:
 									if is_hls:
-										log.info("FreeRadio TimeShift: starting HLS capture for %s", capture_url)
+										log.info("freeAudio TimeShift: starting HLS capture for %s", capture_url)
 									else:
-										log.info("FreeRadio TimeShift: starting capture for %s (resolved from %s)",
+										log.info("freeAudio TimeShift: starting capture for %s (resolved from %s)",
 												  capture_url, stream_url)
 									self._timeshift_buffer.start(capture_url)
 								except Exception as e:
-									log.info("FreeRadio TimeShift: could not start capture: %s", e, exc_info=True)
+									log.info("freeAudio TimeShift: could not start capture: %s", e, exc_info=True)
 							# Whether reused or freshly started, this buffer instance
 							# now genuinely belongs to *this* launch's station.
 							self._timeshift_buffer_gen = gen
@@ -2047,7 +2047,7 @@ class RadioPlayer:
 			if mirror_thread is not None:
 				mirror_thread.join(timeout=30.0)
 
-		threading.Thread(target=_bg_launch, daemon=True, name="FreeRadio-launch").start()
+		threading.Thread(target=_bg_launch, daemon=True, name="freeAudio-launch").start()
 
 	def pause(self):
 		with self._play_lock:
@@ -2197,7 +2197,7 @@ class RadioPlayer:
 
 				mirror_thread = threading.Thread(
 					target=_sync_mirror, daemon=True,
-					name="FreeRadio-mirror-sync")
+					name="freeAudio-mirror-sync")
 				mirror_thread.start()
 
 			try:
@@ -2224,7 +2224,7 @@ class RadioPlayer:
 			if mirror_thread is not None:
 				mirror_thread.join(timeout=30.0)
 
-		threading.Thread(target=_bg_resume, daemon=True, name="FreeRadio-resume").start()
+		threading.Thread(target=_bg_resume, daemon=True, name="freeAudio-resume").start()
 
 	def stop(self, keep_mirror=False):
 		"""Stop the current stream. *keep_mirror*, if True, leaves the
@@ -2506,7 +2506,7 @@ class RadioPlayer:
 		except FileNotFoundError:
 			pass
 		except Exception as e:
-			log.error("FreeRadio: failed to load podcast positions: %s", e)
+			log.error("freeAudio: failed to load podcast positions: %s", e)
 		return {}
 
 	def _write_podcast_positions(self):
@@ -2518,7 +2518,7 @@ class RadioPlayer:
 				json.dump(data, fh, ensure_ascii=False, indent=2)
 			os.replace(tmp_path, self._podcast_positions_path)
 		except Exception as e:
-			log.error("FreeRadio: failed to save podcast positions: %s", e)
+			log.error("freeAudio: failed to save podcast positions: %s", e)
 			try:
 				os.remove(tmp_path)
 			except OSError:
@@ -2580,7 +2580,7 @@ class RadioPlayer:
 		except FileNotFoundError:
 			pass
 		except Exception as e:
-			log.error("FreeRadio: failed to load jukebox folder positions: %s", e)
+			log.error("freeAudio: failed to load jukebox folder positions: %s", e)
 		return {}
 
 	def _write_jukebox_folder_positions(self):
@@ -2592,7 +2592,7 @@ class RadioPlayer:
 				json.dump(data, fh, ensure_ascii=False, indent=2)
 			os.replace(tmp_path, self._jukebox_folder_positions_path)
 		except Exception as e:
-			log.error("FreeRadio: failed to save jukebox folder positions: %s", e)
+			log.error("freeAudio: failed to save jukebox folder positions: %s", e)
 			try:
 				os.remove(tmp_path)
 			except OSError:
@@ -2845,15 +2845,15 @@ class RadioPlayer:
 						# reconnect - the same bug _bg_launch's reuse guard
 						# avoids for station switches/resumes.
 						if self._timeshift_buffer.is_active() and self._timeshift_buffer.get_url() == resolved_for_capture:
-							log.info("FreeRadio TimeShift: reusing existing capture for %s (rewind enabled, "
+							log.info("freeAudio TimeShift: reusing existing capture for %s (rewind enabled, "
 									  "not a switch)", resolved_for_capture)
 						else:
 							try:
-								log.info("FreeRadio TimeShift: starting capture for %s (resolved from %s)",
+								log.info("freeAudio TimeShift: starting capture for %s (resolved from %s)",
 										  resolved_for_capture, url)
 								self._timeshift_buffer.start(resolved_for_capture)
 							except Exception as e:
-								log.info("FreeRadio TimeShift: could not start capture: %s", e, exc_info=True)
+								log.info("freeAudio TimeShift: could not start capture: %s", e, exc_info=True)
 						# Whether reused or freshly started, sync the buffer
 						# generation the same way _bg_launch's own start()
 						# does - otherwise a prior play_gen bump elsewhere (e.g. a
@@ -2868,7 +2868,7 @@ class RadioPlayer:
 							self._timeshift_buffer_gen = gen
 				threading.Thread(
 					target=_bg_start_capture, daemon=True,
-					name="FreeRadio-TimeShiftResolve",
+					name="freeAudio-TimeShiftResolve",
 				).start()
 
 	def is_timeshift_enabled(self):
@@ -3020,7 +3020,7 @@ class RadioPlayer:
 			except Exception:
 				pass
 
-		threading.Thread(target=_do, daemon=True, name="FreeRadio-mirror-timeshift").start()
+		threading.Thread(target=_do, daemon=True, name="freeAudio-mirror-timeshift").start()
 
 	def _sync_mirror_timeshift_seek(self, delta_seconds):
 		"""Apply the same rewind/forward seek to the mirror engine's
@@ -3035,7 +3035,7 @@ class RadioPlayer:
 			except Exception:
 				pass
 
-		threading.Thread(target=_do, daemon=True, name="FreeRadio-mirror-timeshift").start()
+		threading.Thread(target=_do, daemon=True, name="freeAudio-mirror-timeshift").start()
 
 	def _sync_mirror_exit_to_live(self):
 		"""Switch the mirror engine back to the live URL right after the
@@ -3054,7 +3054,7 @@ class RadioPlayer:
 			except Exception:
 				pass
 
-		threading.Thread(target=_do, daemon=True, name="FreeRadio-mirror-timeshift").start()
+		threading.Thread(target=_do, daemon=True, name="freeAudio-mirror-timeshift").start()
 
 	def _sync_mirror_playback_rate(self, rate):
 		"""Reapply a just-changed podcast playback rate on the mirror
@@ -3069,7 +3069,7 @@ class RadioPlayer:
 			except Exception:
 				pass
 
-		threading.Thread(target=_do, daemon=True, name="FreeRadio-mirror-rate").start()
+		threading.Thread(target=_do, daemon=True, name="freeAudio-mirror-rate").start()
 
 	def _sync_mirror_transpose(self, semitones):
 		"""Reapply a just-changed pitch transpose on the mirror engine too,
@@ -3084,7 +3084,7 @@ class RadioPlayer:
 			except Exception:
 				pass
 
-		threading.Thread(target=_do, daemon=True, name="FreeRadio-mirror-transpose").start()
+		threading.Thread(target=_do, daemon=True, name="freeAudio-mirror-transpose").start()
 
 	def get_audio_devices(self, fresh=None):
 		"""Zwróć listę (indeks, nazwa) dostępnych urządzeń wyjściowych BASS.
@@ -3199,7 +3199,7 @@ class RadioPlayer:
 		if not mirror_engine.load():
 			stderr_tail = mirror_engine.get_stderr_tail()
 			log.warning(
-				"FreeRadio: mirror subprocess failed to load for device %r (%r): %s",
+				"freeAudio: mirror subprocess failed to load for device %r (%r): %s",
 				device_index, device_name, stderr_tail,
 			)
 			_mirror_debug_log(
@@ -3231,7 +3231,7 @@ class RadioPlayer:
 		if not ok:
 			last_error = getattr(mirror_engine, "last_play_error", None)
 			log.warning(
-				"FreeRadio: mirror play failed for device %r (%r): %s",
+				"freeAudio: mirror play failed for device %r (%r): %s",
 				device_index, device_name, last_error,
 			)
 			_mirror_debug_log(
@@ -3340,7 +3340,7 @@ class RadioPlayer:
 		callers outside radioPlayer.py (audioDeviceMixin.py's _do_mirror())
 		that want to record their own part of a mirror attempt - e.g. why
 		the connection-freeing retry was or wasn't attempted - in the same
-		freeradio_mirror_debug.log timeline."""
+		freeAudio_mirror_debug.log timeline."""
 		_mirror_debug_log(msg)
 
 	def get_mirror_device(self):
@@ -3390,7 +3390,7 @@ class RadioPlayer:
 
 			if not self._bass_engine.ready() and device_index != -1:
 				log.warning(
-					"FreeRadio: Device %d unavailable, falling back to system default.",
+					"freeAudio: Device %d unavailable, falling back to system default.",
 					device_index,
 				)
 				try:
@@ -3472,7 +3472,7 @@ class RadioPlayer:
 			# Device lost — switch to system default
 			lost_index = target
 			log.warning(
-				"FreeRadio: Audio device %d disappeared, falling back to system default.",
+				"freeAudio: Audio device %d disappeared, falling back to system default.",
 				lost_index,
 			)
 			try:

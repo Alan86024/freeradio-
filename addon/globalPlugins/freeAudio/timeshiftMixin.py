@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Time-shift (rewind/fast-forward) controls
+# freeAudio - Time-shift (rewind/fast-forward) controls
 #
 # Extracted from GlobalPlugin in __init__.py. Mixed into GlobalPlugin, so
 # `self` here is a GlobalPlugin instance - self._player and self._dialog
@@ -126,7 +126,7 @@ class TimeshiftMixin:
 		dialog-independent _advance_getem_chapter_headless()/
 		_advance_jukebox_folder_headless() - the same functions natural
 		end-of-part/track auto-advance already uses, so this works
-		identically whether the FreeRadio window is open or not, and the
+		identically whether the freeAudio window is open or not, and the
 		dialog (if open) simply resyncs its own display from the player
 		the next time that tab is shown, exactly as it already does
 		after a natural auto-advance or an NVDA-startup resume.
@@ -309,7 +309,7 @@ class TimeshiftMixin:
 	@script(
 		# Translators: Name of an NVDA command (Ctrl+Win+J); rewinds the live time-shift buffer, or seeks backward within a podcast/audiobook file if one is playing.
 		description=_("Time-shift: rewind 15 seconds (enters time-shift mode if not already active)"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+j",
 	)
 	def script_timeshiftRewind(self, gesture):
@@ -320,9 +320,9 @@ class TimeshiftMixin:
 			self._handle_podcast_seek(-1)
 			return
 
-		if not config.conf["freeradio"].get("timeshift_enabled", False):
+		if not config.conf["freeAudio"].get("timeshift_enabled", False):
 			# Translators: Spoken when Ctrl+Win+J (rewind) is pressed while the time-shift feature itself is turned off in settings.
-			_notify(_("Time-shift buffer is disabled. Enable it in FreeRadio settings."))
+			_notify(_("Time-shift buffer is disabled. Enable it in freeAudio settings."))
 			return
 		if not self._player.has_media():
 			gesture.send()
@@ -333,7 +333,7 @@ class TimeshiftMixin:
 			_TIMESHIFT_REASON_MESSAGES = {
 				# Translators: One of the reasons a rewind/forward can fail, mapped from rewind_timeshift()'s return reason to a spoken message (continues for the next six lines: feature disabled, wrong backend, HLS unsupported, not enough buffer yet, buffer file not ready, engine error).
 				"bass_disabled":   _("Time-shift requires the BASS audio backend, which is currently disabled."),
-				"feature_disabled": _("Time-shift buffer is disabled. Enable it in FreeRadio settings."),
+				"feature_disabled": _("Time-shift buffer is disabled. Enable it in freeAudio settings."),
 				"wrong_backend":   _("Time-shift is not available for the current playback backend."),
 				"hls_unsupported": _("Time-shift is not supported for this station's stream (no seekable audio could be extracted)."),
 				"no_buffer_yet":   _("Not enough buffered audio to rewind yet. Wait a few seconds after the station starts playing and try again."),
@@ -349,7 +349,7 @@ class TimeshiftMixin:
 	@script(
 		# Translators: Name of an NVDA command (Ctrl+Win+K); fast-forwards the live time-shift buffer (snapping to live once caught up), or seeks forward within a podcast/audiobook file if one is playing.
 		description=_("Time-shift: fast-forward 15 seconds, or return to live if already caught up"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+k",
 	)
 	def script_timeshiftForward(self, gesture):
@@ -360,9 +360,9 @@ class TimeshiftMixin:
 			self._handle_podcast_seek(1)
 			return
 
-		if not config.conf["freeradio"].get("timeshift_enabled", False):
+		if not config.conf["freeAudio"].get("timeshift_enabled", False):
 			# Translators: Same message as the rewind command, spoken here when Ctrl+Win+K (forward) is pressed with time-shift turned off.
-			_notify(_("Time-shift buffer is disabled. Enable it in FreeRadio settings."))
+			_notify(_("Time-shift buffer is disabled. Enable it in freeAudio settings."))
 			return
 		if not self._player.is_timeshifted():
 			# Translators: Spoken when fast-forward is pressed but playback is already at the live edge (not time-shifted).
@@ -386,19 +386,19 @@ class TimeshiftMixin:
 	@script(
 		# Translators: Name of an NVDA command (Ctrl+Win+T); toggles the time-shift buffer feature on/off.
 		description=_("Enable or disable the time-shift (rewind) buffer"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+t",
 	)
 	def script_toggleTimeshift(self, gesture):
-		current = config.conf["freeradio"].get("timeshift_enabled", False)
+		current = config.conf["freeAudio"].get("timeshift_enabled", False)
 		new_value = not current
-		config.conf["freeradio"]["timeshift_enabled"] = new_value
+		config.conf["freeAudio"]["timeshift_enabled"] = new_value
 
 		if self._player is not None:
 			try:
 				self._player.set_timeshift_enabled(new_value)
 			except Exception as e:
-				log.warning("FreeRadio: could not apply timeshift_enabled change: %s", e, exc_info=True)
+				log.warning("freeAudio: could not apply timeshift_enabled change: %s", e, exc_info=True)
 
 		# Best-effort: keep the Settings panel's checkbox in sync if it
 		# happens to be open right now (mirrors script_toggleBassBackend's
@@ -409,5 +409,5 @@ class TimeshiftMixin:
 			except Exception:
 				pass
 
-		# Translators: Spoken after toggling the time-shift buffer; the 'enabled'/'disabled' word is the same one used throughout FreeRadio's other toggle announcements.
+		# Translators: Spoken after toggling the time-shift buffer; the 'enabled'/'disabled' word is the same one used throughout freeAudio's other toggle announcements.
 		ui.message(_("Time-shift buffer %s") % (_("enabled") if new_value else _("disabled")))

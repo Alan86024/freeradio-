@@ -1,12 +1,12 @@
-# FreeRadio — NVDA Add-on
+# freeAudio — NVDA Add-on
 
-FreeRadio is een internetradio-add-on voor de NVDA-schermlezer. Het primaire doel is om gebruikers gemakkelijke toegang te geven tot duizenden internetradiostations. De volledige interface en alle functies zijn ontworpen met volledige toegankelijkheid voor NVDA in het achterhoofd.
+freeAudio is een internetradio-add-on voor de NVDA-schermlezer. Het primaire doel is om gebruikers gemakkelijke toegang te geven tot duizenden internetradiostations. De volledige interface en alle functies zijn ontworpen met volledige toegankelijkheid voor NVDA in het achterhoofd.
 
 ## Radio Browser Directory
 
-FreeRadio gebruikt de open database van [Radio Browser](https://www.radio-browser.info/) voor zijn stationcatalogus. Radio Browser is een door de gemeenschap beheerde, gratis directory die meer dan 50.000 internetradiostations van over de hele wereld host. Er is geen registratie of account vereist en de API is voor iedereen open. Elk station bevat informatie over adres, land, genre, taal en bitrate; stations worden gerangschikt op basis van stemmen van gebruikers. FreeRadio maakt verbinding met deze API via mirror-servers in Duitsland, Nederland en Oostenrijk; als een server onbereikbaar is, schakelt hij automatisch over naar de volgende.
+freeAudio gebruikt de open database van [Radio Browser](https://www.radio-browser.info/) voor zijn stationcatalogus. Radio Browser is een door de gemeenschap beheerde, gratis directory die meer dan 50.000 internetradiostations van over de hele wereld host. Er is geen registratie of account vereist en de API is voor iedereen open. Elk station bevat informatie over adres, land, genre, taal en bitrate; stations worden gerangschikt op basis van stemmen van gebruikers. freeAudio maakt verbinding met deze API via mirror-servers in Duitsland, Nederland en Oostenrijk; als een server onbereikbaar is, schakelt hij automatisch over naar de volgende.
 
-Om de verkenner responsief te houden en niet bij elke zoekopdracht of landwijziging de API te belasten, houdt FreeRadio een lokale cache van de stationcatalogus op schijf bij. Deze cache wordt automatisch op de achtergrond ververst op een periodiek schema, zodat de lijst die je ziet meestal al up-to-date is zonder dat je iets hoeft te doen. Je kunt op elk moment ook zelf een directe hersynchronisatie afdwingen met de knop **Stationslijst bijwerken** — zie Stationsverkenner hieronder.
+Om de verkenner responsief te houden en niet bij elke zoekopdracht of landwijziging de API te belasten, houdt freeAudio een lokale cache van de stationcatalogus op schijf bij. Deze cache wordt automatisch op de achtergrond ververst op een periodiek schema, zodat de lijst die je ziet meestal al up-to-date is zonder dat je iets hoeft te doen. Je kunt op elk moment ook zelf een directe hersynchronisatie afdwingen met de knop **Stationslijst bijwerken** — zie Stationsverkenner hieronder.
 
 ## Een station toevoegen aan Radio Browser
 
@@ -21,7 +21,7 @@ Vul het formulier op die pagina in:
 - **Tags** — genre- of onderwerptrefwoorden gescheiden door komma's, bijvoorbeeld `nieuws`, `jazz`, `klassiek`. Deze worden gebruikt voor zoeken en filteren.
 - **Logo URL** — een directe link naar de logo-afbeelding van het station, indien beschikbaar.
 
-Na het indienen wordt het station beoordeeld en toegevoegd aan de openbare directory. Zodra het geaccepteerd is, verschijnt het automatisch in de zoek- en landoverzichten van FreeRadio, aangezien de directory wordt ververst vanuit de live API.
+Na het indienen wordt het station beoordeeld en toegevoegd aan de openbare directory. Zodra het geaccepteerd is, verschijnt het automatisch in de zoek- en landoverzichten van freeAudio, aangezien de directory wordt ververst vanuit de live API.
 
 ## Vereisten
 
@@ -35,7 +35,7 @@ Download het `.nvda-addon`-bestand, druk op Enter op het bestand en herstart NVD
 
 ## Sneltoetsen
 
-Alle sneltoetsen kunnen opnieuw worden toegewezen via NVDA-menu → Opties → Invoerhandelingen → FreeRadio. Deze sneltoetsen werken overal, ongeacht welk venster de focus heeft.
+Alle sneltoetsen kunnen opnieuw worden toegewezen via NVDA-menu → Opties → Invoerhandelingen → freeAudio. Deze sneltoetsen werken overal, ongeacht welk venster de focus heeft.
 
 | Sneltoets | Functie | Beschrijving |
 |---|---|---|
@@ -54,14 +54,14 @@ Alle sneltoetsen kunnen opnieuw worden toegewezen via NVDA-menu → Opties → I
 | `Ctrl+Win+J` | Tijdsverschuiving (terugspoelen) | Spoelt live radio 15 seconden terug. De eerste druk activeert de Tijdsverschuivingsmodus; elke volgende druk gaat 15 seconden verder terug, tot de limiet van de buffer (~10 minuten). Vereist dat de tijdverschuivingsbuffer is ingeschakeld in de instellingen. |
 | `Ctrl+Win+K` | Tijdverschuiving (vooruitspoelen) | Spoelt 15 seconden vooruit tijdens tijdverschuiving. Zodra het live moment is bereikt, keert het afspelen automatisch terug naar live en doet deze toets niets totdat je weer terugspoelt. |
 | `Ctrl+Win+T` | Tijdverschuivingsbuffer in-/uitschakelen | Schakelt de Tijdverschuivingsbuffer direct in of uit, overeenkomstig het selectievakje in de instellingen. Uitschakelen keert bij Tijdverschuiving direct terug naar live afspelen en stopt de achtergrondopname. |
-| *(niet toegewezen)* | Meldingen dempen in-/uitschakelen | Schakelt de instelling Meldingen dempen direct in of uit. Wijs een toetsencombinatie toe via NVDA-menu → Voorkeuren → Invoergebaren → FreeRadio. |
-| *(niet toegewezen)* | Favoriet station direct afspelen | Elk station in je favorietenlijst verschijnt als een apart item in NVDA-menu → Opties → Invoerhandelingen → **FreeRadio Stations**. Wijs een sneltoets toe aan een station om het direct af te spelen vanaf elke locatie, zonder de stationsverkenner te openen. |
+| *(niet toegewezen)* | Meldingen dempen in-/uitschakelen | Schakelt de instelling Meldingen dempen direct in of uit. Wijs een toetsencombinatie toe via NVDA-menu → Voorkeuren → Invoergebaren → freeAudio. |
+| *(niet toegewezen)* | Favoriet station direct afspelen | Elk station in je favorietenlijst verschijnt als een apart item in NVDA-menu → Opties → Invoerhandelingen → **freeAudio Stations**. Wijs een sneltoets toe aan een station om het direct af te spelen vanaf elke locatie, zonder de stationsverkenner te openen. |
 
 De sneltoetsen voor volgende/vorige navigeren alleen door de favorietenlijst; ze werken niet met de lijst met alle stations. Wanneer een lijst is gefocust in de stationsverkenner, dienen de linker- en rechterpijltjestoetsen hetzelfde doel — zie In-dialoog sneltoetsen.
 
 ## Stationsverkenner
 
-FreeRadio voegt ook een **FreeRadio**-submenu toe aan het NVDA-menu Extra. Van daaruit kun je direct de Stationsverkenner en FreeRadio-instellingen openen.
+freeAudio voegt ook een **freeAudio**-submenu toe aan het NVDA-menu Extra. Van daaruit kun je direct de Stationsverkenner en freeAudio-instellingen openen.
 
 Het venster dat met `Ctrl+Win+R` wordt geopend, bevat vijf tabbladen: Alle stations, Favorieten, Opname, Timer en Gelikete nummers. Je kunt tussen tabbladen navigeren met `Ctrl+Tab`.
 
@@ -187,12 +187,12 @@ Met een station geselecteerd in het tabblad Favorieten, druk je op `komma` om de
 
 ### Directe sneltoetsen voor favoriete stations
 
-Elk station in je favorietenlijst wordt geregistreerd als een apart script in het dialoogvenster Invoerhandelingen van NVDA, onder de categorie **FreeRadio Stations**. Je kunt elke sneltoets toewijzen aan elk station en deze vanaf elke locatie indrukken — je hoeft de stationsverkenner niet eerst te openen.
+Elk station in je favorietenlijst wordt geregistreerd als een apart script in het dialoogvenster Invoerhandelingen van NVDA, onder de categorie **freeAudio Stations**. Je kunt elke sneltoets toewijzen aan elk station en deze vanaf elke locatie indrukken — je hoeft de stationsverkenner niet eerst te openen.
 
 Een sneltoets toewijzen:
 
 1. Open NVDA-menu → Opties → Invoerhandelingen.
-2. Vouw de categorie **FreeRadio Stations** uit.
+2. Vouw de categorie **freeAudio Stations** uit.
 3. Zoek het station op naam, selecteer het en druk op **Toevoegen**.
 4. Druk de gewenste toetscombinatie in en bevestig.
 
@@ -227,7 +227,7 @@ Herkenning werkt als volgt: een kort audiofragment wordt vastgelegd van de strea
 
 **Vereiste:** ffmpeg.exe is vereist. Een ffmpeg.exe die in de add-on-map is geplaatst, wordt automatisch gebruikt; als deze op een andere locatie staat, kan het pad worden ingesteld in de Instellingen. Download ffmpeg van [ffmpeg.org](https://ffmpeg.org/download.html).
 
-**Een opmerking over stations die reclame invoegen:** sommige stations sturen een korte advertentie naar elke gloednieuwe verbinding die met hun stream wordt gemaakt, los van de uitzending waarnaar je al aan het luisteren bent. Herkenning vermijdt het bemonsteren van die advertentie door de bestaande achtergrondstreamverbinding van FreeRadio te hergebruiken (dezelfde die wordt gebruikt voor Tijdverschuiving) in plaats van een nieuwe te openen, zodat het herkent wat er daadwerkelijk speelt in plaats van een advertentie. Dit werkt automatisch en vereist geen configuratie.
+**Een opmerking over stations die reclame invoegen:** sommige stations sturen een korte advertentie naar elke gloednieuwe verbinding die met hun stream wordt gemaakt, los van de uitzending waarnaar je al aan het luisteren bent. Herkenning vermijdt het bemonsteren van die advertentie door de bestaande achtergrondstreamverbinding van freeAudio te hergebruiken (dezelfde die wordt gebruikt voor Tijdverschuiving) in plaats van een nieuwe te openen, zodat het herkent wat er daadwerkelijk speelt in plaats van een advertentie. Dit werkt automatisch en vereist geen configuratie.
 
 ## Audio duplicatie
 
@@ -245,7 +245,7 @@ Bij de eerste keer drukken verschijnt een selectiedialoogvenster met de beschikb
 
 ## Opname
 
-Opnames worden standaard opgeslagen in `Documents\FreeRadio Recordings\`. De bestandsnaam bevat de stationnaam (of nummer titel, in nummer-opnamemodus) en de starttijd van de opname. De opnamemap kan op elk moment worden gewijzigd via NVDA-menu → Opties → Instellingen → FreeRadio → **Opnamemap**. Omdat de opname-engine direct verbinding maakt met de stream, wordt de audio naar schijf geschreven zoals ontvangen — er wordt geen verwerking of her-codering toegepast; de opnamekwaliteit is identiek aan de uitzendkwaliteit.
+Opnames worden standaard opgeslagen in `Documents\freeAudio Recordings\`. De bestandsnaam bevat de stationnaam (of nummer titel, in nummer-opnamemodus) en de starttijd van de opname. De opnamemap kan op elk moment worden gewijzigd via NVDA-menu → Opties → Instellingen → freeAudio → **Opnamemap**. Omdat de opname-engine direct verbinding maakt met de stream, wordt de audio naar schijf geschreven zoals ontvangen — er wordt geen verwerking of her-codering toegepast; de opnamekwaliteit is identiek aan de uitzendkwaliteit.
 
 **Direct opnemen:** Terwijl een station speelt, druk je eenmaal op `Ctrl+Win+E`. Druk nogmaals om te stoppen. Het afspelen gaat gedurende de hele tijd ononderbroken door.
 
@@ -265,19 +265,19 @@ Opnames worden standaard opgeslagen in `Documents\FreeRadio Recordings\`. De bes
 
 NVDA kondigt aan wanneer een opname start en wanneer deze eindigt. Als NVDA opnieuw wordt opgestart terwijl een geplande opname actief is, wordt de opname bij het opstarten automatisch hervat.
 
-Net als bij muziekherkenning hergebruiken directe opname en nummeropname de bestaande achtergrondstreamverbinding van FreeRadio wanneer beschikbaar, in plaats van een nieuwe te openen, zodat een opname vastlegt wat er daadwerkelijk wordt uitgezonden, zelfs bij stations die anders een nieuwe advertentie zouden sturen naar een gloednieuwe verbinding. Dit geldt niet voor geplande opnames in de modus **Alleen opnemen**, aangezien er op dat moment nog geen station speelt.
+Net als bij muziekherkenning hergebruiken directe opname en nummeropname de bestaande achtergrondstreamverbinding van freeAudio wanneer beschikbaar, in plaats van een nieuwe te openen, zodat een opname vastlegt wat er daadwerkelijk wordt uitgezonden, zelfs bij stations die anders een nieuwe advertentie zouden sturen naar een gloednieuwe verbinding. Dit geldt niet voor geplande opnames in de modus **Alleen opnemen**, aangezien er op dat moment nog geen station speelt.
 
 ## Tijdverschuiving (Live radio terugspoelen)
 
 Met Tijdverschuiving kun je het station waarnaar je momenteel luistert terugspoelen, zoals een DVR of een cassettebandje — pauzeer het moment, ga een paar minuten terug en haal de live-uitzending in wanneer je maar wilt. Het afspelen hoeft hiervoor nooit te stoppen: terugspoelen en vooruitspoelen gebeuren beide onmiddellijk op dezelfde audiostream.
 
-Deze functie is **standaard uitgeschakeld**. Schakel het in via NVDA-menu → Opties → Instellingen → FreeRadio → **Tijdverschuivingsbuffer inschakelen (live radio terugspoelen, ~10 minuten)**, of schakel het op elk gewenst moment direct in met `Ctrl+Win+T`.
+Deze functie is **standaard uitgeschakeld**. Schakel het in via NVDA-menu → Opties → Instellingen → freeAudio → **Tijdverschuivingsbuffer inschakelen (live radio terugspoelen, ~10 minuten)**, of schakel het op elk gewenst moment direct in met `Ctrl+Win+T`.
 
-> **Opmerking:** FreeRadio houdt nu altijd een kleine achtergrondopname van het momenteel spelende station actief — niet alleen wanneer deze instelling is ingeschakeld — omdat zowel Muziekherkenning als Opname hierop vertrouwen voor het advertentievermijdingsgedrag dat in die secties wordt beschreven. Wanneer deze instelling **uit** staat, blijft die achtergrondopname beperkt tot ongeveer de laatste 45 seconden en blijven `Ctrl+Win+J`/`Ctrl+Win+K` onbeschikbaar — alleen de buffergrootte verandert, niet of hij actief is. Het inschakelen van deze instelling laat dezelfde opname groeien tot de volledige ~10 minuten durende terugspoelbuffer die hieronder wordt beschreven.
+> **Opmerking:** freeAudio houdt nu altijd een kleine achtergrondopname van het momenteel spelende station actief — niet alleen wanneer deze instelling is ingeschakeld — omdat zowel Muziekherkenning als Opname hierop vertrouwen voor het advertentievermijdingsgedrag dat in die secties wordt beschreven. Wanneer deze instelling **uit** staat, blijft die achtergrondopname beperkt tot ongeveer de laatste 45 seconden en blijven `Ctrl+Win+J`/`Ctrl+Win+K` onbeschikbaar — alleen de buffergrootte verandert, niet of hij actief is. Het inschakelen van deze instelling laat dezelfde opname groeien tot de volledige ~10 minuten durende terugspoelbuffer die hieronder wordt beschreven.
 
 ### Hoe het werkt
 
-Eenmaal ingeschakeld, legt FreeRadio op de achtergrond continu het momenteel spelende station vast in een rollende lokale buffer, onafhankelijk van het normale afspelen. De buffer bevat ongeveer de **laatste 10 minuten** aan audio; oudere audio wordt automatisch verwijderd aan de voorkant naarmate er nieuwe audio binnenkomt, zodat de buffer altijd "het recente verleden" ten opzichte van de live-uitzending vertegenwoordigt.
+Eenmaal ingeschakeld, legt freeAudio op de achtergrond continu het momenteel spelende station vast in een rollende lokale buffer, onafhankelijk van het normale afspelen. De buffer bevat ongeveer de **laatste 10 minuten** aan audio; oudere audio wordt automatisch verwijderd aan de voorkant naarmate er nieuwe audio binnenkomt, zodat de buffer altijd "het recente verleden" ten opzichte van de live-uitzending vertegenwoordigt.
 
 - **`Ctrl+Win+J`** — 15 seconden terugspoelen. De eerste druk schakelt je van live afspelen naar Tijdverschuivingsmodus, beginnend 15 seconden achter de live-uitzending. Elke volgende druk gaat nog eens 15 seconden verder terug, tot de limiet van de buffer.
 - **`Ctrl+Win+K`** — 15 seconden vooruitspoelen tijdens Tijdverschuiving. Zodra je de live-uitzending bereikt, schakelt het afspelen automatisch terug naar de live-stream en kondigt NVDA "Terug naar live" aan — je hoeft niets extra's te doen om het normale luisteren te hervatten.
@@ -293,10 +293,10 @@ Overstappen naar een ander station herstart altijd de buffer voor het nieuwe sta
 
 ### Ondersteunde streams
 
-Tijdverschuiving werkt met hetzelfde bereik van streams dat FreeRadio al ondersteunt:
+Tijdverschuiving werkt met hetzelfde bereik van streams dat freeAudio al ondersteunt:
 
 - Gewone HTTP/HTTPS-streams (MP3, AAC, OGG, enz.), inclusief Shoutcast/Icecast-stijl servers.
-- **HLS (`.m3u8`) streams** — FreeRadio lost de hoofdafspeellijst van het station op, volgt de media-afspeellijst en downloadt segmenten op de achtergrond om de buffer gevuld te houden, op dezelfde manier als bij gewone streams.
+- **HLS (`.m3u8`) streams** — freeAudio lost de hoofdafspeellijst van het station op, volgt de media-afspeellijst en downloadt segmenten op de achtergrond om de buffer gevuld te houden, op dezelfde manier als bij gewone streams.
 
 In het zeldzame geval dat de afspeellijst van een station helemaal niet kan worden gelezen (bijvoorbeeld een defect of onbereikbaar `.m3u8`-manifest), zal NVDA je vertellen dat terugspoelen niet beschikbaar is voor dat specifieke station.
 
@@ -319,7 +319,7 @@ Voor beide typen geldt: als de ingevoerde tijd al is verstreken, wordt de actie 
 
 ## Instellingen
 
-De volgende opties kunnen worden geconfigureerd via NVDA-menu → Opties → Instellingen → FreeRadio:
+De volgende opties kunnen worden geconfigureerd via NVDA-menu → Opties → Instellingen → freeAudio:
 
 | Optie | Beschrijving |
 |---|---|
@@ -332,7 +332,7 @@ De volgende opties kunnen worden geconfigureerd via NVDA-menu → Opties → Ins
 | Automatisch trackwijzigingen aankondigen (ICY-metadata) | Indien ingeschakeld, leest NVDA automatisch de nieuwe tracknaam telkens wanneer deze verandert op een station dat ICY-metadata uitzendt. De eerste track wordt ook direct aangekondigd bij het overschakelen naar een nieuw station. Standaard uitgeschakeld. |
 | Meldingen dempen | Indien ingeschakeld, kondigt NVDA geen zenderwijzigingen, wijzigingen in afspeelstatus (spelen, pauze, stoppen) of opnamegebeurtenissen (gestart, gestopt, voltooid) aan. Foutmeldingen, feedback over favorieten, resultaten van muziekherkenning en update-meldingen worden niet beïnvloed. Kan ook direct worden in-/uitgeschakeld via een niet-toegewezen invoergebaar. Standaard uitgeschakeld. |
 | Tijdverschuivingsbuffer inschakelen (live radio terugspoelen, ~10 minuten) | Schakelt de terugspoelbediening (`Ctrl+Win+J`/`Ctrl+Win+K`) in of uit en vergroot de achtergrondopname van ~45 seconden tot ~10 minuten. Een kleine achtergrondopname van het momenteel spelende station draait altijd, zelfs wanneer dit is uitgeschakeld — zie de opmerking in de sectie **Tijdverschuiving** hieronder. Kan ook direct worden in-/uitgeschakeld met `Ctrl+Win+T`. Vereist de BASS-backend. Standaard uitgeschakeld — zie de sectie **Tijdverschuiving** hieronder voor volledige details. |
-| Gelikete nummers opslaan in een tekstbestand | Indien ingeschakeld, wordt trackinformatie die naar het klembord is gekopieerd door drie keer op `Ctrl+Win+I` te drukken, ook toegevoegd aan `Documents\FreeRadio Recordings\likedSongs.txt`. Als er geen ICY-metadata beschikbaar is, wordt het Shazam-herkenningsresultaat in hetzelfde bestand opgeslagen. Standaard uitgeschakeld. |
+| Gelikete nummers opslaan in een tekstbestand | Indien ingeschakeld, wordt trackinformatie die naar het klembord is gekopieerd door drie keer op `Ctrl+Win+I` te drukken, ook toegevoegd aan `Documents\freeAudio Recordings\likedSongs.txt`. Als er geen ICY-metadata beschikbaar is, wordt het Shazam-herkenningsresultaat in hetzelfde bestand opgeslagen. Standaard uitgeschakeld. |
 | Wanneer Ctrl+Win+P wordt ingedrukt zonder actief afspelen | Bepaalt wat er gebeurt wanneer deze sneltoets wordt ingedrukt en er niets speelt: het laatste station starten of de favorietenlijst openen. |
 | Wanneer Ctrl+Win+P tweemaal wordt ingedrukt | Selecteert wat er gebeurt wanneer de sneltoets twee keer snel achter elkaar wordt ingedrukt: niets doen, favorietenlijst openen, opnametabblad openen of timertabblad openen. Wanneer "niets doen" is geselecteerd, reageert de eerste druk onmiddellijk zonder vertraging. |
 | Wanneer Ctrl+Win+P driemaal wordt ingedrukt | Selecteert wat er gebeurt wanneer de sneltoets drie keer snel achter elkaar wordt ingedrukt: niets doen, favorietenlijst openen, station zoeken openen, opnametabblad openen of timertabblad openen. |
@@ -341,7 +341,7 @@ De volgende opties kunnen worden geconfigureerd via NVDA-menu → Opties → Ins
 | VLC-pad | Als VLC niet is geïnstalleerd of op een niet-standaardlocatie staat, kan hier het volledige pad naar het uitvoerbare bestand worden ingevoerd. |
 | wmplayer.exe pad | Voer hier indien nodig het pad naar Windows Media Player in. |
 | PotPlayer-pad | Als PotPlayer op een niet-standaardlocatie staat, kan het pad hier worden ingevoerd. |
-| Opnamemap | Stelt de map in waar opgenomen bestanden worden opgeslagen. Indien leeg gelaten, wordt de standaardlocatie `Documents\FreeRadio Recordings\` gebruikt. Een Bladeren-knop laat je de map interactief selecteren. Wijzigingen worden direct na het opslaan van kracht. |
+| Opnamemap | Stelt de map in waar opgenomen bestanden worden opgeslagen. Indien leeg gelaten, wordt de standaardlocatie `Documents\freeAudio Recordings\` gebruikt. Een Bladeren-knop laat je de map interactief selecteren. Wijzigingen worden direct na het opslaan van kracht. |
 | Internetverbinding-check vóór afspelen uitschakelen | Aanbevolen voor gebruikers die een vertraging ervaren voordat een station begint te spelen. Ook handig wanneer DNS is geblokkeerd. |
 
 ## Meldingen dempen
@@ -355,19 +355,19 @@ Wanneer **Meldingen dempen** is ingeschakeld in de Instellingen, onderdrukt NVDA
 
 De volgende aankondigingen worden opzettelijk **niet** beïnvloed: foutmeldingen, feedback over favorieten (toegevoegd / al in lijst), resultaten van muziekherkenning en update-meldingen.
 
-De instelling kan worden in-/uitgeschakeld via NVDA-menu → Opties → Instellingen → FreeRadio, of op elk gewenst moment direct via een niet-toegewezen invoergebaar (wijs er een toe via NVDA-menu → Opties → Invoerhandelingen → FreeRadio). Wanneer in-/uitgeschakeld, kondigt NVDA eenmaal "Meldingen gedempt" of "Meldingen niet gedempt" aan om de wijziging te bevestigen.
+De instelling kan worden in-/uitgeschakeld via NVDA-menu → Opties → Instellingen → freeAudio, of op elk gewenst moment direct via een niet-toegewezen invoergebaar (wijs er een toe via NVDA-menu → Opties → Invoerhandelingen → freeAudio). Wanneer in-/uitgeschakeld, kondigt NVDA eenmaal "Meldingen gedempt" of "Meldingen niet gedempt" aan om de wijziging te bevestigen.
 
 ## Automatisch trackwijzigingen aankondigen
 
-Wanneer de optie **Automatisch trackwijzigingen aankondigen** is ingeschakeld in Instellingen, controleert FreeRadio de ICY-metadata-stream van het actieve station op de achtergrond ongeveer elke 5 seconden. Wanneer de track verandert, wordt de nieuwe titel automatisch door NVDA gelezen — geen toetsaanslag vereist.
+Wanneer de optie **Automatisch trackwijzigingen aankondigen** is ingeschakeld in Instellingen, controleert freeAudio de ICY-metadata-stream van het actieve station op de achtergrond ongeveer elke 5 seconden. Wanneer de track verandert, wordt de nieuwe titel automatisch door NVDA gelezen — geen toetsaanslag vereist.
 
 Bij het overschakelen naar een nieuw station wordt de eerste trackinformatie aangekondigd zodra de verbinding tot stand is gebracht. Als je overschakelt naar een station dat geen ICY-metadata uitzendt, blijft het systeem stil en wordt de trackinformatie van het vorige station niet herhaald.
 
-Deze functie is standaard uitgeschakeld en kan worden in-/uitgeschakeld via NVDA-menu → Opties → Instellingen → FreeRadio.
+Deze functie is standaard uitgeschakeld en kan worden in-/uitgeschakeld via NVDA-menu → Opties → Instellingen → freeAudio.
 
 ## Gelikete nummers
 
-Wanneer de optie **Gelikete nummers opslaan in een tekstbestand** is ingeschakeld, wordt trackinformatie die naar het klembord is gekopieerd door drie keer op `Ctrl+Win+I` te drukken, ook regel voor regel toegevoegd aan `Documenten\FreeRadio Opnames\likedSongs.txt`.
+Wanneer de optie **Gelikete nummers opslaan in een tekstbestand** is ingeschakeld, wordt trackinformatie die naar het klembord is gekopieerd door drie keer op `Ctrl+Win+I` te drukken, ook regel voor regel toegevoegd aan `Documenten\freeAudio Opnames\likedSongs.txt`.
 
 Op stations die ICY-metadata uitzenden, worden de tracktitel en artiest direct opgeslagen. Op stations zonder ICY-metadata wordt het Shazam-herkenningsresultaat in hetzelfde bestand opgeslagen — beide bronnen delen dezelfde lijst. Het bestand wordt automatisch aangemaakt als het niet bestaat; elk item wordt aan het einde van het bestand toegevoegd en eerdere items worden nooit verwijderd.
 
@@ -389,7 +389,7 @@ De knoppen Spotify, YouTube, Tekst tonen en Verwijderen zijn alleen ingeschakeld
 
 ### Songtekst-service
 
-FreeRadio gebruikt [lrclib.net](https://lrclib.net) om songteksten op te halen — een gratis, open database die geen API-sleutel of account vereist. Het opzoekproces ontleedt de trackstring die is opgeslagen in `likedSongs.txt` en probeert achtereenvolgens ruimere zoekopdrachten totdat songteksten worden gevonden:
+freeAudio gebruikt [lrclib.net](https://lrclib.net) om songteksten op te halen — een gratis, open database die geen API-sleutel of account vereist. Het opzoekproces ontleedt de trackstring die is opgeslagen in `likedSongs.txt` en probeert achtereenvolgens ruimere zoekopdrachten totdat songteksten worden gevonden:
 
 1. Exacte overeenkomst met de volledige artiestnaam en opgeschoonde titel (ruissuffixen zoals "Remastered", "Live" of jaartags worden verwijderd vóór het zoeken).
 2. Exacte overeenkomst met de volledige artiestnaam en de originele titel (als opschonen deze heeft gewijzigd).
@@ -403,25 +403,25 @@ Wanneer platte songteksten beschikbaar zijn, worden ze getoond zoals ze zijn. Wa
 
 De add-on selecteert een afspeel-backend volgens de volgende prioriteitsvolgorde:
 
-1. **BASS** — de standaard en primaire backend. Er is geen afzonderlijke installatie vereist; deze wordt meegeleverd met de add-on. BASS stuurt audio direct naar de Windows-audiostack en verschijnt in de Windows-volumemixer als een onafhankelijke audiobron genaamd "pythonw.exe", los van NVDA. Dit betekent dat FreeRadio-audio via een volledig gescheiden kanaal stroomt van NVDA-spraak: de radio valt niet uit, mixt niet met, of wordt niet beïnvloed door de eigen audio-instellingen van NVDA terwijl NVDA spreekt. De gebruiker kan het radiovolume onafhankelijk van NVDA aanpassen in de Windows-volumemixer. Ondersteunt HTTP, HTTPS en de meeste ingesloten stream-formaten. Audio Duplicatie is alleen beschikbaar met deze backend.
+1. **BASS** — de standaard en primaire backend. Er is geen afzonderlijke installatie vereist; deze wordt meegeleverd met de add-on. BASS stuurt audio direct naar de Windows-audiostack en verschijnt in de Windows-volumemixer als een onafhankelijke audiobron genaamd "pythonw.exe", los van NVDA. Dit betekent dat freeAudio-audio via een volledig gescheiden kanaal stroomt van NVDA-spraak: de radio valt niet uit, mixt niet met, of wordt niet beïnvloed door de eigen audio-instellingen van NVDA terwijl NVDA spreekt. De gebruiker kan het radiovolume onafhankelijk van NVDA aanpassen in de Windows-volumemixer. Ondersteunt HTTP, HTTPS en de meeste ingesloten stream-formaten. Audio Duplicatie is alleen beschikbaar met deze backend.
 2. **VLC** — neemt het over als BASS faalt. Wordt automatisch gezocht op algemene installatielocaties, gebruikersprofielmappen en het systeempad (PATH).
 3. **PotPlayer** — wordt geprobeerd als VLC niet wordt gevonden. Wordt automatisch gezocht op algemene installatielocaties.
 4. **Windows Media Player** — wordt als laatste redmiddel gebruikt; vereist dat de WMP-component op het systeem is geïnstalleerd.
 
 ## Update-controle
 
-FreeRadio controleert automatisch op nieuwe versies via GitHub.
+freeAudio controleert automatisch op nieuwe versies via GitHub.
 
 **Automatische controle:** Draait stil op de achtergrond 15 seconden nadat NVDA is opgestart. Als een nieuwe versie is gevonden, krijg je een melding; als er geen wordt gevonden, wordt er geen bericht getoond.
 
-**Handmatige controle:** Kan op verzoek worden geactiveerd via NVDA-menu → Extra → FreeRadio → **Controleren op updates…**. Wanneer op deze manier gestart, wordt het resultaat aangekondigd, zelfs als de versie up-to-date is.
+**Handmatige controle:** Kan op verzoek worden geactiveerd via NVDA-menu → Extra → freeAudio → **Controleren op updates…**. Wanneer op deze manier gestart, wordt het resultaat aangekondigd, zelfs als de versie up-to-date is.
 
 **Wanneer een update is gevonden:** Er opent een dialoogvenster met het versienummer en je geïnstalleerde versie.
 
 - Als er een direct downloadbaar `.nvda-addon`-bestand beschikbaar is op de GitHub-release, wordt een knop **Downloaden en installeren** getoond. Zodra bevestigd, wordt het bestand op de achtergrond gedownload, kondigt NVDA aan wanneer de download start en opent NVDA's eigen installatiescherm automatisch.
 - Als er geen directe downloadlink beschikbaar is, wordt een knop **Pagina openen** getoond en opent de GitHub-releasepagina in de standaardbrowser.
 
-**Automatische controles uitschakelen:** Schakel de optie **Automatisch controleren op updates** uit via NVDA-menu → Opties → Instellingen → FreeRadio.
+**Automatische controles uitschakelen:** Schakel de optie **Automatisch controleren op updates** uit via NVDA-menu → Opties → Instellingen → freeAudio.
 
 ## Licentie
 

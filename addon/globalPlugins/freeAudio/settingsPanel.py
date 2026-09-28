@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Settings panel (NVDA Settings > FreeRadio category)
+# freeAudio - Settings panel (NVDA Settings > freeAudio category)
 #
 # Extracted from __init__.py. GlobalPlugin is looked up lazily via
-# _get_freeradio_plugin() (deferred import) rather than imported at module
-# load time, since __init__.py imports FreeRadioSettingsPanel from this
+# _get_freeAudio_plugin() (deferred import) rather than imported at module
+# load time, since __init__.py imports freeAudioSettingsPanel from this
 # module before GlobalPlugin is defined - a top-level import here would be
 # circular.
 
@@ -33,8 +33,8 @@ from . import radioPlayer
 from . import getem
 
 
-def _get_freeradio_plugin():
-	"""Return the running FreeRadio GlobalPlugin instance, or None.
+def _get_freeAudio_plugin():
+	"""Return the running freeAudio GlobalPlugin instance, or None.
 
 	GlobalPlugin is imported here (not at module level) to avoid a circular
 	import, since __init__.py imports this module while building GlobalPlugin.
@@ -46,11 +46,11 @@ def _get_freeradio_plugin():
 	return None
 
 
-class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
+class freeAudioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 	# Translators: Title of this settings category as it appears in NVDA's own Settings dialog category tree.
-	title = _("FreeRadio")
+	title = _("freeAudio")
 
-	# The currently open instance of this panel, or None when the FreeRadio
+	# The currently open instance of this panel, or None when the freeAudio
 	# settings category isn't open. Set in postInit()/cleared via the
 	# window-destroy handler below. Lets GlobalPlugin's gesture-toggle
 	# scripts (MiscTogglesMixin, in miscTogglesMixin.py) find and update
@@ -72,8 +72,8 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			pass
 
 	def _onDestroy(self, event):
-		if FreeRadioSettingsPanel._instance is self:
-			FreeRadioSettingsPanel._instance = None
+		if freeAudioSettingsPanel._instance is self:
+			freeAudioSettingsPanel._instance = None
 		event.Skip()
 
 	def makeSettings(self, settingsSizer):
@@ -88,7 +88,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			# Translators: Checkbox label for the time-shift/rewind feature setting.
 			label=_("&Enable time-shift buffer (rewind live radio, no effect on podcasts and audio books)")
 		)
-		self._timeshift_enabled.SetValue(config.conf["freeradio"].get("timeshift_enabled", False))
+		self._timeshift_enabled.SetValue(config.conf["freeAudio"].get("timeshift_enabled", False))
 		sHelper.addItem(self._timeshift_enabled)
 
 		# --- Time-shift buffer duration ---
@@ -104,7 +104,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 				_("2 hours"), _("5 hours"),
 			],
 		)
-		saved_seconds = config.conf["freeradio"].get("timeshift_buffer_seconds", 600)
+		saved_seconds = config.conf["freeAudio"].get("timeshift_buffer_seconds", 600)
 		try:
 			sel_index = self._timeshift_duration_seconds.index(saved_seconds)
 		except ValueError:
@@ -158,7 +158,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			wx.SpinCtrl,
 			min=0,
 			max=200,
-			initial=config.conf["freeradio"]["volume"],
+			initial=config.conf["freeAudio"]["volume"],
 		)
 
 		# --- Audio effects (BASS only) ---
@@ -189,7 +189,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			nvdaControls.CustomCheckListBox,
 			choices=_fx_display,
 		)
-		_saved_fx = config.conf["freeradio"].get("audio_fx", "none")
+		_saved_fx = config.conf["freeAudio"].get("audio_fx", "none")
 		_active = {x.strip() for x in _saved_fx.split(",") if x.strip() != "none"}
 		for i, key in enumerate(_fx_keys):
 			self._fx_choice.Check(i, key in _active)
@@ -208,7 +208,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		for band, label, default_db in self._eq_bands_settings:
 			lbl = wx.StaticText(self, label=label)
 			sHelper.addItem(lbl)
-			saved_db = config.conf["freeradio"].get("eq_gain_" + band, default_db)
+			saved_db = config.conf["freeAudio"].get("eq_gain_" + band, default_db)
 			spin = wx.SpinCtrl(self, min=-15, max=15, initial=int(saved_db))
 			spin.SetName(label)
 			sHelper.addItem(spin)
@@ -231,14 +231,14 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			choices=_cf_choices,
 		)
 		self._crossfade_choice.SetName(_cf_label)
-		_saved_cf = config.conf["freeradio"].get("crossfade", "off")
+		_saved_cf = config.conf["freeAudio"].get("crossfade", "off")
 		self._crossfade_choice.SetSelection(
 			self._cf_keys.index(_saved_cf) if _saved_cf in self._cf_keys else 0
 		)
 
 		# Translators: Checkbox label for auto-resuming the last-played station when NVDA starts.
 		self._resume = wx.CheckBox(self, label=_("&Resume last station on NVDA startup"))
-		self._resume.SetValue(config.conf["freeradio"].get("resume_on_start", False))
+		self._resume.SetValue(config.conf["freeAudio"].get("resume_on_start", False))
 		sHelper.addItem(self._resume)
 
 		self._announce_track_changes = wx.CheckBox(
@@ -247,7 +247,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			label=_("&Auto-announce track changes (ICY metadata)"),
 		)
 		self._announce_track_changes.SetValue(
-			config.conf["freeradio"].get("announce_track_changes", False)
+			config.conf["freeAudio"].get("announce_track_changes", False)
 		)
 		sHelper.addItem(self._announce_track_changes)
 
@@ -260,10 +260,10 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			choices=[_("NVDA"), _("SAPI5")],
 		)
 		self._track_change_voice.SetName(_voice_label)
-		_saved_voice = config.conf["freeradio"].get("track_change_voice", "nvda")
+		_saved_voice = config.conf["freeAudio"].get("track_change_voice", "nvda")
 		self._track_change_voice.SetSelection(0 if _saved_voice != "sapi5" else 1)
 		self._track_change_voice.Enable(
-			config.conf["freeradio"].get("announce_track_changes", False)
+			config.conf["freeAudio"].get("announce_track_changes", False)
 		)
 		sHelper.addItem(self._track_change_voice)
 
@@ -276,7 +276,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self._sapi5_voice_choice.SetName(_sapi5v_label)
 		self._sapi5_voice_choice.SetSelection(0)
 		_is_sapi5 = _saved_voice == "sapi5"
-		_announce_on = config.conf["freeradio"].get("announce_track_changes", False)
+		_announce_on = config.conf["freeAudio"].get("announce_track_changes", False)
 		self._sapi5_voice_choice.Enable(_announce_on and _is_sapi5)
 		sHelper.addItem(self._sapi5_voice_choice)
 		self._sapi5_voice_names = []  # parallel list: [""] + actual voice names
@@ -286,7 +286,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			def _populate():
 				if not self:
 					return
-				saved_name = config.conf["freeradio"].get("sapi5_voice_name", "")
+				saved_name = config.conf["freeAudio"].get("sapi5_voice_name", "")
 				self._sapi5_voice_names = [""] + voices
 				# Translators: First entry in the SAPI5 voice list once real voices have loaded, meaning 'use the system default SAPI5 voice'.
 				labels = [_("Default (system)")] + voices
@@ -321,14 +321,14 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			label=_("&Mute notifications (station changes, playback, recording)"),
 		)
 		self._mute_notifications.SetValue(
-			config.conf["freeradio"].get("mute_notifications", False)
+			config.conf["freeAudio"].get("mute_notifications", False)
 		)
 		sHelper.addItem(self._mute_notifications)
 
 		self._braille_messages = wx.CheckBox(
 			self,
-			# Translators: Checkbox label for whether FreeRadio notifications also show on a connected braille display.
-			label=_("&Show FreeRadio messages on the braille display"),
+			# Translators: Checkbox label for whether freeAudio notifications also show on a connected braille display.
+			label=_("&Show freeAudio messages on the braille display"),
 		)
 		self._braille_messages.SetValue(_braille_messages_enabled())
 		sHelper.addItem(self._braille_messages)
@@ -339,7 +339,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			label=_("&Save liked songs to a text file"),
 		)
 		self._save_liked_songs.SetValue(
-			config.conf["freeradio"].get("save_liked_songs", False)
+			config.conf["freeAudio"].get("save_liked_songs", False)
 		)
 		sHelper.addItem(self._save_liked_songs)
 
@@ -355,13 +355,13 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			wx.Choice,
 			choices=hotkey_p_choices,
 		)
-		current_action = config.conf["freeradio"].get("hotkey_p_action", "resume")
+		current_action = config.conf["freeAudio"].get("hotkey_p_action", "resume")
 		self._hotkey_p_action.SetSelection(0 if current_action == "resume" else 1)
 
 		# Translators: Label for the choice controlling what a double Ctrl+Win+P press does.
 		hotkey_p_double_label = _("When Ctrl+Win+P is pressed twice:")
 		hotkey_p_double_choices = [
-			# Translators: Choices for what a double/triple Ctrl+Win+P press can do - each opens a different FreeRadio tab or performs a quick action; this same nine-item list is reused for both the double-press and triple-press settings (continues for the next eight lines).
+			# Translators: Choices for what a double/triple Ctrl+Win+P press can do - each opens a different freeAudio tab or performs a quick action; this same nine-item list is reused for both the double-press and triple-press settings (continues for the next eight lines).
 			_("Do nothing"),
 			_("Open favourites list"),
 			_("Open station search"),
@@ -378,7 +378,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			choices=hotkey_p_double_choices,
 		)
 		_double_map = ["none", "favorites", "search", "recording", "timer", "liked", "settings", "announce", "stop"]
-		current_double = config.conf["freeradio"].get("hotkey_p_double", "none")
+		current_double = config.conf["freeAudio"].get("hotkey_p_double", "none")
 		self._hotkey_p_double.SetSelection(
 			_double_map.index(current_double) if current_double in _double_map else 0
 		)
@@ -402,7 +402,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			choices=hotkey_p_triple_choices,
 		)
 		_triple_map = ["none", "favorites", "search", "recording", "timer", "liked", "settings", "announce", "stop"]
-		current_triple = config.conf["freeradio"].get("hotkey_p_triple", "none")
+		current_triple = config.conf["freeAudio"].get("hotkey_p_triple", "none")
 		self._hotkey_p_triple.SetSelection(
 			_triple_map.index(current_triple) if current_triple in _triple_map else 0
 		)
@@ -416,7 +416,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		ffmpeg_sizer = wx.BoxSizer(wx.HORIZONTAL)
 		self._ffmpeg_path = wx.TextCtrl(
 			self,
-			value=config.conf["freeradio"].get("ffmpeg_path", ""),
+			value=config.conf["freeAudio"].get("ffmpeg_path", ""),
 		)
 		self._ffmpeg_path.SetName(ffmpeg_label)
 		# Translators: Button label; opens a file-picker to choose ffmpeg.exe.
@@ -433,13 +433,13 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		rec_dir_sizer = wx.BoxSizer(wx.HORIZONTAL)
 		self._recordings_dir = wx.TextCtrl(
 			self,
-			value=config.conf["freeradio"].get("recordings_dir", ""),
+			value=config.conf["freeAudio"].get("recordings_dir", ""),
 		)
 		self._recordings_dir.SetName(rec_dir_label)
 		_default_hint = wx.StaticText(
 			self,
 			# Translators: Grey hint under the recordings-folder field explaining what happens if it's left empty.
-			label=_("(empty = default: Documents\\FreeRadio Recordings)"),
+			label=_("(empty = default: Documents\\freeAudio Recordings)"),
 		)
 		_default_hint.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
 		# Translators: Button label; opens a folder-picker to choose the recordings folder.
@@ -461,7 +461,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			label=_("Include &network drives when searching the jukebox"),
 		)
 		self._jukebox_search_network_drives.SetValue(
-			config.conf["freeradio"].get("jukebox_search_network_drives", False)
+			config.conf["freeAudio"].get("jukebox_search_network_drives", False)
 		)
 		sHelper.addItem(self._jukebox_search_network_drives)
 
@@ -491,7 +491,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			nvdaControls.CustomCheckListBox,
 			choices=_AUDIOBOOK_SOURCE_DISPLAY,
 		)
-		_saved_audiobook_sources = config.conf["freeradio"].get("audiobook_sources", "getem,librivox,gutenberg")
+		_saved_audiobook_sources = config.conf["freeAudio"].get("audiobook_sources", "getem,librivox,gutenberg")
 		_active_audiobook_sources = {s.strip() for s in _saved_audiobook_sources.split(",") if s.strip()}
 		for i, key in enumerate(_AUDIOBOOK_SOURCE_KEYS):
 			self._audiobook_sources_choice.Check(i, key in _active_audiobook_sources)
@@ -540,7 +540,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 				_("MP3 (convert audio)"),
 			],
 		)
-		_saved_recording_format = config.conf["freeradio"].get("recording_format", "original")
+		_saved_recording_format = config.conf["freeAudio"].get("recording_format", "original")
 		self._recording_format.SetSelection(
 			self._recording_format_keys.index(_saved_recording_format)
 			if _saved_recording_format in self._recording_format_keys else 0
@@ -554,7 +554,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			wx.Choice,
 			choices=["%d kb/s" % value for value in self._mp3_bitrate_values],
 		)
-		_saved_bitrate = config.conf["freeradio"].get("recording_mp3_bitrate", 128)
+		_saved_bitrate = config.conf["freeAudio"].get("recording_mp3_bitrate", 128)
 		self._recording_mp3_bitrate.SetSelection(
 			self._mp3_bitrate_values.index(_saved_bitrate)
 			if _saved_bitrate in self._mp3_bitrate_values else 1
@@ -567,7 +567,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			label=_("&Disable internet connectivity check before playing (recommended if DNS is blocked)"),
 		)
 		self._disable_internet_check.SetValue(
-			config.conf["freeradio"].get("disable_internet_check", False)
+			config.conf["freeAudio"].get("disable_internet_check", False)
 		)
 		sHelper.addItem(self._disable_internet_check)
 
@@ -578,7 +578,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			label=_("&Automatically check for updates on startup"),
 		)
 		self._auto_check_updates.SetValue(
-			config.conf["freeradio"].get("auto_check_updates", True)
+			config.conf["freeAudio"].get("auto_check_updates", True)
 		)
 		sHelper.addItem(self._auto_check_updates)
 
@@ -593,7 +593,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 	def _load_devices(self):
 		"""Fetch device list from BASS in background and pass it to the UI."""
 		devices = []
-		plugin = _get_freeradio_plugin()
+		plugin = _get_freeAudio_plugin()
 		if plugin:
 			try:
 				devices = plugin._player.get_audio_devices()
@@ -616,11 +616,11 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self._device_choice.Clear()
 		for _idx, name in self._audio_devices:
 			self._device_choice.Append(name)
-		saved = config.conf["freeradio"].get("audio_device", -1)
-		saved_name = config.conf["freeradio"].get("audio_device_name", "")
+		saved = config.conf["freeAudio"].get("audio_device", -1)
+		saved_name = config.conf["freeAudio"].get("audio_device_name", "")
 		resolved = saved
 		match = "missing"
-		plugin = _get_freeradio_plugin()
+		plugin = _get_freeAudio_plugin()
 		if plugin:
 			try:
 				resolved, resolved_name, match = plugin._player.resolve_audio_device(
@@ -631,20 +631,20 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			except Exception:
 				resolved_name = saved_name
 		if match == "name" and resolved != saved:
-			config.conf["freeradio"]["audio_device"] = resolved
-			config.conf["freeradio"]["audio_device_name"] = resolved_name
-			plugin = _get_freeradio_plugin()
+			config.conf["freeAudio"]["audio_device"] = resolved
+			config.conf["freeAudio"]["audio_device_name"] = resolved_name
+			plugin = _get_freeAudio_plugin()
 			if plugin:
 				try:
 					actual = plugin._player.switch_output_device(resolved)
 				except Exception:
 					actual = getattr(plugin._player, "_output_device_index", resolved)
 				if actual != resolved:
-					config.conf["freeradio"]["audio_device"] = actual
-					config.conf["freeradio"]["audio_device_name"] = self._audio_device_name_for_index(actual)
+					config.conf["freeAudio"]["audio_device"] = actual
+					config.conf["freeAudio"]["audio_device_name"] = self._audio_device_name_for_index(actual)
 					resolved = actual
 		elif match == "index" and not saved_name and resolved != -1:
-			config.conf["freeradio"]["audio_device_name"] = resolved_name
+			config.conf["freeAudio"]["audio_device_name"] = resolved_name
 		sel = 0
 		for i, (idx, _name) in enumerate(self._audio_devices):
 			if idx == resolved:
@@ -678,8 +678,8 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		checked = self._fx_choice.GetCheckedItems()
 		active = [self._fx_keys[i] for i in checked if 0 <= i < len(self._fx_keys)]
 		fx_str = ",".join(active) if active else "none"
-		config.conf["freeradio"]["audio_fx"] = fx_str
-		plugin = _get_freeradio_plugin()
+		config.conf["freeAudio"]["audio_fx"] = fx_str
+		plugin = _get_freeAudio_plugin()
 		if plugin:
 			try:
 				plugin._player.set_fx(fx_str)
@@ -702,8 +702,8 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 	def _on_eq_gain_settings(self, event, band):
 		"""Apply and save EQ gain change immediately from the settings panel."""
 		gain_db = self._eq_spins_settings[band].GetValue()
-		config.conf["freeradio"]["eq_gain_" + band] = gain_db
-		plugin = _get_freeradio_plugin()
+		config.conf["freeAudio"]["eq_gain_" + band] = gain_db
+		plugin = _get_freeAudio_plugin()
 		if plugin:
 			try:
 				plugin._player.set_eq_gain(band, gain_db)
@@ -728,7 +728,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		# Translators: Temporary label on the Check for Updates Now button while the check is in progress.
 		self._check_now_btn.SetLabel(_("Checking..."))
 		def _run():
-			plugin = _get_freeradio_plugin()
+			plugin = _get_freeAudio_plugin()
 			if plugin:
 				plugin._check_for_updates(silent=False)
 			wx.CallAfter(self._restore_check_btn)
@@ -758,20 +758,20 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 	def onSave(self):
 		vol = self._volume.GetValue()
-		config.conf["freeradio"]["volume"]          = min(100, vol)
-		config.conf["freeradio"]["resume_on_start"]        = self._resume.GetValue()
-		config.conf["freeradio"]["announce_track_changes"] = self._announce_track_changes.GetValue()
-		config.conf["freeradio"]["track_change_voice"] = (
+		config.conf["freeAudio"]["volume"]          = min(100, vol)
+		config.conf["freeAudio"]["resume_on_start"]        = self._resume.GetValue()
+		config.conf["freeAudio"]["announce_track_changes"] = self._announce_track_changes.GetValue()
+		config.conf["freeAudio"]["track_change_voice"] = (
 			"sapi5" if self._track_change_voice.GetSelection() == 1 else "nvda"
 		)
 		_sapi5v_sel = self._sapi5_voice_choice.GetSelection()
-		config.conf["freeradio"]["sapi5_voice_name"] = (
+		config.conf["freeAudio"]["sapi5_voice_name"] = (
 			self._sapi5_voice_names[_sapi5v_sel]
 			if 0 <= _sapi5v_sel < len(self._sapi5_voice_names) else ""
 		)
-		config.conf["freeradio"]["mute_notifications"]     = self._mute_notifications.GetValue()
-		config.conf["freeradio"]["braille_messages"]       = self._braille_messages.GetValue()
-		config.conf["freeradio"]["save_liked_songs"]        = self._save_liked_songs.GetValue()
+		config.conf["freeAudio"]["mute_notifications"]     = self._mute_notifications.GetValue()
+		config.conf["freeAudio"]["braille_messages"]       = self._braille_messages.GetValue()
+		config.conf["freeAudio"]["save_liked_songs"]        = self._save_liked_songs.GetValue()
 		
 		_refresh_sel = self._audio_device_refresh_choice.GetSelection()
 		new_audio_device_refresh_mode = (
@@ -779,11 +779,11 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			if 0 <= _refresh_sel < len(_AUDIO_DEVICE_REFRESH_MODE_KEYS)
 			else "reliable"
 		)
-		config.conf["freeradio"]["audio_device_refresh_mode"] = new_audio_device_refresh_mode
+		config.conf["freeAudio"]["audio_device_refresh_mode"] = new_audio_device_refresh_mode
 		
 		# Audio output device
-		old_device_index = config.conf["freeradio"].get("audio_device", -1)
-		old_device_name = config.conf["freeradio"].get("audio_device_name", "")
+		old_device_index = config.conf["freeAudio"].get("audio_device", -1)
+		old_device_name = config.conf["freeAudio"].get("audio_device_name", "")
 		sel = self._device_choice.GetSelection()
 		if 0 <= sel < len(self._audio_devices):
 			new_device_index, new_device_name = self._audio_devices[sel]
@@ -792,24 +792,24 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		else:
 			new_device_index = -1
 			new_device_name = ""
-		config.conf["freeradio"]["audio_device"] = new_device_index
-		config.conf["freeradio"]["audio_device_name"] = new_device_name
+		config.conf["freeAudio"]["audio_device"] = new_device_index
+		config.conf["freeAudio"]["audio_device_name"] = new_device_name
 		
-		config.conf["freeradio"]["hotkey_p_action"] = (
+		config.conf["freeAudio"]["hotkey_p_action"] = (
 			"resume" if self._hotkey_p_action.GetSelection() == 0 else "favorites"
 		)
 		_double_map = ["none", "favorites", "search", "recording", "timer", "liked", "settings", "announce", "stop"]
 		sel = self._hotkey_p_double.GetSelection()
-		config.conf["freeradio"]["hotkey_p_double"] = (
+		config.conf["freeAudio"]["hotkey_p_double"] = (
 			_double_map[sel] if 0 <= sel < len(_double_map) else "none"
 		)
 		_triple_map = ["none", "favorites", "search", "recording", "timer", "liked", "settings", "announce", "stop"]
 		sel = self._hotkey_p_triple.GetSelection()
-		config.conf["freeradio"]["hotkey_p_triple"] = (
+		config.conf["freeAudio"]["hotkey_p_triple"] = (
 			_triple_map[sel] if 0 <= sel < len(_triple_map) else "none"
 		)
 		try:
-			config.conf["freeradio"]["ffmpeg_path"] = self._ffmpeg_path.GetValue().strip()
+			config.conf["freeAudio"]["ffmpeg_path"] = self._ffmpeg_path.GetValue().strip()
 		except (KeyError, AttributeError):
 			pass
 		
@@ -817,13 +817,13 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		try:
 			checked = self._fx_choice.GetCheckedItems()
 			active = [self._fx_keys[i] for i in checked if 0 <= i < len(self._fx_keys)]
-			config.conf["freeradio"]["audio_fx"] = ",".join(active) if active else "none"
+			config.conf["freeAudio"]["audio_fx"] = ",".join(active) if active else "none"
 		except (AttributeError, IndexError):
 			pass
 		
-		config.conf["freeradio"]["recordings_dir"] = self._recordings_dir.GetValue().strip()
+		config.conf["freeAudio"]["recordings_dir"] = self._recordings_dir.GetValue().strip()
 
-		config.conf["freeradio"]["jukebox_search_network_drives"] = \
+		config.conf["freeAudio"]["jukebox_search_network_drives"] = \
 			self._jukebox_search_network_drives.GetValue()
 
 		# Audio book sources: which of GETEM/LibriVox the Audio Books tab's
@@ -839,7 +839,7 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 				self._audiobook_source_keys[i] for i in checked
 				if 0 <= i < len(self._audiobook_source_keys)
 			]
-			config.conf["freeradio"]["audiobook_sources"] = ",".join(active_sources)
+			config.conf["freeAudio"]["audiobook_sources"] = ",".join(active_sources)
 		except (AttributeError, IndexError):
 			pass
 
@@ -855,37 +855,37 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			self._recording_format_keys[_format_sel]
 			if 0 <= _format_sel < len(self._recording_format_keys) else "original"
 		)
-		config.conf["freeradio"]["recording_format"] = _recording_format
+		config.conf["freeAudio"]["recording_format"] = _recording_format
 		_bitrate_sel = self._recording_mp3_bitrate.GetSelection()
 		_recording_bitrate = (
 			self._mp3_bitrate_values[_bitrate_sel]
 			if 0 <= _bitrate_sel < len(self._mp3_bitrate_values) else 128
 		)
-		config.conf["freeradio"]["recording_mp3_bitrate"] = _recording_bitrate
-		config.conf["freeradio"]["auto_check_updates"] = self._auto_check_updates.GetValue()
-		config.conf["freeradio"]["disable_internet_check"] = self._disable_internet_check.GetValue()
+		config.conf["freeAudio"]["recording_mp3_bitrate"] = _recording_bitrate
+		config.conf["freeAudio"]["auto_check_updates"] = self._auto_check_updates.GetValue()
+		config.conf["freeAudio"]["disable_internet_check"] = self._disable_internet_check.GetValue()
 
 		# Crossfade
 		_cf_sel = self._crossfade_choice.GetSelection()
 		_cf_val = self._cf_keys[_cf_sel] if 0 <= _cf_sel < len(self._cf_keys) else "off"
-		config.conf["freeradio"]["crossfade"] = _cf_val
+		config.conf["freeAudio"]["crossfade"] = _cf_val
 
 		# Time-shift buffer
 		new_timeshift_enabled = self._timeshift_enabled.GetValue()
-		config.conf["freeradio"]["timeshift_enabled"] = new_timeshift_enabled
+		config.conf["freeAudio"]["timeshift_enabled"] = new_timeshift_enabled
 		_duration_sel = self._timeshift_duration_choice.GetSelection()
 		new_timeshift_seconds = (
 			self._timeshift_duration_seconds[_duration_sel]
 			if 0 <= _duration_sel < len(self._timeshift_duration_seconds) else 600
 		)
-		config.conf["freeradio"]["timeshift_buffer_seconds"] = new_timeshift_seconds
+		config.conf["freeAudio"]["timeshift_buffer_seconds"] = new_timeshift_seconds
 
-		plugin = _get_freeradio_plugin()
+		plugin = _get_freeAudio_plugin()
 		if plugin:
 			plugin._recorder.set_output_format(
 				_recording_format,
 				_recording_bitrate,
-				config.conf["freeradio"].get("ffmpeg_path", ""),
+				config.conf["freeAudio"].get("ffmpeg_path", ""),
 			)
 			plugin._player.set_audio_device_refresh_mode(new_audio_device_refresh_mode)
 			plugin._player.set_volume(vol)
@@ -899,21 +899,21 @@ class FreeRadioSettingsPanel(gui.settingsDialogs.SettingsPanel):
 				except Exception:
 					actual_device_index = getattr(plugin._player, "_output_device_index", new_device_index)
 				if actual_device_index != new_device_index:
-					config.conf["freeradio"]["audio_device"] = actual_device_index
-					config.conf["freeradio"]["audio_device_name"] = self._audio_device_name_for_index(actual_device_index)
+					config.conf["freeAudio"]["audio_device"] = actual_device_index
+					config.conf["freeAudio"]["audio_device_name"] = self._audio_device_name_for_index(actual_device_index)
 					new_device_index = actual_device_index
-					new_device_name = config.conf["freeradio"].get("audio_device_name", "")
+					new_device_name = config.conf["freeAudio"].get("audio_device_name", "")
 				wx.CallAfter(plugin._sync_dialog_device, new_device_index)
 				if plugin._dialog and hasattr(plugin._dialog, "refresh_audio_devices"):
 					wx.CallAfter(plugin._dialog.refresh_audio_devices, True)
 			# Apply FX immediately
 			try:
-				plugin._player.set_fx(config.conf["freeradio"].get("audio_fx", "none"))
+				plugin._player.set_fx(config.conf["freeAudio"].get("audio_fx", "none"))
 			except Exception:
 				pass
 			# Apply crossfade / station-tuning transition immediately
 			_cf_map = {"off": 0.0, "short": 1.0, "normal": 2.0, "tuning": 0.0}
-			_new_cf = config.conf["freeradio"].get("crossfade", "off")
+			_new_cf = config.conf["freeAudio"].get("crossfade", "off")
 			try:
 				plugin._player.set_tuning_effect_enabled(_new_cf == "tuning")
 				plugin._player.set_crossfade_duration(_cf_map.get(_new_cf, 0.0))

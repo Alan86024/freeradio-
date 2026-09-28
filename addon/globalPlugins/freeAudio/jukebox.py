@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Local Jukebox
+# freeAudio - Local Jukebox
 #
 # Manages the user's local jukebox: individually added audio files and
 # folders (whose audio tracks are shown much like podcast episodes), plus
@@ -84,7 +84,7 @@ def _get_track_duration(path):
 	try:
 		duration = _probe_audio_duration(path)
 	except Exception as e:
-		log.debug("FreeRadio Jukebox: duration probe failed for %s: %s", path, e)
+		log.debug("freeAudio Jukebox: duration probe failed for %s: %s", path, e)
 		duration = None
 	_duration_cache[path] = (st.st_mtime, st.st_size, duration)
 	return duration
@@ -851,7 +851,7 @@ def _get_track_audio_info(path):
 		try:
 			extra = probe(path) or {}
 		except Exception as e:
-			log.debug("FreeRadio Jukebox: technical-info probe failed for %s: %s", path, e)
+			log.debug("freeAudio Jukebox: technical-info probe failed for %s: %s", path, e)
 	bitrate_kbps = extra.get("bitrate_kbps")
 	if bitrate_kbps is None and duration and duration > 0:
 		bitrate_kbps = int(round(st.st_size * 8 / duration / 1000.0))
@@ -1017,7 +1017,7 @@ class JukeboxEntry:
 					if _is_audio_file(name):
 						found.append(os.path.join(root, name))
 		except Exception as e:
-			log.warning("FreeRadio Jukebox: folder scan failed for %s: %s", self.path, e)
+			log.warning("freeAudio Jukebox: folder scan failed for %s: %s", self.path, e)
 		found.sort(key=lambda p: os.path.relpath(p, self.path).lower())
 		self._tracks = [JukeboxTrack(p) for p in found]
 		return self._tracks
@@ -1065,7 +1065,7 @@ class JukeboxManager:
 		return os.path.normcase(os.path.normpath(path))
 
 	def _get_path(self):
-		return os.path.join(globalVars.appArgs.configPath, "freeradio_jukebox.json")
+		return os.path.join(globalVars.appArgs.configPath, "freeAudio_jukebox.json")
 
 	def _load(self):
 		path = self._get_path()
@@ -1108,7 +1108,7 @@ class JukeboxManager:
 				self._profile_key(k): v for k, v in track_profiles.items()
 			}
 		except Exception as e:
-			log.warning("FreeRadio Jukebox: failed to load library: %s", e)
+			log.warning("freeAudio Jukebox: failed to load library: %s", e)
 			self._entries = []
 			self._track_profiles = {}
 
@@ -1124,7 +1124,7 @@ class JukeboxManager:
 				json.dump(data, f, ensure_ascii=False, indent=2)
 			os.replace(tmp_path, path)
 		except Exception as e:
-			log.warning("FreeRadio Jukebox: failed to save library: %s", e)
+			log.warning("freeAudio Jukebox: failed to save library: %s", e)
 			try:
 				os.remove(tmp_path)
 			except OSError:

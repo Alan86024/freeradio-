@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Explorer app module.
+# freeAudio - Explorer app module.
 #
 # Goes in the add-on's appModules/ folder (a sibling of globalPlugins/, at
-# the add-on package root - NOT inside globalPlugins/freeradio/), named
+# the add-on package root - NOT inside globalPlugins/freeAudio/), named
 # explorer.py so NVDA loads it only while the focused window belongs to
 # explorer.exe.
 #
@@ -53,7 +53,7 @@ _tr = globals()["_"]
 _ = _tr
 del _tr
 
-from globalPlugins.freeradio import jukebox
+from globalPlugins.freeAudio import jukebox
 
 # This file's name (explorer.py) exactly matches NVDA's own built-in app
 # module for explorer.exe, so this module now wins whenever anything
@@ -61,7 +61,7 @@ from globalPlugins.freeradio import jukebox
 # app modules import from each other (not via appModules.explorer or
 # nvdaBuiltin.appModules.explorer). appModules/dllhost.py, for one, does
 # "from explorer import ReadOnlyEditBox" - completely unrelated to
-# Explorer or FreeRadio, but it broke the moment this add-on was
+# Explorer or freeAudio, but it broke the moment this add-on was
 # installed, since our explorer.py never defined ReadOnlyEditBox
 # (confirmed via a real crash report: ImportError: cannot import name
 # 'ReadOnlyEditBox' from 'appModules.explorer', pointing at this file).
@@ -82,21 +82,21 @@ for _name in dir(nvdaBuiltin.appModules.explorer):
 del _name
 
 
-def _get_freeradio_plugin():
-	"""Find the running FreeRadio GlobalPlugin instance, so this app
+def _get_freeAudio_plugin():
+	"""Find the running freeAudio GlobalPlugin instance, so this app
 	module's scripts can reach its self._play_station() the same way
 	GlobalPlugin's own mixins do via self. Imports GlobalPlugin lazily
 	(inside the function, not at module load time) since appModules can
 	load before global plugins have necessarily finished initialising -
 	mirrors the reasoning behind this add-on's existing lazy
-	_get_freeradio_plugin() helper in settingsPanel.py (see the comment
+	_get_freeAudio_plugin() helper in settingsPanel.py (see the comment
 	there); reimplemented locally here rather than imported from it to
 	keep this app module self-contained and independent of
 	settingsPanel.py's own import chain."""
 	import globalPluginHandler
-	from globalPlugins.freeradio import GlobalPlugin as FreeRadioGlobalPlugin
+	from globalPlugins.freeAudio import GlobalPlugin as freeAudioGlobalPlugin
 	for plugin in globalPluginHandler.runningPlugins:
-		if isinstance(plugin, FreeRadioGlobalPlugin):
+		if isinstance(plugin, freeAudioGlobalPlugin):
 			return plugin
 	return None
 
@@ -189,7 +189,7 @@ def _add_path_to_jukebox(path, dialog):
 	if done on its main thread. Only ui.message and the dialog refresh are
 	marshalled back with wx.CallAfter.
 
-	If FreeRadio's window has been opened (it's only ever hidden, never
+	If freeAudio's window has been opened (it's only ever hidden, never
 	destroyed), its own JukeboxManager - loaded once, never reloaded from
 	disk - is used instead of a fresh one: otherwise the dialog's stale
 	in-memory list would silently overwrite this addition the next time it
@@ -223,13 +223,13 @@ def _refresh_dialog_jukebox(dialog):
 class AppModule(nvdaBuiltin.appModules.explorer.AppModule):
 
 	@script(
-		# Translators: Name of an NVDA command; plays the audio file focused in Windows Explorer with FreeRadio, without needing it to already be in the jukebox library.
-		description=_("Play the focused file with FreeRadio"),
-		category=_("FreeRadio"),
+		# Translators: Name of an NVDA command; plays the audio file focused in Windows Explorer with freeAudio, without needing it to already be in the jukebox library.
+		description=_("Play the focused file with freeAudio"),
+		category=_("freeAudio"),
 	)
 	def script_explorerPlayFile(self, gesture):
 		path = _get_explorer_list_item_path()
-		plugin = _get_freeradio_plugin()
+		plugin = _get_freeAudio_plugin()
 		if path is None or plugin is None:
 			gesture.send()
 			return
@@ -256,9 +256,9 @@ class AppModule(nvdaBuiltin.appModules.explorer.AppModule):
 
 
 	@script(
-		# Translators: Name of an NVDA command; adds the file or folder focused in Windows Explorer to the FreeRadio jukebox.
-		description=_("Add the focused item to the FreeRadio jukebox"),
-		category=_("FreeRadio"),
+		# Translators: Name of an NVDA command; adds the file or folder focused in Windows Explorer to the freeAudio jukebox.
+		description=_("Add the focused item to the freeAudio jukebox"),
+		category=_("freeAudio"),
 	)
 	def script_explorerAddToJukebox(self, gesture):
 		path = _get_explorer_list_item_path()
@@ -266,11 +266,11 @@ class AppModule(nvdaBuiltin.appModules.explorer.AppModule):
 			gesture.send()
 			return
 
-		plugin = _get_freeradio_plugin()
+		plugin = _get_freeAudio_plugin()
 		dialog = getattr(plugin, "_dialog", None) if plugin else None
 		threading.Thread(
 			target=_add_path_to_jukebox,
 			args=(path, dialog),
 			daemon=True,
-			name="FreeRadio-ExplorerJukeboxAdd",
+			name="freeAudio-ExplorerJukeboxAdd",
 		).start()

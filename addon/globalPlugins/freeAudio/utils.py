@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Shared utilities
+# freeAudio - Shared utilities
 #
 # Helper functions shared across multiple modules:
 #   - Country code → country name translation (multi-language, NVDA gettext-aware)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Podcast Manager
+# freeAudio - Podcast Manager
 # RSS/Atom podcast feed parser, subscription manager, and iTunes search.
 
 import json
@@ -23,7 +23,7 @@ _ = _tr
 del _tr
 log = logging.getLogger(__name__)
 
-USER_AGENT = "FreeRadio-NVDA/1.0"
+USER_AGENT = "freeAudio-NVDA/1.0"
 # Cap on how much of a feed response is read into memory. A real podcast
 # feed is well under this; the cap exists to prevent a hostile feed (or
 # an attacker on the path to an http:// feed) from exhausting memory by
@@ -293,7 +293,7 @@ class PodcastManager:
 		self._load()
 
 	def _get_path(self):
-		return os.path.join(globalVars.appArgs.configPath, "freeradio_podcasts.json")
+		return os.path.join(globalVars.appArgs.configPath, "freeAudio_podcasts.json")
 
 	def _load(self):
 		path = self._get_path()
@@ -307,7 +307,7 @@ class PodcastManager:
 			for feed in self._feeds:
 				feed.episodes = []
 		except Exception as e:
-			log.warning("FreeRadio Podcast: failed to load subscriptions: %s", e)
+			log.warning("freeAudio Podcast: failed to load subscriptions: %s", e)
 			self._feeds = []
 
 	def _save(self):
@@ -319,7 +319,7 @@ class PodcastManager:
 				json.dump(data, f, ensure_ascii=False, indent=2)
 			os.replace(tmp_path, path)
 		except Exception as e:
-			log.warning("FreeRadio Podcast: failed to save subscriptions: %s", e)
+			log.warning("freeAudio Podcast: failed to save subscriptions: %s", e)
 			try:
 				os.remove(tmp_path)
 			except OSError:
@@ -355,7 +355,7 @@ class PodcastManager:
 			self._save()
 			return feed, None
 		except Exception as e:
-			log.warning("FreeRadio Podcast: add feed failed: %s", e)
+			log.warning("freeAudio Podcast: add feed failed: %s", e)
 			return None, str(e)
 
 	def fetch_preview(self, url):
@@ -368,7 +368,7 @@ class PodcastManager:
 		try:
 			return self._fetch_and_parse(url)
 		except Exception as e:
-			log.warning("FreeRadio Podcast: preview fetch failed: %s", e)
+			log.warning("freeAudio Podcast: preview fetch failed: %s", e)
 			return None, str(e)
 
 	def remove_feed(self, url):
@@ -399,7 +399,7 @@ class PodcastManager:
 			self._save()
 			return feed, None
 		except Exception as e:
-			log.warning("FreeRadio Podcast: refresh feed failed: %s", e)
+			log.warning("freeAudio Podcast: refresh feed failed: %s", e)
 			return feed, str(e)
 
 	def _fetch_and_parse(self, url, existing_feed=None):
@@ -582,7 +582,7 @@ def search_podcasts(query, limit=50):
 	import json
 
 	url = f"https://itunes.apple.com/search?term={urllib.parse.quote(query)}&media=podcast&entity=podcast&limit={limit}"
-	req = urllib.request.Request(url, headers={"User-Agent": "FreeRadio-NVDA/1.0"})
+	req = urllib.request.Request(url, headers={"User-Agent": "freeAudio-NVDA/1.0"})
 	try:
 		with urllib.request.urlopen(req, timeout=10) as resp:
 			data = json.loads(resp.read().decode('utf-8'))
@@ -597,5 +597,5 @@ def search_podcasts(query, limit=50):
 			})
 		return results
 	except Exception as e:
-		log.warning("FreeRadio Podcast: iTunes search failed: %s", e)
+		log.warning("freeAudio Podcast: iTunes search failed: %s", e)
 		return []

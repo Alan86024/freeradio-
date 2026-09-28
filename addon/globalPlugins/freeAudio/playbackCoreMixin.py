@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Core playback: pause/resume, stop, next/prev station
+# freeAudio - Core playback: pause/resume, stop, next/prev station
 #
 # Extracted from GlobalPlugin in __init__.py. Mixed into GlobalPlugin, so
 # `self` here is a GlobalPlugin instance - self._player, self._recorder,
@@ -33,7 +33,7 @@ from . import getem
 from . import jukebox
 from . import librivox
 from . import podcast
-from .settingsPanel import FreeRadioSettingsPanel
+from .settingsPanel import freeAudioSettingsPanel
 
 
 # File extensions that reliably mark a URL as a podcast episode / audio
@@ -80,13 +80,13 @@ class PlaybackCoreMixin:
 
 	@script(
 		# Translators: Name of an NVDA command; pauses playback (single press), with double/triple-press doing other actions - see the docstring above.
-		description=_("Pause or resume FreeRadio playback"),
-		category=_("FreeRadio"),
+		description=_("Pause or resume freeAudio playback"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+p",
 	)
 	def script_pauseResume(self, gesture):
-		_double_action = config.conf["freeradio"].get("hotkey_p_double", "none")
-		_triple_action = config.conf["freeradio"].get("hotkey_p_triple", "none")
+		_double_action = config.conf["freeAudio"].get("hotkey_p_double", "none")
+		_triple_action = config.conf["freeAudio"].get("hotkey_p_triple", "none")
 
 		def _run_action(action):
 			if action == "favorites":
@@ -101,11 +101,11 @@ class PlaybackCoreMixin:
 				# Open the browser dialog and switch to the Liked Songs tab (index 4).
 				wx.CallAfter(self._open_dialog_on_tab, 4)
 			elif action == "settings":
-				# Open NVDA Settings directly on the FreeRadio category.
+				# Open NVDA Settings directly on the freeAudio category.
 				wx.CallAfter(
 					gui.mainFrame._popupSettingsDialog,
 					gui.NVDASettingsDialog,
-					FreeRadioSettingsPanel,
+					freeAudioSettingsPanel,
 				)
 			elif action == "announce":
 				# Announce the currently playing station without opening any dialog.
@@ -119,8 +119,8 @@ class PlaybackCoreMixin:
 		# Snapshot playback state once — used only by the single-press handler.
 		_has_media  = self._player.has_media()
 		_is_playing = self._player.is_playing()
-		_last_url   = config.conf["freeradio"].get("last_station_url", "").strip()
-		_action     = config.conf["freeradio"].get("hotkey_p_action", "resume")
+		_last_url   = config.conf["freeAudio"].get("last_station_url", "").strip()
+		_action     = config.conf["freeAudio"].get("hotkey_p_action", "resume")
 
 		# Always cancel any pending timer so only the latest press schedules work.
 		old_timer = getattr(self, "_pause_resume_timer", None)
@@ -179,9 +179,9 @@ class PlaybackCoreMixin:
 		self._pause_resume_timer = wx.CallLater(350, _do_single_press)
 
 	@script(
-		# Translators: Name of an NVDA command; stops FreeRadio playback outright (as opposed to pausing).
-		description=_("Stop FreeRadio playback"),
-		category=_("FreeRadio"),
+		# Translators: Name of an NVDA command; stops freeAudio playback outright (as opposed to pausing).
+		description=_("Stop freeAudio playback"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+s",
 	)
 	def script_stop(self, gesture):
@@ -223,7 +223,7 @@ class PlaybackCoreMixin:
 					self._stations      = []
 					self._current_index = -1
 					# Translators: Spoken after confirming the stop when active recordings were involved.
-					_notify(_("Freeradio stopped"))
+					_notify(_("freeAudio stopped"))
 
 			wx.CallAfter(_confirm)
 			return
@@ -235,12 +235,12 @@ class PlaybackCoreMixin:
 		self._stations      = []
 		self._current_index = -1
 		# Translators: Spoken when the stop command is used and there were no active recordings to confirm about.
-		_notify(_("Freeradio stopped"))
+		_notify(_("freeAudio stopped"))
 
 	@script(
 		# Translators: Name of an NVDA command; skips to the next station in the favourites list.
 		description=_("Play next station"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+rightArrow",
 	)
 	def script_nextStation(self, gesture):
@@ -277,7 +277,7 @@ class PlaybackCoreMixin:
 	@script(
 		# Translators: Name of an NVDA command; skips to the previous station in the favourites list.
 		description=_("Play previous station"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+leftArrow",
 	)
 	def script_prevStation(self, gesture):
@@ -326,7 +326,7 @@ class PlaybackCoreMixin:
 		through a local proxy (see getem._ensure_proxy_server()) whose
 		registered chapter tokens (getem._proxy_chapters) live only in
 		memory and are lost every NVDA restart, so simply replaying
-		config.conf["freeradio"]["last_station_url"] (a URL from the
+		config.conf["freeAudio"]["last_station_url"] (a URL from the
 		*previous* session) always 404s even though the proxy itself is
 		listening on the same port again. This rebuilds a fresh, valid
 		proxy URL for the saved chapter from the book's own library entry -
@@ -405,7 +405,7 @@ class PlaybackCoreMixin:
 		"""Move an audio book (GETEM or LibriVox) to its previous/next part
 		(*direction* = -1/+1) independent of any dialog UI (list
 		selection/focus/"now playing" state) - either because the current
-		part finished on its own while the FreeRadio dialog isn't open (or
+		part finished on its own while the freeAudio dialog isn't open (or
 		isn't shown) to do it itself via
 		RadioDialog._on_playback_finished()/_play_next_getem_chapter() (see
 		GlobalPlugin._on_podcast_finished_ui() in __init__.py, always
@@ -502,7 +502,7 @@ class PlaybackCoreMixin:
 	def _advance_jukebox_folder_headless(self, station, direction=1):
 		"""Move a jukebox folder to its previous/next track (*direction* =
 		-1/+1) independent of any dialog UI - either because the current
-		track finished on its own while the FreeRadio dialog isn't open
+		track finished on its own while the freeAudio dialog isn't open
 		(or isn't shown) to do it itself via
 		RadioDialog._on_playback_finished() (see
 		GlobalPlugin._on_podcast_finished_ui() in __init__.py, always
@@ -565,7 +565,7 @@ class PlaybackCoreMixin:
 		station_dict["jukebox_folder_path"] = entry.path
 		station_dict["jukebox_track_index"] = next_index
 		self._play_station(station_dict)
-		# If FreeRadio's dialog happens to be open and showing this same
+		# If freeAudio's dialog happens to be open and showing this same
 		# folder's tracks (e.g. this jump came from a Ctrl+Win+J/K seek
 		# while the dialog is visible), keep its selection in sync too -
 		# mirrors _on_playback_finished()'s call to the same helper for
@@ -581,9 +581,9 @@ class PlaybackCoreMixin:
 		return True
 
 	def _resume_last_station(self):
-		url  = config.conf["freeradio"].get("last_station_url", "").strip()
-		name = config.conf["freeradio"].get("last_station_name", "").strip()
-		uuid = config.conf["freeradio"].get("last_station_uuid", "").strip()
+		url  = config.conf["freeAudio"].get("last_station_url", "").strip()
+		name = config.conf["freeAudio"].get("last_station_name", "").strip()
+		uuid = config.conf["freeAudio"].get("last_station_uuid", "").strip()
 
 		if not url:
 			return
@@ -628,7 +628,7 @@ class PlaybackCoreMixin:
 			self._play_station(station)
 			return
 
-		tags = config.conf["freeradio"].get("last_station_tags", "").strip()
+		tags = config.conf["freeAudio"].get("last_station_tags", "").strip()
 
 		# Sanity-check a config-persisted "podcast" tag against the URL's
 		# actual shape before trusting it. This value can be stale AND
@@ -714,8 +714,8 @@ class PlaybackCoreMixin:
 		# docstring for why the placeholder alone left the station-details
 		# dialog showing an incomplete "Audio book details" block.
 		if tags == "audiobook":
-			detail_url = config.conf["freeradio"].get("last_station_getem_detail_url", "").strip()
-			chapter_index = config.conf["freeradio"].get("last_station_getem_chapter_index", 0)
+			detail_url = config.conf["freeAudio"].get("last_station_getem_detail_url", "").strip()
+			chapter_index = config.conf["freeAudio"].get("last_station_getem_chapter_index", 0)
 			rebuilt = self._rebuild_getem_resume_url(detail_url, chapter_index)
 			if not rebuilt:
 				# Translators: Spoken on NVDA startup when resuming the last-played audio book fails because the book is no longer in the user's library.
@@ -732,7 +732,7 @@ class PlaybackCoreMixin:
 			# playable on its own, so a missing/removed feed just means no
 			# profile (or author) to add rather than a reason to give up
 			# resuming.
-			feed_url = config.conf["freeradio"].get("last_station_podcast_feed_url", "").strip()
+			feed_url = config.conf["freeAudio"].get("last_station_podcast_feed_url", "").strip()
 			if feed_url:
 				try:
 					feed = podcast.PodcastManager().get_feed_by_url(feed_url)
@@ -773,16 +773,16 @@ class PlaybackCoreMixin:
 		# jukebox.JukeboxTrack.to_dict()) and never touch the network
 		# regardless of whether one's available. Also skipped if the user
 		# has disabled this check in settings.
-		if station.get("media_kind") != "jukebox" and not config.conf["freeradio"].get("disable_internet_check", False):
+		if station.get("media_kind") != "jukebox" and not config.conf["freeAudio"].get("disable_internet_check", False):
 			if not self._check_internet():
 				# Translators: Spoken when trying to play a station but the internet-connectivity pre-check fails.
 				ui.message(_("No internet connection. Please check your connection and try again."))
 				return
 
 		try:
-			config.conf["freeradio"]["last_station_url"]  = url_resolved or url
-			config.conf["freeradio"]["last_station_name"] = name
-			config.conf["freeradio"]["last_station_uuid"] = station_uuid
+			config.conf["freeAudio"]["last_station_url"]  = url_resolved or url
+			config.conf["freeAudio"]["last_station_name"] = name
+			config.conf["freeAudio"]["last_station_uuid"] = station_uuid
 			# Needed so a podcast episode/audio book/jukebox track resumed on
 			# the next NVDA startup is still recognised as such (see
 			# _resume_last_station) - without this, the reconstructed station
@@ -799,7 +799,7 @@ class PlaybackCoreMixin:
 			# since it has no actual GETEM/podcast/jukebox data behind it -
 			# on the next NVDA startup.
 			_last_media_kind = station.get("media_kind")
-			config.conf["freeradio"]["last_station_tags"] = (
+			config.conf["freeAudio"]["last_station_tags"] = (
 				_last_media_kind if _last_media_kind in ("podcast", "audiobook", "jukebox") else ""
 			)
 			# GETEM audio books additionally need to know which book/part
@@ -812,20 +812,20 @@ class PlaybackCoreMixin:
 			# rather than "tags" - see the comment on _advance_getem_chapter_headless()
 			# above for why matching a live station's real genre tags is unsafe.
 			if station.get("media_kind") == "audiobook":
-				config.conf["freeradio"]["last_station_getem_detail_url"] = station.get("getem_detail_url", "") or ""
-				config.conf["freeradio"]["last_station_getem_chapter_index"] = int(station.get("getem_chapter_index", 0) or 0)
+				config.conf["freeAudio"]["last_station_getem_detail_url"] = station.get("getem_detail_url", "") or ""
+				config.conf["freeAudio"]["last_station_getem_chapter_index"] = int(station.get("getem_chapter_index", 0) or 0)
 			else:
-				config.conf["freeradio"]["last_station_getem_detail_url"] = ""
-				config.conf["freeradio"]["last_station_getem_chapter_index"] = 0
+				config.conf["freeAudio"]["last_station_getem_detail_url"] = ""
+				config.conf["freeAudio"]["last_station_getem_chapter_index"] = 0
 			# Same idea for a subscribed podcast feed's saved audio profile -
 			# see _on_episode_play()/_resume_last_station(). Keyed off
 			# "media_kind" rather than "tags" for the same reason as above;
 			# GETEM/LibriVox chapters carry media_kind="audiobook" (never
 			# "podcast"), so no separate exclusion is needed here anymore.
 			if station.get("media_kind") == "podcast":
-				config.conf["freeradio"]["last_station_podcast_feed_url"] = station.get("podcast_feed_url", "") or ""
+				config.conf["freeAudio"]["last_station_podcast_feed_url"] = station.get("podcast_feed_url", "") or ""
 			else:
-				config.conf["freeradio"]["last_station_podcast_feed_url"] = ""
+				config.conf["freeAudio"]["last_station_podcast_feed_url"] = ""
 		except Exception:
 			pass
 
@@ -880,7 +880,7 @@ class PlaybackCoreMixin:
 		# means _sync_dialog_audio() (below) reflects them immediately.
 		def _apply_profile_and_play():
 			if station_audio:
-				vol = station_audio.get("volume", config.conf["freeradio"]["volume"])
+				vol = station_audio.get("volume", config.conf["freeAudio"]["volume"])
 				fx  = station_audio.get("fx", "none")
 				self._player.set_volume(vol)
 				try:
@@ -897,8 +897,8 @@ class PlaybackCoreMixin:
 				wx.CallAfter(self._sync_dialog_audio, vol, fx, eq_gains=eq_gains)
 			else:
 				# Restore global settings
-				global_vol = config.conf["freeradio"]["volume"]
-				global_fx  = config.conf["freeradio"].get("audio_fx", "none")
+				global_vol = config.conf["freeAudio"]["volume"]
+				global_fx  = config.conf["freeAudio"].get("audio_fx", "none")
 				self._player.set_volume(global_vol)
 				try:
 					self._player.set_fx(global_fx)
@@ -907,7 +907,7 @@ class PlaybackCoreMixin:
 				# Restore global EQ gains
 				_eq_defaults = {"eq_bass": 9, "eq_treble": 9, "eq_vocal": 6}
 				for band, default_db in _eq_defaults.items():
-					gain_db = config.conf["freeradio"].get("eq_gain_" + band, default_db)
+					gain_db = config.conf["freeAudio"].get("eq_gain_" + band, default_db)
 					try:
 						self._player.set_eq_gain(band, gain_db)
 					except Exception:
@@ -964,7 +964,7 @@ class PlaybackCoreMixin:
 					wx.CallAfter(ui.message, name)
 
 		threading.Thread(
-			target=_apply_profile_and_play, daemon=True, name="FreeRadio-play-station"
+			target=_apply_profile_and_play, daemon=True, name="freeAudio-play-station"
 		).start()
 
 	def _format_transpose(self, semitones):
@@ -979,7 +979,7 @@ class PlaybackCoreMixin:
 	@script(
 		# Translators: Name of an NVDA command; raises the pitch of podcasts/audio books/jukebox tracks without changing playback speed.
 		description=_("Raise pitch transpose (podcasts, audio books and jukebox tracks)"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:shift+windows+k",
 	)
 	def script_transposeUp(self, gesture):
@@ -998,7 +998,7 @@ class PlaybackCoreMixin:
 	@script(
 		# Translators: Name of an NVDA command; lowers the pitch of podcasts/audio books/jukebox tracks without changing playback speed.
 		description=_("Lower pitch transpose (podcasts, audio books and jukebox tracks)"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:shift+windows+j",
 	)
 	def script_transposeDown(self, gesture):

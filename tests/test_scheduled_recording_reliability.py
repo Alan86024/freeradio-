@@ -11,8 +11,8 @@ from unittest import mock
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-PACKAGE_DIR = ROOT / "addon" / "globalPlugins" / "freeradio"
-PACKAGE_NAME = "freeradio_scheduler_under_test"
+PACKAGE_DIR = ROOT / "addon" / "globalPlugins" / "freeAudio"
+PACKAGE_NAME = "freeAudio_scheduler_under_test"
 package = types.ModuleType(PACKAGE_NAME)
 package.__path__ = [str(PACKAGE_DIR)]
 sys.modules[PACKAGE_NAME] = package
@@ -84,7 +84,7 @@ class ScheduleLoadTests(unittest.TestCase):
 	def test_load_migrates_stale_recurring_date_and_saves_it(self):
 		now = datetime.datetime(2026, 8, 24, 12, 0)
 		with tempfile.TemporaryDirectory() as temp_dir:
-			path = pathlib.Path(temp_dir) / "freeradio_schedules.json"
+			path = pathlib.Path(temp_dir) / "freeAudio_schedules.json"
 			path.write_text(json.dumps([{
 				"station": {"name": "Test station", "url": "https://stream.example/live"},
 				"start_time": "2026-08-28T10:00:00",
@@ -104,7 +104,7 @@ class ScheduleLoadTests(unittest.TestCase):
 	def test_load_recovers_to_the_exact_remaining_seconds(self):
 		now = datetime.datetime(2026, 8, 24, 10, 59, 45)
 		with tempfile.TemporaryDirectory() as temp_dir:
-			path = pathlib.Path(temp_dir) / "freeradio_schedules.json"
+			path = pathlib.Path(temp_dir) / "freeAudio_schedules.json"
 			path.write_text(json.dumps([{
 				"station": {"name": "Test station", "url": "https://stream.example/live"},
 				"start_time": "2026-08-24T10:00:00",

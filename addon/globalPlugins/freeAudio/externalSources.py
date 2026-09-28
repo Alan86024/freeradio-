@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - External station sources
+# freeAudio - External station sources
 #
 # Best-effort search providers for TuneIn and iHeartRadio. Neither service
 # has a stable, officially supported public API — both endpoints below are
@@ -25,7 +25,7 @@ import urllib.request
 
 log = logging.getLogger(__name__)
 
-USER_AGENT = "FreeRadio-NVDA/1.0"
+USER_AGENT = "freeAudio-NVDA/1.0"
 REQUEST_TIMEOUT = 6
 
 TUNEIN_SEARCH_URL = "https://opml.radiotime.com/Search.ashx"
@@ -66,13 +66,13 @@ def search_tunein(query, limit=50, timeout=REQUEST_TIMEOUT):
 	try:
 		data = _get_json(url, timeout=timeout)
 	except (urllib.error.URLError, TimeoutError, OSError) as exc:
-		log.warning("FreeRadio: TuneIn search unreachable: %s", exc)
+		log.warning("freeAudio: TuneIn search unreachable: %s", exc)
 		return []
 	except (ValueError, json.JSONDecodeError) as exc:
-		log.warning("FreeRadio: TuneIn search returned invalid JSON: %s", exc)
+		log.warning("freeAudio: TuneIn search returned invalid JSON: %s", exc)
 		return []
 	except Exception as exc:
-		log.warning("FreeRadio: TuneIn search failed: %s", exc)
+		log.warning("freeAudio: TuneIn search failed: %s", exc)
 		return []
 
 	stations = []
@@ -139,13 +139,13 @@ def search_iheart(query, limit=50, timeout=REQUEST_TIMEOUT):
 	try:
 		data = _get_json(url, timeout=timeout)
 	except (urllib.error.URLError, TimeoutError, OSError) as exc:
-		log.warning("FreeRadio: iHeart search unreachable: %s", exc)
+		log.warning("freeAudio: iHeart search unreachable: %s", exc)
 		return []
 	except (ValueError, json.JSONDecodeError) as exc:
-		log.warning("FreeRadio: iHeart search returned invalid JSON: %s", exc)
+		log.warning("freeAudio: iHeart search returned invalid JSON: %s", exc)
 		return []
 	except Exception as exc:
-		log.warning("FreeRadio: iHeart search failed: %s", exc)
+		log.warning("freeAudio: iHeart search failed: %s", exc)
 		return []
 
 	try:

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Obligato mode (background music)
+# freeAudio - Obligato mode (background music)
 #
 # "Obligato" plays a favourite station quietly in the background on its own
 # independent BASS engine (a second, standalone radioPlayer.RadioPlayer
@@ -73,7 +73,7 @@ class ObligatoDialog(wx.Dialog):
 		self._station_list.SetName(_("Background station:"))
 		sizer.Add(self._station_list, 1, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
 
-		saved_uuid = config.conf["freeradio"].get("obligato_station_uuid", "")
+		saved_uuid = config.conf["freeAudio"].get("obligato_station_uuid", "")
 		station_selection = 0
 		if saved_uuid:
 			for i, s in enumerate(favorites):
@@ -102,8 +102,8 @@ class ObligatoDialog(wx.Dialog):
 		self._device_combo.SetName(_("Audio output:"))
 		sizer.Add(self._device_combo, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
 
-		saved_device = config.conf["freeradio"].get("obligato_audio_device", "same")
-		saved_device_name = config.conf["freeradio"].get("obligato_audio_device_name", "")
+		saved_device = config.conf["freeAudio"].get("obligato_audio_device", "same")
+		saved_device_name = config.conf["freeAudio"].get("obligato_audio_device_name", "")
 		device_selection = 0
 		if saved_device == "default":
 			for i, (val, _label) in enumerate(self._device_choices):
@@ -144,7 +144,7 @@ class ObligatoDialog(wx.Dialog):
 		self._volume_combo.SetName(_("Background volume:"))
 		sizer.Add(self._volume_combo, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
 
-		saved_ratio = config.conf["freeradio"].get("obligato_volume_ratio", 50)
+		saved_ratio = config.conf["freeAudio"].get("obligato_volume_ratio", 50)
 		try:
 			ratio_selection = _VOLUME_RATIO_CHOICES.index(int(saved_ratio))
 		except ValueError:
@@ -203,7 +203,7 @@ class ObligatoMixin:
 	@script(
 		# Translators: Name of an NVDA command (default Ctrl+Shift+Windows+M); starts or stops Obligato background-music mode.
 		description=_("Toggle Obligato background music mode"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		# Default binding lives in GlobalPlugin.__gestures - see __init__.py.
 	)
 	def script_toggleObligato(self, gesture):
@@ -253,16 +253,16 @@ class ObligatoMixin:
 		on a brand-new, fully independent RadioPlayer (its own subprocess),
 		off the main thread so the picker dialog closes immediately."""
 		kind, index, name = device_choice
-		config.conf["freeradio"]["obligato_station_uuid"] = station.get("stationuuid", "")
-		config.conf["freeradio"]["obligato_station_name"] = station.get("name", "")
-		config.conf["freeradio"]["obligato_station_url"] = station.get("url", "")
+		config.conf["freeAudio"]["obligato_station_uuid"] = station.get("stationuuid", "")
+		config.conf["freeAudio"]["obligato_station_name"] = station.get("name", "")
+		config.conf["freeAudio"]["obligato_station_url"] = station.get("url", "")
 		if kind == "device":
-			config.conf["freeradio"]["obligato_audio_device"] = str(index)
-			config.conf["freeradio"]["obligato_audio_device_name"] = name or ""
+			config.conf["freeAudio"]["obligato_audio_device"] = str(index)
+			config.conf["freeAudio"]["obligato_audio_device_name"] = name or ""
 		else:
-			config.conf["freeradio"]["obligato_audio_device"] = kind
-			config.conf["freeradio"]["obligato_audio_device_name"] = ""
-		config.conf["freeradio"]["obligato_volume_ratio"] = ratio
+			config.conf["freeAudio"]["obligato_audio_device"] = kind
+			config.conf["freeAudio"]["obligato_audio_device_name"] = ""
+		config.conf["freeAudio"]["obligato_volume_ratio"] = ratio
 
 		# Stop any previous background player before starting a new one -
 		# not currently reachable from the UI (the toggle gesture stops
@@ -291,7 +291,7 @@ class ObligatoMixin:
 				except Exception:
 					pass
 
-			if not config.conf["freeradio"].get("disable_internet_check", False):
+			if not config.conf["freeAudio"].get("disable_internet_check", False):
 				if not self._check_internet():
 					wx.CallAfter(
 						ui.message,

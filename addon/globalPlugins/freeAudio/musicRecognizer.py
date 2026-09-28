@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Music Recognizer
+# freeAudio - Music Recognizer
 # ffmpeg.exe ile PCM örnek alma + gerçek Shazam imza algoritması + tanıma.
 # shazamio/algorithm.py + signature.py'den numpy'sız saf Python'a aktarıldı.
 # numpy / aiohttp bağımlılığı yoktur.
@@ -32,7 +32,7 @@ _ = _tr
 del _tr
 log = logging.getLogger(__name__)
 
-USER_AGENT		= "FreeRadio-NVDA/1.0 ( https://github.com/freeradio-nvda )"
+USER_AGENT		= "freeAudio-NVDA/1.0 ( https://github.com/freeAudio-nvda )"
 _SAMPLE_DURATION  = 12		  # saniye
 _FFMPEG_TIMEOUT   = 30
 _HTTP_TIMEOUT	 = 10
@@ -140,7 +140,7 @@ def _resolve_to_audio_url(url, timeout=10, _depth=0):
 	mutlak URL'ye dönüştürür.
 	"""
 	if _depth > 3:
-		log.warning("FreeRadio Recognizer: HLS resolve depth limit reached")
+		log.warning("freeAudio Recognizer: HLS resolve depth limit reached")
 		return None
 
 	req = urllib.request.Request(
@@ -158,11 +158,11 @@ def _resolve_to_audio_url(url, timeout=10, _depth=0):
 		# gibi kullanılabilir.
 		if "ICY" in exc_str or "icy" in exc_str.lower():
 			log.info(
-				"FreeRadio Recognizer: ICY/SHOUTcast stream detected, "
+				"freeAudio Recognizer: ICY/SHOUTcast stream detected, "
 				"using original URL directly: %s", url
 			)
 			return url
-		log.warning("FreeRadio Recognizer: resolve failed: %s", exc)
+		log.warning("freeAudio Recognizer: resolve failed: %s", exc)
 		return None
 
 	if _is_audio_content_type(ct):
@@ -208,7 +208,7 @@ def _resolve_to_audio_url(url, timeout=10, _depth=0):
 				i += 1
 
 			if best_url:
-				log.info("FreeRadio Recognizer: HLS master → variant %s (bw=%s)", best_url, best_bw)
+				log.info("freeAudio Recognizer: HLS master → variant %s (bw=%s)", best_url, best_bw)
 				return _resolve_to_audio_url(best_url, timeout=timeout, _depth=_depth + 1)
 
 		# Normal M3U/M3U8 — ilk medya URL'sini döndür
@@ -698,7 +698,7 @@ def _beep_loop():
 
 def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 	"""local_file: path to a small standalone audio file already extracted
-	from FreeRadio's time-shift buffer (see timeshift.extract_recent_snippet).
+	from freeAudio's time-shift buffer (see timeshift.extract_recent_snippet).
 	When given, this is used instead of reconnecting to stream_url - some
 	stations serve a fresh ad to every brand-new connection, so opening a
 	second connection just to sample audio for recognition would capture
@@ -719,7 +719,7 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 
 	# Bip döngüsünü başlat
 	_beep_stop.clear()
-	_beep_thread = threading.Thread(target=_beep_loop, daemon=True, name="FreeRadio-Beep")
+	_beep_thread = threading.Thread(target=_beep_loop, daemon=True, name="freeAudio-Beep")
 	_beep_thread.start()
 
 	try:
@@ -731,7 +731,7 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 				error_msg=(_(
 					"ffmpeg.exe not found. Download ffmpeg from "
 					"https://ffmpeg.org/download.html and place ffmpeg.exe "
-					"in the FreeRadio addon folder, or set the path in settings."
+					"in the freeAudio addon folder, or set the path in settings."
 				)),
 			)
 
@@ -741,7 +741,7 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 		# yakalamamızı sağlar. Arabellek yoksa (ör. özellik/istasyon
 		# desteklemiyorsa) eskisi gibi canlı URL'ye bağlanılır.
 		if local_file and os.path.isfile(local_file):
-			log.warning("FreeRadio Recognizer: using time-shift buffer snippet (%s), "
+			log.warning("freeAudio Recognizer: using time-shift buffer snippet (%s), "
 					  "skipping a new connection to %s", local_file, stream_url)
 			source_for_ffmpeg = local_file
 		else:
@@ -749,28 +749,28 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 			# HLS playlists (.m3u8) are passed directly to ffmpeg, which handles
 			# segment concatenation natively. Resolving them to a single segment
 			# would yield only one ~6s chunk — not enough for recognition.
-			log.warning("FreeRadio Recognizer: resolving %s", stream_url)
+			log.warning("freeAudio Recognizer: resolving %s", stream_url)
 			if stream_url.lower().endswith(".m3u8"):
-				log.info("FreeRadio Recognizer: HLS playlist detected, passing directly to ffmpeg")
+				log.info("freeAudio Recognizer: HLS playlist detected, passing directly to ffmpeg")
 			else:
 				resolved = _resolve_to_audio_url(stream_url)
 				if resolved and resolved != stream_url:
-					log.info("FreeRadio Recognizer: resolved → %s", resolved)
+					log.info("freeAudio Recognizer: resolved → %s", resolved)
 					stream_url = resolved
 				elif not resolved:
-					log.warning("FreeRadio Recognizer: could not resolve, trying original")
+					log.warning("freeAudio Recognizer: could not resolve, trying original")
 			source_for_ffmpeg = stream_url
 
 		# 3. ffmpeg ile PCM al
-		log.info("FreeRadio Recognizer: decoding %ds PCM via ffmpeg", _SAMPLE_DURATION)
+		log.info("freeAudio Recognizer: decoding %ds PCM via ffmpeg", _SAMPLE_DURATION)
 		try:
 			pcm_bytes = _decode_to_pcm(ffmpeg_path, source_for_ffmpeg, _SAMPLE_DURATION)
 		except Exception as exc:
-			log.warning("FreeRadio Recognizer: ffmpeg error: %s", exc)
+			log.warning("freeAudio Recognizer: ffmpeg error: %s", exc)
 			return RecognitionResult(
 				success=False, error_msg="Audio decode error: %s" % str(exc))
 
-		log.info("FreeRadio Recognizer: %d PCM bytes received", len(pcm_bytes))
+		log.info("freeAudio Recognizer: %d PCM bytes received", len(pcm_bytes))
 
 		# 4. Shazam imzası üret
 		#
@@ -780,7 +780,7 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 		# interval just around this call so NVDA's own thread never waits
 		# long for the GIL while it runs, then always restore the
 		# interpreter's previous interval afterwards.
-		log.info("FreeRadio Recognizer: computing signature")
+		log.info("freeAudio Recognizer: computing signature")
 		_prev_switch_interval = sys.getswitchinterval()
 		try:
 			sys.setswitchinterval(0.001)
@@ -789,7 +789,7 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 		try:
 			sig_uri, sample_ms = _compute_signature_uri(pcm_bytes)
 		except Exception as exc:
-			log.warning("FreeRadio Recognizer: signature error: %s", exc)
+			log.warning("freeAudio Recognizer: signature error: %s", exc)
 			return RecognitionResult(
 				success=False, error_msg="Signature error: %s" % str(exc))
 		finally:
@@ -799,14 +799,14 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 				pass
 
 		# 5. Shazam sorgusu
-		log.info("FreeRadio Recognizer: querying Shazam (sample_ms=%d)", sample_ms)
+		log.info("freeAudio Recognizer: querying Shazam (sample_ms=%d)", sample_ms)
 		try:
 			result = _query_shazam(sig_uri, sample_ms)
 		except ValueError as exc:
-			log.info("FreeRadio Recognizer: %s", exc)
+			log.info("freeAudio Recognizer: %s", exc)
 			return RecognitionResult(success=False, error_msg=str(exc))
 		except Exception as exc:
-			log.warning("FreeRadio Recognizer: Shazam error: %s", exc)
+			log.warning("freeAudio Recognizer: Shazam error: %s", exc)
 			return RecognitionResult(
 				success=False, error_msg="Shazam error: %s" % str(exc))
 
@@ -815,7 +815,7 @@ def recognize(stream_url, ffmpeg_path, _unused_api_key="", local_file=None):
 		album  = result.get("album",   "")
 		rel	= result.get("release", "")
 
-		log.info("FreeRadio Recognizer: '%s' by '%s'", title, artist)
+		log.info("freeAudio Recognizer: '%s' by '%s'", title, artist)
 		return RecognitionResult(
 			success=True, title=title, artist=artist,
 			album=album, release_date=rel, score=1.0,
@@ -842,7 +842,7 @@ def recognize_async(stream_url, ffmpeg_path, api_key, callback, local_file=None)
 		try:
 			callback(result)
 		except Exception as exc:
-			log.error("FreeRadio Recognizer callback error: %s", exc)
-	t = threading.Thread(target=_worker, daemon=True, name="FreeRadio-Recognize")
+			log.error("freeAudio Recognizer callback error: %s", exc)
+	t = threading.Thread(target=_worker, daemon=True, name="freeAudio-Recognize")
 	t.start()
 	return t

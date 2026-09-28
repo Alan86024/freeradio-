@@ -56,13 +56,13 @@ def _speak_on_demand(msg):
 
 def _notifications_muted():
 	"""Return True when the user has enabled 'Mute notifications' in settings."""
-	return config.conf["freeradio"].get("mute_notifications", False)
+	return config.conf["freeAudio"].get("mute_notifications", False)
 
 
 def _braille_messages_enabled():
-	return config.conf["freeradio"].get(
+	return config.conf["freeAudio"].get(
 		"braille_messages",
-		config.conf["freeradio"].get("braille_messages_outside_dialog", False),
+		config.conf["freeAudio"].get("braille_messages_outside_dialog", False),
 	)
 
 
@@ -74,7 +74,7 @@ def _braille_message(msg):
 		if handler:
 			handler.message(str(msg))
 	except Exception as e:
-		log.debug("FreeRadio: braille message failed: %s", e)
+		log.debug("freeAudio: braille message failed: %s", e)
 
 
 def _notify(msg):
@@ -158,7 +158,7 @@ def _sapi5_speak(msg):
 	wx.CallAfter(_braille_message, msg)
 	def _speak():
 		import config as _config
-		voice_name = _config.conf["freeradio"].get("sapi5_voice_name", "")
+		voice_name = _config.conf["freeAudio"].get("sapi5_voice_name", "")
 
 		# --- Method 1: comtypes (bundled with NVDA, preferred) ---
 		try:
@@ -174,7 +174,7 @@ def _sapi5_speak(msg):
 			spk.Speak(msg, 0)  # 0 = SVSFlagDefault (synchronous)
 			return
 		except Exception as e:
-			log.warning("FreeRadio: comtypes SAPI5 speak failed: %s", e)
+			log.warning("freeAudio: comtypes SAPI5 speak failed: %s", e)
 
 		# --- Method 2: win32com ---
 		try:
@@ -193,7 +193,7 @@ def _sapi5_speak(msg):
 				pythoncom.CoUninitialize()
 			return
 		except Exception as e:
-			log.warning("FreeRadio: win32com SAPI5 speak failed: %s", e)
+			log.warning("freeAudio: win32com SAPI5 speak failed: %s", e)
 
 		# --- Method 3: PowerShell fallback (default voice only) ---
 		#
@@ -258,10 +258,10 @@ def _list_sapi5_voices():
 				result.append(voices.Item(i).GetDescription())
 			except Exception:
 				pass
-		log.info("FreeRadio: found %d SAPI5 voices: %s", len(result), result)
+		log.info("freeAudio: found %d SAPI5 voices: %s", len(result), result)
 		return result
 	except Exception as e:
-		log.warning("FreeRadio: _list_sapi5_voices failed: %s", e)
+		log.warning("freeAudio: _list_sapi5_voices failed: %s", e)
 
 	# Fallback: comtypes without pre-generated SpeechLib
 	try:
@@ -270,10 +270,10 @@ def _list_sapi5_voices():
 		# GetVoices returns an ISpeechObjectTokens collection
 		voices = spk.GetVoices()
 		result = [voices.Item(i).GetDescription() for i in range(voices.Count)]
-		log.info("FreeRadio: SAPI5 voices (fallback): %s", result)
+		log.info("freeAudio: SAPI5 voices (fallback): %s", result)
 		return result
 	except Exception as e:
-		log.warning("FreeRadio: _list_sapi5_voices fallback failed: %s", e)
+		log.warning("freeAudio: _list_sapi5_voices fallback failed: %s", e)
 		return []
 
 
@@ -292,12 +292,12 @@ _AUDIO_DEVICE_REFRESH_MODE_KEYS = ["reliable", "fast"]
 
 
 def _audio_device_refresh_mode():
-	mode = config.conf["freeradio"].get("audio_device_refresh_mode", "reliable")
+	mode = config.conf["freeAudio"].get("audio_device_refresh_mode", "reliable")
 	return mode if mode in _AUDIO_DEVICE_REFRESH_MODE_KEYS else "reliable"
 
 
 def _init_config():
-	config.conf.spec["freeradio"] = {
+	config.conf.spec["freeAudio"] = {
 		"volume":           "integer(default=100, min=0, max=100)",
 		"last_station_url": "string(default='')",
 		"last_station_name":"string(default='')",
@@ -328,14 +328,14 @@ def _init_config():
 		# Comma-separated subset of {"getem","librivox","gutenberg"} - which
 		# audio book sources are actually searched from the Audio Books tab
 		# (see radioDialog._enabled_audiobook_sources()). All three enabled
-		# by default; FreeRadioSettingsPanel's "Audio book sources" checklist
+		# by default; freeAudioSettingsPanel's "Audio book sources" checklist
 		# is what edits this, in settingsPanel.py.
 		"audiobook_sources": "string(default='getem,librivox,gutenberg')",
 		# Whether the Jukebox tab's disk search walks mapped/UNC network
 		# drives as well as local ones - off by default, since a network
 		# share can make the search dramatically slower or hang if it's
 		# unreachable. See jukebox._list_drive_roots()'s include_network
-		# parameter and FreeRadioSettingsPanel's checkbox that edits this.
+		# parameter and freeAudioSettingsPanel's checkbox that edits this.
 		"jukebox_search_network_drives": "boolean(default=False)",
 		"audio_device":      "integer(default=-1)",
 		"audio_device_name": "string(default='')",
@@ -377,7 +377,7 @@ _init_config()
 
 
 def _cleanup_orphaned_timeshift_buffers():
-	"""Remove leftover freeradio_timeshift_*.buf files from previous
+	"""Remove leftover freeAudio_timeshift_*.buf files from previous
 	sessions. TimeShiftBuffer.stop() normally deletes its own buffer file,
 	but that only runs on a clean shutdown - an abrupt one (crash, power
 	loss, Windows forcing NVDA closed) skips it, leaving the file behind in
@@ -388,7 +388,7 @@ def _cleanup_orphaned_timeshift_buffers():
 	try:
 		tmp_dir = tempfile.gettempdir()
 		for name in os.listdir(tmp_dir):
-			if name.startswith("freeradio_timeshift_") and name.endswith(".buf"):
+			if name.startswith("freeAudio_timeshift_") and name.endswith(".buf"):
 				try:
 					os.remove(os.path.join(tmp_dir, name))
 				except OSError:
@@ -397,7 +397,7 @@ def _cleanup_orphaned_timeshift_buffers():
 		pass
 
 
-from .settingsPanel import FreeRadioSettingsPanel
+from .settingsPanel import freeAudioSettingsPanel
 from .timerManager import TimerManager
 from .audioDeviceMixin import AudioDeviceMixin
 from .playbackCoreMixin import PlaybackCoreMixin
@@ -465,14 +465,14 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		_cleanup_orphaned_timeshift_buffers()
 		self._player  = radioPlayer.RadioPlayer()
 		self._player.set_audio_device_refresh_mode(_audio_device_refresh_mode())
-		self._player.set_volume(config.conf["freeradio"]["volume"])
+		self._player.set_volume(config.conf["freeAudio"]["volume"])
 		# Time-shift buffer (rewind/fast-forward live radio) - disabled by
 		# default, opt-in via the settings panel or config.
 		self._player.set_timeshift_enabled(
-			config.conf["freeradio"].get("timeshift_enabled", False)
+			config.conf["freeAudio"].get("timeshift_enabled", False)
 		)
 		self._player.set_timeshift_capacity_seconds(
-			config.conf["freeradio"].get("timeshift_buffer_seconds", 600)
+			config.conf["freeAudio"].get("timeshift_buffer_seconds", 600)
 		)
 		self._player.set_timeshift_disk_full_callback(
 			lambda: wx.CallAfter(
@@ -482,8 +482,8 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 			)
 		)
 		# Apply saved audio output device
-		_saved_device = config.conf["freeradio"].get("audio_device", -1)
-		_saved_device_name = config.conf["freeradio"].get("audio_device_name", "")
+		_saved_device = config.conf["freeAudio"].get("audio_device", -1)
+		_saved_device_name = config.conf["freeAudio"].get("audio_device_name", "")
 		_devices = []
 		try:
 			_devices = self._player.get_audio_devices()
@@ -499,8 +499,8 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 					)
 					if _match == "name" and _resolved_device != _saved_device:
 						_saved_device = _resolved_device
-						config.conf["freeradio"]["audio_device"] = _resolved_device
-						config.conf["freeradio"]["audio_device_name"] = _resolved_name
+						config.conf["freeAudio"]["audio_device"] = _resolved_device
+						config.conf["freeAudio"]["audio_device_name"] = _resolved_name
 				except Exception:
 					pass
 			elif _saved_device != -1:
@@ -511,29 +511,29 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 						"",
 					)
 					if _match == "index":
-						config.conf["freeradio"]["audio_device_name"] = _resolved_name
+						config.conf["freeAudio"]["audio_device_name"] = _resolved_name
 				except Exception:
 					pass
 		if _saved_device != -1:
 			try:
 				_actual_device = self._player.switch_output_device(_saved_device)
 				if _actual_device != _saved_device:
-					config.conf["freeradio"]["audio_device"] = _actual_device
+					config.conf["freeAudio"]["audio_device"] = _actual_device
 					_actual_name = ""
 					for _idx, _name in _devices:
 						if _idx == _actual_device:
 							_actual_name = _name
 							break
-					config.conf["freeradio"]["audio_device_name"] = _actual_name
+					config.conf["freeAudio"]["audio_device_name"] = _actual_name
 			except Exception:
 				pass
 		# Apply saved audio FX setting
-		_saved_fx = config.conf["freeradio"].get("audio_fx", "none")
+		_saved_fx = config.conf["freeAudio"].get("audio_fx", "none")
 		if _saved_fx and _saved_fx != "none":
 			self._player.set_fx(_saved_fx)
 		# Apply saved crossfade / station-tuning transition setting
 		_cf_map = {"off": 0.0, "short": 1.0, "normal": 2.0, "tuning": 0.0}
-		_saved_cf = config.conf["freeradio"].get("crossfade", "off")
+		_saved_cf = config.conf["freeAudio"].get("crossfade", "off")
 		self._player.set_tuning_effect_enabled(_saved_cf == "tuning")
 		self._player.set_crossfade_duration(_cf_map.get(_saved_cf, 0.0))
 		# Notify and reset settings when audio device is lost
@@ -556,11 +556,11 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		dll_dir = os.path.dirname(os.path.abspath(__file__))
 		self._recorder = recorderModule.Recorder(
 			dll_dir=dll_dir,
-			volume=config.conf["freeradio"]["volume"],
+			volume=config.conf["freeAudio"]["volume"],
 			main_player=self._player,   # pass main player to avoid interruption
-			recording_format=config.conf["freeradio"].get("recording_format", "original"),
-			mp3_bitrate=config.conf["freeradio"].get("recording_mp3_bitrate", 128),
-			ffmpeg_path=config.conf["freeradio"].get("ffmpeg_path", ""),
+			recording_format=config.conf["freeAudio"].get("recording_format", "original"),
+			mp3_bitrate=config.conf["freeAudio"].get("recording_mp3_bitrate", 128),
+			ffmpeg_path=config.conf["freeAudio"].get("ffmpeg_path", ""),
 		)
 		self._recorder._notify_start  = lambda rec: wx.CallAfter(
 			# Translators: Spoken when a scheduled or manual recording begins; %s is the station name.
@@ -583,7 +583,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		)
 		self._recorder._notify_folder_fallback = lambda rec, requested, reason: wx.CallAfter(
 			_notify,
-			# Translators: Spoken when the folder configured for recordings can't be used (e.g. missing/no permission) and FreeRadio saved to its default folder instead; %(station)s is the station name, %(reason)s is why the folder failed.
+			# Translators: Spoken when the folder configured for recordings can't be used (e.g. missing/no permission) and freeAudio saved to its default folder instead; %(station)s is the station name, %(reason)s is why the folder failed.
 			_("Could not use the selected folder for '%(station)s' (%(reason)s). "
 			  "Saved to the default recordings folder instead.")
 			% {"station": rec.station.get("name", ""), "reason": reason},
@@ -596,28 +596,28 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		self._obligato_dialog_open = False
 		self._obligato_player      = None
 		self._obligato_station     = None
-		self._obligato_ratio       = config.conf["freeradio"].get("obligato_volume_ratio", 50)
+		self._obligato_ratio       = config.conf["freeAudio"].get("obligato_volume_ratio", 50)
 		self._obligato_sync_stop   = None
 		self._obligato_sync_thread = None
-		gui.NVDASettingsDialog.categoryClasses.append(FreeRadioSettingsPanel)
+		gui.NVDASettingsDialog.categoryClasses.append(freeAudioSettingsPanel)
 		# Written through globalVars.appArgs.configPath, same as every other
-		# FreeRadio data file (favourites, podcasts, jukebox library, GETEM
+		# freeAudio data file (favourites, podcasts, jukebox library, GETEM
 		# cache/library) - NOT into the add-on's own install directory.
 		# NVDA removes and re-creates that directory on every add-on update,
 		# so a path built from __file__ here lost every pending sleep/alarm
 		# timer on each update; configPath survives updates the same way it
 		# already does for favourites/podcasts/etc.
-		_timers_path = os.path.join(globalVars.appArgs.configPath, "freeradio_timers.json")
+		_timers_path = os.path.join(globalVars.appArgs.configPath, "freeAudio_timers.json")
 		self._timer_manager = TimerManager(
 			self._player, self._manager,
 			save_path=_timers_path,
 			play_callback=self._on_station_selected,
 		)
-		if config.conf["freeradio"].get("resume_on_start"):
+		if config.conf["freeAudio"].get("resume_on_start"):
 			wx.CallAfter(self._resume_last_station)
 		wx.CallAfter(self._build_tools_menu)
 		# Check for updates in the background after a short delay
-		if config.conf["freeradio"].get("auto_check_updates", True):
+		if config.conf["freeAudio"].get("auto_check_updates", True):
 			t = threading.Timer(15.0, self._check_for_updates, kwargs={"silent": True})
 			t.daemon = True
 			t.start()
@@ -631,7 +631,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		self._icy_poll_thread.start()
 
 		# Build dynamic scripts for favourite stations so they appear in
-		# NVDA's Input Gestures dialog under "FreeRadio Stations".
+		# NVDA's Input Gestures dialog under "freeAudio Stations".
 		self._station_script_names = []   # track names for cleanup
 		self._rebuild_station_scripts()
 
@@ -639,7 +639,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		"""Create or refresh one script per favourite station.
 
 		Each script is named  script_playFavoriteStation_<sanitised_uuid>
-		and appears in the "FreeRadio Stations" category of NVDA's Input
+		and appears in the "freeAudio Stations" category of NVDA's Input
 		Gestures dialog.  The user can assign any keyboard shortcut there;
 		NVDA stores it in userGestureMap and it persists across sessions as
 		long as the station remains a favourite.
@@ -664,8 +664,8 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		]
 
 		# ── 2. Create / refresh a script for every favourite ─────────────────
-		# Translators: Script category shown in NVDA's Input Gestures dialog, grouping the auto-generated 'play this favourite station' shortcuts separately from FreeRadio's main commands.
-		_CATEGORY = _("FreeRadio Stations")
+		# Translators: Script category shown in NVDA's Input Gestures dialog, grouping the auto-generated 'play this favourite station' shortcuts separately from freeAudio's main commands.
+		_CATEGORY = _("freeAudio Stations")
 
 		for station in favs:
 			uid        = self._sanitise_uuid(station.get("stationuuid", ""))
@@ -719,29 +719,29 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		return uid.replace("-", "_").replace(".", "_")
 
 	def _build_tools_menu(self):
-		"""Add a FreeRadio submenu under NVDA's Tools menu."""
+		"""Add a freeAudio submenu under NVDA's Tools menu."""
 		tools_menu = gui.mainFrame.sysTrayIcon.toolsMenu
-		self._freeradio_menu = wx.Menu()
+		self._freeAudio_menu = wx.Menu()
 
-		item_browser = self._freeradio_menu.Append(
+		item_browser = self._freeAudio_menu.Append(
 			wx.ID_ANY,
-			# Translators: Menu item that opens the FreeRadio station browser dialog
+			# Translators: Menu item that opens the freeAudio station browser dialog
 			_("Station &Browser...\tCtrl+Win+R"),
 		)
 		gui.mainFrame.sysTrayIcon.Bind(
 			wx.EVT_MENU, lambda evt: wx.CallAfter(self._open_dialog), item_browser
 		)
 
-		item_settings = self._freeradio_menu.Append(
+		item_settings = self._freeAudio_menu.Append(
 			wx.ID_ANY,
-			# Translators: Menu item that opens FreeRadio settings in NVDA preferences
-			_("FreeRadio &Settings..."),
+			# Translators: Menu item that opens freeAudio settings in NVDA preferences
+			_("freeAudio &Settings..."),
 		)
 		gui.mainFrame.sysTrayIcon.Bind(
 			wx.EVT_MENU, self._on_menu_settings, item_settings
 		)
 
-		item_update = self._freeradio_menu.Append(
+		item_update = self._freeAudio_menu.Append(
 			wx.ID_ANY,
 			# Translators: Menu item that manually triggers the update check
 			_("Check for &Updates..."),
@@ -755,17 +755,17 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		)
 
 		self._tools_menu_item = tools_menu.AppendSubMenu(
-			self._freeradio_menu,
-			# Translators: Label of the FreeRadio submenu in NVDA Tools menu
-			_("&FreeRadio"),
+			self._freeAudio_menu,
+			# Translators: Label of the freeAudio submenu in NVDA Tools menu
+			_("&freeAudio"),
 		)
 
 	def _on_menu_settings(self, evt):
-		"""Open NVDA Settings dialog on the FreeRadio category."""
+		"""Open NVDA Settings dialog on the freeAudio category."""
 		wx.CallAfter(
 			gui.mainFrame._popupSettingsDialog,
 			gui.NVDASettingsDialog,
-			FreeRadioSettingsPanel,
+			freeAudioSettingsPanel,
 		)
 
 
@@ -779,11 +779,11 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		self._station_script_names = []
 
 		try:
-			gui.NVDASettingsDialog.categoryClasses.remove(FreeRadioSettingsPanel)
+			gui.NVDASettingsDialog.categoryClasses.remove(freeAudioSettingsPanel)
 		except ValueError:
 			pass
 
-		# Safely remove the FreeRadio submenu from the Tools menu
+		# Safely remove the freeAudio submenu from the Tools menu
 		try:
 			if hasattr(self, "_tools_menu_item") and self._tools_menu_item:
 				tools_menu = gui.mainFrame.sysTrayIcon.toolsMenu
@@ -791,12 +791,12 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 				tools_menu.Delete(self._tools_menu_item.GetId())
 				self._tools_menu_item = None
 		except Exception:
-			log.debug("FreeRadio: Tools menu item could not be removed", exc_info=True)
+			log.debug("freeAudio: Tools menu item could not be removed", exc_info=True)
 
 		try:
-			if hasattr(self, "_freeradio_menu") and self._freeradio_menu:
-				self._freeradio_menu.Destroy()
-				self._freeradio_menu = None
+			if hasattr(self, "_freeAudio_menu") and self._freeAudio_menu:
+				self._freeAudio_menu.Destroy()
+				self._freeAudio_menu = None
 		except Exception:
 			pass
 
@@ -817,9 +817,9 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 
 	@script(
-		# Translators: Name of an NVDA command; opens the FreeRadio station browser dialog on its main Stations tab.
-		description=_("Open FreeRadio station browser"),
-		category=_("FreeRadio"),
+		# Translators: Name of an NVDA command; opens the freeAudio station browser dialog on its main Stations tab.
+		description=_("Open freeAudio station browser"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+r",
 	)
 	def script_openDialog(self, gesture):
@@ -828,8 +828,8 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 	@script(
 		# Translators: Name of an NVDA command; opens the station browser dialog on the Audio Books tab.
-		description=_("Open FreeRadio audio book library"),
-		category=_("FreeRadio"),
+		description=_("Open freeAudio audio book library"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+l",
 	)
 	def script_openLibrary(self, gesture):
@@ -838,8 +838,8 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 	@script(
 		# Translators: Name of an NVDA command; opens the station browser dialog on the Podcasts tab.
-		description=_("Open FreeRadio podcast subscriptions"),
-		category=_("FreeRadio"),
+		description=_("Open freeAudio podcast subscriptions"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+o",
 	)
 	def script_openPodcasts(self, gesture):
@@ -848,8 +848,8 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 
 	@script(
 		# Translators: Name of an NVDA command; opens the station browser dialog on the local Jukebox tab.
-		description=_("Open FreeRadio local jukebox"),
-		category=_("FreeRadio"),
+		description=_("Open freeAudio local jukebox"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+u",
 	)
 	def script_openJukebox(self, gesture):
@@ -859,7 +859,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 	@script(
 		# Translators: Name of an NVDA command whose behaviour depends on what is currently playing: adds a live station to favourites, or downloads the current audio book/podcast episode.
 		description=_("Add currently playing station to favourites, download the whole audio book if one is playing, or download the episode if a podcast is playing"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+v",
 	)
 	def script_addToFavorites(self, gesture):
@@ -924,7 +924,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		try:
 			self._dialog.download_getem_book_by_detail_url(detail_url)
 		except Exception:
-			log.error("FreeRadio: could not start audio book download", exc_info=True)
+			log.error("freeAudio: could not start audio book download", exc_info=True)
 			# Translators: Spoken when downloading the currently playing audio book fails.
 			ui.message(_("Could not download this audio book."))
 
@@ -982,7 +982,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 			# The dialog isn't open to react (e.g. auto-advance a GETEM
 			# audio book, or a jukebox folder, to its next
 			# part/track) - but playback should keep moving forward on its
-			# own regardless of whether the FreeRadio window happens to be
+			# own regardless of whether the freeAudio window happens to be
 			# open, the same way a podcast's resume position keeps saving
 			# in the background. Do the advance ourselves, independent of
 			# any dialog UI.
@@ -1183,13 +1183,13 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		import urllib.error
 		import webbrowser
 
-		API_URL = "https://api.github.com/repos/Surveyor123/freeradio/releases/latest"
+		API_URL = "https://api.github.com/repos/Surveyor123/freeAudio/releases/latest"
 
 		# Retrieve the currently installed addon version via addonHandler
 		current_version = None
 		try:
 			for addon in addonHandler.getAvailableAddons():
-				if addon.manifest.get("name") == "freeradio":
+				if addon.manifest.get("name") == "freeAudio":
 					current_version = addon.manifest.get("version", "")
 					break
 		except Exception:
@@ -1199,32 +1199,32 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		try:
 			req = urllib.request.Request(
 				API_URL,
-				headers={"User-Agent": "freeradio-nvda-addon"},
+				headers={"User-Agent": "freeAudio-nvda-addon"},
 			)
 			with urllib.request.urlopen(req, timeout=10) as resp:
 				data = json.loads(resp.read().decode("utf-8"))
 		except urllib.error.HTTPError as e:
 			if e.code == 404:
 				# No releases published on GitHub yet
-				log.warning("FreeRadio: No releases found on GitHub.")
+				log.warning("freeAudio: No releases found on GitHub.")
 				if not silent:
 					# Translators: Spoken during a manual update check when the GitHub repository has no published releases yet.
 					wx.CallAfter(ui.message, _("No releases found on GitHub yet."))
 			else:
-				log.warning(f"FreeRadio: Update check HTTP error: {e.code}")
+				log.warning(f"freeAudio: Update check HTTP error: {e.code}")
 				if not silent:
 					# Translators: Spoken during a manual update check when the GitHub API request itself returns an HTTP error; %d is the HTTP status code.
 					wx.CallAfter(ui.message, _("Update check failed (HTTP %d).") % e.code)
 			return
 		except Exception as e:
-			log.warning(f"FreeRadio: Update check failed: {e}")
+			log.warning(f"freeAudio: Update check failed: {e}")
 			if not silent:
 				# Translators: Spoken during a manual update check when the request to GitHub fails outright (e.g. no internet connection).
 				wx.CallAfter(ui.message, _("Update check failed. Please check your internet connection."))
 			return
 
 		latest_tag = data.get("tag_name", "").lstrip("v")
-		release_url = data.get("html_url", "https://github.com/Surveyor123/freeradio/releases/latest")
+		release_url = data.get("html_url", "https://github.com/Surveyor123/freeAudio/releases/latest")
 
 		# Find the .nvda-addon asset download URL if available
 		download_url = release_url
@@ -1255,7 +1255,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 				if direct_install:
 					msg = _(
 						# Translators: Update dialog message when direct install is available. %(new)s=new version, %(current)s=current version
-						"A new version of FreeRadio is available: %(new)s.\n"
+						"A new version of freeAudio is available: %(new)s.\n"
 						"You have version %(current)s.\n\n"
 						"Would you like to download and install it now?"
 					) % {"new": latest_tag, "current": current_version or _("unknown")}
@@ -1264,7 +1264,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 				else:
 					msg = _(
 						# Translators: Update dialog message when only a download page is available. %(new)s=new version, %(current)s=current version
-						"A new version of FreeRadio is available: %(new)s.\n"
+						"A new version of freeAudio is available: %(new)s.\n"
 						"You have version %(current)s.\n\n"
 						"Would you like to open the download page?"
 					) % {"new": latest_tag, "current": current_version or _("unknown")}
@@ -1274,8 +1274,8 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 				dlg = wx.MessageDialog(
 					gui.mainFrame,
 					msg,
-					# Translators: Title of the dialog shown when a newer FreeRadio version is available.
-					_("FreeRadio Update Available"),
+					# Translators: Title of the dialog shown when a newer freeAudio version is available.
+					_("freeAudio Update Available"),
 					wx.YES_NO | wx.YES_DEFAULT | wx.ICON_INFORMATION,
 				)
 				# Translators: 'Cancel' button label on the update-available dialog, paired with whichever install/open-page label is used as the other button.
@@ -1295,22 +1295,22 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 			def _do_install(url, version):
 				import tempfile
 				# Translators: Spoken while the new version is being downloaded for direct install; %s is the version number being downloaded.
-				wx.CallAfter(ui.message, _("Downloading FreeRadio %s…") % version)
+				wx.CallAfter(ui.message, _("Downloading freeAudio %s…") % version)
 				try:
 					req = urllib.request.Request(
 						url,
-						headers={"User-Agent": "freeradio-nvda-addon"},
+						headers={"User-Agent": "freeAudio-nvda-addon"},
 					)
 					with urllib.request.urlopen(req, timeout=60) as resp:
 						data_bytes = resp.read()
 					tmp_path = os.path.join(
 						tempfile.gettempdir(),
-						"freeradio-%s.nvda-addon" % version,
+						"freeAudio-%s.nvda-addon" % version,
 					)
 					with open(tmp_path, "wb") as fh:
 						fh.write(data_bytes)
 				except Exception as e:
-					log.error("FreeRadio: Download failed: %s", e)
+					log.error("freeAudio: Download failed: %s", e)
 					wx.CallAfter(
 						ui.message,
 						# Translators: Spoken when downloading the new-version installer file fails; %s is the underlying error message.
@@ -1321,7 +1321,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 				try:
 					os.startfile(tmp_path)
 				except Exception as e:
-					log.error("FreeRadio: Could not launch installer: %s", e)
+					log.error("freeAudio: Could not launch installer: %s", e)
 					wx.CallAfter(
 						ui.message,
 						# Translators: Spoken when the downloaded .nvda-addon file can't be handed to NVDA's installer automatically; %s is the path where the file was saved so the user can open it manually.
@@ -1335,8 +1335,8 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 					dlg = wx.MessageDialog(
 						gui.mainFrame,
 						# Translators: Message and title of the dialog shown after a manual update check finds no newer version; %s is the currently installed version, or the fallback 'unknown' label just below if it could not be determined.
-						_("FreeRadio is up to date. Installed: %s") % (current_version or _("unknown")),
-						_("FreeRadio Update Check"),
+						_("freeAudio is up to date. Installed: %s") % (current_version or _("unknown")),
+						_("freeAudio Update Check"),
 						wx.OK | wx.ICON_INFORMATION,
 					)
 					dlg.ShowModal()
@@ -1380,7 +1380,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		try:
 			req = urllib.request.Request(
 				"https://de1.api.radio-browser.info/json/stats",
-				headers={"User-Agent": "FreeRadio/1.0"}
+				headers={"User-Agent": "freeAudio/1.0"}
 			)
 			with urllib.request.urlopen(req, timeout=timeout) as resp:
 				return resp.status == 200
@@ -1397,7 +1397,7 @@ class GlobalPlugin(ObligatoMixin, MiscTogglesMixin, TrackInfoMixin, RecordingMix
 		try:
 			req = urllib.request.Request(
 				"https://www.google.com/generate_204",
-				headers={"User-Agent": "FreeRadio/1.0"}
+				headers={"User-Agent": "freeAudio/1.0"}
 			)
 			with urllib.request.urlopen(req, timeout=timeout) as resp:
 				return resp.status in (200, 204)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Output device selection and audio mirroring
+# freeAudio - Output device selection and audio mirroring
 #
 # Extracted from GlobalPlugin in __init__.py as the first slice of a
 # broader script_* grouping. Mixed into GlobalPlugin, so `self` here is a
@@ -26,9 +26,9 @@ class AudioDeviceMixin:
 	"""Output device selection, audio mirroring, and device-loss handling."""
 
 	@script(
-		# Translators: Name of an NVDA command in the Input Gestures dialog; opens a list to pick FreeRadio's main audio output device.
-		description=_("Select the main FreeRadio output device"),
-		category=_("FreeRadio"),
+		# Translators: Name of an NVDA command in the Input Gestures dialog; opens a list to pick freeAudio's main audio output device.
+		description=_("Select the main freeAudio output device"),
+		category=_("freeAudio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_selectOutputDevice(self, gesture):
@@ -60,7 +60,7 @@ class AudioDeviceMixin:
 			self._output_device_dialog_open = False
 			ui.message(
 				# Translators: Spoken instead of showing a picker, when only one physical audio output device exists.
-				_("Only one physical audio output device is available. FreeRadio uses the system default output.")
+				_("Only one physical audio output device is available. freeAudio uses the system default output.")
 			)
 			return
 		self._show_output_device_dialog(devices)
@@ -69,8 +69,8 @@ class AudioDeviceMixin:
 		"""Show an accessible, preselected list of the available BASS outputs."""
 		# Translators: First entry in the output-device list; means 'use whatever Windows currently has as its default output'.
 		choices = [(-1, _("System default"))] + list(devices)
-		saved_index = config.conf["freeradio"].get("audio_device", -1)
-		saved_name = config.conf["freeradio"].get("audio_device_name", "")
+		saved_index = config.conf["freeAudio"].get("audio_device", -1)
+		saved_name = config.conf["freeAudio"].get("audio_device_name", "")
 		try:
 			resolved_index, _resolved_name, match = self._player.resolve_audio_device(
 				devices,
@@ -92,10 +92,10 @@ class AudioDeviceMixin:
 			gui.mainFrame.prePopup()
 			dlg = wx.SingleChoiceDialog(
 				gui.mainFrame,
-				# Translators: Prompt of the dialog listing devices to choose as FreeRadio's main playback output.
+				# Translators: Prompt of the dialog listing devices to choose as freeAudio's main playback output.
 				_("Select the main output device:"),
-				# Translators: Title of the dialog for choosing FreeRadio's main output device.
-				_("FreeRadio Output Device"),
+				# Translators: Title of the dialog for choosing freeAudio's main output device.
+				_("freeAudio Output Device"),
 				[name for (_index, name) in choices],
 			)
 			dlg.SetSelection(selection)
@@ -140,16 +140,16 @@ class AudioDeviceMixin:
 		threading.Thread(target=_switch, daemon=True).start()
 
 	def _finish_output_device_selection(self, device_index, device_name, devices):
-		"""Persist the selected output and update any open FreeRadio controls."""
-		config.conf["freeradio"]["audio_device"] = device_index
-		config.conf["freeradio"]["audio_device_name"] = "" if device_index == -1 else device_name
+		"""Persist the selected output and update any open freeAudio controls."""
+		config.conf["freeAudio"]["audio_device"] = device_index
+		config.conf["freeAudio"]["audio_device_name"] = "" if device_index == -1 else device_name
 		self._sync_dialog_device(device_index)
 		if self._dialog and self._dialog.IsShown() and hasattr(self._dialog, "refresh_audio_devices"):
 			self._dialog.refresh_audio_devices(force=True)
 		try:
 			for win in wx.GetTopLevelWindows():
 				if isinstance(win, gui.NVDASettingsDialog):
-					panel = win.FindWindowByName("FreeRadio")
+					panel = win.FindWindowByName("freeAudio")
 					if panel and hasattr(panel, "_populate_devices"):
 						panel._populate_devices(devices)
 					break
@@ -163,7 +163,7 @@ class AudioDeviceMixin:
 	@script(
 		# Translators: Name of an NVDA command in the Input Gestures dialog; starts/stops simultaneously playing audio through a second output device.
 		description=_("Mirror audio to an additional output device"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+m",
 	)
 	def script_mirrorAudio(self, gesture):
@@ -251,8 +251,8 @@ class AudioDeviceMixin:
 		Resets config and dialog to system default (-1), then notifies the user via NVDA.
 		"""
 		try:
-			config.conf["freeradio"]["audio_device"] = -1
-			config.conf["freeradio"]["audio_device_name"] = ""
+			config.conf["freeAudio"]["audio_device"] = -1
+			config.conf["freeAudio"]["audio_device_name"] = ""
 		except Exception:
 			pass
 		wx.CallAfter(self._on_audio_device_lost_ui, lost_index)
@@ -263,11 +263,11 @@ class AudioDeviceMixin:
 		try:
 			for win in wx.GetTopLevelWindows():
 				if isinstance(win, gui.NVDASettingsDialog):
-					panel = win.FindWindowByName("FreeRadio")
+					panel = win.FindWindowByName("freeAudio")
 					if panel and hasattr(panel, "_populate_devices"):
 						panel._populate_devices(panel._audio_devices)
 					break
 		except Exception:
 			pass
-		# Translators: Spoken automatically when the user's selected output device is unplugged; FreeRadio has fallen back to the system default.
+		# Translators: Spoken automatically when the user's selected output device is unplugged; freeAudio has fallen back to the system default.
 		ui.message(_("Audio device disconnected. Switched to system default."))

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Instant/song-capture recording toggle, recordings folder,
+# freeAudio - Instant/song-capture recording toggle, recordings folder,
 # and podcast episode download
 #
 # Extracted from GlobalPlugin in __init__.py. Mixed into GlobalPlugin, so
@@ -72,7 +72,7 @@ class RecordingMixin:
 	@script(
 		# Translators: Name of an NVDA command (Ctrl+Win+E); single-press toggles a plain instant recording, double-press toggles song-capture recording instead - see this method's logic below.
 		description=_("Start or stop instant recording"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+e",
 	)
 	def script_toggleRecord(self, gesture):
@@ -107,7 +107,7 @@ class RecordingMixin:
 				threading.Thread(
 					target=_stop_song_capture,
 					daemon=True,
-					name="FreeRadio-SongRecordingFinalize",
+					name="freeAudio-SongRecordingFinalize",
 				).start()
 				return
 
@@ -180,7 +180,7 @@ class RecordingMixin:
 						_("Song recording started: %s") % icy,
 					)
 				except Exception as exc:
-					log.error("FreeRadio: song capture failed to start: %s", exc)
+					log.error("freeAudio: song capture failed to start: %s", exc)
 					# Translators: Generic fallback spoken if starting song-capture recording raises an unexpected exception.
 					wx.CallAfter(ui.message, _("Could not start song recording"))
 
@@ -216,7 +216,7 @@ class RecordingMixin:
 					else:
 						# Translators: Fallback spoken when a recording is stopped but no output path was returned.
 						wx.CallAfter(_notify, _("Recording stopped"))
-				threading.Thread(target=_stop_recording, daemon=True, name="FreeRadio-RecordingFinalize").start()
+				threading.Thread(target=_stop_recording, daemon=True, name="freeAudio-RecordingFinalize").start()
 				return
 
 			# No recording; if it's a podcast/audiobook, warn and abort
@@ -244,7 +244,7 @@ class RecordingMixin:
 				# Translators: Spoken when a plain instant recording starts (single-press Ctrl+Win+E); %s is the station name.
 				wx.CallAfter(_notify, _("Recording started: %s") % name)
 			except Exception as exc:
-				log.error("FreeRadio: instant recording failed to start: %s", exc)
+				log.error("freeAudio: instant recording failed to start: %s", exc)
 				# Translators: Generic fallback spoken if starting an instant recording raises an unexpected exception.
 				wx.CallAfter(ui.message, _("Could not start recording"))
 
@@ -253,16 +253,16 @@ class RecordingMixin:
 
 	@script(
 		# Translators: Name of an NVDA command (Ctrl+Win+W); opens the configured recordings folder in File Explorer.
-		description=_("Open FreeRadio recordings folder"),
-		category=_("FreeRadio"),
+		description=_("Open freeAudio recordings folder"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+w",
 	)
 	def script_openRecordingsFolder(self, gesture):
-		custom_dir = config.conf["freeradio"].get("recordings_dir", "").strip()
+		custom_dir = config.conf["freeAudio"].get("recordings_dir", "").strip()
 		if custom_dir and os.path.isabs(custom_dir):
 			recordings_dir = custom_dir
 		else:
-			recordings_dir = os.path.join(os.path.expanduser("~"), "Documents", "FreeRadio Recordings")
+			recordings_dir = os.path.join(os.path.expanduser("~"), "Documents", "freeAudio Recordings")
 		os.makedirs(recordings_dir, exist_ok=True)
 		try:
 			os.startfile(recordings_dir)

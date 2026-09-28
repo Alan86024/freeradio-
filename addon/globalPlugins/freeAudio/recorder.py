@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Recorder
+# freeAudio - Recorder
 #
 # Recording strategy:
 #   - For non-HLS streams: Python reads the stream directly over HTTP and writes it to disk.
@@ -46,15 +46,15 @@ def _set_scheduled_recording_power_request(active):
 		result = ctypes.windll.kernel32.SetThreadExecutionState(flags)
 		if not result:
 			log.warning(
-				"FreeRadio Recorder: Windows rejected the scheduled-recording power request"
+				"freeAudio Recorder: Windows rejected the scheduled-recording power request"
 			)
 		return bool(result)
 	except Exception as e:
-		log.warning("FreeRadio Recorder: could not update the Windows power request: %s", e)
+		log.warning("freeAudio Recorder: could not update the Windows power request: %s", e)
 		return False
 
 # Primary User-Agent (works with ICY and most stations)
-_USER_AGENT_PRIMARY = "FreeRadio-NVDA/1.0"
+_USER_AGENT_PRIMARY = "freeAudio-NVDA/1.0"
 # Fallback User-Agent (used for servers like SomaFM that expect a browser-like UA)
 _USER_AGENT_FALLBACK = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 # Default to primary
@@ -156,7 +156,7 @@ def _urlopen(req, timeout):
 			with _ssl_verify_bypass_lock:
 				_ssl_verify_bypass_hosts.add(host)
 		log.info(
-			"FreeRadio: %s presented an invalid/untrusted TLS certificate; "
+			"freeAudio: %s presented an invalid/untrusted TLS certificate; "
 			"retrying without certificate verification (host will be "
 			"remembered for the rest of this session)", host or req,
 		)
@@ -294,14 +294,14 @@ def _is_icy_error(exc):
 def _recordings_dir():
 	try:
 		import config as _cfg
-		custom = _cfg.conf["freeradio"].get("recordings_dir", "").strip()
+		custom = _cfg.conf["freeAudio"].get("recordings_dir", "").strip()
 		if custom and os.path.isabs(custom):
 			os.makedirs(custom, exist_ok=True)
 			return custom
 	except Exception:
 		pass
 	docs = os.path.join(os.path.expanduser("~"), "Documents")
-	path = os.path.join(docs, "FreeRadio Recordings")
+	path = os.path.join(docs, "freeAudio Recordings")
 	os.makedirs(path, exist_ok=True)
 	return path
 
@@ -340,14 +340,14 @@ def _resolve_output_folder(custom_folder):
 		# recordings can resolve the same folder at the same moment (e.g.
 		# several entries firing together), and a fixed filename would have
 		# one thread's write collide with another's on Windows.
-		probe = os.path.join(custom_folder, ".freeradio_write_test_%s" % uuid.uuid4().hex)
+		probe = os.path.join(custom_folder, ".freeAudio_write_test_%s" % uuid.uuid4().hex)
 		with open(probe, "w") as f:
 			f.write("")
 		os.remove(probe)
 		return custom_folder, None
 	except Exception as e:
 		log.warning(
-			"FreeRadio Recorder: configured folder '%s' is unavailable (%s); "
+			"freeAudio Recorder: configured folder '%s' is unavailable (%s); "
 			"falling back to the default recordings folder",
 			custom_folder, e,
 		)
@@ -375,7 +375,7 @@ def _default_ffmpeg_path(dll_dir=None):
 	"""Return the configured or bundled ffmpeg executable path."""
 	try:
 		import config as _cfg
-		configured = _cfg.conf["freeradio"].get("ffmpeg_path", "").strip()
+		configured = _cfg.conf["freeAudio"].get("ffmpeg_path", "").strip()
 		if configured:
 			return configured
 	except Exception:
@@ -644,12 +644,12 @@ def _resolve_hls(url):
 						best_bw  = bw
 						best_url = child
 		if best_url:
-			log.debug("FreeRadio Recorder: HLS best sub-stream (bw=%d) → %s", best_bw, best_url)
+			log.debug("freeAudio Recorder: HLS best sub-stream (bw=%d) → %s", best_bw, best_url)
 			if best_url.lower().split("?")[0].endswith(".m3u8"):
 				return _resolve_hls(best_url)
 			return best_url
 	except Exception as e:
-		log.warning("FreeRadio Recorder: HLS resolve failed: %s", e)
+		log.warning("freeAudio Recorder: HLS resolve failed: %s", e)
 	return url
 
 
@@ -683,7 +683,7 @@ class _StreamWriter:
 		# resolved URL's extension, since an HLS manifest is not always
 		# served from a URL ending in ".m3u8".
 		self._effective_url, self._is_hls = _resolve_url(url)
-		log.debug("FreeRadio Recorder: effective URL for %s: %s, is_hls=%s",
+		log.debug("freeAudio Recorder: effective URL for %s: %s, is_hls=%s",
 		          url, self._effective_url, self._is_hls)
 
 	def start(self):
@@ -711,16 +711,16 @@ class _StreamWriter:
 		
 		if container == "mp4" and current_ext not in (".mp4", ".m4a"):
 			self.output_path = base + ".m4a"
-			log.info("FreeRadio Recorder: detected MP4 container, saving as %s", self.output_path)
+			log.info("freeAudio Recorder: detected MP4 container, saving as %s", self.output_path)
 		elif container == "ts" and current_ext != ".ts":
 			self.output_path = base + ".ts"
-			log.info("FreeRadio Recorder: detected MPEG-TS container, saving as %s", self.output_path)
+			log.info("freeAudio Recorder: detected MPEG-TS container, saving as %s", self.output_path)
 		elif container == "unknown" and self._is_hls:
 			# For HLS, default to .m4a — most modern AAC/HLS streams use MP4 container.
 			# .ts is legacy; defaulting to it causes "no audio" on AAC-in-MP4 segments.
 			if current_ext not in (".m4a", ".mp4"):
 				self.output_path = base + ".m4a"
-				log.info("FreeRadio Recorder: unknown HLS container, defaulting to .m4a")
+				log.info("freeAudio Recorder: unknown HLS container, defaulting to .m4a")
 
 	def _run(self):
 		import time
@@ -739,7 +739,7 @@ class _StreamWriter:
 
 			except _IcyProtocolError:
 				# Server returned ICY 200 OK — retry with raw socket path
-				log.info("FreeRadio Recorder: ICY protocol detected, switching to raw socket mode")
+				log.info("freeAudio Recorder: ICY protocol detected, switching to raw socket mode")
 				try:
 					self._run_icy(first)
 					first = False
@@ -751,7 +751,7 @@ class _StreamWriter:
 					self._error = e2
 					fail_streak += 1
 					log.warning(
-						"FreeRadio Recorder: ICY connection error (streak=%d): %s",
+						"freeAudio Recorder: ICY connection error (streak=%d): %s",
 						fail_streak, e2,
 					)
 
@@ -762,7 +762,7 @@ class _StreamWriter:
 				if not connected:
 					fail_streak += 1
 				log.warning(
-					"FreeRadio Recorder: connection error (streak=%d): %s",
+					"freeAudio Recorder: connection error (streak=%d): %s",
 					fail_streak, e,
 				)
 
@@ -770,7 +770,7 @@ class _StreamWriter:
 				return
 
 			wait = min(2 ** fail_streak, 30)
-			log.warning("FreeRadio Recorder: reconnecting in %ds...", wait)
+			log.warning("freeAudio Recorder: reconnecting in %ds...", wait)
 			for _ in range(wait * 10):
 				if self._stop.is_set():
 					return
@@ -806,7 +806,7 @@ class _StreamWriter:
 				ext = _guess_ext(self._effective_url, ct)
 				base, _ = os.path.splitext(self.output_path)
 				self.output_path = base + "." + ext
-				log.info("FreeRadio Recorder: writing to %s (ct=%s)", self.output_path, ct)
+				log.info("freeAudio Recorder: writing to %s (ct=%s)", self.output_path, ct)
 
 			with open(self.output_path, "ab") as f:
 				self._connected.set()
@@ -825,7 +825,7 @@ class _StreamWriter:
 				ext = _guess_ext(self._effective_url, ct)
 				base, _ = os.path.splitext(self.output_path)
 				self.output_path = base + "." + ext
-				log.info("FreeRadio Recorder: ICY writing to %s (ct=%s)", self.output_path, ct)
+				log.info("freeAudio Recorder: ICY writing to %s (ct=%s)", self.output_path, ct)
 
 			with open(self.output_path, "ab") as f:
 				self._connected.set()
@@ -869,7 +869,7 @@ class _StreamWriter:
 		import time
 		from urllib.parse import urlparse
 
-		log.info("FreeRadio Recorder: HLS recording started for %s", self._effective_url)
+		log.info("freeAudio Recorder: HLS recording started for %s", self._effective_url)
 
 		def _abs(url, base_url):
 			from urllib.parse import urljoin
@@ -915,7 +915,7 @@ class _StreamWriter:
 								best_bw = bw
 								best_manifest = _abs(nl, base_url)
 				if best_manifest and best_manifest != manifest_url:
-					log.info("FreeRadio Recorder: HLS → best sub-manifest (bw=%d): %s", best_bw, best_manifest)
+					log.info("freeAudio Recorder: HLS → best sub-manifest (bw=%d): %s", best_bw, best_manifest)
 					manifest_url = best_manifest
 					switched = True
 				if switched:
@@ -939,7 +939,7 @@ class _StreamWriter:
 				media_sequence, parsed_segments = _parse_hls_media_segments(lines, base_url)
 				if seen_segments.prepare_playlist(parsed_segments):
 					log.info(
-						"FreeRadio Recorder: HLS media sequence reset detected; "
+						"freeAudio Recorder: HLS media sequence reset detected; "
 						"starting a new segment epoch"
 					)
 				segments = [
@@ -948,7 +948,7 @@ class _StreamWriter:
 				]
 
 				log.debug(
-					"FreeRadio Recorder: HLS %d new segments "
+					"freeAudio Recorder: HLS %d new segments "
 					"(target_dur=%ds, media_sequence=%s)",
 					len(segments), target_dur, media_sequence,
 				)
@@ -975,7 +975,7 @@ class _StreamWriter:
 								output_file = open(self.output_path, "ab")
 								first_segment_written = True
 								self._connected.set()
-								log.info("FreeRadio Recorder: first segment written to %s", self.output_path)
+								log.info("freeAudio Recorder: first segment written to %s", self.output_path)
 
 								# fMP4 streams carry moov/init in a separate #EXT-X-MAP segment.
 								# Without it, players see no audio/video tracks.
@@ -989,17 +989,17 @@ class _StreamWriter:
 											output_file.flush()
 											last_map_signature = map_signature
 											log.info(
-												"FreeRadio Recorder: wrote fMP4 init segment from %s",
+												"freeAudio Recorder: wrote fMP4 init segment from %s",
 												current_map_url,
 											)
 										else:
 											log.debug(
-												"FreeRadio Recorder: ignored unchanged fMP4 init "
+												"freeAudio Recorder: ignored unchanged fMP4 init "
 												"segment with refreshed URL"
 											)
 										last_map_url = current_map_url
 									except Exception as e:
-										log.warning("FreeRadio Recorder: failed to fetch init segment: %s", e)
+										log.warning("freeAudio Recorder: failed to fetch init segment: %s", e)
 							else:
 								# If the init segment changed mid-stream, write the new one
 								if current_map_url and current_map_url != last_map_url:
@@ -1011,17 +1011,17 @@ class _StreamWriter:
 											output_file.flush()
 											last_map_signature = map_signature
 											log.info(
-												"FreeRadio Recorder: wrote new fMP4 init segment from %s",
+												"freeAudio Recorder: wrote new fMP4 init segment from %s",
 												current_map_url,
 											)
 										else:
 											log.debug(
-												"FreeRadio Recorder: ignored unchanged fMP4 init "
+												"freeAudio Recorder: ignored unchanged fMP4 init "
 												"segment with refreshed URL"
 											)
 										last_map_url = current_map_url
 									except Exception as e:
-										log.warning("FreeRadio Recorder: failed to fetch new init segment: %s", e)
+										log.warning("freeAudio Recorder: failed to fetch new init segment: %s", e)
 
 							if output_file:
 								output_file.write(data)
@@ -1032,7 +1032,7 @@ class _StreamWriter:
 							break
 						except Exception as e:
 							log.warning(
-								"FreeRadio Recorder: HLS segment error (attempt %d/5): %s",
+								"freeAudio Recorder: HLS segment error (attempt %d/5): %s",
 								seg_attempt + 1, e,
 							)
 							seg_errors += 1
@@ -1060,7 +1060,7 @@ class _StreamWriter:
 				manifest_errors += 1
 				wait = min(2 ** manifest_errors, 30)
 				log.warning(
-					"FreeRadio Recorder: HLS manifest error (streak=%d), retry in %ds: %s",
+					"freeAudio Recorder: HLS manifest error (streak=%d), retry in %ds: %s",
 					manifest_errors, wait, e,
 				)
 				for _ in range(wait * 10):
@@ -1110,7 +1110,7 @@ def _resolve_playlist(url, _hops=3):
 			ct = (resp.headers.get("content-type") or "").lower().split(";")[0].strip()
 			text = resp.read(8192).decode("utf-8", errors="ignore")
 	except Exception as e:
-		log.warning("FreeRadio Recorder: playlist resolve failed: %s", e)
+		log.warning("freeAudio Recorder: playlist resolve failed: %s", e)
 		return url, False
 
 	# A content-type that already says "this is audio" - and isn't one of
@@ -1213,7 +1213,7 @@ def _normalise_recurring_occurrence(start, duration_minutes, active_days, now, m
 	The returned start is either the currently active occurrence or the first
 	future occurrence on an allowed weekday.  It is derived from the schedule's
 	wall-clock time rather than its persisted date, which also repairs dates
-	that older FreeRadio versions incorrectly moved a full week ahead.
+	that older freeAudio versions incorrectly moved a full week ahead.
 
 	The second return value counts fully missed occurrences between the stored
 	start and the returned start.  Legacy fixed-count schedules use that value
@@ -1283,7 +1283,7 @@ class ScheduledRecording:
 		self.fired             = False
 		self.output_path       = None
 		# Per-entry destination folder. Empty string/None means "use the
-		# global default recordings folder" (config.conf["freeradio"]["recordings_dir"]).
+		# global default recordings folder" (config.conf["freeAudio"]["recordings_dir"]).
 		self.output_folder     = (output_folder or "").strip()
 		# Recurrence fields
 		self.recurrence        = recurrence       # "once" | "weekly" | "indefinite"
@@ -1364,14 +1364,14 @@ def _schedules_path():
 	"""The path to the JSON file.
 
 	Resolved through globalVars.appArgs.configPath, the same as every
-	other FreeRadio data file (favourites, podcasts, jukebox library,
+	other freeAudio data file (favourites, podcasts, jukebox library,
 	timers, GETEM cache/library) - NOT %APPDATA%\\nvda directly. Those are
 	the same directory for a normal installed NVDA, but not for a portable
 	copy or for `nvda.exe -c <path>`, where %APPDATA%\\nvda points at the
 	wrong (or a nonexistent) profile while configPath correctly resolves
 	to whichever profile NVDA is actually running with.
 	"""
-	return os.path.join(globalVars.appArgs.configPath, "freeradio_schedules.json")
+	return os.path.join(globalVars.appArgs.configPath, "freeAudio_schedules.json")
 
 
 def _save_schedules(schedules):
@@ -1406,7 +1406,7 @@ def _save_schedules(schedules):
 				"output_folder":     rec.output_folder,
 			})
 		except Exception as e:
-			log.warning("FreeRadio Recorder: could not serialize schedule: %s", e)
+			log.warning("freeAudio Recorder: could not serialize schedule: %s", e)
 	try:
 		path = _schedules_path()
 		os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -1419,7 +1419,7 @@ def _save_schedules(schedules):
 			if os.path.exists(temp_path):
 				os.remove(temp_path)
 	except Exception as e:
-		log.warning("FreeRadio Recorder: could not save schedules: %s", e)
+		log.warning("freeAudio Recorder: could not save schedules: %s", e)
 
 
 def _roll_forward_occurrence(start, active_days, now, max_steps=520):
@@ -1479,7 +1479,7 @@ def _load_schedules(now=None):
 					)
 					if start is None:
 						log.warning(
-							"FreeRadio Recorder: could not find a valid occurrence for '%s'; dropping entry",
+							"freeAudio Recorder: could not find a valid occurrence for '%s'; dropping entry",
 							item.get("station", {}).get("name", "?"),
 						)
 						needs_save = True
@@ -1492,7 +1492,7 @@ def _load_schedules(now=None):
 					if start != original_start:
 						needs_save = True
 						log.info(
-							"FreeRadio Recorder: normalised recurring schedule '%s' to %s",
+							"freeAudio Recorder: normalised recurring schedule '%s' to %s",
 							item.get("station", {}).get("name", "?"),
 							start.strftime("%d.%m.%Y %H:%M"),
 						)
@@ -1506,7 +1506,7 @@ def _load_schedules(now=None):
 				if start <= now < deadline:
 					catchup_seconds = (deadline - now).total_seconds()
 					log.info(
-						"FreeRadio Recorder: recovering '%s' with %.1f seconds remaining",
+						"freeAudio Recorder: recovering '%s' with %.1f seconds remaining",
 						item.get("station", {}).get("name", "?"),
 						catchup_seconds,
 					)
@@ -1525,12 +1525,12 @@ def _load_schedules(now=None):
 				rec.catchup_duration_seconds = catchup_seconds
 				result.append(rec)
 			except Exception as e:
-				log.warning("FreeRadio Recorder: skipping bad schedule entry: %s", e)
+				log.warning("freeAudio Recorder: skipping bad schedule entry: %s", e)
 		if needs_save:
 			_save_schedules(result)
 		return result
 	except Exception as e:
-		log.warning("FreeRadio Recorder: could not load schedules: %s", e)
+		log.warning("freeAudio Recorder: could not load schedules: %s", e)
 		return []
 
 
@@ -1597,13 +1597,13 @@ class Recorder:
 		)
 		if error:
 			log.error(
-				"FreeRadio Recorder: output conversion failed; original retained: %s",
+				"freeAudio Recorder: output conversion failed; original retained: %s",
 				error,
 			)
 			if hasattr(self, "_notify_conversion_error") and self._notify_conversion_error:
 				self._notify_conversion_error(path, error)
 		else:
-			log.info("FreeRadio Recorder: finalized recording → %s", converted_path)
+			log.info("freeAudio Recorder: finalized recording → %s", converted_path)
 		return converted_path
 
 	def _persist_schedules(self, extra_active=None):
@@ -1671,7 +1671,7 @@ class Recorder:
 		original_url = getattr(player, "_current_url_resolved", None) or player._current_url
 		if not original_url:
 			raise RuntimeError("No station playing")
-		log.warning("FreeRadio Recorder: instant recording URL = %s", original_url)
+		log.warning("freeAudio Recorder: instant recording URL = %s", original_url)
 		if self._writer:
 			self._writer.stop()
 
@@ -1680,7 +1680,7 @@ class Recorder:
 		self._station_name = station_name
 		self._writer = _StreamWriter(original_url, out)
 		self._writer.start()
-		log.warning("FreeRadio Recorder: instant recording started → %s", out)
+		log.warning("freeAudio Recorder: instant recording started → %s", out)
 		return out
 
 	def start_song_capture(self, player, song_title, timeshift_buffer=None):
@@ -1710,7 +1710,7 @@ class Recorder:
 		self._song_capture = True         # flag: this recording was started in song-capture mode
 		self._writer = _StreamWriter(original_url, out)
 		self._writer.start()
-		log.warning("FreeRadio Recorder: song-capture recording started → %s", out)
+		log.warning("freeAudio Recorder: song-capture recording started → %s", out)
 		return out
 
 	def stop_song_capture(self):
@@ -1728,7 +1728,7 @@ class Recorder:
 		self._song_capture = False
 		if writer:
 			path = self._finalize_writer(writer)
-		log.info("FreeRadio Recorder: song-capture recording stopped, file=%s", path)
+		log.info("freeAudio Recorder: song-capture recording stopped, file=%s", path)
 		return path
 
 	def is_song_capture(self):
@@ -1752,7 +1752,7 @@ class Recorder:
 		self._song_capture = False
 		if writer:
 			path = self._finalize_writer(writer)
-		log.info("FreeRadio Recorder: instant recording stopped, file=%s", path)
+		log.info("freeAudio Recorder: instant recording stopped, file=%s", path)
 		return path
 
 	def is_recording(self):
@@ -1888,7 +1888,7 @@ class Recorder:
 				changed = True
 				if not rec.is_recurring():
 					log.warning(
-						"FreeRadio Recorder: one-shot schedule for '%s' was missed while NVDA was suspended",
+						"freeAudio Recorder: one-shot schedule for '%s' was missed while NVDA was suspended",
 						rec.station.get("name", "?"),
 					)
 					continue
@@ -1903,7 +1903,7 @@ class Recorder:
 					rec.occurrences_done += skipped
 				if new_start is None or not rec.has_more_occurrences():
 					log.warning(
-						"FreeRadio Recorder: missed recurring schedule for '%s' has no future occurrence",
+						"freeAudio Recorder: missed recurring schedule for '%s' has no future occurrence",
 						rec.station.get("name", "?"),
 					)
 					continue
@@ -1911,7 +1911,7 @@ class Recorder:
 				rec.catchup_duration_seconds = None
 				pending.append(rec)
 				log.warning(
-					"FreeRadio Recorder: missed occurrence for '%s'; next at %s",
+					"freeAudio Recorder: missed occurrence for '%s'; next at %s",
 					rec.station.get("name", "?"),
 					new_start.strftime("%d.%m.%Y %H:%M"),
 				)
@@ -1957,20 +1957,20 @@ class Recorder:
 				try:
 					self._main_player.play(url, name, url_resolved=url, station=rec.station)
 					started_on_main = True
-					log.info("FreeRadio Recorder: scheduled playback via main player")
+					log.info("freeAudio Recorder: scheduled playback via main player")
 				except Exception as e:
-					log.warning("FreeRadio Recorder: failed to start scheduled playback on main player: %s", e)
+					log.warning("freeAudio Recorder: failed to start scheduled playback on main player: %s", e)
 			elif main_station and main_station.get("stationuuid") == rec.station.get("stationuuid"):
-				log.info("FreeRadio Recorder: main player already playing %s; will only record", name)
+				log.info("freeAudio Recorder: main player already playing %s; will only record", name)
 			else:
-				log.info("FreeRadio Recorder: main player playing another station; will only record (no playback)")
+				log.info("freeAudio Recorder: main player playing another station; will only record (no playback)")
 		# (If main_player is None or record_only=True, no playback is done)
 
 		with self._active_scheduled_lock:
 			self._active_scheduled.add(rec)
 		self._persist_schedules()
 
-		log.info("FreeRadio Recorder: scheduled recording started — %s → %s", name, out)
+		log.info("freeAudio Recorder: scheduled recording started — %s → %s", name, out)
 		if hasattr(self, "_notify_start") and self._notify_start:
 			self._notify_start(rec)
 
@@ -2004,18 +2004,18 @@ class Recorder:
 				current = self._main_player.get_current_station()
 				if current and current.get("stationuuid") == rec.station.get("stationuuid"):
 					self._main_player.stop()
-					log.info("FreeRadio Recorder: stopped scheduled playback on main player")
+					log.info("freeAudio Recorder: stopped scheduled playback on main player")
 			# else: user changed station; keep playing what they chose
 
 		if not ever_connected:
 			log.error(
-				"FreeRadio Recorder: scheduled recording never connected — %s (no file was written)",
+				"freeAudio Recorder: scheduled recording never connected — %s (no file was written)",
 				name,
 			)
 			if hasattr(self, "_notify_failed") and self._notify_failed:
 				self._notify_failed(rec)
 		else:
-			log.info("FreeRadio Recorder: scheduled recording finished — %s", rec.output_path)
+			log.info("freeAudio Recorder: scheduled recording finished — %s", rec.output_path)
 			if hasattr(self, "_notify_finish") and self._notify_finish:
 				self._notify_finish(rec)
 
@@ -2050,14 +2050,14 @@ class Recorder:
 					self._scheduled.sort(key=lambda r: r.start_time)
 				self._persist_schedules()
 				log.info(
-					"FreeRadio Recorder: recurring entry re-queued — "
+					"freeAudio Recorder: recurring entry re-queued — "
 					"'%s' next at %s",
 					rec.station.get("name", "?"),
 					next_start.strftime("%d.%m.%Y %H:%M"),
 				)
 			else:
 				log.warning(
-					"FreeRadio Recorder: could not find next valid day "
+					"freeAudio Recorder: could not find next valid day "
 					"for '%s'; stopping recurrence",
 					rec.station.get("name", "?"),
 				)

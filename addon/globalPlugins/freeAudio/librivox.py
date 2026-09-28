@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Audio Books (LibriVox) integration
+# freeAudio - Audio Books (LibriVox) integration
 #
 # Searches and resolves playable media from LibriVox
 # (https://librivox.org/), the volunteer-read public-domain audiobook
@@ -51,7 +51,7 @@
 # NOTE: this module was written and updated without being able to make a
 # live request to either librivox.org or archive.org from the environment
 # it was authored in - if archive.org searches or chapter listings still
-# fail, check the *actual* HTTP status and response body in FreeRadio's
+# fail, check the *actual* HTTP status and response body in freeAudio's
 # log (see _fetch()'s error handling) rather than assuming this note is
 # still the full picture.
 
@@ -86,7 +86,7 @@ ARCHIVE_DETAILS_BASE = "https://archive.org/details/"
 # Books search field - see looks_like_book_url()/get_book_by_url().
 ARCHIVE_DETAILS_URL_RE = re.compile(
 	r"^https?://(?:www\.)?archive\.org/details/([A-Za-z0-9._-]+)", re.IGNORECASE)
-USER_AGENT = "FreeRadio-NVDA/1.0"
+USER_AGENT = "freeAudio-NVDA/1.0"
 # Same rationale as the equivalent constants in podcast.py: a hard cap on
 # how much of any single API/RSS response is read, plus an extension
 # allowlist for downloaded chapter files.
@@ -124,7 +124,7 @@ def _fetch(url, timeout=REQUEST_TIMEOUT):
 		# usually far more specific about what it actually objected to,
 		# and this couldn't be reached for a scripted request from the
 		# environment this module was authored/fixed in, so this detail is
-		# needed in FreeRadio's log to diagnose it for real next time
+		# needed in freeAudio's log to diagnose it for real next time
 		# rather than guessing again.
 		try:
 			body = e.read().decode("utf-8", errors="replace")[:300].strip()
@@ -219,13 +219,13 @@ def search_librivox(query, limit=RESULTS_PER_QUERY):
 	try:
 		response_text = _fetch(url, timeout=SEARCH_TIMEOUT)
 	except Exception as e:
-		log.warning("FreeRadio LibriVox: archive.org search failed: %s", e)
+		log.warning("freeAudio LibriVox: archive.org search failed: %s", e)
 		return [], str(e)
 
 	try:
 		data = json.loads(response_text)
 	except ValueError as e:
-		log.warning("FreeRadio LibriVox: could not parse archive.org search response: %s", e)
+		log.warning("freeAudio LibriVox: could not parse archive.org search response: %s", e)
 		return [], str(e)
 
 	docs = (((data or {}).get("response") or {}).get("docs")) or []
@@ -234,7 +234,7 @@ def search_librivox(query, limit=RESULTS_PER_QUERY):
 		try:
 			books.append(_parse_archive_doc(doc))
 		except Exception as e:
-			log.warning("FreeRadio LibriVox: could not parse one archive.org result: %s", e)
+			log.warning("freeAudio LibriVox: could not parse one archive.org result: %s", e)
 
 	return books, None
 
@@ -693,7 +693,7 @@ class LibrivoxLibrary:
 		self._load()
 
 	def _get_path(self):
-		return os.path.join(globalVars.appArgs.configPath, "freeradio_librivox_library.json")
+		return os.path.join(globalVars.appArgs.configPath, "freeAudio_librivox_library.json")
 
 	def _load(self):
 		path = self._get_path()
@@ -704,7 +704,7 @@ class LibrivoxLibrary:
 				data = json.load(f)
 			self._books = [LibrivoxBook.from_dict(item) for item in data if isinstance(item, dict)]
 		except Exception as e:
-			log.warning("FreeRadio LibriVox: failed to load library: %s", e)
+			log.warning("freeAudio LibriVox: failed to load library: %s", e)
 
 	def save(self):
 		try:
@@ -714,7 +714,7 @@ class LibrivoxLibrary:
 				json.dump([b.to_library_dict() for b in self._books], f, ensure_ascii=False, indent=4)
 			os.replace(tmp_path, path)
 		except Exception as e:
-			log.warning("FreeRadio LibriVox: failed to save library: %s", e)
+			log.warning("freeAudio LibriVox: failed to save library: %s", e)
 
 	def get_books(self):
 		return list(self._books)

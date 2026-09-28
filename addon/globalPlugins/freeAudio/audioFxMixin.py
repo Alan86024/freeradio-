@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Volume, EQ/bass-treble-vocal boost, crossfade, playback rate
+# freeAudio - Volume, EQ/bass-treble-vocal boost, crossfade, playback rate
 #
 # Extracted from GlobalPlugin in __init__.py. Mixed into GlobalPlugin, so
 # `self` here is a GlobalPlugin instance - self._player and self._dialog
@@ -29,29 +29,29 @@ class AudioFxMixin:
 	transition controls, plus the dialog-sync helpers they share."""
 
 	@script(
-		# Translators: Name of an NVDA command; raises FreeRadio's playback volume by 5 (of 200 max, capped at 100 when saved).
-		description=_("Increase FreeRadio volume by 5"),
-		category=_("FreeRadio"),
+		# Translators: Name of an NVDA command; raises freeAudio's playback volume by 5 (of 200 max, capped at 100 when saved).
+		description=_("Increase freeAudio volume by 5"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+upArrow",
 	)
 	def script_volumeUp(self, gesture):
 		vol = min(200, self._player.get_volume() + 5)
 		self._player.set_volume(vol)
-		config.conf["freeradio"]["volume"] = min(100, vol)
+		config.conf["freeAudio"]["volume"] = min(100, vol)
 		# Translators: Spoken after volume is changed with the volume-up/down commands; %d is the new volume level.
 		_notify(_("Volume %d") % vol)
 		self._sync_dialog_volume(vol)
 
 	@script(
-		# Translators: Name of an NVDA command; lowers FreeRadio's playback volume by 5.
-		description=_("Decrease FreeRadio volume by 5"),
-		category=_("FreeRadio"),
+		# Translators: Name of an NVDA command; lowers freeAudio's playback volume by 5.
+		description=_("Decrease freeAudio volume by 5"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+downArrow",
 	)
 	def script_volumeDown(self, gesture):
 		vol = max(0, self._player.get_volume() - 5)
 		self._player.set_volume(vol)
-		config.conf["freeradio"]["volume"] = min(100, vol)
+		config.conf["freeAudio"]["volume"] = min(100, vol)
 		# Translators: Spoken after volume is changed; %d is the new volume level.
 		_notify(_("Volume %d") % vol)
 		self._sync_dialog_volume(vol)
@@ -59,7 +59,7 @@ class AudioFxMixin:
 	@script(
 		# Translators: Name of an NVDA command; speeds up playback rate, podcasts/audiobooks/GETEM chapters only.
 		description=_("Increase podcast playback speed"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+shift+k",
 	)
 	def script_playbackRateUp(self, gesture):
@@ -68,7 +68,7 @@ class AudioFxMixin:
 	@script(
 		# Translators: Name of an NVDA command; slows down playback rate, podcasts/audiobooks/GETEM chapters only.
 		description=_("Decrease podcast playback speed"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+shift+j",
 	)
 	def script_playbackRateDown(self, gesture):
@@ -85,7 +85,7 @@ class AudioFxMixin:
 			return
 		if reason == "bass_fx_unavailable":
 			# Translators: Spoken when playback-rate change fails because the optional bass_fx library used for time-stretching isn't installed.
-			_notify(_("Playback speed control needs the bass_fx add-on library — see the FreeRadio docs."))
+			_notify(_("Playback speed control needs the bass_fx add-on library — see the freeAudio docs."))
 		elif reason in ("not_tempo_stream", "wrong_backend"):
 			# Translators: Spoken when the user tries to change playback rate while playing a live radio station rather than a podcast/audiobook.
 			_notify(_("Playback speed control is only available for podcasts."))
@@ -130,7 +130,7 @@ class AudioFxMixin:
 	@script(
 		# Translators: Name of an NVDA command; toggles a low-frequency EQ boost on/off.
 		description=_("Toggle bass boost"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleBassBoost(self, gesture):
@@ -140,7 +140,7 @@ class AudioFxMixin:
 	@script(
 		# Translators: Name of an NVDA command; toggles a high-frequency EQ boost on/off.
 		description=_("Toggle treble boost"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleTrebleBoost(self, gesture):
@@ -150,7 +150,7 @@ class AudioFxMixin:
 	@script(
 		# Translators: Name of an NVDA command; toggles a mid-range EQ boost tuned for vocal clarity on/off.
 		description=_("Toggle vocal boost"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleVocalBoost(self, gesture):
@@ -165,7 +165,7 @@ class AudioFxMixin:
 		toggling must add/remove that name from "audio_fx" via set_fx,
 		in addition to (re)applying the saved gain via set_eq_gain.
 		"""
-		fx_str = config.conf["freeradio"].get("audio_fx", "none")
+		fx_str = config.conf["freeAudio"].get("audio_fx", "none")
 		active = [f.strip() for f in fx_str.split(",") if f.strip() and f.strip() != "none"]
 
 		gain_key = "eq_gain_" + band
@@ -180,12 +180,12 @@ class AudioFxMixin:
 			active.append(band)
 			turning_on = True
 			# Ensure a sensible (non-zero) gain is set.
-			if config.conf["freeradio"].get(gain_key, 0) == 0:
-				config.conf["freeradio"][gain_key] = _eq_defaults.get(band, 6)
+			if config.conf["freeAudio"].get(gain_key, 0) == 0:
+				config.conf["freeAudio"][gain_key] = _eq_defaults.get(band, 6)
 
 		new_fx_str = ",".join(active) if active else "none"
-		config.conf["freeradio"]["audio_fx"] = new_fx_str
-		gain_db = config.conf["freeradio"].get(gain_key, _eq_defaults.get(band, 6))
+		config.conf["freeAudio"]["audio_fx"] = new_fx_str
+		gain_db = config.conf["freeAudio"].get(gain_key, _eq_defaults.get(band, 6))
 
 		if self._player is not None:
 			try:
@@ -227,7 +227,7 @@ class AudioFxMixin:
 	@script(
 		# Translators: Name of an NVDA command; cycles the sound effect played when switching stations (crossfade/instant cut/tuning effect).
 		description=_("Toggle station switch transition (crossfade)"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		# No gesture assigned by default; bind one via NVDA's Input Gestures dialog.
 	)
 	def script_toggleStationTransition(self, gesture):
@@ -244,14 +244,14 @@ class AudioFxMixin:
 		}
 		_cf_map = {"off": 0.0, "short": 1.0, "normal": 2.0, "tuning": 0.0}
 
-		current = config.conf["freeradio"].get("crossfade", "off")
+		current = config.conf["freeAudio"].get("crossfade", "off")
 		try:
 			idx = _cf_order.index(current)
 		except ValueError:
 			idx = 0
 		new_value = _cf_order[(idx + 1) % len(_cf_order)]
 
-		config.conf["freeradio"]["crossfade"] = new_value
+		config.conf["freeAudio"]["crossfade"] = new_value
 		if self._player is not None:
 			try:
 				self._player.set_tuning_effect_enabled(new_value == "tuning")

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - Station Browser Dialog
-# Initial UI event handling patterns and dialog base inspired by work by Gary Mp (GaryMp/freeradio).
+# freeAudio - Station Browser Dialog
+# Initial UI event handling patterns and dialog base inspired by work by Gary Mp (GaryMp/freeAudio).
 
 import addonHandler
 addonHandler.initTranslation()
@@ -232,7 +232,7 @@ def _notify(msg):
 	Falls back to ui.message when the plugin module is not yet loaded.
 	"""
 	for key, mod in sys.modules.items():
-		if key.endswith("freeradio") and not key.endswith(("radioDialog", "stationManager", "utils", "radioPlayer", "recorder", "musicRecognizer")):
+		if key.endswith("freeAudio") and not key.endswith(("radioDialog", "stationManager", "utils", "radioPlayer", "recorder", "musicRecognizer")):
 			fn = getattr(mod, "_notify", None)
 			if callable(fn):
 				fn(msg)
@@ -261,7 +261,7 @@ def _build_folder_picker(parent, sizer, initial_folder=""):
 		0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 8,
 	)
 	default_rb = wx.RadioButton(
-		# Translators: Radio button: save this recording to FreeRadio's default recordings folder.
+		# Translators: Radio button: save this recording to freeAudio's default recordings folder.
 		parent, label=_("&Default recordings folder"), style=wx.RB_GROUP,
 	)
 	# Translators: Radio button: save this recording to a specific folder chosen below.
@@ -389,7 +389,7 @@ def check_stream_url(url, timeout=8):
 	try:
 		req = _req.Request(
 			url,
-			headers={"User-Agent": "FreeRadio-NVDA/1.0", "Icy-MetaData": "1"},
+			headers={"User-Agent": "freeAudio-NVDA/1.0", "Icy-MetaData": "1"},
 		)
 		with _req.urlopen(req, timeout=timeout) as resp:
 			final_url = resp.url if hasattr(resp, "url") else url
@@ -558,15 +558,15 @@ def _format_podcast_episode_lines(author="", published="", duration="", descript
 
 def _enabled_audiobook_sources():
 	"""Which audio book sources (currently "getem"/"librivox"/"gutenberg")
-	the user has enabled in Settings - see FreeRadioSettingsPanel's "Audio
-	book sources" checklist, which is what edits config.conf["freeradio"]
+	the user has enabled in Settings - see freeAudioSettingsPanel's "Audio
+	book sources" checklist, which is what edits config.conf["freeAudio"]
 	["audiobook_sources"]. Returns a set of the enabled keys - all three are
 	enabled by default (the confspec default is "getem,librivox,gutenberg"),
 	so an upgrade from a version before this option existed searches
 	exactly as before. An empty set is a legitimate result (the user
 	unchecked everything), not a fallback case - _on_getem_search() handles
 	that by simply finding nothing rather than searching everything."""
-	raw = config.conf["freeradio"].get("audiobook_sources", "getem,librivox,gutenberg")
+	raw = config.conf["freeAudio"].get("audiobook_sources", "getem,librivox,gutenberg")
 	return {s.strip() for s in raw.split(",") if s.strip()}
 
 
@@ -585,8 +585,8 @@ class RadioDialog(wx.Dialog):
 	def __init__(self, parent, station_manager, player, play_callback, recorder=None, timer_manager=None, plugin=None):
 		super().__init__(
 			parent,
-			# Translators: Title of the main FreeRadio station-browser dialog itself.
-			title=_("FreeRadio - Station Browser"),
+			# Translators: Title of the main freeAudio station-browser dialog itself.
+			title=_("freeAudio - Station Browser"),
 			style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
 		)
 		self._manager       = station_manager
@@ -709,7 +709,7 @@ class RadioDialog(wx.Dialog):
 		audio_row.Add(_vol_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 8)
 
 		self._vol_spin = wx.SpinCtrl(self, min=0, max=200,
-		                             initial=config.conf["freeradio"]["volume"])
+		                             initial=config.conf["freeAudio"]["volume"])
 		# Translators: Accessible name for the volume spin control (same text as its static label).
 		self._vol_spin.SetName(_("Volume:"))
 		self._vol_spin.SetMinSize((70, -1))
@@ -732,7 +732,7 @@ class RadioDialog(wx.Dialog):
 		self._fx_choice = wx.CheckListBox(self, choices=_fx_display)
 		# Translators: Accessible name for the audio-effects checklist (same text as its static label).
 		self._fx_choice.SetName(_("Effects:"))
-		_saved_fx = config.conf["freeradio"].get("audio_fx", "none")
+		_saved_fx = config.conf["freeAudio"].get("audio_fx", "none")
 		_active = {x.strip() for x in _saved_fx.split(",") if x.strip() != "none"}
 		for i, key in enumerate(self._fx_keys):
 			self._fx_choice.Check(i, key in _active)
@@ -754,7 +754,7 @@ class RadioDialog(wx.Dialog):
 		for band, label, default_db in self._eq_bands:
 			lbl = wx.StaticText(self, label=label)
 			eq_row.Add(lbl, 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 8)
-			saved_db = config.conf["freeradio"].get("eq_gain_" + band, default_db)
+			saved_db = config.conf["freeAudio"].get("eq_gain_" + band, default_db)
 			spin = wx.SpinCtrl(self, min=-15, max=15, initial=int(saved_db))
 			spin.SetName(label)
 			spin.SetMinSize((60, -1))
@@ -1092,7 +1092,7 @@ class RadioDialog(wx.Dialog):
 			wx.StaticText(self._all_panel, label=_("Result limit per country:")),
 			0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 4,
 		)
-		_saved_limit = config.conf["freeradio"].get("result_limit", 1000)
+		_saved_limit = config.conf["freeAudio"].get("result_limit", 1000)
 		self._limit_spin = wx.SpinCtrl(
 			self._all_panel, min=100, max=10000, initial=_saved_limit,
 		)
@@ -1627,8 +1627,8 @@ class RadioDialog(wx.Dialog):
 			return
 		# Translators: Same 'System default' first-entry convention as the main output-device picker (see audioDeviceMixin.py), used here to populate this dialog's own device list.
 		new_devices = [(-1, _("System default"))] + list(devices)
-		saved = config.conf["freeradio"].get("audio_device", -1)
-		saved_name = config.conf["freeradio"].get("audio_device_name", "")
+		saved = config.conf["freeAudio"].get("audio_device", -1)
+		saved_name = config.conf["freeAudio"].get("audio_device_name", "")
 		resolved = saved
 		match = "missing"
 		try:
@@ -1640,22 +1640,22 @@ class RadioDialog(wx.Dialog):
 		except Exception:
 			resolved_name = saved_name
 		if match == "name" and resolved != saved:
-			config.conf["freeradio"]["audio_device"] = resolved
-			config.conf["freeradio"]["audio_device_name"] = resolved_name
+			config.conf["freeAudio"]["audio_device"] = resolved
+			config.conf["freeAudio"]["audio_device_name"] = resolved_name
 			try:
 				actual = self._player.switch_output_device(resolved)
 			except Exception:
 				actual = getattr(self._player, "_output_device_index", resolved)
 			if actual != resolved:
-				config.conf["freeradio"]["audio_device"] = actual
-				config.conf["freeradio"]["audio_device_name"] = ""
+				config.conf["freeAudio"]["audio_device"] = actual
+				config.conf["freeAudio"]["audio_device_name"] = ""
 				for idx, name in new_devices:
 					if idx == actual:
-						config.conf["freeradio"]["audio_device_name"] = "" if idx == -1 else name
+						config.conf["freeAudio"]["audio_device_name"] = "" if idx == -1 else name
 						break
 				resolved = actual
 		elif match == "index" and not saved_name and resolved != -1:
-			config.conf["freeradio"]["audio_device_name"] = resolved_name
+			config.conf["freeAudio"]["audio_device_name"] = resolved_name
 		sel = 0
 		for i, (idx, _name) in enumerate(new_devices):
 			if idx == resolved:
@@ -1682,15 +1682,15 @@ class RadioDialog(wx.Dialog):
 		else:
 			new_index = -1
 			new_name = ""
-		config.conf["freeradio"]["audio_device"] = new_index
-		config.conf["freeradio"]["audio_device_name"] = new_name
+		config.conf["freeAudio"]["audio_device"] = new_index
+		config.conf["freeAudio"]["audio_device_name"] = new_name
 		try:
 			actual = self._player.switch_output_device(new_index)
 		except Exception:
 			actual = getattr(self._player, "_output_device_index", new_index)
 		if actual != new_index:
-			config.conf["freeradio"]["audio_device"] = actual
-			config.conf["freeradio"]["audio_device_name"] = self._audio_device_name_for_index(actual)
+			config.conf["freeAudio"]["audio_device"] = actual
+			config.conf["freeAudio"]["audio_device_name"] = self._audio_device_name_for_index(actual)
 			for i, (idx, _name) in enumerate(self._dialog_audio_devices):
 				if idx == actual:
 					self._device_choice.SetSelection(i)
@@ -1701,7 +1701,7 @@ class RadioDialog(wx.Dialog):
 		"""When the volume changes, instantly apply it to the player and save it in the config."""
 		vol = self._vol_spin.GetValue()
 		self._player.set_volume(vol)
-		config.conf["freeradio"]["volume"] = min(100, vol)
+		config.conf["freeAudio"]["volume"] = min(100, vol)
 		event.Skip()
 
 	def _on_fx_focus(self, event):
@@ -1735,7 +1735,7 @@ class RadioDialog(wx.Dialog):
 			self._player.set_fx(fx_str)
 		except Exception:
 			pass
-		config.conf["freeradio"]["audio_fx"] = fx_str
+		config.conf["freeAudio"]["audio_fx"] = fx_str
 		self._update_eq_row_visibility(active)
 		event.Skip()
 
@@ -1760,7 +1760,7 @@ class RadioDialog(wx.Dialog):
 			self._player.set_fx(fx_str)
 		except Exception:
 			pass
-		config.conf["freeradio"]["audio_fx"] = fx_str
+		config.conf["freeAudio"]["audio_fx"] = fx_str
 		self._update_eq_row_visibility(active)
 
 	def _update_eq_row_visibility(self, active_fx_list=None):
@@ -1790,20 +1790,20 @@ class RadioDialog(wx.Dialog):
 	def _init_eq_gains(self):
 		"""Apply saved EQ gain values to the player and set initial row visibility."""
 		for band, _label, default_db in self._eq_bands:
-			saved_db = config.conf["freeradio"].get("eq_gain_" + band, default_db)
+			saved_db = config.conf["freeAudio"].get("eq_gain_" + band, default_db)
 			try:
 				self._player.set_eq_gain(band, saved_db)
 			except Exception:
 				pass
 		# Set row visibility based on currently saved active effects
-		_saved_fx = config.conf["freeradio"].get("audio_fx", "none")
+		_saved_fx = config.conf["freeAudio"].get("audio_fx", "none")
 		active = [x.strip() for x in _saved_fx.split(",") if x.strip() != "none"]
 		self._update_eq_row_visibility(active)
 
 	def _on_eq_gain_changed(self, event, band):
 		"""Instantly apply EQ gain change and save it to config."""
 		gain_db = self._eq_spins[band].GetValue()
-		config.conf["freeradio"]["eq_gain_" + band] = gain_db
+		config.conf["freeAudio"]["eq_gain_" + band] = gain_db
 		try:
 			self._player.set_eq_gain(band, gain_db)
 		except Exception:
@@ -2225,7 +2225,7 @@ class RadioDialog(wx.Dialog):
 				stations_top[0] = self._manager.get_top_stations(limit=1000)
 			except RadioBrowserError as exc:
 				import logging
-				logging.getLogger(__name__).warning("FreeRadio: fetch_top failed: %s", exc)
+				logging.getLogger(__name__).warning("freeAudio: fetch_top failed: %s", exc)
 
 		def fetch_country():
 			try:
@@ -2237,7 +2237,7 @@ class RadioDialog(wx.Dialog):
 					stations_country[0] = result[0] if isinstance(result, tuple) else result
 			except RadioBrowserError as exc:
 				import logging
-				logging.getLogger(__name__).warning("FreeRadio: fetch_country failed: %s", exc)
+				logging.getLogger(__name__).warning("freeAudio: fetch_country failed: %s", exc)
 
 		t1 = _threading.Thread(target=fetch_top,     daemon=True)
 		t2 = _threading.Thread(target=fetch_country, daemon=True)
@@ -2317,7 +2317,7 @@ class RadioDialog(wx.Dialog):
 			countries_data = self._manager.get_countries()
 		except RadioBrowserError as exc:
 			import logging
-			logging.getLogger(__name__).warning("FreeRadio: _fetch_countries failed: %s", exc)
+			logging.getLogger(__name__).warning("freeAudio: _fetch_countries failed: %s", exc)
 			return
 		if not countries_data or not self:
 			return
@@ -2407,7 +2407,7 @@ class RadioDialog(wx.Dialog):
 			
 		# Append a hint when the displayed count equals the configured limit.
 		# Only issue a limit warning if a search or country filter is active.
-		user_limit = config.conf["freeradio"].get("result_limit", 1000)
+		user_limit = config.conf["freeAudio"].get("result_limit", 1000)
 		is_filtered = bool(sel_country or text)
 		
 		if is_filtered and len(result) >= user_limit and not status_override:
@@ -2535,7 +2535,7 @@ class RadioDialog(wx.Dialog):
 
 		ci = self._country_cb.GetSelection()
 		selected_country = name_to_code(self._country_cb.GetString(ci)) if ci > 0 else None
-		user_limit = config.conf["freeradio"].get("result_limit", 1000)
+		user_limit = config.conf["freeAudio"].get("result_limit", 1000)
 
 		def _do_search():
 			self._search_debounce_timer = None
@@ -2824,7 +2824,7 @@ class RadioDialog(wx.Dialog):
 	def _on_limit_changed(self, event):
 		"""Save the new result limit to config and re-trigger search/country fetch."""
 		limit = self._limit_spin.GetValue()
-		config.conf["freeradio"]["result_limit"] = limit
+		config.conf["freeAudio"]["result_limit"] = limit
 		# Re-run the active search or country fetch with the new limit.
 		query = self._search.GetValue().strip()
 		if query:
@@ -2895,7 +2895,7 @@ class RadioDialog(wx.Dialog):
 			self._combo_debounce_timer = None
 			if not self or fetch_id != self._combo_fetch_id:
 				return
-			user_limit = config.conf["freeradio"].get("result_limit", 1000)
+			user_limit = config.conf["freeAudio"].get("result_limit", 1000)
 
 			def fetch():
 				RadioBrowserError = _radio_browser_error()
@@ -3176,7 +3176,7 @@ class RadioDialog(wx.Dialog):
 			message=_("Export Favourites"),
 			wildcard=wildcard,
 			style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
-			defaultFile="freeradio_favourites",
+			defaultFile="freeAudio_favourites",
 		)
 		if dlg.ShowModal() != wx.ID_OK:
 			dlg.Destroy()
@@ -3907,7 +3907,7 @@ class RadioDialog(wx.Dialog):
 		if key == wx.WXK_F5:
 			vol = max(0, self._player.get_volume() - 5)
 			self._player.set_volume(vol)
-			config.conf["freeradio"]["volume"] = min(100, vol)
+			config.conf["freeAudio"]["volume"] = min(100, vol)
 			self._vol_spin.SetValue(vol)
 			# Translators: Spoken when F5 (volume down) is pressed inside the dialog; %d is the new volume level. Same wording as the main volumeDown NVDA command.
 			_notify(_("Volume %d") % vol)
@@ -3921,7 +3921,7 @@ class RadioDialog(wx.Dialog):
 		if key == wx.WXK_F6:
 			vol = min(200, self._player.get_volume() + 5)
 			self._player.set_volume(vol)
-			config.conf["freeradio"]["volume"] = min(100, vol)
+			config.conf["freeAudio"]["volume"] = min(100, vol)
 			self._vol_spin.SetValue(vol)
 			# Translators: Spoken when F6 (volume up) is pressed inside the dialog; %d is the new volume level. Same wording as the main volumeUp NVDA command.
 			_notify(_("Volume %d") % vol)
@@ -4103,7 +4103,7 @@ class RadioDialog(wx.Dialog):
 			if key == wx.WXK_UP:
 				vol = min(200, self._player.get_volume() + 5)
 				self._player.set_volume(vol)
-				config.conf["freeradio"]["volume"] = min(100, vol)
+				config.conf["freeAudio"]["volume"] = min(100, vol)
 				# Translators: Spoken when Ctrl+Up (volume up) is pressed inside the dialog on a focused control that doesn't otherwise handle it; %d is the new volume level. Same wording as the main volumeUp NVDA command.
 				_notify(_("Volume %d") % vol)
 				self._vol_spin.SetValue(vol)
@@ -4111,7 +4111,7 @@ class RadioDialog(wx.Dialog):
 			if key == wx.WXK_DOWN:
 				vol = max(0, self._player.get_volume() - 5)
 				self._player.set_volume(vol)
-				config.conf["freeradio"]["volume"] = min(100, vol)
+				config.conf["freeAudio"]["volume"] = min(100, vol)
 				# Translators: Spoken when Ctrl+Down (volume down) is pressed inside the dialog; %d is the new volume level. Same wording as the main volumeDown NVDA command.
 				_notify(_("Volume %d") % vol)
 				self._vol_spin.SetValue(vol)
@@ -5044,12 +5044,12 @@ class RadioDialog(wx.Dialog):
 
 	def _liked_songs_path(self):
 		"""Return the path to likedSongs.txt, mirroring __init__.py logic."""
-		custom_dir = config.conf["freeradio"].get("recordings_dir", "").strip()
+		custom_dir = config.conf["freeAudio"].get("recordings_dir", "").strip()
 		if custom_dir and os.path.isabs(custom_dir):
 			recordings_dir = custom_dir
 		else:
 			recordings_dir = os.path.join(
-				os.path.expanduser("~"), "Documents", "FreeRadio Recordings"
+				os.path.expanduser("~"), "Documents", "freeAudio Recordings"
 			)
 		return os.path.join(recordings_dir, "likedSongs.txt")
 
@@ -6065,7 +6065,7 @@ class RadioDialog(wx.Dialog):
 		# playbackCoreMixin._play_station().
 		feed = self._get_selected_podcast_feed()
 		if feed:
-			# Carried through to config.conf["freeradio"]["last_station_podcast_feed_url"]
+			# Carried through to config.conf["freeAudio"]["last_station_podcast_feed_url"]
 			# by playbackCoreMixin._play_station() - lets a "resume last
 			# station" on the next NVDA startup look this feed's audio
 			# profile back up and apply it too, the same way
@@ -6902,7 +6902,7 @@ class RadioDialog(wx.Dialog):
 			# Translators: Spoken when the user tries to search but disabled every audio-book source (GETEM/LibriVox/Project Gutenberg) in Settings.
 			ui.message(_(
 				"No audio book sources are enabled. Enable at least one "
-				"in FreeRadio settings."
+				"in freeAudio settings."
 			))
 			return
 
@@ -7370,7 +7370,7 @@ class RadioDialog(wx.Dialog):
 		# The book title is included here (not just the chapter/part name)
 		# since this "name" is what playbackCoreMixin._play_station()
 		# announces as "what's playing" and saves as
-		# config.conf["freeradio"]["last_station_name"] - a bare chapter
+		# config.conf["freeAudio"]["last_station_name"] - a bare chapter
 		# label like "Part 3" (or, for a single-file GETEM work,
 		# getem._label_chapters() already sets chapter["title"] to the
 		# book's own title, in which case there's nothing to add here)
@@ -7378,7 +7378,7 @@ class RadioDialog(wx.Dialog):
 		station_dict["name"] = self._format_getem_now_playing_name(book, chapter)
 		station_dict["url"] = stream_url
 		station_dict["url_resolved"] = stream_url
-		# Carried through to config.conf["freeradio"]["last_station_getem_chapter_index"]
+		# Carried through to config.conf["freeAudio"]["last_station_getem_chapter_index"]
 		# by playbackCoreMixin._play_station() - lets a "resume last
 		# station" on the next NVDA startup know which part to rebuild a
 		# fresh proxy URL for (see GlobalPlugin._rebuild_getem_resume_url()),
@@ -8004,7 +8004,7 @@ class RadioDialog(wx.Dialog):
 		# Translators: Spoken when a jukebox device search starts; %s is the search text.
 		ui.message(_("Searching devices for \"%s\"...") % query)
 
-		include_network = config.conf["freeradio"].get("jukebox_search_network_drives", False)
+		include_network = config.conf["freeAudio"].get("jukebox_search_network_drives", False)
 
 		def _do_search():
 			results = jukebox.search_disk_for_audio(
@@ -8812,7 +8812,7 @@ class AddCustomStationDialog(wx.Dialog):
 		test_row.Add(self._test_status, 1, wx.ALIGN_CENTER_VERTICAL)
 		sizer.Add(test_row, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 5)
 
-		# Translators: Button label; opens Radio Browser's own website to submit this station to their public directory (separate from just adding it locally to FreeRadio).
+		# Translators: Button label; opens Radio Browser's own website to submit this station to their public directory (separate from just adding it locally to freeAudio).
 		self._rb_btn = wx.Button(self, label=_("Add to &Radio Browser directory…"))
 		sizer.Add(self._rb_btn, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 5)
 

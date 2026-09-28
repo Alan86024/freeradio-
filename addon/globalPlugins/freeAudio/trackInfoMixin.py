@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# FreeRadio - "What's playing" announcements, station details dialog,
+# freeAudio - "What's playing" announcements, station details dialog,
 # track-info clipboard/recognition, and the ICY metadata polling loop
 #
 # Extracted from GlobalPlugin in __init__.py. Mixed into GlobalPlugin, so
@@ -69,7 +69,7 @@ class TrackInfoMixin:
 		"""
 		from . import musicRecognizer
 		dll_dir     = os.path.dirname(os.path.abspath(__file__))
-		ffmpeg_path = config.conf["freeradio"].get("ffmpeg_path", "").strip() \
+		ffmpeg_path = config.conf["freeAudio"].get("ffmpeg_path", "").strip() \
 		              or os.path.join(dll_dir, "ffmpeg.exe")
 
 		# Try to pull a short snippet of "what's airing right now" out of the
@@ -85,7 +85,7 @@ class TrackInfoMixin:
 			buf = None
 		if buf is not None and buf.is_active() and buf.is_tail_safe():
 			try:
-				fd, snippet_path = tempfile.mkstemp(prefix="freeradio_recognize_", suffix=".buf")
+				fd, snippet_path = tempfile.mkstemp(prefix="freeAudio_recognize_", suffix=".buf")
 				os.close(fd)
 				if buf.extract_recent_snippet(18, snippet_path):
 					local_snippet = snippet_path
@@ -95,7 +95,7 @@ class TrackInfoMixin:
 					except OSError:
 						pass
 			except Exception:
-				log.warning("FreeRadio: could not extract recognition snippet from time-shift buffer", exc_info=True)
+				log.warning("freeAudio: could not extract recognition snippet from time-shift buffer", exc_info=True)
 
 		def _on_result(result):
 			if result.success:
@@ -118,7 +118,7 @@ class TrackInfoMixin:
 	@script(
 		# Translators: Name of an NVDA command (Ctrl+Win+I); its behaviour escalates with repeated presses as the description itself explains.
 		description=_("Announce currently playing station. Press twice for full details, three times to copy track info, four times to force music recognition."),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		gesture="kb:control+windows+i",
 		speakOnDemand=True,
 	)
@@ -136,7 +136,7 @@ class TrackInfoMixin:
 				_speak_on_demand("  ".join(parts))
 			else:
 				# Translators: Spoken by What's Playing when nothing is playing and no scheduled recording is active either.
-				_speak_on_demand(_("FreeRadio is not active"))
+				_speak_on_demand(_("freeAudio is not active"))
 			return
 		name = self._player.get_current_name()
 		repeat = getLastScriptRepeatCount()
@@ -322,12 +322,12 @@ class TrackInfoMixin:
 		# rapid key presses can assign a single keystroke to this action.
 		# Translators: Name of an NVDA command; unbound-gesture equivalent of pressing Ctrl+Win+I (or F2 in the dialog) twice.
 		description=_("Show details of the currently playing station"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 	)
 	def script_showStationDetails(self, gesture):
 		if not self._player.has_media():
 			# Translators: Same "not active" message as What's Playing, spoken here when this standalone show-details gesture is used with nothing playing.
-			ui.message(_("FreeRadio is not active"))
+			ui.message(_("freeAudio is not active"))
 			return
 		if not getattr(self, "_whats_playing_dialog_open", False):
 			self._whats_playing_dialog_open = True
@@ -341,13 +341,13 @@ class TrackInfoMixin:
 		# rapid key presses can assign a single keystroke to this action.
 		# Translators: Name of an NVDA command; unbound-gesture equivalent of pressing Ctrl+Win+I (or F2 in the dialog) three times.
 		description=_("Copy current track info to clipboard, or start music recognition if unavailable"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		speakOnDemand=True,
 	)
 	def script_copyTrackInfo(self, gesture):
 		if not self._player.has_media():
 			# Translators: Same "not active" message as elsewhere, spoken here when this standalone copy/recognize gesture is used with nothing playing.
-			_speak_on_demand(_("FreeRadio is not active"))
+			_speak_on_demand(_("freeAudio is not active"))
 			return
 		import time as _time
 		token = _time.monotonic()
@@ -390,13 +390,13 @@ class TrackInfoMixin:
 		# rapid key presses can assign a single keystroke to this action.
 		# Translators: Name of an NVDA command; unbound-gesture equivalent of pressing Ctrl+Win+I (or F2 in the dialog) four times.
 		description=_("Force music recognition for the currently playing stream"),
-		category=_("FreeRadio"),
+		category=_("freeAudio"),
 		speakOnDemand=True,
 	)
 	def script_forceMusicRecognition(self, gesture):
 		if not self._player.has_media():
 			# Translators: Same "not active" message as elsewhere, spoken here when this standalone force-recognition gesture is used with nothing playing.
-			_speak_on_demand(_("FreeRadio is not active"))
+			_speak_on_demand(_("freeAudio is not active"))
 			return
 		stream_url = (
 			getattr(self._player, "_current_url_resolved", None)
@@ -437,7 +437,7 @@ class TrackInfoMixin:
 				ui.message("  ".join(parts))
 			else:
 				# Translators: Same "not active" message as elsewhere, spoken here by the F2 dialog equivalent of What's Playing.
-				ui.message(_("FreeRadio is not active"))
+				ui.message(_("freeAudio is not active"))
 			return
 
 		name = self._player.get_current_name()
@@ -641,21 +641,21 @@ class TrackInfoMixin:
 					self._stations      = []
 					self._current_index = -1
 					# Translators: Spoken by F8 (stop) after confirming the stop and ending any active recordings.
-					_notify(_("Freeradio stopped"))
+					_notify(_("freeAudio stopped"))
 
 			wx.CallAfter(_confirm)
 			return
 
 		if not self._player.has_media():
 			# Translators: Same "not active" message as elsewhere, spoken here when F8 (stop) is pressed with nothing playing and no recordings active.
-			ui.message(_("FreeRadio is not active"))
+			ui.message(_("freeAudio is not active"))
 			return
 
 		self._player.stop()
 		self._stations      = []
 		self._current_index = -1
 		# Translators: Spoken by F8 (stop) when there were no active recordings to confirm about.
-		_notify(_("Freeradio stopped"))
+		_notify(_("freeAudio stopped"))
 
 	def _announce_now(self):
 		"""Announce the currently playing station name (and ICY track if available).
@@ -664,7 +664,7 @@ class TrackInfoMixin:
 		"""
 		if not self._player.has_media():
 			# Translators: Same "not active" message as elsewhere, spoken here by this hotkey-triggered station announcement.
-			ui.message(_("FreeRadio is not active"))
+			ui.message(_("freeAudio is not active"))
 			return
 		name = self._player.get_current_name()
 		if self._player.is_playing():
@@ -1145,13 +1145,13 @@ class TrackInfoMixin:
 			# Translators: Spoken if the system clipboard can't be opened for the copy.
 			ui.message(_("Could not access clipboard"))
 		# Save to likedSongs.txt if the option is enabled
-		if config.conf["freeradio"].get("save_liked_songs", False):
+		if config.conf["freeAudio"].get("save_liked_songs", False):
 			try:
-				custom_dir = config.conf["freeradio"].get("recordings_dir", "").strip()
+				custom_dir = config.conf["freeAudio"].get("recordings_dir", "").strip()
 				if custom_dir and os.path.isabs(custom_dir):
 					recordings_dir = custom_dir
 				else:
-					recordings_dir = os.path.join(os.path.expanduser("~"), "Documents", "FreeRadio Recordings")
+					recordings_dir = os.path.join(os.path.expanduser("~"), "Documents", "freeAudio Recordings")
 				os.makedirs(recordings_dir, exist_ok=True)
 				liked_path = os.path.join(recordings_dir, "likedSongs.txt")
 				# Duplicate check: don't add the same song if it is already in the list
@@ -1166,7 +1166,7 @@ class TrackInfoMixin:
 					with open(liked_path, "a", encoding="utf-8") as fh:
 						fh.write("%s\n" % text)
 			except Exception as e:
-				log.error("FreeRadio: could not save liked song: %s", e)
+				log.error("freeAudio: could not save liked song: %s", e)
 
 	def _icy_poll_loop(self):
 		"""Background thread: polls ICY metadata every ~5 s and announces changes.
@@ -1233,7 +1233,7 @@ class TrackInfoMixin:
 				# ---------------------------------------------------------- #
 				# Track-change announcements (controlled by user setting)      #
 				# ---------------------------------------------------------- #
-				if not config.conf["freeradio"].get("announce_track_changes", False):
+				if not config.conf["freeAudio"].get("announce_track_changes", False):
 					# Still keep _icy_last_title current for song-capture comparisons.
 					if self._icy_last_title is None:
 						self._icy_last_title = icy
@@ -1244,7 +1244,7 @@ class TrackInfoMixin:
 				if self._icy_last_title is None:
 					# First read after a station change — announce immediately and store.
 					self._icy_last_title = icy
-					if config.conf["freeradio"].get("track_change_voice", "nvda") == "sapi5":
+					if config.conf["freeAudio"].get("track_change_voice", "nvda") == "sapi5":
 						_sapi5_speak(icy)
 					else:
 						wx.CallAfter(_notify, icy)
@@ -1252,7 +1252,7 @@ class TrackInfoMixin:
 
 				if icy != self._icy_last_title:
 					self._icy_last_title = icy
-					if config.conf["freeradio"].get("track_change_voice", "nvda") == "sapi5":
+					if config.conf["freeAudio"].get("track_change_voice", "nvda") == "sapi5":
 						_sapi5_speak(icy)
 					else:
 						wx.CallAfter(_notify, icy)

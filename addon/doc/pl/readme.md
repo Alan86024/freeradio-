@@ -1,12 +1,12 @@
-# FreeRadio - dodatek dla NVDA
+# freeAudio - dodatek dla NVDA
 
-FreeRadio to dodatek radia internetowego dla czytnika ekranu NVDA. Jego głównym celem jest łatwy dostęp do tysięcy internetowych stacji radiowych. Cały interfejs i wszystkie funkcje zaprojektowano z myślą o pełnej dostępności w NVDA.
+freeAudio to dodatek radia internetowego dla czytnika ekranu NVDA. Jego głównym celem jest łatwy dostęp do tysięcy internetowych stacji radiowych. Cały interfejs i wszystkie funkcje zaprojektowano z myślą o pełnej dostępności w NVDA.
 
 ## Katalog Radio Browser
 
-FreeRadio używa otwartej bazy [Radio Browser](https://www.radio-browser.info/) jako katalogu stacji. Radio Browser to bezpłatny katalog zarządzany przez społeczność, zawierający ponad 50 000 internetowych stacji radiowych z całego świata. Nie wymaga rejestracji ani konta, a jego API jest otwarte dla wszystkich. Każda stacja zawiera adres, kraj, gatunek, język i informacje o przepływności; stacje są sortowane również według głosów użytkowników. FreeRadio łączy się z API przez serwery lustrzane w Niemczech, Holandii i Austrii; jeśli jeden serwer jest niedostępny, automatycznie przełącza się na następny.
+freeAudio używa otwartej bazy [Radio Browser](https://www.radio-browser.info/) jako katalogu stacji. Radio Browser to bezpłatny katalog zarządzany przez społeczność, zawierający ponad 50 000 internetowych stacji radiowych z całego świata. Nie wymaga rejestracji ani konta, a jego API jest otwarte dla wszystkich. Każda stacja zawiera adres, kraj, gatunek, język i informacje o przepływności; stacje są sortowane również według głosów użytkowników. freeAudio łączy się z API przez serwery lustrzane w Niemczech, Holandii i Austrii; jeśli jeden serwer jest niedostępny, automatycznie przełącza się na następny.
 
-Aby przeglądarka pozostawała responsywna i nie obciążała API przy każdym wyszukiwaniu lub zmianie kraju, FreeRadio przechowuje na dysku lokalną kopię (cache) katalogu stacji. Ta kopia jest automatycznie odświeżana w tle według okresowego harmonogramu, więc wyświetlana lista jest zwykle już aktualna bez żadnego działania z Twojej strony. W dowolnym momencie możesz też wymusić natychmiastową ponowną synchronizację przyciskiem **Aktualizuj listę stacji** — patrz Przeglądarka stacji poniżej.
+Aby przeglądarka pozostawała responsywna i nie obciążała API przy każdym wyszukiwaniu lub zmianie kraju, freeAudio przechowuje na dysku lokalną kopię (cache) katalogu stacji. Ta kopia jest automatycznie odświeżana w tle według okresowego harmonogramu, więc wyświetlana lista jest zwykle już aktualna bez żadnego działania z Twojej strony. W dowolnym momencie możesz też wymusić natychmiastową ponowną synchronizację przyciskiem **Aktualizuj listę stacji** — patrz Przeglądarka stacji poniżej.
 
 ## Dodawanie stacji do Radio Browser
 
@@ -21,7 +21,7 @@ Wypełnij formularz na tej stronie:
 - **Tags** - słowa kluczowe gatunku lub tematu, rozdzielone przecinkami, na przykład `news`, `jazz`, `classical`. Są używane do wyszukiwania i filtrowania.
 - **Logo URL** - bezpośredni link do obrazu logo stacji, jeśli jest dostępny.
 
-Po wysłaniu stacja zostanie sprawdzona i dodana do publicznego katalogu. Po zaakceptowaniu pojawi się automatycznie w wyszukiwaniu i listach krajów FreeRadio, ponieważ katalog jest odświeżany z aktywnego API.
+Po wysłaniu stacja zostanie sprawdzona i dodana do publicznego katalogu. Po zaakceptowaniu pojawi się automatycznie w wyszukiwaniu i listach krajów freeAudio, ponieważ katalog jest odświeżany z aktywnego API.
 
 ## Wymagania
 
@@ -35,7 +35,7 @@ Pobierz plik `.nvda-addon`, naciśnij na nim Enter i uruchom NVDA ponownie, gdy 
 
 ## Skróty klawiszowe
 
-Wszystkie skróty można zmienić w menu NVDA -> Preferencje -> Zdarzenia wejścia -> FreeRadio. Skróty działają z dowolnego miejsca, niezależnie od aktywnego okna.
+Wszystkie skróty można zmienić w menu NVDA -> Preferencje -> Zdarzenia wejścia -> freeAudio. Skróty działają z dowolnego miejsca, niezależnie od aktywnego okna.
 
 | Skrót | Funkcja | Opis |
 |---|---|---|
@@ -54,21 +54,21 @@ Wszystkie skróty można zmienić w menu NVDA -> Preferencje -> Zdarzenia wejśc
 | `Ctrl+Win+J` | Cofnięcie (time-shift) | Cofa live radio o 15 sekund. Pierwsze naciśnięcie wchodzi w tryb time-shift; każde kolejne cofa o kolejne 15 sekund, do limitu bufora (~10 minut). Wymaga włączonego bufora time-shift w Ustawieniach. |
 | `Ctrl+Win+K` | Przewijanie do przodu (time-shift) | Przewija o 15 sekund do przodu w trybie time-shift. Po osiągnięciu krawędzi na żywo odtwarzanie automatycznie wraca do live i polecenie nie działa, dopóki ponownie nie cofniesz. |
 | `Ctrl+Win+T` | Przełącz bufor time-shift | Włącza lub wyłącza bufor time-shift na bieżąco, odzwierciedlając pole wyboru w Ustawieniach. Wyłączenie natychmiast wraca do live (jeśli w trybie time-shift) i zatrzymuje przechwytywanie w tle. |
-| *(nieprzypisane)* | Wybierz urządzenie wyjściowe | Otwiera na żądanie listę dostępnych głównych urządzeń wyjściowych. Lista pojawia się tylko wtedy, gdy BASS wykryje więcej niż jedno fizyczne urządzenie wyjściowe. Skrót można przypisać w menu NVDA -> Preferencje -> Zdarzenia wejścia -> FreeRadio. |
-| *(nieprzypisane)* | Przełącz wyciszenie powiadomień | Przełącza ustawienie Wycisz powiadomienia w locie. Przypisz skrót w menu NVDA -> Preferencje -> Zdarzenia wejścia -> FreeRadio. |
-| *(nieprzypisane)* | Odtwórz ulubioną stację bezpośrednio | Każda stacja z listy ulubionych pojawia się jako osobna pozycja w menu NVDA -> Preferencje -> Zdarzenia wejścia -> **FreeRadio Stations**. Przypisz skrót klawiszowy dowolnej stacji i uruchamiaj ją natychmiast z dowolnego miejsca, bez otwierania przeglądarki. |
+| *(nieprzypisane)* | Wybierz urządzenie wyjściowe | Otwiera na żądanie listę dostępnych głównych urządzeń wyjściowych. Lista pojawia się tylko wtedy, gdy BASS wykryje więcej niż jedno fizyczne urządzenie wyjściowe. Skrót można przypisać w menu NVDA -> Preferencje -> Zdarzenia wejścia -> freeAudio. |
+| *(nieprzypisane)* | Przełącz wyciszenie powiadomień | Przełącza ustawienie Wycisz powiadomienia w locie. Przypisz skrót w menu NVDA -> Preferencje -> Zdarzenia wejścia -> freeAudio. |
+| *(nieprzypisane)* | Odtwórz ulubioną stację bezpośrednio | Każda stacja z listy ulubionych pojawia się jako osobna pozycja w menu NVDA -> Preferencje -> Zdarzenia wejścia -> **freeAudio Stations**. Przypisz skrót klawiszowy dowolnej stacji i uruchamiaj ją natychmiast z dowolnego miejsca, bez otwierania przeglądarki. |
 
 Skróty następnej i poprzedniej stacji poruszają się tylko po liście ulubionych; nie działają z listą wszystkich stacji. Gdy fokus znajduje się na liście w oknie przeglądarki, lewa i prawa strzałka pełnią tę samą funkcję - zobacz Skróty w oknie dialogowym.
 
 ## Przeglądarka stacji
 
-FreeRadio dodaje też podmenu **FreeRadio** do menu Narzędzia NVDA. Można z niego bezpośrednio otworzyć przeglądarkę stacji i ustawienia FreeRadio.
+freeAudio dodaje też podmenu **freeAudio** do menu Narzędzia NVDA. Można z niego bezpośrednio otworzyć przeglądarkę stacji i ustawienia freeAudio.
 
 Okno otwierane skrótem `Ctrl+Win+R` zawiera pięć kart: Wszystkie stacje, Ulubione, Nagrywanie, Timer i Polubione utwory. Między kartami można przełączać się skrótem `Ctrl+Tab`.
 
 Po otwarciu karty Wszystkie stacje automatycznie ładowanych jest 1000 najczęściej głosowanych stacji z Radio Browser. Wybranie kraju z listy rozwijanej aktualizuje listę i pokazuje stacje z tego kraju. Pisanie w polu wyszukiwania natychmiast uruchamia pełne wyszukiwanie w całej bazie Radio Browser, jednocześnie po nazwie, kraju i gatunku.
 
-Lista **Urządzenie wyjściowe** na dole okna przeglądarki, poza kartami, zawiera wszystkie urządzenia audio rozpoznane przez BASS. Wybranie urządzenia natychmiast przekierowuje na nie dźwięk i zapisuje wybór na stałe; to samo urządzenie będzie użyte automatycznie w następnej sesji. Jeśli wybrane urządzenie nie jest podłączone, dodatek sam wraca do domyślnego urządzenia systemowego. Naciśnij `F11`, aby z dowolnego miejsca w Przeglądarce stacji otworzyć prostsze okno wyboru urządzenia. Nie pojawia się ono automatycznie i jest otwierane tylko wtedy, gdy BASS wykryje więcej niż jedno fizyczne urządzenie wyjściowe. Gdy dostępne jest tylko jedno urządzenie, wybór nie jest potrzebny, a FreeRadio korzysta z domyślnego urządzenia systemowego. Funkcja działa tylko wtedy, gdy aktywny jest backend BASS.
+Lista **Urządzenie wyjściowe** na dole okna przeglądarki, poza kartami, zawiera wszystkie urządzenia audio rozpoznane przez BASS. Wybranie urządzenia natychmiast przekierowuje na nie dźwięk i zapisuje wybór na stałe; to samo urządzenie będzie użyte automatycznie w następnej sesji. Jeśli wybrane urządzenie nie jest podłączone, dodatek sam wraca do domyślnego urządzenia systemowego. Naciśnij `F11`, aby z dowolnego miejsca w Przeglądarce stacji otworzyć prostsze okno wyboru urządzenia. Nie pojawia się ono automatycznie i jest otwierane tylko wtedy, gdy BASS wykryje więcej niż jedno fizyczne urządzenie wyjściowe. Gdy dostępne jest tylko jedno urządzenie, wybór nie jest potrzebny, a freeAudio korzysta z domyślnego urządzenia systemowego. Funkcja działa tylko wtedy, gdy aktywny jest backend BASS.
 
 Kontrolki **Głośność** (0-200) i **Efekty** w tym samym obszarze można zmieniać w dowolnej chwili, gdy okno jest otwarte. Z listy efektów można jednocześnie włączyć Chorus, Kompresor, Przesterowanie, Echo, Flanger, Gargle, Pogłos, EQ: wzmocnienie basu, EQ: wzmocnienie sopranów i EQ: wzmocnienie wokalu; zmiany są natychmiast stosowane do aktywnego strumienia. Każdy efekt można też natychmiast przełączyć skrótami od `Ctrl+1` do `Ctrl+0`, bez odrywania rąk od klawiatury — patrz Skróty efektów poniżej. Te kontrolki działają w pełni tylko przy aktywnym backendzie BASS.
 
@@ -189,12 +189,12 @@ Po zaznaczeniu stacji na karcie Ulubione naciśnij `przecinek`, aby wejść w tr
 
 ### Bezpośrednie skróty klawiszowe do ulubionych stacji
 
-Każda stacja z listy ulubionych jest zarejestrowana jako osobny skrypt w oknie Zdarzeń wejścia NVDA, w kategorii **FreeRadio Stations**. Możesz przypisać dowolny skrót klawiszowy do dowolnej stacji i nacisnąć go z dowolnego miejsca — bez konieczności otwierania okna przeglądarki.
+Każda stacja z listy ulubionych jest zarejestrowana jako osobny skrypt w oknie Zdarzeń wejścia NVDA, w kategorii **freeAudio Stations**. Możesz przypisać dowolny skrót klawiszowy do dowolnej stacji i nacisnąć go z dowolnego miejsca — bez konieczności otwierania okna przeglądarki.
 
 Aby przypisać skrót:
 
 1. Otwórz menu NVDA -> Preferencje -> Zdarzenia wejścia.
-2. Rozwiń kategorię **FreeRadio Stations**.
+2. Rozwiń kategorię **freeAudio Stations**.
 3. Znajdź stację po nazwie, zaznacz ją i naciśnij **Dodaj**.
 4. Naciśnij żądaną kombinację klawiszy i potwierdź.
 
@@ -229,7 +229,7 @@ Rozpoznawanie działa tak: krótka próbka audio jest przechwytywana ze strumien
 
 **Wymaganie:** potrzebny jest `ffmpeg.exe`. Plik `ffmpeg.exe` umieszczony w folderze dodatku zostanie użyty automatycznie; jeśli znajduje się gdzie indziej, ścieżkę można ustawić w Ustawieniach. Pobierz ffmpeg ze strony [ffmpeg.org](https://ffmpeg.org/download.html).
 
-**Uwaga dotycząca stacji wstawiających reklamy:** niektóre stacje wysyłają krótką reklamę do każdego nowego połączenia nawiązanego z ich strumieniem, oddzielnie od audycji, której już słuchasz. Rozpoznawanie unika próbkowania tej reklamy, ponownie wykorzystując istniejące połączenie FreeRadio ze strumieniem w tle (to samo, które jest używane dla Time-shift) zamiast otwierać nowe, dzięki czemu rozpoznaje to, co faktycznie gra, a nie reklamę. Działa to automatycznie i nie wymaga konfiguracji.
+**Uwaga dotycząca stacji wstawiających reklamy:** niektóre stacje wysyłają krótką reklamę do każdego nowego połączenia nawiązanego z ich strumieniem, oddzielnie od audycji, której już słuchasz. Rozpoznawanie unika próbkowania tej reklamy, ponownie wykorzystując istniejące połączenie freeAudio ze strumieniem w tle (to samo, które jest używane dla Time-shift) zamiast otwierać nowe, dzięki czemu rozpoznaje to, co faktycznie gra, a nie reklamę. Działa to automatycznie i nie wymaga konfiguracji.
 
 ## Kopia dźwięku
 
@@ -248,12 +248,12 @@ Po pierwszym naciśnięciu pojawia się dialog wyboru z listą dostępnych urzą
 
 ## Nagrywanie
 
-Nagrania są domyślnie zapisywane w `Documents\FreeRadio Recordings\`. Nazwa pliku zawiera nazwę stacji albo tytuł utworu w trybie nagrywania utworu oraz czas rozpoczęcia nagrywania. Folder nagrań można w dowolnej chwili zmienić w menu NVDA -> Preferencje -> Ustawienia -> FreeRadio -> **Folder nagrań**.
+Nagrania są domyślnie zapisywane w `Documents\freeAudio Recordings\`. Nazwa pliku zawiera nazwę stacji albo tytuł utworu w trybie nagrywania utworu oraz czas rozpoczęcia nagrywania. Folder nagrań można w dowolnej chwili zmienić w menu NVDA -> Preferencje -> Ustawienia -> freeAudio -> **Folder nagrań**.
 
 Ustawienie **Format zapisu nagrań** określa sposób zapisywania zakończonych nagrań:
 - **Oryginalny format strumienia** zapisuje transmisję dokładnie tak, jak została odebrana. Dlatego transmisja HLS może utworzyć plik `.ts`.
 - **Tylko dźwięk, oryginalny kodek** usuwa warstwę obrazu lub kontenera bez ponownego kodowania dźwięku. Na przykład dźwięk AAC z nagrania HLS w pliku `.ts` jest zwykle zapisywany jako `.m4a`, z zachowaniem jakości transmisji.
-- **MP3** po zakończeniu nagrania konwertuje dźwięk z wybraną przepływnością. Konwersja korzysta z pliku `ffmpeg.exe` dołączonego do FreeRadio i działa w tle, aby NVDA pozostawał responsywny. Jeśli konwersja się nie powiedzie, zachowany zostanie plik oryginalny.
+- **MP3** po zakończeniu nagrania konwertuje dźwięk z wybraną przepływnością. Konwersja korzysta z pliku `ffmpeg.exe` dołączonego do freeAudio i działa w tle, aby NVDA pozostawał responsywny. Jeśli konwersja się nie powiedzie, zachowany zostanie plik oryginalny.
 
 **Nagrywanie natychmiastowe:** podczas odtwarzania stacji naciśnij `Ctrl+Win+E` raz. Naciśnij ponownie, aby zatrzymać. Odtwarzanie trwa bez przerwy.
 
@@ -273,19 +273,19 @@ Ustawienie **Format zapisu nagrań** określa sposób zapisywania zakończonych 
 
 NVDA ogłasza rozpoczęcie i zakończenie nagrywania. Jeśli NVDA zostanie uruchomione ponownie podczas aktywnego zaplanowanego nagrywania, nagrywanie zostanie automatycznie wznowione po uruchomieniu.
 
-Podobnie jak rozpoznawanie muzyki, nagrywanie natychmiastowe i nagrywanie utworu ponownie wykorzystują istniejące połączenie FreeRadio ze strumieniem w tle, gdy jest dostępne, zamiast otwierać nowe, dzięki czemu nagranie rejestruje to, co faktycznie jest nadawane, nawet na stacjach, które w przeciwnym razie wysłałyby świeżą reklamę do nowego połączenia. Nie dotyczy to zaplanowanych nagrań w trybie **Tylko nagrywaj**, ponieważ w chwili ich rozpoczęcia żadna stacja jeszcze nie gra.
+Podobnie jak rozpoznawanie muzyki, nagrywanie natychmiastowe i nagrywanie utworu ponownie wykorzystują istniejące połączenie freeAudio ze strumieniem w tle, gdy jest dostępne, zamiast otwierać nowe, dzięki czemu nagranie rejestruje to, co faktycznie jest nadawane, nawet na stacjach, które w przeciwnym razie wysłałyby świeżą reklamę do nowego połączenia. Nie dotyczy to zaplanowanych nagrań w trybie **Tylko nagrywaj**, ponieważ w chwili ich rozpoczęcia żadna stacja jeszcze nie gra.
 
 ## Time-shift (cofanie radia na żywo)
 
 Time-shift pozwala cofnąć aktualnie słuchaną stację jak DVR lub kaseta magnetofonowa — zatrzymaj chwilę, cofnij się kilka minut i dogońcie live, kiedy chcesz. Odtwarzanie nie musi się zatrzymywać: cofanie i przewijanie do przodu odbywają się natychmiastowo na tym samym strumieniu audio.
 
-Funkcja jest **domyślnie wyłączona**. Włącz ją w Menu NVDA → Preferencje → Ustawienia → FreeRadio → **Włącz bufor time-shift (cofanie radia na żywo, ~10 minut)** lub przełącz natychmiast w dowolnym momencie za pomocą `Ctrl+Win+T`.
+Funkcja jest **domyślnie wyłączona**. Włącz ją w Menu NVDA → Preferencje → Ustawienia → freeAudio → **Włącz bufor time-shift (cofanie radia na żywo, ~10 minut)** lub przełącz natychmiast w dowolnym momencie za pomocą `Ctrl+Win+T`.
 
-> **Uwaga:** FreeRadio utrzymuje teraz niewielkie przechwytywanie aktualnie odtwarzanej stacji w tle przez cały czas — nie tylko wtedy, gdy ta opcja jest włączona — ponieważ zarówno Rozpoznawanie muzyki, jak i Nagrywanie polegają na tym w kwestii opisanego w tych sekcjach unikania reklam. Gdy ta opcja jest **wyłączona**, to przechwytywanie w tle ograniczone jest do mniej więcej ostatnich 45 sekund, a `Ctrl+Win+J`/`Ctrl+Win+K` pozostają niedostępne — zmienia się tylko rozmiar bufora, a nie to, czy działa. Włączenie tej opcji powiększa to samo przechwytywanie do pełnego, opisanego niżej bufora cofania o długości ~10 minut.
+> **Uwaga:** freeAudio utrzymuje teraz niewielkie przechwytywanie aktualnie odtwarzanej stacji w tle przez cały czas — nie tylko wtedy, gdy ta opcja jest włączona — ponieważ zarówno Rozpoznawanie muzyki, jak i Nagrywanie polegają na tym w kwestii opisanego w tych sekcjach unikania reklam. Gdy ta opcja jest **wyłączona**, to przechwytywanie w tle ograniczone jest do mniej więcej ostatnich 45 sekund, a `Ctrl+Win+J`/`Ctrl+Win+K` pozostają niedostępne — zmienia się tylko rozmiar bufora, a nie to, czy działa. Włączenie tej opcji powiększa to samo przechwytywanie do pełnego, opisanego niżej bufora cofania o długości ~10 minut.
 
 ### Jak to działa
 
-Po włączeniu FreeRadio ciągle przechwytuje aktualnie odtwarzaną stację do lokalnego, obracającego się bufora w tle. Bufor przechowuje mniej więcej **ostatnie 10 minut** audio; starsze audio jest automatycznie usuwane z przodu wraz z napływaniem nowego, dzięki czemu bufor zawsze reprezentuje „niedawną przeszłość" względem krawędzi na żywo.
+Po włączeniu freeAudio ciągle przechwytuje aktualnie odtwarzaną stację do lokalnego, obracającego się bufora w tle. Bufor przechowuje mniej więcej **ostatnie 10 minut** audio; starsze audio jest automatycznie usuwane z przodu wraz z napływaniem nowego, dzięki czemu bufor zawsze reprezentuje „niedawną przeszłość" względem krawędzi na żywo.
 
 - **`Ctrl+Win+J`** — Cofnij o 15 sekund. Pierwsze naciśnięcie przełącza z odtwarzania na żywo na odtwarzanie z time-shiftem, zaczynając 15 sekund za krawędzią na żywo. Każde kolejne naciśnięcie cofa o kolejne 15 sekund.
 - **`Ctrl+Win+K`** — Przewiń do przodu o 15 sekund w trybie time-shift. Po osiągnięciu krawędzi na żywo odtwarzanie automatycznie przełącza się z powrotem do strumienia na żywo, a NVDA ogłasza „Powrót do transmisji na żywo".
@@ -301,10 +301,10 @@ Przełączenie na inną stację zawsze restartuje bufor dla nowej stacji; zbufor
 
 ### Obsługiwane strumienie
 
-Time-shift działa z tą samą gamą strumieni, które FreeRadio już obsługuje:
+Time-shift działa z tą samą gamą strumieni, które freeAudio już obsługuje:
 
 - Zwykłe strumienie HTTP/HTTPS (MP3, AAC, OGG itd.), w tym serwery w stylu Shoutcast/Icecast.
-- **Strumienie HLS (`.m3u8`)** — FreeRadio rozwiązuje główną playlistę stacji, śledzi playlistę mediów i pobiera segmenty w tle, aby bufor był stale wypełniony.
+- **Strumienie HLS (`.m3u8`)** — freeAudio rozwiązuje główną playlistę stacji, śledzi playlistę mediów i pobiera segmenty w tle, aby bufor był stale wypełniony.
 
 W rzadkim przypadku, gdy playlista stacji nie może zostać w ogóle odczytana (np. uszkodzony lub niedostępny manifest `.m3u8`), NVDA poinformuje, że cofanie nie jest dostępne dla tej konkretnej stacji.
 
@@ -327,7 +327,7 @@ Dla obu typów, jeśli podana godzina już minęła, akcja zostanie zaplanowana 
 
 ## Ustawienia
 
-Poniższe opcje można skonfigurować w menu NVDA -> Preferencje -> Ustawienia -> FreeRadio:
+Poniższe opcje można skonfigurować w menu NVDA -> Preferencje -> Ustawienia -> freeAudio:
 
 | Opcja | Opis |
 |---|---|
@@ -340,9 +340,9 @@ Poniższe opcje można skonfigurować w menu NVDA -> Preferencje -> Ustawienia -
 | Wznów ostatnią stację przy starcie NVDA | Gdy włączone, ostatnio odtwarzana stacja jest automatycznie uruchamiana przy każdym starcie NVDA. |
 | Automatycznie ogłaszaj zmiany utworów (metadane ICY) | Gdy włączone, NVDA automatycznie odczytuje nową nazwę utworu za każdym razem, gdy zmieni się na stacji nadającej metadane ICY. Pierwszy utwór jest ogłaszany również natychmiast po przełączeniu na nową stację. Domyślnie wyłączone. |
 | Wycisz powiadomienia | Gdy włączone, NVDA nie ogłasza zmian stacji, zmian stanu odtwarzania (odtwórz, pauza, stop) ani zdarzeń nagrywania (rozpoczęte, zatrzymane, zakończone). Komunikaty błędów, informacje o ulubionych, wyniki rozpoznawania muzyki i powiadomienia aktualizacji nie są wyciszane. Można też przełączać w locie przez nieprzypisane zdarzenie wejścia. Domyślnie wyłączone. |
-| Komunikaty brajlowskie | Gdy włączone, FreeRadio wysyła swoje powiadomienia bezpośrednio na linijkę brajlowską. Przydaje się to przy tytułach utworów, zmianach stacji, stanie odtwarzania i zmianach głośności. Domyślnie wyłączone. |
+| Komunikaty brajlowskie | Gdy włączone, freeAudio wysyła swoje powiadomienia bezpośrednio na linijkę brajlowską. Przydaje się to przy tytułach utworów, zmianach stacji, stanie odtwarzania i zmianach głośności. Domyślnie wyłączone. |
 | Włącz bufor time-shift (cofanie radia na żywo, ~10 minut) | Włącza lub wyłącza sterowanie cofaniem (`Ctrl+Win+J`/`Ctrl+Win+K`) i powiększa przechwytywanie w tle z ~45 sekund do ~10 minut. Niewielkie przechwytywanie w tle aktualnie odtwarzanej stacji działa zawsze, nawet gdy ta opcja jest wyłączona — zobacz uwagę w sekcji **Time-shift** poniżej. Można też natychmiast przełączyć za pomocą `Ctrl+Win+T`. Wymaga backendu BASS. Domyślnie wyłączone — pełne szczegóły znajdziesz w sekcji **Time-shift** poniżej. |
-| Zapisuj polubione utwory do pliku tekstowego | Gdy włączone, informacje o utworze skopiowane do schowka trzykrotnym naciśnięciem `Ctrl+Win+I` są też dopisywane do `Documents\FreeRadio Recordings\likedSongs.txt`. Jeśli metadane ICY nie są dostępne, do tego samego pliku zapisany zostaje wynik rozpoznawania przez Shazam. Domyślnie wyłączone. |
+| Zapisuj polubione utwory do pliku tekstowego | Gdy włączone, informacje o utworze skopiowane do schowka trzykrotnym naciśnięciem `Ctrl+Win+I` są też dopisywane do `Documents\freeAudio Recordings\likedSongs.txt`. Jeśli metadane ICY nie są dostępne, do tego samego pliku zapisany zostaje wynik rozpoznawania przez Shazam. Domyślnie wyłączone. |
 | Gdy Ctrl+Win+P zostanie naciśnięty bez aktywnego odtwarzania | Określa, co stanie się po naciśnięciu skrótu, gdy nic nie gra: uruchomienie ostatniej stacji albo otwarcie listy ulubionych. |
 | Gdy Ctrl+Win+P zostanie naciśnięty dwa razy | Wybiera akcję po dwukrotnym szybkim naciśnięciu skrótu: nic nie rób, otwórz listę ulubionych, otwórz kartę nagrywania albo otwórz kartę timera. Gdy wybrane jest "nic nie rób", pierwsze naciśnięcie reaguje natychmiast, bez opóźnienia. |
 | Gdy Ctrl+Win+P zostanie naciśnięty trzy razy | Wybiera akcję po trzykrotnym szybkim naciśnięciu skrótu: nic nie rób, otwórz listę ulubionych, otwórz wyszukiwanie stacji, otwórz kartę nagrywania albo otwórz kartę timera. |
@@ -351,7 +351,7 @@ Poniższe opcje można skonfigurować w menu NVDA -> Preferencje -> Ustawienia -
 | Ścieżka do VLC | Jeśli VLC nie jest zainstalowany albo znajduje się w nietypowym miejscu, można tutaj wpisać pełną ścieżkę do pliku wykonywalnego. |
 | Ścieżka do wmplayer.exe | Wpisz tutaj ścieżkę do Windows Media Playera, jeśli jest potrzebna. |
 | Ścieżka do PotPlayera | Jeśli PotPlayer znajduje się w nietypowym miejscu, można tutaj wpisać jego ścieżkę. |
-| Folder nagrań | Ustawia folder, w którym zapisywane są nagrania. Jeśli pozostanie pusty, używana jest domyślna lokalizacja `Documents\FreeRadio Recordings\`. Przycisk Przeglądaj pozwala wybrać folder interaktywnie. Zmiany działają natychmiast po zapisaniu. |
+| Folder nagrań | Ustawia folder, w którym zapisywane są nagrania. Jeśli pozostanie pusty, używana jest domyślna lokalizacja `Documents\freeAudio Recordings\`. Przycisk Przeglądaj pozwala wybrać folder interaktywnie. Zmiany działają natychmiast po zapisaniu. |
 | Format zapisu nagrań | Zachowuje oryginalny strumień, wyodrębnia sam dźwięk bez zmiany kodeka albo konwertuje zakończone nagranie do MP3. Domyślnie zachowywany jest oryginalny format strumienia. |
 | Przepływność nagrań MP3 | Ustawia przepływność używaną, gdy wybrany jest format MP3. Domyślna wartość to 128 kb/s. |
 | Wyłącz sprawdzanie połączenia internetowego przed odtwarzaniem | Zalecane dla użytkowników, u których występuje opóźnienie przed rozpoczęciem odtwarzania stacji. Przydatne również, gdy DNS jest blokowany. |
@@ -367,19 +367,19 @@ Gdy w ustawieniach włączone jest **Wycisz powiadomienia**, NVDA wycisza nastę
 
 Celowo **nie** są wyciszane: komunikaty błędów, informacje o ulubionych (dodano / już na liście), wyniki rozpoznawania muzyki i powiadomienia aktualizacji.
 
-Ustawienie można przełączyć w menu NVDA -> Preferencje -> Ustawienia -> FreeRadio albo natychmiast w dowolnym momencie przez nieprzypisane zdarzenie wejścia (przypisz je w menu NVDA -> Preferencje -> Zdarzenia wejścia -> FreeRadio). Po przełączeniu NVDA odczyta raz "Powiadomienia wyciszone" albo "Powiadomienia włączone", aby potwierdzić zmianę.
+Ustawienie można przełączyć w menu NVDA -> Preferencje -> Ustawienia -> freeAudio albo natychmiast w dowolnym momencie przez nieprzypisane zdarzenie wejścia (przypisz je w menu NVDA -> Preferencje -> Zdarzenia wejścia -> freeAudio). Po przełączeniu NVDA odczyta raz "Powiadomienia wyciszone" albo "Powiadomienia włączone", aby potwierdzić zmianę.
 
 ## Automatyczne ogłaszanie zmian utworów
 
-Gdy w ustawieniach włączona jest opcja **Automatycznie ogłaszaj zmiany utworów**, FreeRadio sprawdza w tle strumień metadanych ICY aktywnej stacji mniej więcej co 5 sekund. Po zmianie utworu nowy tytuł jest automatycznie odczytywany przez NVDA - bez naciskania klawiszy.
+Gdy w ustawieniach włączona jest opcja **Automatycznie ogłaszaj zmiany utworów**, freeAudio sprawdza w tle strumień metadanych ICY aktywnej stacji mniej więcej co 5 sekund. Po zmianie utworu nowy tytuł jest automatycznie odczytywany przez NVDA - bez naciskania klawiszy.
 
 Po przełączeniu na nową stację pierwsza informacja o utworze jest ogłaszana zaraz po nawiązaniu połączenia. Jeśli przełączysz na stację, która nie nadaje metadanych ICY, system pozostanie cichy, a informacje z poprzedniej stacji nie będą powtarzane.
 
-Funkcja jest domyślnie wyłączona i można ją przełączyć w menu NVDA -> Preferencje -> Ustawienia -> FreeRadio.
+Funkcja jest domyślnie wyłączona i można ją przełączyć w menu NVDA -> Preferencje -> Ustawienia -> freeAudio.
 
 ## Polubione utwory
 
-Gdy włączona jest opcja **Zapisuj polubione utwory do pliku tekstowego**, informacje o utworze skopiowane do schowka trzykrotnym naciśnięciem `Ctrl+Win+I` są także dopisywane w kolejnych wierszach do `Documents\FreeRadio Recordings\likedSongs.txt`.
+Gdy włączona jest opcja **Zapisuj polubione utwory do pliku tekstowego**, informacje o utworze skopiowane do schowka trzykrotnym naciśnięciem `Ctrl+Win+I` są także dopisywane w kolejnych wierszach do `Documents\freeAudio Recordings\likedSongs.txt`.
 
 Na stacjach nadających metadane ICY tytuł utworu i wykonawca są zapisywane bezpośrednio. Na stacjach bez metadanych ICY do tego samego pliku zapisywany jest wynik rozpoznawania przez Shazam - oba źródła używają jednej listy. Plik jest tworzony automatycznie, jeśli nie istnieje; każdy wpis jest dopisywany na końcu, a poprzednie wpisy nie są usuwane.
 
@@ -401,7 +401,7 @@ Przyciski Spotify, YouTube, Pokaż tekst i Usuń są aktywne tylko wtedy, gdy na
 
 ### Serwis tekstów piosenek
 
-FreeRadio używa [lrclib.net](https://lrclib.net) do pobierania tekstów piosenek — bezpłatna, otwarta baza danych niewymagająca klucza API ani konta. Proces wyszukiwania analizuje ciąg ścieżki zapisany w `likedSongs.txt` i próbuje coraz luźniejszych zapytań, aż do znalezienia tekstu:
+freeAudio używa [lrclib.net](https://lrclib.net) do pobierania tekstów piosenek — bezpłatna, otwarta baza danych niewymagająca klucza API ani konta. Proces wyszukiwania analizuje ciąg ścieżki zapisany w `likedSongs.txt` i próbuje coraz luźniejszych zapytań, aż do znalezienia tekstu:
 
 1. Dokładne dopasowanie przy użyciu pełnej nazwy wykonawcy i oczyszczonego tytułu (szumowe przyrostki takie jak „Remastered", „Live" lub tagi roku są usuwane przed wyszukiwaniem).
 2. Dokładne dopasowanie przy użyciu pełnej nazwy wykonawcy i oryginalnego tytułu (jeśli czyszczenie go zmieniło).
@@ -416,25 +416,25 @@ Gdy dostępne są zwykłe teksty, są wyświetlane tak jak są. Gdy dostępne s�
 
 Dodatek wybiera backend odtwarzania w następującej kolejności priorytetów:
 
-1. **BASS** - domyślny i główny backend. Nie wymaga osobnej instalacji; jest dołączony do dodatku. BASS wysyła dźwięk bezpośrednio do stosu audio Windows i pojawia się w mikserze głośności Windows jako niezależne źródło audio o nazwie "pythonw.exe", oddzielone od NVDA. Oznacza to, że dźwięk FreeRadio płynie całkowicie osobnym kanałem niż mowa NVDA: radio nie zanika, nie miesza się i nie jest zależne od ustawień audio NVDA, gdy NVDA mówi. Użytkownik może regulować głośność radia niezależnie od NVDA w mikserze głośności Windows. Obsługuje HTTP, HTTPS i większość osadzonych formatów strumieni. Kopia dźwięku jest dostępna tylko z tym backendem.
+1. **BASS** - domyślny i główny backend. Nie wymaga osobnej instalacji; jest dołączony do dodatku. BASS wysyła dźwięk bezpośrednio do stosu audio Windows i pojawia się w mikserze głośności Windows jako niezależne źródło audio o nazwie "pythonw.exe", oddzielone od NVDA. Oznacza to, że dźwięk freeAudio płynie całkowicie osobnym kanałem niż mowa NVDA: radio nie zanika, nie miesza się i nie jest zależne od ustawień audio NVDA, gdy NVDA mówi. Użytkownik może regulować głośność radia niezależnie od NVDA w mikserze głośności Windows. Obsługuje HTTP, HTTPS i większość osadzonych formatów strumieni. Kopia dźwięku jest dostępna tylko z tym backendem.
 2. **VLC** - przejmuje odtwarzanie, jeśli BASS zawiedzie. Jest automatycznie szukany w typowych lokalizacjach instalacji, folderach profilu użytkownika i w systemowym PATH.
 3. **PotPlayer** - używany, jeśli VLC nie zostanie znaleziony. Jest automatycznie szukany w typowych lokalizacjach instalacji.
 4. **Windows Media Player** - używany jako ostatnia możliwość; wymaga zainstalowanego komponentu WMP w systemie.
 
 ## Sprawdzanie aktualizacji
 
-FreeRadio automatycznie sprawdza nowe wersje przez GitHuba.
+freeAudio automatycznie sprawdza nowe wersje przez GitHuba.
 
 **Sprawdzanie automatyczne:** działa cicho w tle 15 sekund po starcie NVDA. Jeśli zostanie znaleziona nowa wersja, pojawi się powiadomienie; jeśli nie, nie pojawia się żaden komunikat.
 
-**Sprawdzanie ręczne:** można uruchomić na żądanie z menu NVDA -> Narzędzia -> FreeRadio -> **Sprawdź aktualizacje...**. Przy ręcznym uruchomieniu wynik jest ogłaszany nawet wtedy, gdy wersja jest aktualna.
+**Sprawdzanie ręczne:** można uruchomić na żądanie z menu NVDA -> Narzędzia -> freeAudio -> **Sprawdź aktualizacje...**. Przy ręcznym uruchomieniu wynik jest ogłaszany nawet wtedy, gdy wersja jest aktualna.
 
 **Gdy znajdzie się aktualizacja:** pojawia się dialog z numerem nowej wersji i wersją zainstalowaną.
 
 - Jeśli w wydaniu GitHuba jest dostępny bezpośrednio pobieralny plik `.nvda-addon`, pojawia się przycisk **Pobierz i zainstaluj**. Po potwierdzeniu plik jest pobierany w tle, NVDA ogłasza rozpoczęcie pobierania, a następnie automatycznie otwiera własny ekran instalacji NVDA.
 - Jeśli nie ma bezpośredniego linku pobierania, pojawia się przycisk **Otwórz stronę**, który otwiera stronę wydania GitHuba w domyślnej przeglądarce.
 
-**Aby wyłączyć automatyczne sprawdzanie:** wyłącz opcję **Sprawdzaj aktualizacje automatycznie** w menu NVDA -> Preferencje -> Ustawienia -> FreeRadio.
+**Aby wyłączyć automatyczne sprawdzanie:** wyłącz opcję **Sprawdzaj aktualizacje automatycznie** w menu NVDA -> Preferencje -> Ustawienia -> freeAudio.
 
 ## Licencja
 
