@@ -24,7 +24,50 @@ addon_info = AddonInfo(
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version
 	addon_changelog=_("""
-- Initial release with the new brand.
+# freeAudio: What's New
+
+## FreeRadio is now freeAudio
+
+- Your settings, favourites, podcasts, jukebox library and recordings location are carried over automatically on first start.
+- Custom shortcuts assigned in Input Gestures must be set again.
+- Uninstall the old FreeRadio add-on to avoid conflicts.
+
+## Added
+
+### Favourite groups (folders)
+
+- **M3U import:** reads the `group-title` attribute. If only the first station in a folder carries the tag, as common exporters such as DVBViewer write it, the group is carried forward to the stations that follow.
+- **M3U export:** writes `group-title` again, so a round trip through freeAudio no longer drops the folder structure. JSON import and export keep the same group field.
+- **List display:** each favourite shows its folder as a trailing "— Group" suffix. This is display only, and the station's name is never changed.
+- **Filter box:** now also matches the group and splits your text on whitespace, so each word can match a different field. For example, "Houston Classical" finds "Houston Public Media Classical", even though that phrase never appears in one piece.
+- **Assign to Group…** (new context-menu command): mark favourites with `.`, then type a group name to organise them by hand, or leave the name empty to clear the group. It works for hand-made favourites too, not only imported M3U ones.
+- **Backward compatible:** favourites without a group default to an empty group, and the list looks and behaves exactly as before until you import a grouped playlist or use Assign to Group.
+
+### Mark a range of items
+
+Favourites, Liked Songs, Audio Books and Jukebox already let you mark single rows with `.` for bulk removal. You can now mark whole ranges:
+
+- **Shift+End:** marks or unmarks from the focused row to the last row.
+- **Shift+Home:** marks or unmarks from the focused row to the first row.
+
+The focused row's current state decides the direction: if it is unmarked, the whole range gets marked, and if it is marked, the whole range gets unmarked. This mirrors how Shift+Home and Shift+End extend a selection in a text field. Afterwards focus moves to the far end of the range and the number of rows changed is announced. The placeholder rows in Liked Songs ("No liked songs yet.", "No results found.") are never marked.
+
+### Timers
+
+- New **recurring** option for timers.
+
+### Windows Explorer integration
+
+A new `appModules/explorer.py`, active only in the file list of `explorer.exe`, not in the address bar, tree view, ribbon, search box or other Explorer controls. It adds two commands, both unassigned by default:
+
+- **Play the focused file with freeAudio**
+- **Add the focused file or folder to the freeAudio jukebox**
+
+Assign a key (for example `.` or `,`) in Input Gestures while focused in Explorer. It is bound only there and still works as itself everywhere else.
+
+## Fixed
+
+- **The freeAudio window sometimes failed to come to the foreground**, requiring an NVDA restart. If you minimized the window instead of closing it, it stayed in the taskbar and could not be brought back. Reopening it now restores a minimized window before raising it.
 """),
 	
 	# Author(s)
