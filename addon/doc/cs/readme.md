@@ -53,6 +53,8 @@ Stáhněte si soubor `.nvda-addon`, stiskněte na něm Enter a po výzvě restar
 
 Všechny klávesové zkratky lze znovu přiřadit v nabídce NVDA → Předvolby → Vstupní gesta → freeAudio. Tyto zkratky fungují odkudkoli, bez ohledu na to, které okno má fokus.
 
+Některé z těchto zkratek se překrývají se zkratkami, které používá sám systém Windows. Pokud chcete zachovat vlastní zkratku Windows bez opětovného přiřazení zkratky freeAudio, stiskněte těsně před kombinací kláves `NVDA+F2` (Předat další klávesu) — NVDA odešle tuto jednu kombinaci kláves přímo do Windows místo toho, aby ji zachytila pro freeAudio.
+
 | Zkratka | Funkce | Popis |
 |---|---|---|
 | `Ctrl+Win+R` | Otevřít prohlížeč stanic | Otevře okno prohlížeče, pokud je zavřené, nebo jej přenese do popředí, pokud je již otevřené. |
@@ -206,6 +208,7 @@ Chcete-li stanici ze seznamu oblíbených odstranit, vyberte ji a stiskněte tla
 Oblíbené, oblíbené skladby, knihovna audioknih a seznam jukeboxu podporují označení několika položek a jejich společné odstranění v jednom kroku:
 
 - Stiskněte **`.`** (tečku) na zvýrazněné položce pro její označení nebo zrušení označení. NVDA oznámí změnu a řádek označené položky je označen jako „(označeno)“, aby byl její stav jasný při procházení seznamu.
+- Stisknutím **`Shift+Home`** označíte nebo odznačíte všechny položky od aktuální až po první položku v seznamu, nebo **`Shift+End`** totéž dolů po poslední položku. Zda bude rozsah označen nebo odznačen, se rozhoduje podle aktuálního stavu aktuální položky, takže se celý rozsah vždy v jednom kroku pohybuje stejným směrem. Fokus se poté přesune na vzdálenější konec rozsahu a NVDA oznámí, kolik položek se změnilo.
 - Stiskněte **`Delete`** pro odstranění všech označených položek najednou. Pokud není nic označeno, `Delete` stále odstraní pouze aktuálně vybranou položku, jako dříve.
 - Kontextová nabídka pravého tlačítka (klávesa Nabídka / `Shift+F10`) každého seznamu obsahuje příkaz **Odstranit vybrané**, aktivní pouze tehdy, je-li označena alespoň jedna položka, který dělá totéž.
 - Před jakýmkoli odstraněním se zobrazí jedno potvrzovací dialogové okno shrnující, kolik položek bude odstraněno.
@@ -226,6 +229,14 @@ Záložka Oblíbené obsahuje dvě tlačítka pro zálohu a obnovu seznamu stani
 - **Zrušit** — vrátí se do prohlížeče bez provedení jakýchkoli změn.
 
 Po úspěšném importu se automaticky obnoví seznam oblíbených, seznam stanic naplánovaných nahrávání a seznam stanic časovače.
+
+### Organizace oblíbených do skupin
+
+Oblíbené mohou patřit do složky/skupiny, což se v seznamu zobrazuje jako přípona „— Skupina" za názvem stanice (například „NPR Newscast — NPR").
+
+- **Import z M3U** — pokud soubor používá značku `group-title` (konvence používaná programem DVBViewer a většinou ostatních editorů a přehrávačů M3U) k organizaci stanic do složek, freeAudio ji přečte a při importu zachová skupinu každé stanice. Export oblíbených zpět do M3U zapíše stejnou značku, takže struktura složek přežije cestu tam i zpět přes freeAudio.
+- **Ruční přiřazení nebo odebrání skupiny** — označte jednu nebo více oblíbených stanic pomocí `.` (viz [Označení a odstranění více položek](#označení-a-odstranění-více-položek) výše), poté zvolte **Přiřadit ke skupině…** z kontextové nabídky (klávesa Nabídka / `Shift+F10`) a zadejte název skupiny. Ponechte pole prázdné, chcete-li označené oblíbené ze skupiny odebrat. Pokud není nic označeno, příkaz se použije na aktuálně vybranou oblíbenou stanici.
+- **Filtrování podle skupiny** — pole Filtr nad seznamem oblíbených odpovídá také názvům skupin a přijímá více slov, z nichž každé může odpovídat jinému poli. Například zadání `Houston Classical` najde „Houston Public Media Classical", i když se tato přesná fráze nikde nevyskytuje — „Houston" odpovídá skupině a „Classical" odpovídá názvu stanice.
 
 ### Změna pořadí oblíbených stanic
 
@@ -392,6 +403,8 @@ Při výběru stanice pro časovač alarmu vám pole **Filtr** nad seznamem stan
 **Sleep - zastavení rádia:** Zastaví přehrávání v zadaný čas. Po spuštění časovače se hlasitost postupně snižuje po dobu 60 sekund, než se přehrávání zastaví. Není třeba vybírat žádnou stanici, stačí zadat čas.
 
 Platí pro oba typy, pokud zadaný čas již uplynul, je akce naplánována na následující den. Pokud již existuje časovač ve stejnou dobu (bez ohledu na typ), přidání nového časovače je zablokováno; uživatel je informován o konfliktu a vyzván k odebrání stávající položky. Na kartě jsou uvedeny čekající časovače; vyberte jeden z nich a stisknutím tlačítka Odebrat vybraný časovač jej zrušte.
+
+**Opakované časovače:** V části **Opakování** zvolte **Opakovat každý týden** místo výchozí jednorázové možnosti, aby se časovač spouštěl každý týden, nikoli jednou. Seznam zaškrtávacích políček **Aktivní dny** vám pak umožní vybrat, ve které dny v týdnu se opakuje; pokud necháte všechny dny nezaškrtnuté, opakuje se každý den. Opakovaný časovač se spouští podle plánu, dokud jej neodstraníte ze seznamu čekajících časovačů — nejde o jednorázovou položku, která po spuštění zmizí.
 
 ## Podcasty
 
@@ -639,6 +652,15 @@ Seznam Jukebox je vaše trvalá osobní knihovna. Lze přidat dva druhy položek
 - **Odebrat** — smaže aktuálně vybranou položku z vašeho jukeboxu. Odebrání položky složky neodstraní žádné soubory z disku; pouze zapomene složku. Můžete také označit několik položek najednou a odstranit je všechny společně — viz [Označení a odstranění více položek](#označení-a-odstranění-více-položek) v části Oblíbené.
 
 Seznam Jukebox se ukládá automaticky, takže přežije restartování NVDA. Obsah složky se skenuje na vyžádání a ukládá do mezipaměti, takže přidání složky je okamžité i u velmi velkých sbírek — úplné skenování proběhne při prvním výběru této složky. Pokud přidáte soubory do složky mimo freeAudio, použijte položku **Znovu prohledat složku** v kontextové nabídce složky, abyste je zachytili.
+
+### Přidávání položek z Průzkumníka Windows
+
+Dva další příkazy, dostupné pouze tehdy, když je v seznamu souborů Průzkumníka Windows (seznam Podrobnosti/ikony — nikoli adresní řádek, strom složek, pás karet nebo vyhledávací pole) zaměřen soubor nebo složka, vám umožní zcela přeskočit dialogy Přidat soubor…/Přidat složku… výše:
+
+- **Přehrát zaměřený soubor ve freeAudio** — přehraje zvýrazněný zvukový soubor přímo, aniž by musel být již ve vašem seznamu Jukebox. Funguje pouze na soubory; při použití na složku vám sdělí, abyste složku přidali do jukeboxu místo toho.
+- **Přidat zaměřenou položku do jukeboxu freeAudio** — přidá zvýrazněný soubor nebo složku do vašeho seznamu Jukebox, přesně jako kdybyste použili **Přidat soubor…** nebo **Přidat složku…** výše.
+
+Ani jeden z příkazů nemá ve výchozím stavu přiřazenou klávesu. Přiřaďte ji z nabídky NVDA → Předvolby → Vstupní gesta **při zaměření uvnitř okna Průzkumníka souborů** — zobrazí se tam v sekci samotného Průzkumníka, nikoli v části „Všechny aplikace", takže zvolená kombinace kláves tyto příkazy spustí pouze při procházení souborů v Průzkumníku; všude jinde si zachovává svůj obvyklý význam.
 
 ### Přehrávání z jukeboxu
 

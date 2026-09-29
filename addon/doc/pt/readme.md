@@ -55,6 +55,8 @@ Descarregue o ficheiro `.nvda-addon`, prima Enter sobre ele e reinicie o NVDA qu
 
 Todos os atalhos podem ser reatribuídos em Menu NVDA → Preferências → Definir comandos → freeAudio. Estes atalhos funcionam em qualquer lugar, independentemente da janela que estiver em foco.
 
+Alguns destes atalhos sobrepõem-se a atalhos que o próprio Windows usa. Se preferir manter o atalho do próprio Windows sem reatribuir o do freeAudio, prima `NVDA+F2` (Passar a tecla seguinte) imediatamente antes da combinação de teclas — o NVDA enviará essa combinação de teclas diretamente para o Windows em vez de a intercetar para o freeAudio.
+
 | Atalho | Função | Descrição |
 |---|---|---|
 | `Ctrl+Win+R` | Abrir navegador de estações | Abre a janela do navegador se estiver fechada, ou traz-a para primeiro plano se já estiver aberta. |
@@ -208,6 +210,7 @@ Para eliminar uma estação da lista de favoritos, selecione-a e prima o botão 
 Favoritos, Músicas Gostadas, a biblioteca de Audiolivros e a lista do Jukebox suportam marcar vários itens e removê-los juntos num único passo:
 
 - Prima **`.`** (ponto) num item destacado para o marcar ou desmarcar. O NVDA anuncia a alteração, e a linha de um item marcado é rotulada como "(marcado)" para que o seu estado permaneça claro enquanto percorre a lista.
+- Prima **`Shift+Home`** para marcar ou desmarcar todos os itens desde o atual até ao primeiro da lista, ou **`Shift+End`** para fazer o mesmo até ao último. Se o intervalo é marcado ou desmarcado é decidido pelo estado do próprio item atual, pelo que o intervalo inteiro se move sempre no mesmo sentido numa única ação. O foco passa depois para o extremo oposto do intervalo, e o NVDA anuncia quantos itens mudaram.
 - Prima **`Delete`** para remover todos os itens marcados de uma só vez. Se nada estiver marcado, `Delete` continua a remover apenas o item atualmente selecionado, como antes.
 - O menu de contexto do botão direito (tecla Aplicações / `Shift+F10`) de cada lista inclui um comando **Remover Selecionados**, ativo apenas quando pelo menos um item está marcado, que faz o mesmo.
 - Antes de qualquer remoção, uma única caixa de diálogo de confirmação resume quantos itens estão prestes a ser removidos.
@@ -228,6 +231,14 @@ O separador Favoritos inclui dois botões para fazer cópias de segurança e res
 - **Cancelar** — regressa ao navegador sem efetuar quaisquer alterações.
 
 Após uma importação bem-sucedida, a lista de favoritos, a lista de estações de gravação agendada e a lista de estações do temporizador são todas atualizadas automaticamente.
+
+### Organizar Favoritos em Grupos
+
+Os favoritos podem pertencer a uma pasta/grupo, apresentado como um sufixo "— Grupo" após o nome da estação na lista (por exemplo, "NPR Newscast — NPR").
+
+- **Importar de M3U** — se o ficheiro usar a etiqueta `group-title` (a convenção usada pelo DVBViewer e pela maioria dos outros editores e leitores de M3U) para organizar estações em pastas, o freeAudio lê-a e mantém o grupo de cada estação na importação. Exportar os seus favoritos de volta para M3U escreve a mesma etiqueta, pelo que a estrutura de pastas sobrevive a uma ida e volta pelo freeAudio.
+- **Atribuir ou remover um grupo manualmente** — marque um ou mais favoritos com `.` (ver [Marcar e Remover Vários Itens](#marcar-e-remover-vários-itens) acima), depois escolha **Atribuir ao Grupo…** no menu de contexto (tecla Aplicações / `Shift+F10`) e escreva um nome de grupo. Deixe o campo vazio para remover os favoritos marcados do seu grupo. Se nada estiver marcado, o comando aplica-se ao favorito atualmente selecionado.
+- **Filtrar por grupo** — o campo Filtro acima da lista de favoritos também corresponde a nomes de grupos e aceita várias palavras, cada uma podendo corresponder a um campo diferente. Por exemplo, escrever `Houston Classical` encontra "Houston Public Media Classical" mesmo que essa frase exata nunca apareça em lado nenhum — "Houston" corresponde ao grupo e "Classical" corresponde ao nome da estação.
 
 ### Reordenar Favoritos
 
@@ -394,6 +405,8 @@ Ao escolher uma estação para um temporizador de alarme, um campo **Filtro** ac
 **Suspensão — parar rádio:** Para a reprodução à hora especificada. Quando o temporizador dispara, o volume é reduzido gradualmente durante 60 segundos antes de parar a reprodução. Não é necessário selecionar uma estação; basta introduzir a hora.
 
 Para ambos os tipos, se a hora introduzida já tiver passado, a ação é agendada para o dia seguinte. Se já existir um temporizador à mesma hora (independentemente do tipo), a adição de um novo é bloqueada; o utilizador é informado do conflito e solicitado a remover primeiro a entrada existente. Os temporizadores pendentes estão listados no separador; selecione um e prima o botão Remover Temporizador Selecionado para o cancelar.
+
+**Temporizadores recorrentes:** Em **Recorrência**, escolha **Repetir semanalmente** em vez da opção única predefinida para que o temporizador dispare todas as semanas em vez de uma só vez. Uma lista de verificação **Dias ativos** permite-lhe então escolher em que dias da semana se repete; deixar todos os dias desmarcados repete-o todos os dias. Um temporizador recorrente continua a disparar conforme agendado até o remover da lista de temporizadores pendentes — não é uma entrada única que desaparece após disparar.
 
 ## Podcasts
 
@@ -641,6 +654,15 @@ A lista Jukebox é a sua biblioteca pessoal persistente. Podem ser adicionados d
 - **Remover** — elimina a entrada atualmente selecionada do seu Jukebox. Remover uma entrada de pasta não elimina quaisquer ficheiros do disco; apenas esquece a pasta. Também pode marcar várias entradas de uma só vez e removê-las todas juntas — veja [Marcar e Remover Vários Itens](#marcar-e-remover-vários-itens) em Favoritos.
 
 A sua lista Jukebox é guardada automaticamente, pelo que sobrevive a reinícios do NVDA. O conteúdo das pastas é analisado a pedido e armazenado em cache, pelo que adicionar uma pasta é instantâneo mesmo para coleções muito grandes — a análise completa ocorre na primeira vez que seleciona essa pasta. Se adicionar ficheiros a uma pasta fora do freeAudio, use o item **Reanalisar Pasta** no menu de contexto da pasta para os detetar.
+
+### Adicionar Itens a partir do Windows Explorer
+
+Mais dois comandos, disponíveis apenas enquanto um ficheiro ou pasta está em foco na lista de ficheiros do Windows Explorer (lista Detalhes/Ícones — não a barra de endereço, a árvore de pastas, o friso, ou a caixa de pesquisa), permitem-lhe ignorar completamente as caixas de diálogo Adicionar Ficheiro…/Adicionar Pasta… acima:
+
+- **Reproduzir o ficheiro em foco com o freeAudio** — reproduz o ficheiro de áudio destacado diretamente, sem ser necessário já estar na sua lista Jukebox. Só funciona em ficheiros; usá-lo numa pasta diz-lhe para adicionar a pasta ao jukebox em vez disso.
+- **Adicionar o item em foco ao jukebox do freeAudio** — adiciona o ficheiro ou pasta destacado à sua lista Jukebox, exatamente como se tivesse usado **Adicionar Ficheiro…** ou **Adicionar Pasta…** acima.
+
+Nenhum dos comandos tem uma tecla predefinida atribuída. Atribua uma em Menu NVDA → Preferências → Definir comandos **enquanto estiver em foco dentro de uma janela do Explorador de Ficheiros** — aparecem lá na secção própria do Explorador em vez de "Todas as aplicações", pelo que a combinação de teclas que escolher apenas aciona estes comandos enquanto navega em ficheiros no Explorador; em qualquer outro lugar, mantém o seu significado normal.
 
 ### Reproduzir a partir do Jukebox
 

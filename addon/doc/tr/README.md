@@ -53,6 +53,8 @@ Gönderildikten sonra istasyon incelenerek dizine eklenir. Kabul edildikten sonr
 
 Tüm kısayollar NVDA Menüsü → Tercihler → Girdi Hareketleri → freeAudio bölümünden yeniden atanabilir. Bu kısayollar, odak hangi pencerede olursa olsun her yerden çalışır.
 
+Bu kısayolların bazıları Windows'un kendi kullandığı kısayollarla çakışır. freeAudio'nun kısayolunu yeniden atamadan Windows'un kendi kısayolunu kullanmayı tercih ediyorsanız, tuş kombinasyonundan hemen önce `NVDA+F2` (Sonraki tuşa geç) tuşlarına basın — NVDA bu tek tuş kombinasyonunu freeAudio için yakalamak yerine doğrudan Windows'a gönderir.
+
 | Kısayol | İşlev | Açıklama |
 |---|---|---|
 | `Ctrl+Win+R` | İstasyon tarayıcısını aç | Tarayıcı penceresi kapalıysa açar, açıksa öne getirir. |
@@ -206,6 +208,7 @@ Favoriler listesinden bir istasyonu silmek için istasyonu seçip **İstasyonu S
 Favoriler, Beğenilen Şarkılar, Sesli Kitaplar kitaplığı ve Müzik Kutusu listesi, birden fazla öğeyi işaretleyip tek adımda kaldırma özelliğini destekler:
 
 - Vurgulanan bir öğe üzerinde **`.`** (nokta) tuşuna basarak işaretleyin veya işareti kaldırın. NVDA değişikliği bildirir ve işaretli bir öğenin satırı "(işaretli)" olarak etiketlenir; böylece listede gezinirken durumu net kalır.
+- Mevcut öğeden listedeki ilk öğeye kadar olan tüm öğeleri işaretlemek veya işaretini kaldırmak için **`Shift+Home`**, son öğeye kadar olanları işaretlemek veya işaretini kaldırmak için **`Shift+End`** tuşlarına basın. Aralığın işaretlenip işaretlenmeyeceği mevcut öğenin kendi durumuna göre belirlenir; böylece tüm aralık tek işlemde aynı yönde hareket eder. Ardından odak aralığın diğer ucuna taşınır ve NVDA kaç öğenin değiştiğini bildirir.
 - **`Delete`** tuşuna basarak işaretli tüm öğeleri tek seferde kaldırın. Hiçbir şey işaretli değilse, `Delete` yine de yalnızca o an seçili öğeyi kaldırır.
 - Her listenin sağ tıklama bağlam menüsünde (Uygulamalar tuşu / `Shift+F10`), yalnızca en az bir öğe işaretliyken etkinleşen ve aynı işlemi yapan bir **Seçilenleri Kaldır** komutu bulunur.
 - Silme işleminden önce, kaç öğenin kaldırılacağını özetleyen tek bir onay iletişim kutusu açılır.
@@ -226,6 +229,14 @@ Favoriler sekmesi, istasyon listenizi yedeklemenizi ve geri yüklemenizi sağlay
 - **İptal** — herhangi bir değişiklik yapmadan tarayıcıya döner.
 
 Başarılı bir içe aktarmanın ardından favoriler listesi, zamanlı kayıt istasyon listesi ve zamanlayıcı istasyon listesi otomatik olarak yenilenir.
+
+### Favorileri Gruplara Ayırma
+
+Favoriler bir klasöre/gruba ait olabilir; bu, listede istasyon adının ardından "— Grup" sonekiyle gösterilir (örneğin, "NPR Newscast — NPR").
+
+- **M3U'dan içe aktarma** — dosya, istasyonları klasörlere ayırmak için `group-title` etiketini (DVBViewer ve diğer çoğu M3U düzenleyicisi ile oynatıcısının kullandığı kural) kullanıyorsa, freeAudio bunu okur ve içe aktarma sırasında her istasyonun grubunu korur. Favorilerinizi tekrar M3U'ya aktarmak aynı etiketi yazar; böylece klasör yapısı freeAudio'dan geçen bir gidiş-dönüşte korunur.
+- **Elle grup atama veya kaldırma** — bir veya daha fazla favoriyi `.` ile işaretleyin (yukarıdaki [Birden Fazla Öğeyi İşaretleme ve Kaldırma](#birden-fazla-öğeyi-i̇şaretleme-ve-kaldırma) bölümüne bakın), ardından bağlam menüsünden (Uygulamalar tuşu / `Shift+F10`) **Gruba Ata…** seçeneğini seçip bir grup adı yazın. İşaretli favorileri grubundan çıkarmak için alanı boş bırakın. Hiçbir şey işaretli değilse, komut o an seçili olan favoriye uygulanır.
+- **Gruba göre filtreleme** — favoriler listesinin üzerindeki Filtre alanı grup adlarıyla da eşleşir ve her biri farklı bir alanla eşleşebilen birden fazla kelimeyi kabul eder. Örneğin, `Houston Classical` yazmak, bu tam ifade hiçbir yerde geçmese bile "Houston Public Media Classical" istasyonunu bulur — "Houston" grup adıyla, "Classical" ise istasyon adıyla eşleşir.
 
 ### Favorileri Yeniden Sıralama
 
@@ -392,6 +403,8 @@ Alarm zamanlayıcısı için bir istasyon seçerken, istasyon listesinin üzerin
 **Uyku — radyoyu durdur:** Belirtilen saatte oynatmayı durdurur. Zamanlayıcı tetiklendiğinde ses 60 saniye boyunca kademeli olarak kısılır, ardından oynatma durur. İstasyon seçmeye gerek yoktur; yalnızca saat girilmesi yeterlidir.
 
 Her iki tür için de girilen saat geçmişse işlem ertesi güne planlanır. Aynı saatte zaten bir zamanlayıcı varsa (türü ne olursa olsun) yeni zamanlayıcı eklenmesi engellenir; çakışma hakkında bilgi verilir ve mevcut girişin önce kaldırılması istenir. Bekleyen zamanlayıcılar sekmede listelenir; listeden seçip Seçili Zamanlayıcıyı Kaldır düğmesine basılarak iptal edilebilir.
+
+**Tekrarlayan zamanlayıcılar:** **Tekrar** altında, varsayılan tek seferlik seçenek yerine **Haftalık tekrar**'ı seçerek zamanlayıcının bir kez yerine her hafta tetiklenmesini sağlayabilirsiniz. Ardından gelen **Aktif günler** onay kutuları listesi, hangi günlerde tekrarlanacağını seçmenize olanak tanır; tüm günleri işaretsiz bırakmak her gün tekrarlanması anlamına gelir. Tekrarlayan bir zamanlayıcı, bekleyen zamanlayıcılar listesinden kaldırılana kadar programına uygun olarak tetiklenmeye devam eder — tetiklendikten sonra kaybolan tek seferlik bir giriş değildir.
 
 ## Podcastler
 
@@ -639,6 +652,15 @@ Müzik Kutusu listesi kalıcı, kişisel kütüphanenizdir. İki tür öğe ekle
 - **Kaldır** — seçili öğeyi Müzik Kutusu'ndan siler. Bir klasör öğesini kaldırmak, diskteki dosyaları silmez; yalnızca klasörü unutur. Birden fazla öğeyi aynı anda işaretleyip hepsini birlikte kaldırabilirsiniz — bkz. Favoriler altındaki [Birden Fazla Öğeyi İşaretleme ve Kaldırma](#birden-fazla-öğeyi-i̇şaretleme-ve-kaldırma).
 
 Müzik Kutusu listeniz otomatik olarak kaydedilir, böylece NVDA'yı yeniden başlatsanız da korunur. Klasör içerikleri isteğe bağlı olarak taranır ve önbelleğe alınır; böylece çok büyük koleksiyonlarda bile klasör eklemek anlıktır — tam tarama, o klasörü ilk seçtiğinizde yapılır. freeAudio dışında bir klasöre dosya eklerseniz, klasörün bağlam menüsündeki **Klasörü Yeniden Tara** öğesini kullanarak bunları alabilirsiniz.
+
+### Windows Gezgini'nden Öğe Ekleme
+
+Yalnızca Windows Gezgini'nin dosya listesinde bir dosya veya klasör odaklanmışken kullanılabilen iki komut daha (Adres çubuğu, klasör ağacı, şerit veya arama kutusu değil, Ayrıntılar/Simgeler listesi), yukarıdaki Dosya Ekle…/Klasör Ekle… iletişim kutularını tamamen atlamanıza olanak tanır:
+
+- **Odaklanan dosyayı freeAudio ile çal** — vurgulanan ses dosyasını, halihazırda Müzik Kutusu listenizde olmasına gerek kalmadan doğrudan çalar. Yalnızca dosyalarda çalışır; bir klasörde kullanıldığında size klasörü bunun yerine müzik kutusuna eklemenizi söyler.
+- **Odaklanan öğeyi freeAudio müzik kutusuna ekle** — vurgulanan dosya veya klasörü, yukarıdaki **Dosya Ekle…** veya **Klasör Ekle…** seçeneklerini kullanmışsınız gibi Müzik Kutusu listenize ekler.
+
+Her iki komuta da varsayılan olarak atanmış bir tuş yoktur. Bir tuş atamak için, **bir Dosya Gezgini penceresi içinde odaklanmışken** NVDA Menüsü → Tercihler → Girdi Hareketleri'ni açın — bu komutlar "Tüm uygulamalar" yerine Explorer'ın kendi bölümünde görünür; böylece seçtiğiniz tuş kombinasyonu yalnızca Explorer'da dosyalara göz atarken bu komutları tetikler, başka her yerde normal anlamını korur.
 
 ### Müzik Kutusu'ndan Çalma
 
